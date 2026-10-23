@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-e52fd481cd6d5ddc6099ae3fb48268f3",
+    "generated_at_utc": "2026-10-23T08:04:38Z"
+  },
+  "work": {
+    "work_id": "04843",
+    "title": "video stills - balance_1_5",
+    "year": 2011,
+    "year_display": "2003, 2011",
+    "width_px": 2958,
+    "height_px": 1667,
+    "height_cm": 14.1,
+    "width_cm": 25,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "150",
+    "galleries": [
+      {
+        "gallery_id": "318",
+        "title": "balance machine - video stills"
+      }
+    ]
+  }
+}

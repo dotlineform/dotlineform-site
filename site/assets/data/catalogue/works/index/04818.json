@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-e63bc9c72b4df40fa800c4bea8fcbcfe",
+    "generated_at_utc": "2026-10-23T08:04:38Z"
+  },
+  "work": {
+    "work_id": "04818",
+    "title": "balance machine 1 birth 5",
+    "year": 2011,
+    "year_display": "2003, 2011",
+    "width_px": 5315,
+    "height_px": 2953,
+    "height_cm": 25,
+    "width_cm": 45,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "150",
+    "galleries": [
+      {
+        "gallery_id": "317",
+        "title": "balance machine"
+      }
+    ]
+  }
+}

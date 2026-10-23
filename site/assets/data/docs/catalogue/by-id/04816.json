@@ -1,0 +1,80 @@
+{
+  "doc_id": "04816",
+  "title": "balance machine 1 birth 3",
+  "added_date": "2026-10-23 08:58:50",
+  "last_updated": "2026-10-23 08:58:50",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>balance machine 1 birth 3</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04816\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 5315 / 2953;\" data-docs-media-open aria-label=\"Open balance machine 1 birth 3\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04816-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04816-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04816-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04816-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"balance machine 1 birth 3\" width=\"5315\" height=\"2953\" decoding=\"async\"><span data-docs-media-placeholder hidden>balance machine 1 birth 3</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2003, 2011<br>digital c-type print<br>25 × 45 cm<br><br>cat. 04816</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04816"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04816": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04816"
+        },
+        "label": "balance machine 1 birth 3",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04816-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04816-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04816-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04816-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "balance machine 1 birth 3",
+          "width_px": 5315,
+          "height_px": 2953
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04816-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "317"
+            },
+            "label": "balance machine",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "318"
+            },
+            "label": "balance machine - video stills",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2003, 2011",
+            "digital c-type print",
+            "25 × 45 cm",
+            "",
+            "cat. 04816"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

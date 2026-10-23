@@ -1,0 +1,80 @@
+{
+  "doc_id": "04893",
+  "title": "video stills - balance_3 - 2011-11-06 at 20.36.38",
+  "added_date": "2026-10-23 08:58:50",
+  "last_updated": "2026-10-23 08:58:50",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>video stills - balance_3 - 2011-11-06 at 20.36.38</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04893\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4724 / 2979;\" data-docs-media-open aria-label=\"Open video stills - balance_3 - 2011-11-06 at 20.36.38\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04893-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04893-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04893-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04893-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"video stills - balance_3 - 2011-11-06 at 20.36.38\" width=\"4724\" height=\"2979\" decoding=\"async\"><span data-docs-media-placeholder hidden>video stills - balance_3 - 2011-11-06 at 20.36.38</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2011<br>digital c-type print<br>25.2 × 40 cm<br><br>cat. 04893</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04893"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04893": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04893"
+        },
+        "label": "video stills - balance_3 - 2011-11-06 at 20.36.38",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04893-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04893-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04893-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04893-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "video stills - balance_3 - 2011-11-06 at 20.36.38",
+          "width_px": 4724,
+          "height_px": 2979
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04893-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "318"
+            },
+            "label": "balance machine - video stills",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "317"
+            },
+            "label": "balance machine",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2011",
+            "digital c-type print",
+            "25.2 × 40 cm",
+            "",
+            "cat. 04893"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

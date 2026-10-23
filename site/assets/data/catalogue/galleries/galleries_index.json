@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-23T07:10:13Z"
+    "generated_at_utc": "2026-10-23T08:04:38Z"
   },
   "galleries": {
     "001": {
@@ -1231,6 +1231,14 @@
     "316": {
       "gallery_id": "316",
       "title": "architecture"
+    },
+    "317": {
+      "gallery_id": "317",
+      "title": "balance machine"
+    },
+    "318": {
+      "gallery_id": "318",
+      "title": "balance machine - video stills"
     }
   }
 }

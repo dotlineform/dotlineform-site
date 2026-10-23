@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-de2e9371885916dd0906e17d99bf6f0e",
+    "generated_at_utc": "2026-10-23T08:04:38Z"
+  },
+  "work": {
+    "work_id": "04822",
+    "title": "balance machine 3.1",
+    "year": 2011,
+    "year_display": "2011",
+    "width_px": 5906,
+    "height_px": 3725,
+    "height_cm": 31.5,
+    "width_cm": 50,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "150",
+    "galleries": [
+      {
+        "gallery_id": "317",
+        "title": "balance machine"
+      }
+    ]
+  }
+}

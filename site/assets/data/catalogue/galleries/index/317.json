@@ -1,0 +1,53 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T07:58:31Z",
+    "gallery_id": "317"
+  },
+  "gallery": {
+    "gallery_id": "317",
+    "title": "balance machine"
+  },
+  "member_works": [
+    {
+      "work_id": "04813",
+      "title": "balance machine 1"
+    },
+    {
+      "work_id": "04814",
+      "title": "balance machine 1 birth 1"
+    },
+    {
+      "work_id": "04815",
+      "title": "balance machine 1 birth 2"
+    },
+    {
+      "work_id": "04816",
+      "title": "balance machine 1 birth 3"
+    },
+    {
+      "work_id": "04817",
+      "title": "balance machine 1 birth 4"
+    },
+    {
+      "work_id": "04818",
+      "title": "balance machine 1 birth 5"
+    },
+    {
+      "work_id": "04819",
+      "title": "balance machine 1 birth 6"
+    },
+    {
+      "work_id": "04820",
+      "title": "balance machine 1 birth 7"
+    },
+    {
+      "work_id": "04821",
+      "title": "balance machine 2"
+    },
+    {
+      "work_id": "04822",
+      "title": "balance machine 3.1"
+    }
+  ]
+}

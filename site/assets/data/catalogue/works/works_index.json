@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-23T07:10:13Z"
+    "generated_at_utc": "2026-10-23T07:58:31Z"
   },
   "works": {
     "00001": {
@@ -19203,6 +19203,406 @@
     "04812": {
       "work_id": "04812",
       "title": "architecture source"
+    },
+    "04813": {
+      "work_id": "04813",
+      "title": "balance machine 1"
+    },
+    "04814": {
+      "work_id": "04814",
+      "title": "balance machine 1 birth 1"
+    },
+    "04815": {
+      "work_id": "04815",
+      "title": "balance machine 1 birth 2"
+    },
+    "04816": {
+      "work_id": "04816",
+      "title": "balance machine 1 birth 3"
+    },
+    "04817": {
+      "work_id": "04817",
+      "title": "balance machine 1 birth 4"
+    },
+    "04818": {
+      "work_id": "04818",
+      "title": "balance machine 1 birth 5"
+    },
+    "04819": {
+      "work_id": "04819",
+      "title": "balance machine 1 birth 6"
+    },
+    "04820": {
+      "work_id": "04820",
+      "title": "balance machine 1 birth 7"
+    },
+    "04821": {
+      "work_id": "04821",
+      "title": "balance machine 2"
+    },
+    "04822": {
+      "work_id": "04822",
+      "title": "balance machine 3.1"
+    },
+    "04823": {
+      "work_id": "04823",
+      "title": "video stills - balance_1_1"
+    },
+    "04824": {
+      "work_id": "04824",
+      "title": "video stills - balance_1_10"
+    },
+    "04825": {
+      "work_id": "04825",
+      "title": "video stills - balance_1_11"
+    },
+    "04826": {
+      "work_id": "04826",
+      "title": "video stills - balance_1_12"
+    },
+    "04827": {
+      "work_id": "04827",
+      "title": "video stills - balance_1_13"
+    },
+    "04828": {
+      "work_id": "04828",
+      "title": "video stills - balance_1_14"
+    },
+    "04829": {
+      "work_id": "04829",
+      "title": "video stills - balance_1_15"
+    },
+    "04830": {
+      "work_id": "04830",
+      "title": "video stills - balance_1_16"
+    },
+    "04831": {
+      "work_id": "04831",
+      "title": "video stills - balance_1_17"
+    },
+    "04832": {
+      "work_id": "04832",
+      "title": "video stills - balance_1_18"
+    },
+    "04833": {
+      "work_id": "04833",
+      "title": "video stills - balance_1_19"
+    },
+    "04834": {
+      "work_id": "04834",
+      "title": "video stills - balance_1_2"
+    },
+    "04835": {
+      "work_id": "04835",
+      "title": "video stills - balance_1_20"
+    },
+    "04836": {
+      "work_id": "04836",
+      "title": "video stills - balance_1_21"
+    },
+    "04837": {
+      "work_id": "04837",
+      "title": "video stills - balance_1_22"
+    },
+    "04838": {
+      "work_id": "04838",
+      "title": "video stills - balance_1_23"
+    },
+    "04839": {
+      "work_id": "04839",
+      "title": "video stills - balance_1_24"
+    },
+    "04840": {
+      "work_id": "04840",
+      "title": "video stills - balance_1_25"
+    },
+    "04841": {
+      "work_id": "04841",
+      "title": "video stills - balance_1_3"
+    },
+    "04842": {
+      "work_id": "04842",
+      "title": "video stills - balance_1_4"
+    },
+    "04843": {
+      "work_id": "04843",
+      "title": "video stills - balance_1_5"
+    },
+    "04844": {
+      "work_id": "04844",
+      "title": "video stills - balance_1_6"
+    },
+    "04845": {
+      "work_id": "04845",
+      "title": "video stills - balance_1_7"
+    },
+    "04846": {
+      "work_id": "04846",
+      "title": "video stills - balance_1_8"
+    },
+    "04847": {
+      "work_id": "04847",
+      "title": "video stills - balance_1_9"
+    },
+    "04848": {
+      "work_id": "04848",
+      "title": "video stills - balance_2_1"
+    },
+    "04849": {
+      "work_id": "04849",
+      "title": "video stills - balance_2_10"
+    },
+    "04850": {
+      "work_id": "04850",
+      "title": "video stills - balance_2_11"
+    },
+    "04851": {
+      "work_id": "04851",
+      "title": "video stills - balance_2_12"
+    },
+    "04852": {
+      "work_id": "04852",
+      "title": "video stills - balance_2_13"
+    },
+    "04853": {
+      "work_id": "04853",
+      "title": "video stills - balance_2_14"
+    },
+    "04854": {
+      "work_id": "04854",
+      "title": "video stills - balance_2_15"
+    },
+    "04855": {
+      "work_id": "04855",
+      "title": "video stills - balance_2_16"
+    },
+    "04856": {
+      "work_id": "04856",
+      "title": "video stills - balance_2_17"
+    },
+    "04857": {
+      "work_id": "04857",
+      "title": "video stills - balance_2_18"
+    },
+    "04858": {
+      "work_id": "04858",
+      "title": "video stills - balance_2_19"
+    },
+    "04859": {
+      "work_id": "04859",
+      "title": "video stills - balance_2_2"
+    },
+    "04860": {
+      "work_id": "04860",
+      "title": "video stills - balance_2_20"
+    },
+    "04861": {
+      "work_id": "04861",
+      "title": "video stills - balance_2_21"
+    },
+    "04862": {
+      "work_id": "04862",
+      "title": "video stills - balance_2_22"
+    },
+    "04863": {
+      "work_id": "04863",
+      "title": "video stills - balance_2_23"
+    },
+    "04864": {
+      "work_id": "04864",
+      "title": "video stills - balance_2_24"
+    },
+    "04865": {
+      "work_id": "04865",
+      "title": "video stills - balance_2_25"
+    },
+    "04866": {
+      "work_id": "04866",
+      "title": "video stills - balance_2_3"
+    },
+    "04867": {
+      "work_id": "04867",
+      "title": "video stills - balance_2_4"
+    },
+    "04868": {
+      "work_id": "04868",
+      "title": "video stills - balance_2_5"
+    },
+    "04869": {
+      "work_id": "04869",
+      "title": "video stills - balance_2_6"
+    },
+    "04870": {
+      "work_id": "04870",
+      "title": "video stills - balance_2_7"
+    },
+    "04871": {
+      "work_id": "04871",
+      "title": "video stills - balance_2_8"
+    },
+    "04872": {
+      "work_id": "04872",
+      "title": "video stills - balance_2_9"
+    },
+    "04873": {
+      "work_id": "04873",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.30.08"
+    },
+    "04874": {
+      "work_id": "04874",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.30.36"
+    },
+    "04875": {
+      "work_id": "04875",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.30.50"
+    },
+    "04876": {
+      "work_id": "04876",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.31.19"
+    },
+    "04877": {
+      "work_id": "04877",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.32.06"
+    },
+    "04878": {
+      "work_id": "04878",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.32.18"
+    },
+    "04879": {
+      "work_id": "04879",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.32.34"
+    },
+    "04880": {
+      "work_id": "04880",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.32.56"
+    },
+    "04881": {
+      "work_id": "04881",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.33.11"
+    },
+    "04882": {
+      "work_id": "04882",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.33.26"
+    },
+    "04883": {
+      "work_id": "04883",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.33.41"
+    },
+    "04884": {
+      "work_id": "04884",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.33.52"
+    },
+    "04885": {
+      "work_id": "04885",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.34.02"
+    },
+    "04886": {
+      "work_id": "04886",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.34.12"
+    },
+    "04887": {
+      "work_id": "04887",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.34.34"
+    },
+    "04888": {
+      "work_id": "04888",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.34.52"
+    },
+    "04889": {
+      "work_id": "04889",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.35.52"
+    },
+    "04890": {
+      "work_id": "04890",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.36.05"
+    },
+    "04891": {
+      "work_id": "04891",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.36.15"
+    },
+    "04892": {
+      "work_id": "04892",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.36.26"
+    },
+    "04893": {
+      "work_id": "04893",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.36.38"
+    },
+    "04894": {
+      "work_id": "04894",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.36.47"
+    },
+    "04895": {
+      "work_id": "04895",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.36.56"
+    },
+    "04896": {
+      "work_id": "04896",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.37.17"
+    },
+    "04897": {
+      "work_id": "04897",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.37.25"
+    },
+    "04898": {
+      "work_id": "04898",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.37.37"
+    },
+    "04899": {
+      "work_id": "04899",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.38.20"
+    },
+    "04900": {
+      "work_id": "04900",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.38.36"
+    },
+    "04901": {
+      "work_id": "04901",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.39.29"
+    },
+    "04902": {
+      "work_id": "04902",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.39.56"
+    },
+    "04903": {
+      "work_id": "04903",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.40.30"
+    },
+    "04904": {
+      "work_id": "04904",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.40.51"
+    },
+    "04905": {
+      "work_id": "04905",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.41.13"
+    },
+    "04906": {
+      "work_id": "04906",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.41.22"
+    },
+    "04907": {
+      "work_id": "04907",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.41.40"
+    },
+    "04908": {
+      "work_id": "04908",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.41.57"
+    },
+    "04909": {
+      "work_id": "04909",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.42.07"
+    },
+    "04910": {
+      "work_id": "04910",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.42.15"
+    },
+    "04911": {
+      "work_id": "04911",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.42.53"
+    },
+    "04912": {
+      "work_id": "04912",
+      "title": "video stills - balance_3 - 2011-11-06 at 20.43.24"
     }
   }
 }
