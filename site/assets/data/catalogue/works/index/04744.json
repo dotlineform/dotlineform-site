@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-90b54c9ab0d8045b757f12ced58f68e4",
-    "generated_at_utc": "2026-10-22T20:27:49Z"
+    "version": "blake2b-44d00ceebce069d2dc69d73f9cbc5e4b",
+    "generated_at_utc": "2026-10-24T20:31:24Z"
   },
   "work": {
     "work_id": "04744",
@@ -16,8 +16,8 @@
     "series_id": "147",
     "galleries": [
       {
-        "gallery_id": "313",
-        "title": "abstract paintings (2024) details"
+        "gallery_id": "312",
+        "title": "abstract paintings (2024)"
       }
     ]
   }

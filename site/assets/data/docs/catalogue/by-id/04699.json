@@ -1,9 +1,9 @@
 {
   "doc_id": "04699",
-  "title": "abstract painting III (2024-01-10)",
+  "title": "abstract painting III",
   "added_date": "2026-10-22 21:28:02",
-  "last_updated": "2026-10-22 21:28:02",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>abstract painting III (2024-01-10)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04699\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3024 / 3024;\" data-docs-media-open aria-label=\"Open abstract painting III (2024-01-10)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04699-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04699-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04699-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04699-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"abstract painting III (2024-01-10)\" width=\"3024\" height=\"3024\" decoding=\"async\"><span data-docs-media-placeholder hidden>abstract painting III (2024-01-10)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2024<br>50 × 50 cm<br><br>cat. 04699</p></div></article></div>\n",
+  "last_updated": "2026-10-24 21:31:32",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>abstract painting III</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04699\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3024 / 3024;\" data-docs-media-open aria-label=\"Open abstract painting III\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04699-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04699-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04699-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04699-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"abstract painting III\" width=\"3024\" height=\"3024\" decoding=\"async\"><span data-docs-media-placeholder hidden>abstract painting III</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2024<br>50 × 50 cm<br><br>cat. 04699</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -24,7 +24,7 @@
           "kind": "catalogue-work",
           "id": "04699"
         },
-        "label": "abstract painting III (2024-01-10)",
+        "label": "abstract painting III",
         "image": {
           "src": "https://media.dotlineform.com/works/img/04699-primary-800.webp?v=1",
           "candidates": [
@@ -41,7 +41,7 @@
               "width_px": 1600
             }
           ],
-          "alt": "abstract painting III (2024-01-10)",
+          "alt": "abstract painting III",
           "width_px": 3024,
           "height_px": 3024
         },
@@ -54,14 +54,6 @@
             },
             "label": "abstract paintings (2024)",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "313"
-            },
-            "label": "abstract paintings (2024) details",
-            "relation": "series"
           }
         ],
         "entry": {

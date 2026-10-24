@@ -1,12 +1,12 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-01e80710efc23175d4df027189fb6092",
-    "generated_at_utc": "2026-10-22T20:27:49Z"
+    "version": "blake2b-adb3878a5c47e66e466b4e78c7b80478",
+    "generated_at_utc": "2026-10-24T20:31:24Z"
   },
   "work": {
     "work_id": "04699",
-    "title": "abstract painting III (2024-01-10)",
+    "title": "abstract painting III",
     "year": 2024,
     "year_display": "2024",
     "width_px": 3024,

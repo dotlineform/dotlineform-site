@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T20:24:38Z"
+    "generated_at_utc": "2026-10-24T20:35:05Z"
   },
   "series_galleries": {
     "001": [
@@ -159,7 +159,12 @@
         "title": "changed photos"
       }
     ],
-    "025": [],
+    "025": [
+      {
+        "gallery_id": "339",
+        "title": "closeness"
+      }
+    ],
     "026": [
       {
         "gallery_id": "026",
@@ -292,10 +297,6 @@
       {
         "gallery_id": "046",
         "title": "egg forms"
-      },
-      {
-        "gallery_id": "240",
-        "title": "egg forms (work in progress)"
       }
     ],
     "047": [
@@ -606,14 +607,6 @@
       {
         "gallery_id": "101",
         "title": "molecules"
-      },
-      {
-        "gallery_id": "160",
-        "title": "molecules (versions)"
-      },
-      {
-        "gallery_id": "161",
-        "title": "molecules (details)"
       }
     ],
     "103": [
@@ -893,10 +886,6 @@
       {
         "gallery_id": "312",
         "title": "abstract paintings (2024)"
-      },
-      {
-        "gallery_id": "313",
-        "title": "abstract paintings (2024) details"
       }
     ],
     "148": [

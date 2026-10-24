@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-3535c65ae3c6074fc9d233a79ad7ef57",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-f9aff2676567035606e323407a05748e",
+    "generated_at_utc": "2026-10-24T20:35:05Z"
   },
   "work": {
     "work_id": "02874",
     "title": "molecules (detail 12)",
     "year": 2013,
     "year_display": "2013",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "101",
     "galleries": [
       {
-        "gallery_id": "161",
-        "title": "molecules (details)"
+        "gallery_id": "101",
+        "title": "molecules"
       }
     ]
   }

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-8d2041c78a629b2a501ca2cdcaf7b5ae",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-d98ff3a5b5e960fc5280361f7bff10d8",
+    "generated_at_utc": "2026-10-24T20:33:52Z"
   },
   "work": {
     "work_id": "03601",
     "title": "2024-05-30 17-32 7",
     "year": 2024,
     "year_display": "2024",
-    "medium": "ink on paper",
     "width_px": 4284,
     "height_px": 4284,
+    "medium": "ink on paper",
     "media_version": 1,
     "series_id": "046",
     "galleries": [
       {
-        "gallery_id": "240",
-        "title": "egg forms (work in progress)"
+        "gallery_id": "046",
+        "title": "egg forms"
       }
     ]
   }

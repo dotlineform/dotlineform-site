@@ -1,12 +1,12 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d16c02deb656d63a3a6d1bb1fe1db964",
-    "generated_at_utc": "2026-10-22T20:27:49Z"
+    "version": "blake2b-8ea634e8b4bf621823c85d84b7ead8d4",
+    "generated_at_utc": "2026-10-24T20:31:24Z"
   },
   "work": {
     "work_id": "04698",
-    "title": "abstract painting II (2024-03-08)",
+    "title": "abstract painting II",
     "year": 2024,
     "year_display": "2024",
     "width_px": 2905,

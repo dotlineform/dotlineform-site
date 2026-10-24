@@ -46,7 +46,16 @@
           "height_px": 3543
         },
         "new_tab_target": "https://media.dotlineform.com/works/img/00811-primary-1600.webp?v=1",
-        "galleries": [],
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "339"
+            },
+            "label": "closeness",
+            "relation": "direct"
+          }
+        ],
         "entry": {
           "metadata_lines": [
             "2017",

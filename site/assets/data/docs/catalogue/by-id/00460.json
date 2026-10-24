@@ -54,22 +54,6 @@
             },
             "label": "molecules",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "160"
-            },
-            "label": "molecules (versions)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "161"
-            },
-            "label": "molecules (details)",
-            "relation": "series"
           }
         ],
         "entry": {

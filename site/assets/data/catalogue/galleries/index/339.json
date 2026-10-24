@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T20:32:50Z",
+    "gallery_id": "339"
+  },
+  "gallery": {
+    "gallery_id": "339",
+    "title": "closeness"
+  },
+  "member_works": [
+    {
+      "work_id": "00811",
+      "title": "close"
+    },
+    {
+      "work_id": "00812",
+      "title": "closer"
+    }
+  ]
+}

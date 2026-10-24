@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-24T20:01:02Z"
+    "generated_at_utc": "2026-10-24T20:31:24Z"
   },
   "works": {
     "00001": {
@@ -18594,15 +18594,15 @@
     },
     "04697": {
       "work_id": "04697",
-      "title": "abstract painting I (2024-02-07)"
+      "title": "abstract painting I"
     },
     "04698": {
       "work_id": "04698",
-      "title": "abstract painting II (2024-03-08)"
+      "title": "abstract painting II"
     },
     "04699": {
       "work_id": "04699",
-      "title": "abstract painting III (2024-01-10)"
+      "title": "abstract painting III"
     },
     "04700": {
       "work_id": "04700",

@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "313"
-            },
-            "label": "abstract paintings (2024) details",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "312"
             },
             "label": "abstract paintings (2024)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

@@ -50,26 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "160"
-            },
-            "label": "molecules (versions)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "101"
             },
             "label": "molecules",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "161"
-            },
-            "label": "molecules (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

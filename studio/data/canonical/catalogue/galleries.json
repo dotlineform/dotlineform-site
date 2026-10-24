@@ -531,14 +531,6 @@
       "gallery_id": "159",
       "title": "molecule forms (molecules)"
     },
-    "160": {
-      "gallery_id": "160",
-      "title": "molecules (versions)"
-    },
-    "161": {
-      "gallery_id": "161",
-      "title": "molecules (details)"
-    },
     "175": {
       "gallery_id": "175",
       "title": "learning to draw landscapes (versions) (versions)"
@@ -562,10 +554,6 @@
     "227": {
       "gallery_id": "227",
       "title": "curve machine holes"
-    },
-    "240": {
-      "gallery_id": "240",
-      "title": "egg forms (work in progress)"
     },
     "247": {
       "gallery_id": "247",
@@ -606,10 +594,6 @@
     "312": {
       "gallery_id": "312",
       "title": "abstract paintings (2024)"
-    },
-    "313": {
-      "gallery_id": "313",
-      "title": "abstract paintings (2024) details"
     },
     "315": {
       "gallery_id": "315",
@@ -698,6 +682,10 @@
     "338": {
       "gallery_id": "338",
       "title": "grid dissection"
+    },
+    "339": {
+      "gallery_id": "339",
+      "title": "closeness"
     }
   }
 }
