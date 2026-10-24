@@ -29,7 +29,7 @@ from studio.shared.python.local_browser_assets import (
     LOCAL_BROWSER_ASSET_PATHS,
     render_local_browser_icon_links,
 )
-from studio.shared.python.local_http_logging import QuietErrorLoggingMixin
+from studio.shared.python.local_http_logging import IgnoreEarlyDisconnectMixin, QuietErrorLoggingMixin
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
@@ -79,7 +79,7 @@ def env_flag(name: str, default: bool = False) -> bool:
     return value.strip().lower() in ENABLED_VALUES
 
 
-class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
+class StudioAppRequestHandler(IgnoreEarlyDisconnectMixin, QuietErrorLoggingMixin, BaseHTTPRequestHandler):
     server_version = "StudioAppServer/0.1"
     service_log_name = "studio"
 

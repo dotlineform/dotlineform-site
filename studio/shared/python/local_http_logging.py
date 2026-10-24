@@ -1,6 +1,19 @@
-"""Shared request logging for quiet local HTTP services."""
+"""Shared request handling and logging for local HTTP services."""
 
 from __future__ import annotations
+
+
+class IgnoreEarlyDisconnectMixin:
+    """Close resets before the first request line, preserving later failures."""
+
+    def handle(self) -> None:
+        try:
+            super().handle()
+        except ConnectionResetError:
+            # BaseHTTPRequestHandler assigns this only after reading the line.
+            if hasattr(self, "raw_requestline"):
+                raise
+            self.close_connection = True
 
 
 def is_error_status(code: int | str) -> bool:

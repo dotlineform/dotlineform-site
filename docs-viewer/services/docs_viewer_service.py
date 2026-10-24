@@ -27,7 +27,7 @@ from studio.shared.python.local_browser_assets import (
     LOCAL_BROWSER_ASSET_PATHS,
     render_local_browser_icon_links,
 )
-from studio.shared.python.local_http_logging import QuietErrorLoggingMixin
+from studio.shared.python.local_http_logging import IgnoreEarlyDisconnectMixin, QuietErrorLoggingMixin
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
@@ -393,7 +393,7 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
     return payload
 
 
-class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
+class DocsViewerRequestHandler(IgnoreEarlyDisconnectMixin, QuietErrorLoggingMixin, BaseHTTPRequestHandler):
     server_version = "DocsViewerService/0.1"
     service_log_name = "docs-viewer"
 

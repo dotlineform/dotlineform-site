@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-203756-b41c00
 title: Local Setup Public Site Preview
 added_date: 2026-05-23 20:37:56
-last_updated: "2026-08-30 14:39:24"
+last_updated: "2026-10-24"
 parent_id: d-20260413-000000-d314b7
 ---
 # Local Setup Public Site Preview
@@ -72,7 +72,7 @@ bin/site-preview --no-validate
 ```
 
 The preview server is a static HTTP server. It does not watch files, run LiveReload, or start Local Studio services.
-It suppresses only client-disconnect exceptions caused when a browser abandons an in-flight response during navigation or redirect. Unexpected file and socket errors continue to surface in the terminal.
+It suppresses a browser connection reset before the first HTTP request line is read, plus its existing client-disconnect exceptions when a browser abandons an in-flight file response during navigation or redirect. The [shared early-disconnect boundary](Local_Runners.md#early-browser-disconnects) preserves header/body/application errors; unexpected file and socket errors continue to surface in the terminal.
 
 ## Related References
 

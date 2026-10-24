@@ -6,9 +6,17 @@ from __future__ import annotations
 import argparse
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer, test
 from pathlib import Path
+import sys
 
 
-class SitePreviewRequestHandler(SimpleHTTPRequestHandler):
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from studio.shared.python.local_http_logging import IgnoreEarlyDisconnectMixin  # noqa: E402
+
+
+class SitePreviewRequestHandler(IgnoreEarlyDisconnectMixin, SimpleHTTPRequestHandler):
     def copyfile(self, source: object, outputfile: object) -> None:
         try:
             super().copyfile(source, outputfile)
