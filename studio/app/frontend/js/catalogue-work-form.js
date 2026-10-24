@@ -115,7 +115,7 @@ function setSeriesDraftId(state, seriesId, options) {
   const node = state.fieldNodes.get("series_id");
   if (node) node.value = state.draft.series_id;
   renderSeriesPicker(state);
-  notifyStateChange(options);
+  notifyFieldInput(options, "series_id");
 }
 
 /** Refresh the selected Series label without applying or resetting the Work draft. */
@@ -551,7 +551,7 @@ export function setModeFieldAvailability(state) {
   if (state.seriesPicker) {
     state.seriesPicker.pickerNode.hidden = false;
     state.seriesPicker.searchWrap.hidden = false;
-    state.seriesPicker.searchInput.disabled = isBulk || busy || !state.serverAvailable;
+    state.seriesPicker.searchInput.disabled = busy || !state.serverAvailable;
     if (state.seriesPicker.searchInput.disabled) {
       renderSeriesPicker(state);
     }

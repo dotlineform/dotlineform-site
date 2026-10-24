@@ -293,9 +293,8 @@ export function updateWorkSummary(state, options = {}) {
   if (state.mode === "bulk") {
     state.layout.setPreviewAvailable(true);
     const selectedCount = state.bulkWorkIds.length;
-    const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId));
-    const seriesIds = Array.from(new Set(selectedRecords.map(record => record.series_id).filter(id => id !== null && id !== undefined)));
-    const seriesTitles = seriesIds.map(seriesId => state.seriesById.get(seriesId).title);
+    const savedSeriesId = state.bulkRecords.get(state.bulkWorkIds[0]).series_id;
+    const seriesTitle = state.seriesById.get(savedSeriesId).title;
     state.metaNode.hidden = false;
     state.metaNode.textContent = selectedCount
       ? `${selectedCount} works selected`
@@ -311,7 +310,7 @@ export function updateWorkSummary(state, options = {}) {
       </div>
       <div class="studioForm__field">
         <span class="studioForm__label">series</span>
-        <div class="studioUi__input studioUi__input--readonlyDisplay catalogueWorkSummary__series">${escapeHtml(seriesTitles.length ? seriesTitles.join(", ") : "—")}</div>
+        <div class="studioUi__input studioUi__input--readonlyDisplay catalogueWorkSummary__series">${escapeHtml(seriesTitle)}</div>
       </div>
     `;
     if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = true;

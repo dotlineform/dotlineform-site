@@ -83,10 +83,6 @@
       "gallery_id": "024",
       "title": "changed photos"
     },
-    "025": {
-      "gallery_id": "025",
-      "title": "closeness"
-    },
     "026": {
       "gallery_id": "026",
       "title": "collected 1989-1998"
@@ -251,10 +247,6 @@
       "gallery_id": "068",
       "title": "fragments"
     },
-    "069": {
-      "gallery_id": "069",
-      "title": "genetic (2020)"
-    },
     "070": {
       "gallery_id": "070",
       "title": "glass forms"
@@ -370,10 +362,6 @@
     "104": {
       "gallery_id": "104",
       "title": "mouse story"
-    },
-    "105": {
-      "gallery_id": "105",
-      "title": "nerve"
     },
     "106": {
       "gallery_id": "106",
@@ -535,10 +523,6 @@
       "gallery_id": "145",
       "title": "grid dissection (details)"
     },
-    "146": {
-      "gallery_id": "146",
-      "title": "Michelle Pfeiffer (details)"
-    },
     "147": {
       "gallery_id": "147",
       "title": "mouse story (pages)"
@@ -558,10 +542,6 @@
     "154": {
       "gallery_id": "154",
       "title": "certainty (photos)"
-    },
-    "155": {
-      "gallery_id": "155",
-      "title": "spiders (photos)"
     },
     "156": {
       "gallery_id": "156",
@@ -615,10 +595,6 @@
       "gallery_id": "187",
       "title": "2 bodies monoprint (details)"
     },
-    "190": {
-      "gallery_id": "190",
-      "title": "forms scan 5 (working)"
-    },
     "191": {
       "gallery_id": "191",
       "title": "harmony 3 (version) (details)"
@@ -659,21 +635,9 @@
       "gallery_id": "200",
       "title": "bits symbols 1 (details ^2)"
     },
-    "211": {
-      "gallery_id": "211",
-      "title": "a theory of happiness is a theory of everything (layers)"
-    },
     "212": {
       "gallery_id": "212",
       "title": "a theory of happiness is a theory of everything (64°) (64 degrees)"
-    },
-    "213": {
-      "gallery_id": "213",
-      "title": "all the little cracks (details)"
-    },
-    "214": {
-      "gallery_id": "214",
-      "title": "all the little cracks again (details)"
     },
     "220": {
       "gallery_id": "220",
@@ -807,10 +771,6 @@
       "gallery_id": "273",
       "title": "kylie wax model 5.0 (iterations)"
     },
-    "275": {
-      "gallery_id": "275",
-      "title": "olive tree (details)"
-    },
     "276": {
       "gallery_id": "276",
       "title": "k particles (details)"
@@ -855,25 +815,9 @@
       "gallery_id": "286",
       "title": "room 4 (details)"
     },
-    "287": {
-      "gallery_id": "287",
-      "title": "spine symbols (symbols)"
-    },
-    "288": {
-      "gallery_id": "288",
-      "title": "spine symbols (source)"
-    },
     "290": {
       "gallery_id": "290",
       "title": "state of mind (source)"
-    },
-    "291": {
-      "gallery_id": "291",
-      "title": "tabula rasa (details)"
-    },
-    "292": {
-      "gallery_id": "292",
-      "title": "tabula rasa (source)"
     },
     "307": {
       "gallery_id": "307",
@@ -931,10 +875,6 @@
       "gallery_id": "321",
       "title": "a world of non-linearity"
     },
-    "322": {
-      "gallery_id": "322",
-      "title": "a world of non-linearity (moments)"
-    },
     "323": {
       "gallery_id": "323",
       "title": "boundary conditions (by the river)"
@@ -966,6 +906,10 @@
     "331": {
       "gallery_id": "331",
       "title": "composites (book, 2023)"
+    },
+    "332": {
+      "gallery_id": "332",
+      "title": "Michelle Pfeiffer"
     }
   }
 }

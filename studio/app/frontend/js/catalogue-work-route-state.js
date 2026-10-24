@@ -38,6 +38,11 @@ function buildBulkDraftFromRecords(records) {
   const draft = {};
   const mixedFields = new Set();
   EDITABLE_FIELDS.forEach((field) => {
+    if (field.key === "series_id") {
+      // Only the displayed Series member list supplies bulk selections.
+      draft.series_id = drafts[0].series_id;
+      return;
+    }
     if (field.key === "gallery_ids") {
       draft.gallery_ids = (drafts[0]?.gallery_ids || []).filter(id => drafts.every(item => item.gallery_ids.includes(id)));
       return;
@@ -139,10 +144,11 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   state.draft = { ...bulkDraft };
   state.bulkTouchedFields = new Set();
   state.bulkMixedFields = mixedFields;
+  state.searchNode.value = "";
   callback(options, "setOpenInputMode");
   callback(options, "applyDraftToInputs");
   callback(options, "clearReadonlyFields");
-  syncUrl(workIds.join(","));
+  syncUrl("");
   callback(
     options,
     "setTextWithState",

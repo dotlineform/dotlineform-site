@@ -60,7 +60,7 @@ import { deleteCurrentWork } from "./catalogue-work-actions.js";
 import {
   applyInitialWorkRouteSelection,
   bindWorkSelectionControls,
-  openWorkSelection,
+  openSelectedWorks,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
 import { BULK_WORK_METADATA_FIELDS, NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
@@ -79,7 +79,7 @@ import {
 } from "./catalogue-work-editor-state.js";
 
 function setOpenInputMode(state) {
-  state.searchNode.placeholder = "find work id(s): 00001, 00003-00005";
+  state.searchNode.placeholder = "find work id";
   state.searchNode.setAttribute("aria-label", "Find work by id");
 }
 
@@ -569,7 +569,7 @@ async function init() {
     state.seriesBrowser = createWorkSeriesBrowser(state, elements, {
       draftHasChanges: () => draftHasChanges(state),
       onEditDefinition: workFormOptions(state).onEditDefinition,
-      openWorks: workIds => openWorkSelection(state, workIds.join(","), workSelectionOptions(state)),
+      openWorks: workIds => openSelectedWorks(state, workIds, workSelectionOptions(state)),
       clearWork: () => setEmptySearchMode(state, workRouteStateOptions(state))
     });
     bindWorkEditorEvents(state, {

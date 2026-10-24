@@ -57,6 +57,7 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
 const WORK_READONLY_FIELDS = Object.freeze([]);
 
 const BULK_WORK_METADATA_FIELDS = Object.freeze([
+  WORK_FIELD_DEFINITIONS.series_id,
   WORK_FIELD_DEFINITIONS.title,
   WORK_FIELD_DEFINITIONS.year,
   WORK_FIELD_DEFINITIONS.year_display,

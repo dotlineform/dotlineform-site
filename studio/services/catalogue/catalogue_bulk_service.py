@@ -22,6 +22,7 @@ from catalogue.catalogue_shared_changes import work_shared_changes
 
 
 BULK_WORK_EDITABLE_FIELDS = {
+    "series_id",
     "title",
     "year",
     "year_display",
@@ -95,7 +96,8 @@ def bulk_save_payload(
         changed_field_names.update(fields_changed)
         affected_work_ids.append(work_id)
         affected_series_ids.update(
-            [current_record["series_id"]] if current_record.get("series_id") else []
+            record["series_id"] for record in (current_record, updated_record)
+            if record.get("series_id")
         )
         updated_works[work_id] = updated_record
 

@@ -212,9 +212,8 @@ export function createWorkSeriesBrowser(state, elements, options) {
     bulkRecords = state.bulkRecords;
     currentWorkId = state.currentWorkId;
     mode = state.mode;
-    const bulkSeriesIds = new Set([...state.bulkRecords.values()].map(record => record.series_id));
     const initialSeriesId = currentRecord?.series_id || (mode === "new" ? state.draft.series_id
-      : bulkSeriesIds.size === 1 ? [...bulkSeriesIds][0] : "");
+      : state.bulkRecords.values().next().value?.series_id);
     if (!seriesId && initialSeriesId && state.seriesById.has(initialSeriesId)) {
       seriesId = initialSeriesId;
       restoreSearch();

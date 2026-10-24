@@ -20,13 +20,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function buildSearchToken(value) {
-  const normalized = normalizeText(value);
-  if (!normalized) return "";
-  const digits = normalized.replace(/\D/g, "");
-  return digits || normalized.toLowerCase();
-}
-
 function normalizeSearchText(value) {
   return normalizeText(value).toLowerCase().replace(/\s+/g, " ");
 }
@@ -35,14 +28,15 @@ function workSearchOptions(state) {
   return Array.from(state.workSearchById.entries()).map(([workId, record]) => ({ workId, record }));
 }
 
-function numericSearchToken(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  return digits.replace(/^0+/, "") || (digits ? "0" : "");
+function singleWorkId(value) {
+  const text = normalizeText(value);
+  return /^\d{1,5}$/.test(text) ? normalizeWorkId(text) : "";
 }
 
 function workIdPrefixMatches(workId, rawQuery) {
-  const query = numericSearchToken(rawQuery);
-  if (!query) return false;
+  const queryId = singleWorkId(rawQuery);
+  if (!queryId) return false;
+  const query = queryId.replace(/^0+/, "") || "0";
   const normalizedWorkId = normalizeText(workId).replace(/^0+/, "") || "0";
   return normalizedWorkId.startsWith(query);
 }
@@ -53,61 +47,6 @@ function titleMatches(record, rawQuery) {
   return normalizeSearchText(record && record.title).includes(query);
 }
 
-export function parseWorkSelection(rawValue) {
-  const normalized = normalizeText(rawValue);
-  if (!normalized) return [];
-  const tokens = normalized.split(",").map((item) => normalizeText(item)).filter(Boolean);
-  const workIds = [];
-  const seen = new Set();
-  tokens.forEach((token) => {
-    const rangeMatch = token.match(/^(\d{1,5})\s*-\s*(\d{1,5})$/);
-    if (rangeMatch) {
-      const start = Number(normalizeWorkId(rangeMatch[1]));
-      const end = Number(normalizeWorkId(rangeMatch[2]));
-      if (!Number.isFinite(start) || !Number.isFinite(end) || start > end) {
-        throw new Error(`Invalid work id range: ${token}`);
-      }
-      for (let value = start; value <= end; value += 1) {
-        const workId = String(value).padStart(5, "0");
-        if (seen.has(workId)) continue;
-        seen.add(workId);
-        workIds.push(workId);
-      }
-      return;
-    }
-    const workId = normalizeWorkId(token);
-    if (!workId) {
-      throw new Error(`Invalid work id: ${token}`);
-    }
-    if (seen.has(workId)) return;
-    seen.add(workId);
-    workIds.push(workId);
-  });
-  return workIds;
-}
-
-function formatWorkSelection(workIds) {
-  const ids = workIds.slice().sort((a, b) => Number(a) - Number(b));
-  const ranges = [];
-  for (let index = 0; index < ids.length; index += 1) {
-    const start = ids[index];
-    while (index + 1 < ids.length && Number(ids[index + 1]) === Number(ids[index]) + 1) {
-      index += 1;
-    }
-    const end = ids[index];
-    ranges.push(start === end ? start : `${start}-${end}`);
-  }
-  return ranges.join(", ");
-}
-
-export function isWorkBulkQuery(rawValue) {
-  try {
-    return parseWorkSelection(rawValue).length > 1;
-  } catch (_error) {
-    return false;
-  }
-}
-
 export function setWorkSelectionPopupVisibility(state, visible) {
   if (state.popupListNode) state.popupListNode.hidden = !visible;
   else if (state.popupNode) state.popupNode.hidden = !visible;
@@ -115,8 +54,7 @@ export function setWorkSelectionPopupVisibility(state, visible) {
 
 export function getWorkSearchMatches(state, rawQuery) {
   const normalizedQuery = normalizeText(rawQuery);
-  const query = buildSearchToken(rawQuery);
-  if (!query) return [];
+  if (!normalizedQuery) return [];
   const matches = [];
   for (const [workId, record] of state.workSearchById.entries()) {
     if (/[a-z]/i.test(normalizedQuery) ? titleMatches(record, normalizedQuery) : workIdPrefixMatches(workId, normalizedQuery)) {
@@ -150,31 +88,13 @@ export function renderWorkSearchMatches(state, matches, message = "") {
   setWorkSelectionPopupVisibility(state, true);
 }
 
-export async function openWorkSelection(state, requestedValue, context) {
-  let workIds;
-  try {
-    workIds = parseWorkSelection(requestedValue);
-  } catch (error) {
-    renderWorkSearchMatches(state, [], normalizeText(error && error.message) || "Enter a work id.");
-    return;
-  }
-
-  if (!workIds.length) {
-    renderWorkSearchMatches(state, [], "Enter a work id.");
-    return;
-  }
+/** Open a nonempty exact selection from one displayed Series; search/URL entry opens one Work. */
+export async function openSelectedWorks(state, workIds, context) {
   if (workIds.length === 1) {
     await openWorkById(state, workIds[0], context);
     return;
   }
 
-  const unknown = workIds.find((workId) => !state.workSearchById.has(workId));
-  if (unknown) {
-    renderWorkSearchMatches(state, [], `Unknown work id: ${unknown}.`);
-    return;
-  }
-
-  state.searchNode.value = formatWorkSelection(workIds);
   setWorkSelectionPopupVisibility(state, false);
   const lookups = await Promise.all(workIds.map((workId) => context.loadWorkLookupRecord(workId)));
   const recordsById = new Map();
@@ -182,8 +102,7 @@ export async function openWorkSelection(state, requestedValue, context) {
   for (let index = 0; index < workIds.length; index += 1) {
     const workId = workIds[index];
     const lookup = lookups[index];
-    const fallbackRecord = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
-    const record = fallbackRecord;
+    const record = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
     if (!record) {
       throw new Error(`work source missing record for ${workId}`);
     }
@@ -194,12 +113,11 @@ export async function openWorkSelection(state, requestedValue, context) {
 }
 
 export async function openWorkById(state, requestedWorkId, context) {
-  const workId = normalizeWorkId(requestedWorkId);
+  const workId = singleWorkId(requestedWorkId);
   if (!workId) {
-    renderWorkSearchMatches(state, [], "Enter a work id.");
+    renderWorkSearchMatches(state, []);
     return;
   }
-
   const searchRecord = state.workSearchById.get(workId);
   if (!searchRecord) {
     const matches = getWorkSearchMatches(state, requestedWorkId);
@@ -214,8 +132,7 @@ export async function openWorkById(state, requestedWorkId, context) {
   state.searchNode.value = workId;
   setWorkSelectionPopupVisibility(state, false);
   const lookup = await context.loadWorkLookupRecord(workId);
-  const fallbackRecord = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
-  const record = fallbackRecord;
+  const record = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
   if (!record) {
     throw new Error(`work source missing record for ${workId}`);
   }
@@ -235,11 +152,11 @@ export function bindWorkSelectionControls(state, context) {
   const searchController = bindSearchList(state.searchNode, state.popupListNode, {
     id: "catalogueWorkSearchList",
     maxOptions: SEARCH_LIMIT,
-    shouldOpen: ({ value }) => state.mode !== "new" && normalizeText(value) && !isWorkBulkQuery(value),
+    shouldOpen: ({ value }) => state.mode !== "new" && normalizeText(value),
     loadOptions: () => workSearchOptions(state),
     filterOptions: (options, rawQuery) => {
       const query = normalizeText(rawQuery);
-      if (!query || isWorkBulkQuery(query)) return [];
+      if (!query) return [];
       const hasLetters = /[a-z]/i.test(query);
       const matches = options.filter(({ workId, record }) => (
         hasLetters ? titleMatches(record, query) : workIdPrefixMatches(workId, query)
@@ -274,8 +191,8 @@ export function bindWorkSelectionControls(state, context) {
       });
       return;
     }
-    openWorkSelection(state, state.searchNode.value, context).catch((error) => {
-      console.warn("catalogue_work_editor: failed to open requested work selection", error);
+    openWorkById(state, state.searchNode.value, context).catch((error) => {
+      console.warn("catalogue_work_editor: failed to open requested work", error);
     });
   });
 
@@ -302,9 +219,9 @@ export async function applyInitialWorkRouteSelection(state, context) {
   const requestedSeriesId = normalizeSeriesId(requestedSeriesRaw);
   if (requestedWorkValue) {
     try {
-      await openWorkSelection(state, requestedWorkValue, context);
+      await openWorkById(state, requestedWorkValue, context);
     } catch (error) {
-      console.warn("catalogue_work_editor: failed to open requested work selection", error);
+      console.warn("catalogue_work_editor: failed to open requested work", error);
       context.setEmptySearchMode({ keepSearchValue: true });
       context.setTextWithState(
         state.statusNode,
