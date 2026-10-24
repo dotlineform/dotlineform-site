@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-23d3cc15e42e8046b8d9d30629ec1287",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-9770cd4f079256d3db4902a5c0fc876f",
+    "generated_at_utc": "2026-10-24T17:33:19Z"
   },
   "work": {
     "work_id": "04140",
     "title": "form 32",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 2000,
     "height_px": 2000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "065",
     "galleries": [
       {
-        "gallery_id": "255",
-        "title": "forms (forms)"
+        "gallery_id": "065",
+        "title": "forms"
       }
     ]
   }

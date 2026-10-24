@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-8717dc80cfa473b8489e47301c7faeb3",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-ceb15bcf915b6d50d9a29a723f5c7f64",
+    "generated_at_utc": "2026-10-24T17:33:19Z"
   },
   "work": {
     "work_id": "04187",
     "title": "particle (bird nature)",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "065",
     "galleries": [
       {
-        "gallery_id": "257",
-        "title": "form particles (particles)"
+        "gallery_id": "065",
+        "title": "forms"
       }
     ]
   }

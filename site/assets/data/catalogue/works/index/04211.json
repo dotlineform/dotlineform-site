@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-8ea18a7c961703d31ef6c581fa621e0d",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-85815f5d310a6758d327ef97540ac8b1",
+    "generated_at_utc": "2026-10-24T17:33:19Z"
   },
   "work": {
     "work_id": "04211",
     "title": "particle (petri)",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "065",
     "galleries": [
       {
-        "gallery_id": "257",
-        "title": "form particles (particles)"
+        "gallery_id": "065",
+        "title": "forms"
       }
     ]
   }

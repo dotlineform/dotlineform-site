@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d0a1064cb30c396fc7206117b43ee7f2",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-648912ce12fffa340c9f05d06d9df12c",
+    "generated_at_utc": "2026-10-24T17:33:19Z"
   },
   "work": {
     "work_id": "04208",
     "title": "particle (nerve)",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "065",
     "galleries": [
       {
-        "gallery_id": "257",
-        "title": "form particles (particles)"
+        "gallery_id": "065",
+        "title": "forms"
       }
     ]
   }

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-83ed994d28723f4aebfdf39c81267bb7",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-fc2000579fd0eef3d4895dc9d2d52672",
+    "generated_at_utc": "2026-10-24T17:33:19Z"
   },
   "work": {
     "work_id": "04209",
     "title": "particle (particle forms)",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "065",
     "galleries": [
       {
-        "gallery_id": "257",
-        "title": "form particles (particles)"
+        "gallery_id": "065",
+        "title": "forms"
       }
     ]
   }

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-731d6d9b607559beb36736e975191c5f",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-233d9c2fd3b2c68e7a071b0a7ad33fac",
+    "generated_at_utc": "2026-10-24T17:33:19Z"
   },
   "work": {
     "work_id": "04215",
     "title": "particle (qtot)",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "065",
     "galleries": [
       {
-        "gallery_id": "257",
-        "title": "form particles (particles)"
+        "gallery_id": "065",
+        "title": "forms"
       }
     ]
   }

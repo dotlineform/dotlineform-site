@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "252"
-            },
-            "label": "forest (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "060"
             },
             "label": "forest (2024)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

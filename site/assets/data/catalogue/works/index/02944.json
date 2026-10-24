@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-f2eaa17d0adb43ffd4818c04c205cd5b",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-b7e00e1071d984b627b7a7cb694ef3f9",
+    "generated_at_utc": "2026-10-24T17:29:31Z"
   },
   "work": {
     "work_id": "02944",
     "title": "memories 37-42",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 5906,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "061",
     "galleries": [
       {
-        "gallery_id": "166",
-        "title": "forest memories 1-48 (composite memories)"
+        "gallery_id": "061",
+        "title": "forest memories 1-48"
       }
     ]
   }

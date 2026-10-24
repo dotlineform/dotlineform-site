@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-93cd58c2db7a696c6b86a506a8342a76",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-c8f5021afabcb2372e46d662c7f9a7d6",
+    "generated_at_utc": "2026-10-24T17:33:19Z"
   },
   "work": {
     "work_id": "04178",
     "title": "form paths 41-48",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 5906,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "065",
     "galleries": [
       {
-        "gallery_id": "256",
-        "title": "form paths (paths)"
+        "gallery_id": "065",
+        "title": "forms"
       }
     ]
   }

@@ -50,34 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "166"
-            },
-            "label": "forest memories 1-48 (composite memories)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "061"
             },
             "label": "forest memories 1-48",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "164"
-            },
-            "label": "forest memories 1-48 (moments)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "165"
-            },
-            "label": "forest memories 1-48 (memories)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

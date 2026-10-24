@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-48b5dcfbfb75060950a1f89726bfa603",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-4f5ae0825524645f129a6bc7eb1a4a2e",
+    "generated_at_utc": "2026-10-24T17:29:31Z"
   },
   "work": {
     "work_id": "04057",
     "title": "forest detail 10",
     "year": 2024,
     "year_display": "2024",
-    "medium": "mixed media on board",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "mixed media on board",
     "media_version": 1,
     "series_id": "060",
     "galleries": [
       {
-        "gallery_id": "252",
-        "title": "forest (details)"
+        "gallery_id": "060",
+        "title": "forest (2024)"
       }
     ]
   }

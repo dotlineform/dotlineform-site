@@ -46,16 +46,7 @@
           "height_px": 4930
         },
         "new_tab_target": "https://media.dotlineform.com/works/img/00346-primary-1600.webp?v=1",
-        "galleries": [
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "058"
-            },
-            "label": "for David Lynch (2025)",
-            "relation": "direct"
-          }
-        ],
+        "galleries": [],
         "entry": {
           "metadata_lines": [
             "2025",

@@ -54,14 +54,6 @@
             },
             "label": "forest (2024)",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "252"
-            },
-            "label": "forest (details)",
-            "relation": "series"
           }
         ],
         "entry": {

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T17:14:07Z"
+    "generated_at_utc": "2026-10-24T17:33:19Z"
   },
   "series_galleries": {
     "001": [
@@ -479,12 +479,7 @@
         "title": "folding structure"
       }
     ],
-    "058": [
-      {
-        "gallery_id": "058",
-        "title": "for David Lynch (2025)"
-      }
-    ],
+    "058": [],
     "059": [
       {
         "gallery_id": "059",
@@ -495,28 +490,12 @@
       {
         "gallery_id": "060",
         "title": "forest (2024)"
-      },
-      {
-        "gallery_id": "252",
-        "title": "forest (details)"
       }
     ],
     "061": [
       {
         "gallery_id": "061",
         "title": "forest memories 1-48"
-      },
-      {
-        "gallery_id": "164",
-        "title": "forest memories 1-48 (moments)"
-      },
-      {
-        "gallery_id": "165",
-        "title": "forest memories 1-48 (memories)"
-      },
-      {
-        "gallery_id": "166",
-        "title": "forest memories 1-48 (composite memories)"
       }
     ],
     "062": [
@@ -545,22 +524,6 @@
       {
         "gallery_id": "065",
         "title": "forms"
-      },
-      {
-        "gallery_id": "254",
-        "title": "forms (source)"
-      },
-      {
-        "gallery_id": "255",
-        "title": "forms (forms)"
-      },
-      {
-        "gallery_id": "256",
-        "title": "form paths (paths)"
-      },
-      {
-        "gallery_id": "257",
-        "title": "form particles (particles)"
       }
     ],
     "066": [
