@@ -97,6 +97,7 @@ function setDraftField(state, fieldKey, value, options = {}) {
 
 function applyProjectMediaSelection(state, selection, options = {}) {
   state.pendingWorkBatch = null;
+  state.pendingSourceFolder = null;
   state.regenerateImage = true;
   if (state.mode === "new" && !state.draft.work_id) {
     state.draft.work_id = state.nextSuggestedWorkId;

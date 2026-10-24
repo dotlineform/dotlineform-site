@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T21:38:34Z",
+    "gallery_id": "350"
+  },
+  "gallery": {
+    "gallery_id": "350",
+    "title": "form symbol"
+  },
+  "member_works": [
+    {
+      "work_id": "00043",
+      "title": "form symbol (superimposed) 1"
+    },
+    {
+      "work_id": "00044",
+      "title": "form symbol (superimposed) 2"
+    }
+  ]
+}

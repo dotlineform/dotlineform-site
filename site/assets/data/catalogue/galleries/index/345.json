@@ -1,0 +1,113 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T22:13:44Z",
+    "gallery_id": "345"
+  },
+  "gallery": {
+    "gallery_id": "345",
+    "title": "frames"
+  },
+  "member_works": [
+    {
+      "work_id": "00012",
+      "title": "frame (positive)"
+    },
+    {
+      "work_id": "00013",
+      "title": "frame (negative)"
+    },
+    {
+      "work_id": "00022",
+      "title": "collage 1"
+    },
+    {
+      "work_id": "00023",
+      "title": "collage 2"
+    },
+    {
+      "work_id": "00024",
+      "title": "collage 3"
+    },
+    {
+      "work_id": "00025",
+      "title": "collage 4"
+    },
+    {
+      "work_id": "00026",
+      "title": "collage 5"
+    },
+    {
+      "work_id": "00038",
+      "title": "nude frame 10 (surface)"
+    },
+    {
+      "work_id": "00039",
+      "title": "nude frame 11 (surface)"
+    },
+    {
+      "work_id": "00040",
+      "title": "nude frame 12"
+    },
+    {
+      "work_id": "00066",
+      "title": "nude frame 1"
+    },
+    {
+      "work_id": "00067",
+      "title": "nude frame 2"
+    },
+    {
+      "work_id": "00068",
+      "title": "nude frame 3"
+    },
+    {
+      "work_id": "00069",
+      "title": "nude frame 4"
+    },
+    {
+      "work_id": "00070",
+      "title": "nude frame 5"
+    },
+    {
+      "work_id": "00071",
+      "title": "nude frame 6"
+    },
+    {
+      "work_id": "00072",
+      "title": "nude frame 7"
+    },
+    {
+      "work_id": "00073",
+      "title": "nude frame 8 (internal frame)"
+    },
+    {
+      "work_id": "00074",
+      "title": "nude frame 9"
+    },
+    {
+      "work_id": "00191",
+      "title": "nude frame"
+    },
+    {
+      "work_id": "00192",
+      "title": "nude frame a"
+    },
+    {
+      "work_id": "00193",
+      "title": "nude frame b"
+    },
+    {
+      "work_id": "00194",
+      "title": "nude frame c"
+    },
+    {
+      "work_id": "00195",
+      "title": "nude frame d"
+    },
+    {
+      "work_id": "00196",
+      "title": "nude frame e"
+    }
+  ]
+}

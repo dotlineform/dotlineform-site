@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-24T20:31:24Z"
+    "generated_at_utc": "2026-10-24T21:54:36Z"
   },
   "works": {
     "00001": {
@@ -651,10 +651,6 @@
     "00162": {
       "work_id": "00162",
       "title": "mouse story (fragment)"
-    },
-    "00164": {
-      "work_id": "00164",
-      "title": "unrelated commentaries"
     },
     "00165": {
       "work_id": "00165",
@@ -3190,7 +3186,7 @@
     },
     "00806": {
       "work_id": "00806",
-      "title": "book of curves 0"
+      "title": "book of curves 0 form"
     },
     "00807": {
       "work_id": "00807",

@@ -3,7 +3,7 @@ import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { renderWorkMediumField } from "./catalogue-work-medium.js";
-import { openBulkWorkSourceFolder } from "./catalogue-work-source-folder.js";
+import { openWorkSourceFolder } from "./catalogue-work-source-folder.js";
 import { clearAutomaticWorkDimensions, clearWorkImagePreview } from "./catalogue-work-image-preview.js";
 import { BULK_WORK_METADATA_FIELDS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
@@ -69,7 +69,7 @@ function updateMediaSourceButton(state) {
   button.dataset.mediaSourceId = currentSourceId;
   button.setAttribute(
     "aria-label",
-    state.mode === "bulk" && nextSourceId
+    state.mode !== "new" && nextSourceId
       ? `Choose source folder in ${nextLabel}.`
       : nextSourceId
       ? `Media source: ${currentLabel}. Select ${nextLabel}.`
@@ -77,8 +77,8 @@ function updateMediaSourceButton(state) {
   );
 }
 
-async function chooseBulkSourceFolder(state, options, mediaSourceId) {
-  const result = await openBulkWorkSourceFolder(state, options, mediaSourceId);
+async function chooseSourceFolder(state, options, mediaSourceId) {
+  const result = await openWorkSourceFolder(state, options, mediaSourceId);
   if (!result?.confirmed) return;
   applyDraftToInputs(state);
   notifyStateChange(options);
@@ -257,9 +257,9 @@ function renderMediaSourceField(field, fieldsNode, state, options) {
     const currentIndex = config.sourceIds.indexOf(currentSourceId);
     if (currentIndex < 0 || config.sourceIds.length !== 2) return;
     const nextSourceId = config.sourceIds[(currentIndex + 1) % config.sourceIds.length];
-    if (state.mode === "bulk") {
+    if (state.mode !== "new") {
       event.stopPropagation();
-      chooseBulkSourceFolder(state, options, nextSourceId).catch(error => {
+      chooseSourceFolder(state, options, nextSourceId).catch(error => {
         console.warn("catalogue_work_form: failed to choose source folder", error);
       });
       return;
@@ -338,9 +338,9 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
     button.setAttribute("aria-label", "Open subfolder");
     button.addEventListener("click", event => {
       event.stopPropagation();
-      const selection = state.mode === "bulk"
-        ? chooseBulkSourceFolder(state, options, resolvedWorkMediaSourceId(state))
-        : openProjectMediaFolderForCurrentDraft(state, options);
+      const selection = state.mode === "new"
+        ? openProjectMediaFolderForCurrentDraft(state, options)
+        : chooseSourceFolder(state, options, resolvedWorkMediaSourceId(state));
       selection.catch(error => {
         console.warn("catalogue_work_form: failed to open project folder picker", error);
       });
@@ -579,9 +579,9 @@ export function setModeFieldAvailability(state) {
     state.projectMediaChooseButton.disabled = state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting;
   }
   state.projectMediaFolderButtons.forEach((button, fieldKey) => {
-    button.hidden = !isBulk && !(state.mode === "new" && fieldKey === "project_subfolder");
+    button.hidden = !isBulk && !state.currentRecord && !(state.mode === "new" && fieldKey === "project_subfolder");
     button.disabled = busy || !state.serverAvailable;
-    const label = isBulk ? "Choose source folder" : "Open subfolder";
+    const label = state.mode === "new" ? "Open subfolder" : "Choose source folder";
     button.title = label;
     button.setAttribute("aria-label", label);
   });

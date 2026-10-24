@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-739738c51c5e37baa6560cf9bdf3f60c",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-927570d0791a4ebcd0b0451c09fede34",
+    "generated_at_utc": "2026-10-24T21:31:49Z"
   },
   "work": {
     "work_id": "00215",
     "title": "internal forms (body)",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "photocopy",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 2200,
     "height_px": 3168,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "photocopy",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "170",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "348",
+        "title": "internal forms"
       }
     ]
   }

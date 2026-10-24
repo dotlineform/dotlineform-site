@@ -709,11 +709,59 @@
     },
     "345": {
       "gallery_id": "345",
-      "title": "nude frame"
+      "title": "frames"
     },
     "346": {
       "gallery_id": "346",
       "title": "slaughter"
+    },
+    "347": {
+      "gallery_id": "347",
+      "title": "perspective"
+    },
+    "348": {
+      "gallery_id": "348",
+      "title": "internal forms"
+    },
+    "349": {
+      "gallery_id": "349",
+      "title": "dissection"
+    },
+    "350": {
+      "gallery_id": "350",
+      "title": "form symbol"
+    },
+    "351": {
+      "gallery_id": "351",
+      "title": "forms ink and water"
+    },
+    "352": {
+      "gallery_id": "352",
+      "title": "hand life"
+    },
+    "353": {
+      "gallery_id": "353",
+      "title": "joining forms"
+    },
+    "354": {
+      "gallery_id": "354",
+      "title": "healing symbols"
+    },
+    "355": {
+      "gallery_id": "355",
+      "title": "gesture in grey"
+    },
+    "356": {
+      "gallery_id": "356",
+      "title": "life and death"
+    },
+    "357": {
+      "gallery_id": "357",
+      "title": "fly"
+    },
+    "358": {
+      "gallery_id": "358",
+      "title": "mesh"
     }
   }
 }

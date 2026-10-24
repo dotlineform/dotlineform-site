@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T22:09:28Z",
+    "gallery_id": "357"
+  },
+  "gallery": {
+    "gallery_id": "357",
+    "title": "fly"
+  },
+  "member_works": [
+    {
+      "work_id": "00064",
+      "title": "fly"
+    },
+    {
+      "work_id": "00065",
+      "title": "fly (broken)"
+    }
+  ]
+}

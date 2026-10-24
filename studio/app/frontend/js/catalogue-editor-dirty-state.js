@@ -20,11 +20,7 @@ export function catalogueDraftFieldsChanged(options = {}) {
 /** Compare single/New drafts with their saved or initial baseline; bulk changes use explicit field intent. */
 export function catalogueDraftHasChanges(options = {}) {
   const mode = normalizeText(options.mode);
-  if (mode === "bulk") {
-    return typeof options.bulkModeChanged === "function"
-      ? Boolean(options.bulkModeChanged())
-      : hasSetItems(options.touchedFields);
-  }
+  if (mode === "bulk") return hasSetItems(options.touchedFields);
   return catalogueDraftFieldsChanged(options);
 }
 

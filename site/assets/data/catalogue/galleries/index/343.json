@@ -1,0 +1,49 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T20:56:48Z",
+    "gallery_id": "343"
+  },
+  "gallery": {
+    "gallery_id": "343",
+    "title": "body series"
+  },
+  "member_works": [
+    {
+      "work_id": "00082",
+      "title": "body series dissected 1"
+    },
+    {
+      "work_id": "00083",
+      "title": "body series dissected 2"
+    },
+    {
+      "work_id": "00084",
+      "title": "body series dissected 3"
+    },
+    {
+      "work_id": "00085",
+      "title": "body series dissected 4"
+    },
+    {
+      "work_id": "00086",
+      "title": "body series opened 1"
+    },
+    {
+      "work_id": "00087",
+      "title": "body series opened 2"
+    },
+    {
+      "work_id": "00088",
+      "title": "body series opened 3"
+    },
+    {
+      "work_id": "00089",
+      "title": "body series opened 4"
+    },
+    {
+      "work_id": "00093",
+      "title": "3 elements of a body"
+    }
+  ]
+}

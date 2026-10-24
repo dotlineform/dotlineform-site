@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-97a20eeaadb87409ea8e60c44c512bc1",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-41792427a6291f66aa9866415f18e958",
+    "generated_at_utc": "2026-10-24T21:51:06Z"
   },
   "work": {
     "work_id": "00113",
     "title": "gesture in grey 1",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "acrylic on paper",
-    "height_cm": 12.7,
-    "width_cm": 17.0,
     "width_px": 4129,
     "height_px": 3071,
+    "height_cm": 12.7,
+    "width_cm": 17,
+    "medium": "acrylic on paper",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "177",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "355",
+        "title": "gesture in grey"
       }
     ]
   }

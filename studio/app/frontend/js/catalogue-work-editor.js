@@ -128,7 +128,7 @@ async function deleteEmbeddedEntry(state, kind, index) {
 }
 
 function draftHasChanges(state) {
-  if (state.pendingWorkBatch) return true;
+  if (state.pendingWorkBatch || state.pendingSourceFolder) return true;
   if (state.mode !== "bulk" && (state.regenerateImage || state.pendingAttachments.size)) return true;
   return catalogueDraftHasChanges({
     mode: state.mode,
@@ -136,7 +136,6 @@ function draftHasChanges(state) {
     draft: state.draft,
     baselineDraft: state.baselineDraft,
     touchedFields: state.bulkTouchedFields,
-    bulkModeChanged: () => state.bulkTouchedFields.size > 0 || state.bulkSourceFolder !== null,
     canonicalizeScalar,
     extraComparisons: [
       {

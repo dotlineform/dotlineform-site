@@ -89,7 +89,6 @@ function resetBulkState(state) {
   state.bulkRecordHashes = new Map();
   state.bulkTouchedFields = new Set();
   state.bulkMixedFields = new Set();
-  state.bulkSourceFolder = null;
 }
 
 const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
@@ -117,6 +116,7 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
   state.mode = "single";
   state.currentWorkId = workId;
   state.currentRecord = record;
+  state.pendingSourceFolder = null;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   resetBulkState(state);
   state.baselineDraft = buildDraftFromRecord(record);
@@ -153,7 +153,7 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   state.draft = { ...bulkDraft };
   state.bulkTouchedFields = new Set();
   state.bulkMixedFields = mixedFields;
-  state.bulkSourceFolder = null;
+  state.pendingSourceFolder = null;
   state.searchNode.value = "";
   callback(options, "setOpenInputMode");
   callback(options, "applyDraftToInputs");
@@ -175,6 +175,7 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
 /** Start a pristine draft whose suggested ID and optional Series are its initial baseline. */
 export function setNewWorkMode(state, options = {}) {
   clearWorkMediaIntent(state);
+  state.pendingSourceFolder = null;
   state.mode = "new";
   state.currentWorkId = "";
   state.currentRecord = null;
@@ -207,6 +208,7 @@ export function setNewWorkMode(state, options = {}) {
 
 export function setEmptySearchMode(state, options = {}) {
   clearWorkMediaIntent(state);
+  state.pendingSourceFolder = null;
   state.mode = "single";
   state.currentWorkId = "";
   state.currentRecord = null;

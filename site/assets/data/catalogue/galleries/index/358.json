@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T22:23:41Z",
+    "gallery_id": "358"
+  },
+  "gallery": {
+    "gallery_id": "358",
+    "title": "mesh"
+  },
+  "member_works": [
+    {
+      "work_id": "00041",
+      "title": "hair"
+    },
+    {
+      "work_id": "00042",
+      "title": "model face"
+    },
+    {
+      "work_id": "00060",
+      "title": "mesh forms 1"
+    },
+    {
+      "work_id": "00061",
+      "title": "mesh forms 2"
+    },
+    {
+      "work_id": "00172",
+      "title": "orange mesh"
+    },
+    {
+      "work_id": "00173",
+      "title": "orange mesh compact"
+    }
+  ]
+}

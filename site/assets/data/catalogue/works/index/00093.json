@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-89ce550335bb0c8d864c5b9376114b21",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-596a1f5ece11ad3679053145924d5af4",
+    "generated_at_utc": "2026-10-24T20:54:48Z"
   },
   "work": {
     "work_id": "00093",
     "title": "3 elements of a body",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "photocopy",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 4961,
     "height_px": 7016,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "photocopy",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "165",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "343",
+        "title": "body series"
       }
     ]
   }

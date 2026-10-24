@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-4f1626d0827adac8716257bc3ee685f1",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-9e429230adf19173113b4297a8c45387",
+    "generated_at_utc": "2026-10-24T20:40:44Z"
   },
   "work": {
     "work_id": "00176",
     "title": "all chemical 3",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "dried leaf mounted on canvas",
-    "height_cm": 25.5,
-    "width_cm": 20.4,
     "width_px": 2362,
     "height_px": 2953,
+    "height_cm": 25.5,
+    "width_cm": 20.4,
+    "medium": "dried leaf mounted on canvas",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "162",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "340",
+        "title": "all chemical"
       }
     ]
   }

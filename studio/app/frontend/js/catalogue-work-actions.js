@@ -35,11 +35,15 @@ function workMediaRequest(state) {
 
 /** Bulk patches carry only explicit edits; control serialization remains UI-owned. */
 function buildPayload(state) {
-  if (state.mode !== "bulk") return {
-    work_id: state.currentWorkId,
-    record: buildWorkRecordFromDraft(state.draft, { downloadFields: DOWNLOAD_FIELDS, linkFields: LINK_FIELDS }),
-    gallery_ids: state.draft.gallery_ids.slice()
-  };
+  if (state.mode !== "bulk") {
+    const record = buildWorkRecordFromDraft(state.draft, { downloadFields: DOWNLOAD_FIELDS, linkFields: LINK_FIELDS });
+    const payload = { work_id: state.currentWorkId, record, gallery_ids: state.draft.gallery_ids.slice() };
+    if (state.pendingSourceFolder) {
+      payload.source_folder = { ...state.pendingSourceFolder };
+      for (const key of Object.keys(payload.source_folder)) delete record[key];
+    }
+    return payload;
+  }
   const payload = {
     kind: "works", ids: state.bulkWorkIds.slice()
   };
@@ -50,7 +54,7 @@ function buildPayload(state) {
     setFields[field.key] = value ? (field.type === "number" ? Number(value) : value) : null;
   }
   if (Object.keys(setFields).length) payload.set_fields = setFields;
-  if (state.bulkSourceFolder) payload.source_folder = { ...state.bulkSourceFolder };
+  if (state.pendingSourceFolder) payload.source_folder = { ...state.pendingSourceFolder };
   if (state.bulkTouchedFields.has("gallery_ids")) {
     payload.gallery_ids = state.draft.gallery_ids.slice();
   }

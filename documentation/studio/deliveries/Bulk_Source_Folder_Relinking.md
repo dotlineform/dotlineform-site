@@ -10,18 +10,18 @@ parent_id: d-20260428-000000-f5ff18
 
 ## Requirements
 
-Relink selected Works to one destination folder after their unchanged originals have been moved. Keep each Work's existing filename and all prepared media, dimensions, versions and staging flags. The user explicitly approved folder selection in bulk mode without image regeneration. Retain ordinary metadata and Gallery/Series editing in the same Save.
+Relink one saved Work or multiple selected Works to a destination folder after unchanged originals have been moved. Keep each Work's existing filename and all prepared media, dimensions, versions and staging flags. The user approved bulk folder selection without image regeneration and its extension to single saved Works. Retain ordinary metadata and Gallery/Series editing in the same Save; separately requested image or attachment work retains its existing completion.
 
 ## Deliverables
 
-- Bulk folder selection, with project-parent or direct-subfolder destinations and the existing configured media-source choice.
+- Single/bulk folder selection, with project-parent or direct-subfolder destinations and the existing configured media-source choice.
 - Browser-owned matching of saved filenames against the already loaded destination list; Cancel and missing files preserve the draft.
-- An explicit source-folder request alongside ordinary bulk metadata/memberships, persisted through current transaction and metadata-only completion owners.
+- One shared source-folder request alongside single/bulk metadata/memberships, persisted through current transaction owners. Folder-only changes select metadata effects; single Save retains required processing for actual image/attachment changes.
 - Durable behavior in [Catalogue Work Editor](../Catalogue_Work_Editor.md#relink-source-folder), lifecycle ownership in [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md#work-media-authoring) and the maintained [Development Checklist](../Development_Checklist.md).
 
 ## Process
 
-Move original files, select their Works in the displayed Series, choose a destination with either folder-open button beside project folder or project subfolder and confirm it. Both buttons share the same picker and relink action. To choose the other configured media source, use the media-source button, which opens its destination picker without changing the draft until confirmation. Save persists the common location with each saved filename and existing media retained; normal Refresh/Regenerate/Publish remain separate.
+Move original files, open one saved Work or select multiple Works in the displayed Series, choose a destination with either folder-open button beside project folder or project subfolder and confirm it. Both buttons share the same picker and relink action. To choose the other configured media source, use the media-source button, which opens its destination picker without changing the draft until confirmation. Save persists the location with each filename and existing media retained; normal Refresh/Regenerate/Publish remain separate.
 
 ## Delivery Steps
 
@@ -32,6 +32,12 @@ Move original files, select their Works in the displayed Series, choose a destin
 
 ## Follow-on
 
-The project-folder button uses the same picker and relink owner as the subfolder button. Source review confirmed stored control references, shared busy-state handling and bulk-only visibility for the added button; New Work keeps its existing subfolder import control. Focused lint passed for both changed JavaScript owners and whitespace checks passed. This adds no requests, server behavior, validation or media processing; UI interaction remains a manual check.
+### Single Work Extension
+
+- [x] **Implementation And Verification:** both folder-field controls and the source selector now use the relink picker for a saved single Work. Shared draft intent replaces the bulk-only state/API without aliases; ordinary image selection releases that intent. Single Save sends location once through the shared server envelope and carries its known relink target into existing media selection. Only location changes are excluded from image preparation; actual filename changes, explicit regeneration and required attachment preparation remain active. Eight JavaScript owners and four Python owners passed focused lint; all four Python owners compiled and whitespace checks passed. Relevant refinements received focused lint only. This remains seconds-long static verification without test code, application writes or live services.
+- [x] **Source Review:** completed distinct code and mandatory Redundancy And Defensive Behavior Review. Traced single/bulk selection and Save reset, Cancel, exact source identity including spaces, unchanged/restored location, location-once request shaping, shared envelope parsing, carried relink targets, ordinary filename/explicit-regeneration/attachment selection, saved-but-incomplete adoption and queue merge preservation. Removed the unused bulk-dirty override and bulk-only API/state names; kept one browser intent owner and one server envelope reader. Required picker filename matching, path confinement, exact request/target/write boundaries and selected media checks retain their existing owners without another directory listing, original-file probe, content hash, corpus audit or generic bypass. No unresolved source findings remain. Live behavior still requires the manual gate below.
+- [ ] **Manual Acceptance:** restart Local Studio and reload. Confirm single folder-only Save, unchanged filename/media/dimensions/version, missing names, Cancel, source choice, restoring the original location, combined metadata/download edits and explicit image replacement/regeneration. Bulk behavior and the New Work import control remain within the same manual boundary. Live Save and browser interaction remain unrun by Codex; no test work is included.
+
+Both folder-field buttons share the same picker and relink owner in saved single and bulk editing, with stored control references and shared busy-state handling. New Work keeps its existing subfolder import control. UI interaction remains a manual check.
 
 No additional product scope or test work is proposed. The source-folder action trusts unchanged originals and does no content verification or automatic repair.

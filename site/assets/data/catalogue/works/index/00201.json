@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-fd61849e776ef0f6d005c4d523ab70c9",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-a3a735382aa26376d015a3ad10648b11",
+    "generated_at_utc": "2026-10-24T21:01:40Z"
   },
   "work": {
     "work_id": "00201",
     "title": "book of curves 4",
     "year": 1994,
     "year_display": "1994",
-    "medium": "photocopy",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 2432,
     "height_px": 3436,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "photocopy",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "022",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "022",
+        "title": "book of curves"
       }
     ]
   }

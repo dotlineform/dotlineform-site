@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T22:26:12Z",
+    "gallery_id": "354"
+  },
+  "gallery": {
+    "gallery_id": "354",
+    "title": "healing symbols"
+  },
+  "member_works": [
+    {
+      "work_id": "00092",
+      "title": "healing dissection"
+    },
+    {
+      "work_id": "00104",
+      "title": "healing symbol"
+    },
+    {
+      "work_id": "00110",
+      "title": "healing symbol joined"
+    },
+    {
+      "work_id": "00178",
+      "title": "carpet pattern"
+    },
+    {
+      "work_id": "00184",
+      "title": "heal us"
+    }
+  ]
+}

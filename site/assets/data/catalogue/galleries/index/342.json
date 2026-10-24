@@ -1,0 +1,45 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T20:51:03Z",
+    "gallery_id": "342"
+  },
+  "gallery": {
+    "gallery_id": "342",
+    "title": "body forms"
+  },
+  "member_works": [
+    {
+      "work_id": "00075",
+      "title": "body forms 2"
+    },
+    {
+      "work_id": "00076",
+      "title": "body forms 3"
+    },
+    {
+      "work_id": "00077",
+      "title": "body forms 4"
+    },
+    {
+      "work_id": "00078",
+      "title": "body forms 5"
+    },
+    {
+      "work_id": "00079",
+      "title": "body forms 6"
+    },
+    {
+      "work_id": "00080",
+      "title": "body forms 7"
+    },
+    {
+      "work_id": "00081",
+      "title": "body forms 8"
+    },
+    {
+      "work_id": "00094",
+      "title": "body forms 1"
+    }
+  ]
+}

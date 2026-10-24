@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T21:44:15Z",
+    "gallery_id": "352"
+  },
+  "gallery": {
+    "gallery_id": "352",
+    "title": "hand life"
+  },
+  "member_works": [
+    {
+      "work_id": "00167",
+      "title": "hand life 1"
+    },
+    {
+      "work_id": "00168",
+      "title": "hand life 2"
+    },
+    {
+      "work_id": "00169",
+      "title": "hand life 3"
+    },
+    {
+      "work_id": "00170",
+      "title": "hand life 5"
+    },
+    {
+      "work_id": "00171",
+      "title": "hand life 7"
+    }
+  ]
+}

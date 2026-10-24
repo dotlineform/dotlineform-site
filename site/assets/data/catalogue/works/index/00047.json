@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-c46ff8cc05ae4392bb40491134da4239",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-db1fcce9ca8796882b57b12faa16abd4",
+    "generated_at_utc": "2026-10-24T21:26:24Z"
   },
   "work": {
     "work_id": "00047",
     "title": "slaughter 1",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "photocopy",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 4961,
     "height_px": 7016,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "photocopy",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "168",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "346",
+        "title": "slaughter"
       }
     ]
   }

@@ -2,11 +2,12 @@
   "doc_id": "d-20260215-000000-3b0cc8",
   "title": "angels",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-10-22 15:07:44",
+  "last_updated": "2026-10-24 23:19:58",
   "date": "1998-04-01",
   "date_display": "c. Apr 1998",
   "draft": false,
-  "content_html": "<h1>angels</h1>\n<p class=\"momentDate\">c. Apr 1998</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04648\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open angels\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04648-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04648-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04648-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04648-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"angels\" width=\"1654\" height=\"1689\" decoding=\"async\"><span data-docs-media-placeholder hidden>angels</span></button></figure></div>\n<pre class=\"moment-text\">\ntheir faces are blank and empty\nthoughts turn inside ...\n \nwhere the air is without life\nthe earth is dry\nthere is no heat\nno light\nthere is a demon's eye\nspend a moment alone with me, here\nwith no others to precede nor follow\nno deeper place to go\nnothing else\ni have sensed its paralysing gaze\nreached downwards with eyes closed\nan unseen gentle hand\na pinpoint light where there is deep shadow\n \nour stories ... a tiny child feels fear as if it were real\na young woman feels love, her desires are twisting roots\na mother feels compassion pressing against her in her sleep\nan old man feels remorse, his blood is like water\n(and there is his last breath on the window pane)\n \nsilently, each unspoken thought becomes a small ghost\nthe emptiness is real, waiting for our thoughts to fade\nbrief glimpses, paths and tunnels\nreservoirs of beauty and horror\nexpressionless angels\n \nwe can't wait but we cannot move forward\n</pre>\n",
+  "has_thumbnail": true,
+  "content_html": "<h1>angels</h1>\n<p class=\"momentDate\">c. Apr 1998</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04648\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open angels\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04648-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04648-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04648-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04648-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"angels\" width=\"1654\" height=\"1689\" decoding=\"async\"><span data-docs-media-placeholder hidden>angels</span></button></figure></div>\n<pre class=\"moment-text\">\ntheir faces are blank and empty\nthoughts turn inside ...\n \nwhere the air is without life\nthe earth is dry\nthere is no heat\nno light\nthere is a demon's eye\nspend a moment alone with me, here\nwith no others to precede nor follow\nno deeper place to go\nnothing else\ni have sensed its paralysing gaze\nreached downwards with eyes closed\nan unseen gentle hand\na pinpoint light where there is deep shadow\n \nour stories ... a tiny child feels fear as if it were real\na young woman feels love, her desires are twisting roots\na mother feels compassion pressing against her in her sleep\nan old man feels remorse, his blood is like water\n(and there is his last breath on the window pane)\n \nsilently, each unspoken thought becomes a small ghost\nthe emptiness is real, waiting for our thoughts to fade\nbrief glimpses, paths and tunnels\nreservoirs of beauty and horror\nexpressionless angels\n \nwe can't wait but we cannot move forward\n</pre>\n<div data-docs-catalogue-ref=\"c2\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00165\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open angels\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00165-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00165-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00165-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00165-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"angels\" width=\"2862\" height=\"4061\" decoding=\"async\"><span data-docs-media-placeholder hidden>angels</span></button></figure></div>",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -15,6 +16,20 @@
         "target": {
           "kind": "catalogue-work",
           "id": "04648"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      },
+      {
+        "reference_id": "c2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00165"
         },
         "presentation": "image",
         "options": {
@@ -64,8 +79,46 @@
             "relation": "direct"
           }
         ]
+      },
+      "catalogue-work:00165": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00165"
+        },
+        "label": "angels",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00165-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00165-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00165-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00165-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "angels",
+          "width_px": 2862,
+          "height_px": 4061
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00165-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
       }
     }
-  },
-  "has_thumbnail": true
+  }
 }

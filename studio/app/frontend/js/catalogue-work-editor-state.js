@@ -100,8 +100,8 @@ export function createWorkEditorState(elements, options = {}) {
     bulkRecordHashes: new Map(),
     bulkTouchedFields: new Set(),
     bulkMixedFields: new Set(),
-    /** @type {import("./catalogue-work-source-folder.js").BulkSourceFolder | null} */
-    bulkSourceFolder: null,
+    /** @type {import("./catalogue-work-source-folder.js").WorkSourceFolder | null} */
+    pendingSourceFolder: null,
     baselineDraft: null,
     draft: {},
     pendingAttachments: new Map(),

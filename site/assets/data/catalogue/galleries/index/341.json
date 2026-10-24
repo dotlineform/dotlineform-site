@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T20:49:23Z",
+    "gallery_id": "341"
+  },
+  "gallery": {
+    "gallery_id": "341",
+    "title": "body cast"
+  },
+  "member_works": [
+    {
+      "work_id": "00179",
+      "title": "body cast 1"
+    },
+    {
+      "work_id": "00180",
+      "title": "body cast 2"
+    },
+    {
+      "work_id": "00181",
+      "title": "body cast 3"
+    }
+  ]
+}

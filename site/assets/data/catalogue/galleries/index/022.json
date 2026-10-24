@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T21:01:40Z",
     "gallery_id": "022"
   },
   "gallery": {
@@ -10,8 +10,56 @@
   },
   "member_works": [
     {
-      "work_id": "00806",
+      "work_id": "00197",
       "title": "book of curves 0"
+    },
+    {
+      "work_id": "00198",
+      "title": "book of curves 1"
+    },
+    {
+      "work_id": "00199",
+      "title": "book of curves 2"
+    },
+    {
+      "work_id": "00200",
+      "title": "book of curves 3"
+    },
+    {
+      "work_id": "00201",
+      "title": "book of curves 4"
+    },
+    {
+      "work_id": "00202",
+      "title": "book of curves 5"
+    },
+    {
+      "work_id": "00203",
+      "title": "book of curves 6"
+    },
+    {
+      "work_id": "00204",
+      "title": "book of curves 7"
+    },
+    {
+      "work_id": "00205",
+      "title": "book of curves 8"
+    },
+    {
+      "work_id": "00206",
+      "title": "book of curves 9"
+    },
+    {
+      "work_id": "00207",
+      "title": "book of curves 10"
+    },
+    {
+      "work_id": "00208",
+      "title": "book of curves 11"
+    },
+    {
+      "work_id": "00806",
+      "title": "book of curves 0 form"
     },
     {
       "work_id": "00807",

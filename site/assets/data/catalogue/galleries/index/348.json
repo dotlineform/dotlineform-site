@@ -1,0 +1,49 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T21:31:49Z",
+    "gallery_id": "348"
+  },
+  "gallery": {
+    "gallery_id": "348",
+    "title": "internal forms"
+  },
+  "member_works": [
+    {
+      "work_id": "00009",
+      "title": "internal organs (wireframe)"
+    },
+    {
+      "work_id": "00053",
+      "title": "internal organs of doll"
+    },
+    {
+      "work_id": "00131",
+      "title": "internal forms"
+    },
+    {
+      "work_id": "00209",
+      "title": "internal form 1"
+    },
+    {
+      "work_id": "00210",
+      "title": "internal form 2"
+    },
+    {
+      "work_id": "00211",
+      "title": "internal form 3"
+    },
+    {
+      "work_id": "00212",
+      "title": "internal form 4"
+    },
+    {
+      "work_id": "00213",
+      "title": "internal form 5"
+    },
+    {
+      "work_id": "00215",
+      "title": "internal forms (body)"
+    }
+  ]
+}

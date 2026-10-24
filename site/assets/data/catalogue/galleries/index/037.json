@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T20:01:02Z",
+    "generated_at_utc": "2026-10-24T22:07:37Z",
     "gallery_id": "037"
   },
   "gallery": {
@@ -9,6 +9,10 @@
     "title": "doll"
   },
   "member_works": [
+    {
+      "work_id": "00027",
+      "title": "doll forms"
+    },
     {
       "work_id": "00872",
       "title": "doll bandage"

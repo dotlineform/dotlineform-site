@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-b6ccfe97e9534d5c0e88c852989c57c0",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-47e2ea73c8cf65fdc4b29b3b9c418af2",
+    "generated_at_utc": "2026-10-24T21:26:24Z"
   },
   "work": {
     "work_id": "00033",
     "title": "slaughter 6",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "photocopy",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 4961,
     "height_px": 7015,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "photocopy",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "168",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "346",
+        "title": "slaughter"
       }
     ]
   }

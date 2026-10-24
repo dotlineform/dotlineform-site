@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T22:04:59Z",
+    "gallery_id": "349"
+  },
+  "gallery": {
+    "gallery_id": "349",
+    "title": "dissection"
+  },
+  "member_works": [
+    {
+      "work_id": "00054",
+      "title": "preparation for mannequin"
+    },
+    {
+      "work_id": "00055",
+      "title": "mannequin (legs)"
+    },
+    {
+      "work_id": "00062",
+      "title": "dissecting forms 1"
+    },
+    {
+      "work_id": "00063",
+      "title": "dissecting forms 2"
+    },
+    {
+      "work_id": "00090",
+      "title": "dissection (identification of points on a surface)"
+    },
+    {
+      "work_id": "00091",
+      "title": "dissection"
+    },
+    {
+      "work_id": "00096",
+      "title": "dissection (prepared body 1)"
+    },
+    {
+      "work_id": "00097",
+      "title": "dissection (prepared body 2)"
+    },
+    {
+      "work_id": "00098",
+      "title": "dissected body 1"
+    },
+    {
+      "work_id": "00099",
+      "title": "dissected body 2"
+    },
+    {
+      "work_id": "00100",
+      "title": "preparation for dissection"
+    },
+    {
+      "work_id": "00101",
+      "title": "dissection in progress"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T21:29:15Z",
+    "gallery_id": "347"
+  },
+  "gallery": {
+    "gallery_id": "347",
+    "title": "perspective"
+  },
+  "member_works": [
+    {
+      "work_id": "00050",
+      "title": "perspective 1"
+    },
+    {
+      "work_id": "00051",
+      "title": "perspective 2"
+    },
+    {
+      "work_id": "00052",
+      "title": "perspective 3"
+    }
+  ]
+}

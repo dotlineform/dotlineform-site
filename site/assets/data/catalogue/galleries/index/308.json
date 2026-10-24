@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T08:49:55Z",
+    "generated_at_utc": "2026-10-24T22:20:27Z",
     "gallery_id": "308"
   },
   "gallery": {
@@ -9,6 +9,10 @@
     "title": "moments"
   },
   "member_works": [
+    {
+      "work_id": "00165",
+      "title": "angels"
+    },
     {
       "work_id": "00182",
       "title": "drunken vultures"

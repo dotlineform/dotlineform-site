@@ -19,6 +19,7 @@ from catalogue.catalogue_service_context import (
 )
 from catalogue.catalogue_source import CatalogueSourceRecords, payload_for_map
 from catalogue.catalogue_shared_changes import work_shared_changes
+from catalogue.catalogue_work_source_folder import extract_source_folder
 
 
 BULK_WORK_EDITABLE_FIELDS = {
@@ -204,17 +205,9 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
     if unknown_fields:
         raise ValueError(f"bulk save contains unsupported fields: {', '.join(unknown_fields)}")
 
-    source_folder = None
-    if "source_folder" in body:
-        source_folder = body["source_folder"]
-        if not isinstance(source_folder, dict) or set(source_folder) != {
-            "media_source_id", "project_folder", "project_subfolder",
-        }:
-            raise ValueError("source_folder requires media_source_id, project_folder and project_subfolder")
-
     return {
         "kind": kind,
         "ids": raw_ids,
         "set_fields": raw_set_fields,
-        "source_folder": source_folder,
+        "source_folder": extract_source_folder(body),
     }

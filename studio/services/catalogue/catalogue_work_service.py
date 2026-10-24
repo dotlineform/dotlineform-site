@@ -21,6 +21,7 @@ from catalogue.catalogue_service_context import (
 )
 from catalogue.catalogue_source import CatalogueSourceRecords, WORK_FIELDS
 from catalogue.catalogue_shared_changes import work_shared_changes
+from catalogue.catalogue_work_source_folder import extract_source_folder
 
 
 def work_create_payload(
@@ -98,6 +99,9 @@ def work_save_payload(
 ) -> tuple[dict[str, Any], CatalogueSourceRecords, CatalogueSourceRecords]:
     """Save from one Work read and carry before/after records into completion."""
     work_update = extract_work_update(body)
+    source_folder = extract_source_folder(body)
+    if source_folder is not None:
+        work_update = {**work_update, **source_folder}
     work_id = body.get("work_id")
     if not isinstance(work_id, str):
         raise ValueError("work_id must identify an existing exact Work")
@@ -137,6 +141,8 @@ def work_save_payload(
             works, {**works, work_id: plan.updated_record}, galleries.works, updated_galleries.works, [work_id],
         ),
     }
+    if source_folder is not None:
+        payload["_source_folder_relinks"] = [work_id]
     if context.dry_run:
         payload.update(dry_run=True, would_write=changed)
     elif changed:

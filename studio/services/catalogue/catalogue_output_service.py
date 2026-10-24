@@ -19,20 +19,23 @@ def download_filenames(record: dict[str, Any]) -> set[str]:
 
 def changed_work_media(
     previous: CatalogueSourceRecords, current: CatalogueSourceRecords, candidate_ids: set[str],
-    attachment_names: set[str],
+    attachment_names: set[str], source_folder_relinks: set[str],
 ) -> tuple[list[str], dict[str, set[str]]]:
     """Select changed image sources, added downloads and supplied replacement bytes.
 
     Unchanged downloads are assumed to remain available. Removed references do
     not select remaining files for validation or media completion.
+    A confirmed folder relink ignores location changes only; changed filenames
+    still select image preparation, independently of explicit regeneration.
     """
     image_ids = []
     file_changes = {}
     for key in sorted(candidate_ids & current.works.keys()):
         record = current.works[key]
         old = previous.works.get(key)
+        source_fields = ("project_filename",) if key in source_folder_relinks else MEDIA_SOURCE_FIELDS
         if record.get("project_filename") and (
-            old is None or any(old.get(field) != record.get(field) for field in MEDIA_SOURCE_FIELDS)
+            old is None or any(old.get(field) != record.get(field) for field in source_fields)
         ):
             image_ids.append(key)
         names = download_filenames(record)
@@ -58,6 +61,7 @@ def complete_saved_catalogue_edit(
     require editor-record completion after media.
     """
     shared = response.pop("_shared_changes", None)
+    source_folder_relinks = set(response.pop("_source_folder_relinks", ()))
     if context.dry_run or not response.get("ok"):
         return
     response["saved"] = True
@@ -75,7 +79,9 @@ def complete_saved_catalogue_edit(
             ) if key in current.works
         }
         if candidate_ids:
-            image_ids, file_changes = changed_work_media(previous, current, candidate_ids, set(attachment_files or {}))
+            image_ids, file_changes = changed_work_media(
+                previous, current, candidate_ids, set(attachment_files or {}), source_folder_relinks,
+            )
         if regenerate_image:
             image_ids = sorted(set(image_ids) | {response["work_id"]})
         media_work_ids = set(image_ids) | set(file_changes)

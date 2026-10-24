@@ -1,7 +1,7 @@
 import { openProjectMediaModal } from "./catalogue-project-media-picker.js";
 
 /**
- * @typedef {Object} BulkSourceFolder
+ * @typedef {Object} WorkSourceFolder
  * @property {string|null} media_source_id Null selects the configured default with canonical omission.
  * @property {string} project_folder Exact picker-selected project folder.
  * @property {string|null} project_subfolder Null selects the project folder itself.
@@ -13,8 +13,10 @@ import { openProjectMediaModal } from "./catalogue-project-media-picker.js";
  * Filenames, prepared media, dimensions and regeneration intent remain untouched.
  * The caller redraws the confirmed draft and owns normal Save/busy behavior.
  */
-export async function openBulkWorkSourceFolder(state, options, mediaSourceId) {
-  const works = state.bulkWorkIds.map(workId => state.bulkRecords.get(workId));
+export async function openWorkSourceFolder(state, options, mediaSourceId) {
+  const works = state.mode === "bulk"
+    ? state.bulkWorkIds.map(workId => state.bulkRecords.get(workId))
+    : [{ work_id: state.currentWorkId, project_filename: state.draft.project_filename }];
   const sameSource = mediaSourceId === options.getMediaSourceId();
   const result = await openProjectMediaModal(state, {
     ...options,
@@ -38,12 +40,16 @@ export async function openBulkWorkSourceFolder(state, options, mediaSourceId) {
   });
   if (!result?.confirmed) return result;
   const selection = result.selection;
-  state.bulkSourceFolder = {
+  const sourceFolder = {
     media_source_id: selection.media_source_id === state.workMediaSourceConfig.defaultMediaSourceId
       ? null : selection.media_source_id,
     project_folder: selection.project_folder,
     project_subfolder: selection.project_subfolder || null
   };
-  for (const [key, value] of Object.entries(state.bulkSourceFolder)) state.draft[key] = value ?? "";
+  const unchanged = state.mode !== "bulk" && Object.entries(sourceFolder).every(
+    ([key, value]) => state.baselineDraft[key] === (value ?? "")
+  );
+  state.pendingSourceFolder = unchanged ? null : sourceFolder;
+  for (const [key, value] of Object.entries(sourceFolder)) state.draft[key] = value ?? "";
   return result;
 }

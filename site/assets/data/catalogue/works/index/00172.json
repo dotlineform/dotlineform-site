@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-3ac3dac7742dc8f7576cb72216c8196e",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-2e7795ee7b81a8280d38c0dd647e70db",
+    "generated_at_utc": "2026-10-24T22:16:07Z"
   },
   "work": {
     "work_id": "00172",
     "title": "orange mesh",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "photocopy",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 2436,
     "height_px": 3490,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "photocopy",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "180",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "358",
+        "title": "mesh"
       }
     ]
   }

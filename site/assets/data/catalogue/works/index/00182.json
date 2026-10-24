@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-927d9d12722a65c19fc3a0ba9b2c3143",
-    "generated_at_utc": "2026-10-22T16:21:34Z"
+    "version": "blake2b-e737d409a8ef0f5929b0fa4d79cb562b",
+    "generated_at_utc": "2026-10-24T22:22:31Z"
   },
   "work": {
     "work_id": "00182",
@@ -15,12 +15,8 @@
     "width_cm": 21,
     "medium": "photocopy",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "144",
     "galleries": [
-      {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
-      },
       {
         "gallery_id": "308",
         "title": "moments"

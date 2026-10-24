@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T21:46:15Z",
+    "gallery_id": "353"
+  },
+  "gallery": {
+    "gallery_id": "353",
+    "title": "joining forms"
+  },
+  "member_works": [
+    {
+      "work_id": "00057",
+      "title": "joining forms 1"
+    },
+    {
+      "work_id": "00058",
+      "title": "joining forms 2"
+    },
+    {
+      "work_id": "00059",
+      "title": "joining forms 3"
+    },
+    {
+      "work_id": "00108",
+      "title": "joined forms"
+    },
+    {
+      "work_id": "00109",
+      "title": "joined forms 2"
+    }
+  ]
+}

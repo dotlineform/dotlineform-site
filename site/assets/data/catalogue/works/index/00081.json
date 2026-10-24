@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d57ce52b38cb4b11cd8ad96121b3a390",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-e968b09f8ceaee42b79d59241c39f33e",
+    "generated_at_utc": "2026-10-24T20:51:03Z"
   },
   "work": {
     "work_id": "00081",
     "title": "body forms 8",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "photocopy",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 4961,
     "height_px": 7015,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "photocopy",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "164",
     "galleries": [
       {
-        "gallery_id": "026",
-        "title": "collected 1989-1998"
+        "gallery_id": "342",
+        "title": "body forms"
       }
     ]
   }
