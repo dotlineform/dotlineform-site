@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T19:33:19Z"
+    "generated_at_utc": "2026-10-24T19:58:28Z"
   },
   "series_galleries": {
     "001": [
@@ -19,31 +19,23 @@
     "004": [
       {
         "gallery_id": "004",
-        "title": "bodies"
-      },
-      {
-        "gallery_id": "180",
-        "title": "body (details)"
+        "title": "body"
       },
       {
         "gallery_id": "183",
-        "title": "body residue (details)"
+        "title": "body residue"
       },
       {
-        "gallery_id": "184",
-        "title": "body curves (details)"
+        "gallery_id": "334",
+        "title": "body monoprint"
       },
       {
-        "gallery_id": "185",
-        "title": "body monoprint (details)"
+        "gallery_id": "335",
+        "title": "2 bodies"
       },
       {
-        "gallery_id": "186",
-        "title": "body monoprint petals (details)"
-      },
-      {
-        "gallery_id": "187",
-        "title": "2 bodies monoprint (details)"
+        "gallery_id": "336",
+        "title": "body curves"
       }
     ],
     "005": [
@@ -78,10 +70,6 @@
       {
         "gallery_id": "009",
         "title": "a poem divided into 4 parts"
-      },
-      {
-        "gallery_id": "144",
-        "title": "a poem divided into 4 parts (\"our dreams are real\") (details)"
       }
     ],
     "010": [
@@ -248,32 +236,12 @@
       {
         "gallery_id": "036",
         "title": "curve poems"
-      },
-      {
-        "gallery_id": "152",
-        "title": "the eye (details)"
       }
     ],
     "037": [
       {
         "gallery_id": "037",
         "title": "doll"
-      },
-      {
-        "gallery_id": "228",
-        "title": "doll cell (cell)"
-      },
-      {
-        "gallery_id": "229",
-        "title": "doll moiré (versions (2022))"
-      },
-      {
-        "gallery_id": "230",
-        "title": "doll moiré reduced (versions (2022))"
-      },
-      {
-        "gallery_id": "231",
-        "title": "doll still life 1 (versions (2022))"
       }
     ],
     "038": [
@@ -818,22 +786,6 @@
       {
         "gallery_id": "122",
         "title": "room"
-      },
-      {
-        "gallery_id": "283",
-        "title": "room 1 (details)"
-      },
-      {
-        "gallery_id": "284",
-        "title": "room 2 (details)"
-      },
-      {
-        "gallery_id": "285",
-        "title": "room 3 (details)"
-      },
-      {
-        "gallery_id": "286",
-        "title": "room 4 (details)"
       }
     ],
     "123": [

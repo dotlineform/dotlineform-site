@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-71a1df97c0632473c7a75098d52d8495",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-8c9907d4eaa1f3b539075d4e172ad5cc",
+    "generated_at_utc": "2026-10-24T19:52:18Z"
   },
   "work": {
     "work_id": "03108",
     "title": "body detail",
     "year": 2025,
     "year_display": "2025",
-    "medium": "ink and acrylic on paper",
     "width_px": 3024,
     "height_px": 4032,
+    "medium": "ink and acrylic on paper",
     "media_version": 1,
     "series_id": "004",
     "galleries": [
       {
-        "gallery_id": "187",
-        "title": "2 bodies monoprint (details)"
+        "gallery_id": "335",
+        "title": "2 bodies"
       }
     ]
   }

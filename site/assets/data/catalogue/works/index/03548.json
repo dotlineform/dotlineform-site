@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-999beab98a2523433649fae7c07d3c8e",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-8d6763e6ba9e3401fa8e9493cf78cd88",
+    "generated_at_utc": "2026-10-24T19:58:28Z"
   },
   "work": {
     "work_id": "03548",
     "title": "doll moiré (version 4.1)",
     "year": 2008,
-    "year_display": "c. 2008",
-    "medium": "pencil on paper",
+    "year_display": "c. 2008, 2022",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "pencil on paper",
     "media_version": 1,
     "series_id": "037",
     "galleries": [
       {
-        "gallery_id": "229",
-        "title": "doll moiré (versions (2022))"
+        "gallery_id": "037",
+        "title": "doll"
       }
     ]
   }

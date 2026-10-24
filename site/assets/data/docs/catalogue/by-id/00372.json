@@ -54,14 +54,6 @@
             },
             "label": "curve poems",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "152"
-            },
-            "label": "the eye (details)",
-            "relation": "series"
           }
         ],
         "entry": {

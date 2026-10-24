@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d67053b30c48a0f30b353cdfc178b1cc",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-66cda2f6e17ff2055f8c8a558ef3e586",
+    "generated_at_utc": "2026-10-24T19:52:18Z"
   },
   "work": {
     "work_id": "00534",
     "title": "2 bodies monoprint",
     "year": 2025,
     "year_display": "2025",
-    "medium": "ink and acrylic on paper",
-    "height_cm": 64.0,
-    "width_cm": 50.0,
     "width_px": 5906,
     "height_px": 7559,
+    "height_cm": 64,
+    "width_cm": 50,
+    "medium": "ink and acrylic on paper",
     "media_version": 1,
     "series_id": "004",
     "galleries": [
       {
-        "gallery_id": "004",
-        "title": "bodies"
+        "gallery_id": "335",
+        "title": "2 bodies"
       }
     ]
   }

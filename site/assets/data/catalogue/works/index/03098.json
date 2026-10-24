@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-df422b14efabd2ea2864765da92092c3",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-89263077b1e109e8436f9b58d99e8d11",
+    "generated_at_utc": "2026-10-24T19:52:18Z"
   },
   "work": {
     "work_id": "03098",
     "title": "body detail",
     "year": 2025,
     "year_display": "2025",
-    "medium": "mixed media",
     "width_px": 4032,
     "height_px": 3024,
+    "medium": "mixed media",
     "media_version": 1,
     "series_id": "004",
     "galleries": [
       {
-        "gallery_id": "186",
-        "title": "body monoprint petals (details)"
+        "gallery_id": "334",
+        "title": "body monoprint"
       }
     ]
   }

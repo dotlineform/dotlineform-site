@@ -1,14 +1,18 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:52:18Z",
     "gallery_id": "183"
   },
   "gallery": {
     "gallery_id": "183",
-    "title": "body residue (details)"
+    "title": "body residue"
   },
   "member_works": [
+    {
+      "work_id": "00529",
+      "title": "body residue"
+    },
     {
       "work_id": "03083",
       "title": "body detail"

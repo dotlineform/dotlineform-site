@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e49e1f609b0d2b90a8bf288248041efa",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-76ee9b0ed906fefd90166324f181cf6d",
+    "generated_at_utc": "2026-10-24T19:52:18Z"
   },
   "work": {
     "work_id": "03090",
     "title": "body detail",
     "year": 2025,
     "year_display": "2025",
-    "medium": "ink on paper",
     "width_px": 3024,
     "height_px": 4032,
+    "medium": "ink on paper",
     "media_version": 1,
     "series_id": "004",
     "galleries": [
       {
-        "gallery_id": "184",
-        "title": "body curves (details)"
+        "gallery_id": "336",
+        "title": "body curves"
       }
     ]
   }

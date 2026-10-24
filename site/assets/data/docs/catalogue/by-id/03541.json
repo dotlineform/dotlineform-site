@@ -50,42 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "228"
-            },
-            "label": "doll cell (cell)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "037"
             },
             "label": "doll",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "229"
-            },
-            "label": "doll moiré (versions (2022))",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "230"
-            },
-            "label": "doll moiré reduced (versions (2022))",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "231"
-            },
-            "label": "doll still life 1 (versions (2022))",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

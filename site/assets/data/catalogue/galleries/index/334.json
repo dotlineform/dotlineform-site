@@ -1,0 +1,53 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T19:52:18Z",
+    "gallery_id": "334"
+  },
+  "gallery": {
+    "gallery_id": "334",
+    "title": "body monoprint"
+  },
+  "member_works": [
+    {
+      "work_id": "00531",
+      "title": "body monoprint"
+    },
+    {
+      "work_id": "00532",
+      "title": "body monoprint petals"
+    },
+    {
+      "work_id": "03093",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03094",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03095",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03096",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03097",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03098",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03099",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03100",
+      "title": "body detail"
+    }
+  ]
+}

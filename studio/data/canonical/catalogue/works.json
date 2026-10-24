@@ -14586,24 +14586,8 @@
       "work_id": "00890",
       "series_id": "037",
       "project_folder": "doll",
-      "project_filename": "doll frame [2].jpg",
-      "media_version": 1,
-      "image_staged": false,
-      "title": "doll frame [2]",
-      "width_cm": "9.7 cm",
-      "height_cm": "14.4 cm",
-      "year": 1990,
-      "year_display": "c. 1990",
-      "medium": "c-type print",
-      "width_px": 1150,
-      "height_px": 1700
-    },
-    "00891": {
-      "work_id": "00891",
-      "series_id": "037",
-      "project_folder": "doll",
       "project_filename": "doll frame [3].jpg",
-      "media_version": 1,
+      "media_version": 2,
       "image_staged": false,
       "title": "doll frame [3]",
       "width_cm": 30,
@@ -32485,6 +32469,8 @@
       "media_version": 1,
       "image_staged": false,
       "title": "the eye - detail 1",
+      "width_cm": 25.6,
+      "height_cm": 25.6,
       "year": 2025,
       "year_display": "2025",
       "medium": "ink and pencil on paper",
@@ -54996,7 +54982,7 @@
       "image_staged": false,
       "title": "doll moiré (version 1)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "pencil on paper",
       "width_px": 3543,
       "height_px": 3543
@@ -55011,7 +54997,7 @@
       "image_staged": false,
       "title": "doll moiré (version 2)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "pencil on paper",
       "width_px": 3543,
       "height_px": 3543
@@ -55026,7 +55012,7 @@
       "image_staged": false,
       "title": "doll moiré (version 3)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "pencil on paper",
       "width_px": 3543,
       "height_px": 3543
@@ -55041,7 +55027,7 @@
       "image_staged": false,
       "title": "doll moiré (version 4)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "pencil on paper",
       "width_px": 2000,
       "height_px": 2000
@@ -55056,7 +55042,7 @@
       "image_staged": false,
       "title": "doll moiré (version 4.1)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "pencil on paper",
       "width_px": 3543,
       "height_px": 3543
@@ -55071,7 +55057,7 @@
       "image_staged": false,
       "title": "doll moiré (version 4.2)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "pencil on paper",
       "width_px": 3543,
       "height_px": 3543
@@ -55086,7 +55072,7 @@
       "image_staged": false,
       "title": "doll moiré (version 4.3)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "pencil on paper",
       "width_px": 3543,
       "height_px": 3543
@@ -55101,7 +55087,7 @@
       "image_staged": false,
       "title": "doll moiré (version 4.4)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "pencil on paper",
       "width_px": 3543,
       "height_px": 3543
@@ -55116,7 +55102,7 @@
       "image_staged": false,
       "title": "doll moiré reduced (version 1)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "digital c-type print",
       "width_px": 3543,
       "height_px": 3543
@@ -55131,7 +55117,7 @@
       "image_staged": false,
       "title": "doll moiré reduced (version 2)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "digital c-type print",
       "width_px": 3543,
       "height_px": 3543
@@ -55146,7 +55132,7 @@
       "image_staged": false,
       "title": "doll moiré reduced (version 3)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "digital c-type print",
       "width_px": 3543,
       "height_px": 3543
@@ -55161,7 +55147,7 @@
       "image_staged": false,
       "title": "doll moiré reduced (version 4)",
       "year": 2008,
-      "year_display": "c. 2008",
+      "year_display": "c. 2008, 2022",
       "medium": "digital c-type print",
       "width_px": 3543,
       "height_px": 3543

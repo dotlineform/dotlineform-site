@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:54:37Z",
     "gallery_id": "036"
   },
   "gallery": {
@@ -356,6 +356,22 @@
     {
       "work_id": "00454",
       "title": "I bet you look good on the dancefloor"
+    },
+    {
+      "work_id": "02011",
+      "title": "the eye - detail 1"
+    },
+    {
+      "work_id": "02012",
+      "title": "the eye - detail 2"
+    },
+    {
+      "work_id": "02013",
+      "title": "the eye - detail 3"
+    },
+    {
+      "work_id": "02014",
+      "title": "the eye - detail 4"
     }
   ]
 }

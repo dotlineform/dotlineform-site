@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-b5d53ea446b2a41ae133b5fba5ca3436",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-4adf1be16f3a8a05afd3a1529b7bc427",
+    "generated_at_utc": "2026-10-24T19:37:44Z"
   },
   "work": {
     "work_id": "04363",
     "title": "room 4 - detail 2",
     "year": 2008,
     "year_display": "2008",
-    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "122",
     "galleries": [
       {
-        "gallery_id": "286",
-        "title": "room 4 (details)"
+        "gallery_id": "122",
+        "title": "room"
       }
     ]
   }

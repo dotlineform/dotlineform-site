@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-86cdb85402653c47e505f1918fa5b126",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-abfc50016fc858ef1e7ce2e403872968",
+    "generated_at_utc": "2026-10-24T19:37:44Z"
   },
   "work": {
     "work_id": "04354",
     "title": "room 1 - detail 2",
     "year": 2007,
     "year_display": "2007",
-    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "122",
     "galleries": [
       {
-        "gallery_id": "283",
-        "title": "room 1 (details)"
+        "gallery_id": "122",
+        "title": "room"
       }
     ]
   }

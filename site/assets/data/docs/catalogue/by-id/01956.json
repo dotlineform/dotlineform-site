@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "144"
-            },
-            "label": "a poem divided into 4 parts (\"our dreams are real\") (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "009"
             },
             "label": "a poem divided into 4 parts",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

@@ -1,12 +1,12 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:52:18Z",
     "gallery_id": "004"
   },
   "gallery": {
     "gallery_id": "004",
-    "title": "bodies"
+    "title": "body"
   },
   "member_works": [
     {
@@ -22,28 +22,40 @@
       "title": "body"
     },
     {
-      "work_id": "00529",
-      "title": "body residue"
+      "work_id": "03074",
+      "title": "body detail"
     },
     {
-      "work_id": "00530",
-      "title": "body curves"
+      "work_id": "03075",
+      "title": "body detail"
     },
     {
-      "work_id": "00531",
-      "title": "body monoprint"
+      "work_id": "03076",
+      "title": "body detail"
     },
     {
-      "work_id": "00532",
-      "title": "body monoprint petals"
+      "work_id": "03077",
+      "title": "body detail"
     },
     {
-      "work_id": "00533",
-      "title": "2 bodies monoprint"
+      "work_id": "03078",
+      "title": "body detail"
     },
     {
-      "work_id": "00534",
-      "title": "2 bodies monoprint"
+      "work_id": "03079",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03080",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03081",
+      "title": "body detail"
+    },
+    {
+      "work_id": "03082",
+      "title": "body detail"
     }
   ]
 }

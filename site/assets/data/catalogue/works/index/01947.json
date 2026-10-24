@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-25874ce1b5074920d0fd72321adfe262",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-1aeddc1e58c09e3da9b8d59d857e5023",
+    "generated_at_utc": "2026-10-24T19:42:42Z"
   },
   "work": {
     "work_id": "01947",
     "title": "a poem divided into 4 parts - end 5",
     "year": 2025,
     "year_display": "2025",
-    "medium": "pencil on tracing paper",
     "width_px": 4032,
     "height_px": 2268,
+    "medium": "pencil on tracing paper",
     "media_version": 1,
     "series_id": "009",
     "galleries": [
       {
-        "gallery_id": "144",
-        "title": "a poem divided into 4 parts (\"our dreams are real\") (details)"
+        "gallery_id": "009",
+        "title": "a poem divided into 4 parts"
       }
     ]
   }

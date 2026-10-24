@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-24T19:33:19Z"
+    "generated_at_utc": "2026-10-24T19:58:28Z"
   },
   "galleries": {
     "001": {
@@ -14,7 +14,7 @@
     },
     "004": {
       "gallery_id": "004",
-      "title": "bodies"
+      "title": "body"
     },
     "005": {
       "gallery_id": "005",
@@ -516,10 +516,6 @@
       "gallery_id": "143",
       "title": "simultaneous equations"
     },
-    "144": {
-      "gallery_id": "144",
-      "title": "a poem divided into 4 parts (\"our dreams are real\") (details)"
-    },
     "145": {
       "gallery_id": "145",
       "title": "grid dissection (details)"
@@ -527,10 +523,6 @@
     "150": {
       "gallery_id": "150",
       "title": "nerve (formaldehyde form)"
-    },
-    "152": {
-      "gallery_id": "152",
-      "title": "the eye (details)"
     },
     "154": {
       "gallery_id": "154",
@@ -560,29 +552,9 @@
       "gallery_id": "175",
       "title": "learning to draw landscapes (versions) (versions)"
     },
-    "180": {
-      "gallery_id": "180",
-      "title": "body (details)"
-    },
     "183": {
       "gallery_id": "183",
-      "title": "body residue (details)"
-    },
-    "184": {
-      "gallery_id": "184",
-      "title": "body curves (details)"
-    },
-    "185": {
-      "gallery_id": "185",
-      "title": "body monoprint (details)"
-    },
-    "186": {
-      "gallery_id": "186",
-      "title": "body monoprint petals (details)"
-    },
-    "187": {
-      "gallery_id": "187",
-      "title": "2 bodies monoprint (details)"
+      "title": "body residue"
     },
     "191": {
       "gallery_id": "191",
@@ -607,22 +579,6 @@
     "227": {
       "gallery_id": "227",
       "title": "holes (details)"
-    },
-    "228": {
-      "gallery_id": "228",
-      "title": "doll cell (cell)"
-    },
-    "229": {
-      "gallery_id": "229",
-      "title": "doll moiré (versions (2022))"
-    },
-    "230": {
-      "gallery_id": "230",
-      "title": "doll moiré reduced (versions (2022))"
-    },
-    "231": {
-      "gallery_id": "231",
-      "title": "doll still life 1 (versions (2022))"
     },
     "233": {
       "gallery_id": "233",
@@ -663,22 +619,6 @@
     "282": {
       "gallery_id": "282",
       "title": "poa 1 (map 1-500) (selected source)"
-    },
-    "283": {
-      "gallery_id": "283",
-      "title": "room 1 (details)"
-    },
-    "284": {
-      "gallery_id": "284",
-      "title": "room 2 (details)"
-    },
-    "285": {
-      "gallery_id": "285",
-      "title": "room 3 (details)"
-    },
-    "286": {
-      "gallery_id": "286",
-      "title": "room 4 (details)"
     },
     "290": {
       "gallery_id": "290",
@@ -779,6 +719,18 @@
     "333": {
       "gallery_id": "333",
       "title": "bits symbols"
+    },
+    "334": {
+      "gallery_id": "334",
+      "title": "body monoprint"
+    },
+    "335": {
+      "gallery_id": "335",
+      "title": "2 bodies"
+    },
+    "336": {
+      "gallery_id": "336",
+      "title": "body curves"
     }
   }
 }

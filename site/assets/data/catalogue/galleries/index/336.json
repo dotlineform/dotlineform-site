@@ -1,14 +1,18 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
-    "gallery_id": "184"
+    "generated_at_utc": "2026-10-24T19:52:18Z",
+    "gallery_id": "336"
   },
   "gallery": {
-    "gallery_id": "184",
-    "title": "body curves (details)"
+    "gallery_id": "336",
+    "title": "body curves"
   },
   "member_works": [
+    {
+      "work_id": "00530",
+      "title": "body curves"
+    },
     {
       "work_id": "03089",
       "title": "body detail"

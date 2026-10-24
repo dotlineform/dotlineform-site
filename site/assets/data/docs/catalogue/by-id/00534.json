@@ -50,17 +50,17 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "004"
+              "id": "335"
             },
-            "label": "bodies",
+            "label": "2 bodies",
             "relation": "direct"
           },
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "180"
+              "id": "004"
             },
-            "label": "body (details)",
+            "label": "body",
             "relation": "series"
           },
           {
@@ -68,39 +68,23 @@
               "kind": "catalogue-gallery",
               "id": "183"
             },
-            "label": "body residue (details)",
+            "label": "body residue",
             "relation": "series"
           },
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "184"
+              "id": "334"
             },
-            "label": "body curves (details)",
+            "label": "body monoprint",
             "relation": "series"
           },
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "185"
+              "id": "336"
             },
-            "label": "body monoprint (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "186"
-            },
-            "label": "body monoprint petals (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "187"
-            },
-            "label": "2 bodies monoprint (details)",
+            "label": "body curves",
             "relation": "series"
           }
         ],

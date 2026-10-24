@@ -1,18 +1,20 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e39ae6521a9d89634860ca8c093ae724",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-06081e2469d55df1e3142e4eb7c9b5d7",
+    "generated_at_utc": "2026-10-24T20:01:02Z"
   },
   "work": {
     "work_id": "00890",
-    "title": "doll frame [2]",
+    "title": "doll frame [3]",
     "year": 1990,
     "year_display": "c. 1990",
+    "width_px": 3543,
+    "height_px": 4724,
+    "height_cm": 40,
+    "width_cm": 30,
     "medium": "c-type print",
-    "width_px": 1150,
-    "height_px": 1700,
-    "media_version": 1,
+    "media_version": 2,
     "series_id": "037",
     "galleries": [
       {

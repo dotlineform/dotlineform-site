@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:37:44Z",
     "gallery_id": "122"
   },
   "gallery": {
@@ -24,6 +24,54 @@
     {
       "work_id": "01632",
       "title": "room 4"
+    },
+    {
+      "work_id": "04353",
+      "title": "room 1 - detail 1"
+    },
+    {
+      "work_id": "04354",
+      "title": "room 1 - detail 2"
+    },
+    {
+      "work_id": "04355",
+      "title": "room 1 - detail 3"
+    },
+    {
+      "work_id": "04356",
+      "title": "room 2 - detail 1"
+    },
+    {
+      "work_id": "04357",
+      "title": "room 2 - detail 2"
+    },
+    {
+      "work_id": "04358",
+      "title": "room 2 - detail 3"
+    },
+    {
+      "work_id": "04359",
+      "title": "room 3 - detail 1"
+    },
+    {
+      "work_id": "04360",
+      "title": "room 3 - detail 2"
+    },
+    {
+      "work_id": "04361",
+      "title": "room 3 - detail 3"
+    },
+    {
+      "work_id": "04362",
+      "title": "room 4 - detail 1"
+    },
+    {
+      "work_id": "04363",
+      "title": "room 4 - detail 2"
+    },
+    {
+      "work_id": "04364",
+      "title": "room 4 - detail 3"
     }
   ]
 }
