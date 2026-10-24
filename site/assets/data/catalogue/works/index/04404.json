@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-0b7d597a0190c24eaa46903a5c0b8687",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-8c425c7ad2d737bc72e66d116cc07383",
+    "generated_at_utc": "2026-10-24T17:46:53Z"
   },
   "work": {
     "work_id": "04404",
     "title": "lazy rush",
     "year": 2008,
     "year_display": "2008",
-    "medium": "giclée print",
     "width_px": 1600,
     "height_px": 1553,
+    "medium": "giclée print",
     "media_version": 1,
     "series_id": "126",
     "galleries": [
       {
-        "gallery_id": "287",
-        "title": "spine symbols (symbols)"
+        "gallery_id": "126",
+        "title": "spine symbols"
       }
     ]
   }

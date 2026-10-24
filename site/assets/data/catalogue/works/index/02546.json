@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-1589f50f99095f15a5991a6d9ec20694",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-533367f42ea032030651cee2ba6b792a",
+    "generated_at_utc": "2026-10-24T17:43:35Z"
   },
   "work": {
     "work_id": "02546",
     "title": "spiders (2006-06-08 - 20-16-41)",
     "year": 2006,
     "year_display": "2006",
-    "medium": "digital c-type print",
     "width_px": 2816,
     "height_px": 2112,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "125",
     "galleries": [
       {
-        "gallery_id": "155",
-        "title": "spiders (photos)"
+        "gallery_id": "125",
+        "title": "spiders"
       }
     ]
   }

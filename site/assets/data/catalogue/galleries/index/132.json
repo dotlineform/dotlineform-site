@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T17:48:29Z",
     "gallery_id": "132"
   },
   "gallery": {
@@ -12,6 +12,46 @@
     {
       "work_id": "01744",
       "title": "tabula rasa"
+    },
+    {
+      "work_id": "04557",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04558",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04559",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04560",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04561",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04562",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04563",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04564",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04565",
+      "title": "tabula rasa - detail 1"
+    },
+    {
+      "work_id": "04566",
+      "title": "tabula rasa - source"
     }
   ]
 }

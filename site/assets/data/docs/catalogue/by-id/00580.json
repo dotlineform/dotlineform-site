@@ -54,14 +54,6 @@
             },
             "label": "string theory",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "190"
-            },
-            "label": "forms scan 5 (working)",
-            "relation": "series"
           }
         ],
         "entry": {

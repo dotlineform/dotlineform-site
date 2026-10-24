@@ -58,14 +58,6 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "211"
-            },
-            "label": "a theory of happiness is a theory of everything (layers)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "212"
             },
             "label": "a theory of happiness is a theory of everything (64°) (64 degrees)",

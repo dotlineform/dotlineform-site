@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T17:38:49Z"
+    "generated_at_utc": "2026-10-24T18:21:09Z"
   },
   "series_galleries": {
     "001": [
@@ -90,10 +90,6 @@
         "title": "a theory of happiness is a theory of everything"
       },
       {
-        "gallery_id": "211",
-        "title": "a theory of happiness is a theory of everything (layers)"
-      },
-      {
         "gallery_id": "212",
         "title": "a theory of happiness is a theory of everything (64°) (64 degrees)"
       }
@@ -102,14 +98,6 @@
       {
         "gallery_id": "012",
         "title": "all the little cracks"
-      },
-      {
-        "gallery_id": "213",
-        "title": "all the little cracks (details)"
-      },
-      {
-        "gallery_id": "214",
-        "title": "all the little cracks again (details)"
       }
     ],
     "013": [
@@ -183,12 +171,7 @@
         "title": "changed photos"
       }
     ],
-    "025": [
-      {
-        "gallery_id": "025",
-        "title": "closeness"
-      }
-    ],
+    "025": [],
     "026": [
       {
         "gallery_id": "026",
@@ -197,10 +180,6 @@
       {
         "gallery_id": "145",
         "title": "grid dissection (details)"
-      },
-      {
-        "gallery_id": "146",
-        "title": "Michelle Pfeiffer (details)"
       }
     ],
     "027": [
@@ -548,12 +527,7 @@
         "title": "fragments"
       }
     ],
-    "069": [
-      {
-        "gallery_id": "069",
-        "title": "genetic (2020)"
-      }
-    ],
+    "069": [],
     "070": [
       {
         "gallery_id": "070",
@@ -824,10 +798,6 @@
     ],
     "105": [
       {
-        "gallery_id": "105",
-        "title": "nerve"
-      },
-      {
         "gallery_id": "150",
         "title": "nerve (formaldehyde form)"
       },
@@ -852,10 +822,6 @@
       {
         "gallery_id": "108",
         "title": "olive tree"
-      },
-      {
-        "gallery_id": "275",
-        "title": "olive tree (details)"
       }
     ],
     "109": [
@@ -1018,24 +984,12 @@
       {
         "gallery_id": "125",
         "title": "spiders"
-      },
-      {
-        "gallery_id": "155",
-        "title": "spiders (photos)"
       }
     ],
     "126": [
       {
         "gallery_id": "126",
         "title": "spine symbols"
-      },
-      {
-        "gallery_id": "287",
-        "title": "spine symbols (symbols)"
-      },
-      {
-        "gallery_id": "288",
-        "title": "spine symbols (source)"
       }
     ],
     "127": [
@@ -1058,10 +1012,6 @@
       {
         "gallery_id": "129",
         "title": "string theory"
-      },
-      {
-        "gallery_id": "190",
-        "title": "forms scan 5 (working)"
       }
     ],
     "130": [
@@ -1080,14 +1030,6 @@
       {
         "gallery_id": "132",
         "title": "tabula rasa"
-      },
-      {
-        "gallery_id": "291",
-        "title": "tabula rasa (details)"
-      },
-      {
-        "gallery_id": "292",
-        "title": "tabula rasa (source)"
       }
     ],
     "133": [
@@ -1205,10 +1147,6 @@
       {
         "gallery_id": "321",
         "title": "a world of non-linearity"
-      },
-      {
-        "gallery_id": "322",
-        "title": "a world of non-linearity (moments)"
       }
     ],
     "153": [
@@ -1255,6 +1193,12 @@
         "title": "composites (book, 2023)"
       }
     ],
-    "159": []
+    "159": [],
+    "160": [
+      {
+        "gallery_id": "332",
+        "title": "Michelle Pfeiffer"
+      }
+    ]
   }
 }

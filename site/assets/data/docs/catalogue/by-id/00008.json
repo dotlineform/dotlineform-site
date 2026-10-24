@@ -50,14 +50,6 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "105"
-            },
-            "label": "nerve",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "150"
             },
             "label": "nerve (formaldehyde form)",

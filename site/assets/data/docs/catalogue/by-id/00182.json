@@ -70,14 +70,6 @@
             },
             "label": "grid dissection (details)",
             "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "146"
-            },
-            "label": "Michelle Pfeiffer (details)",
-            "relation": "series"
           }
         ],
         "entry": {

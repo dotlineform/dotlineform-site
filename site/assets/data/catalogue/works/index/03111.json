@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-f693ec204d4d3375fa2aff32f685a95f",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-8385f8dc3115ba5bbb9c16744e71e7ee",
+    "generated_at_utc": "2026-10-24T17:47:44Z"
   },
   "work": {
     "work_id": "03111",
     "title": "2012-01-06 - 12-30-44",
     "year": 2005,
     "year_display": "2005",
-    "medium": "digital c-type print",
     "width_px": 3264,
     "height_px": 2448,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "129",
     "galleries": [
       {
-        "gallery_id": "190",
-        "title": "forms scan 5 (working)"
+        "gallery_id": "129",
+        "title": "string theory"
       }
     ]
   }

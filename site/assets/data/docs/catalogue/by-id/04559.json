@@ -50,26 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "291"
-            },
-            "label": "tabula rasa (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "132"
             },
             "label": "tabula rasa",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "292"
-            },
-            "label": "tabula rasa (source)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-4b9d09c375c9533871e66666edf978d5",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-9beee84c69d9ae2d9214402312d40ba0",
+    "generated_at_utc": "2026-10-24T17:40:42Z"
   },
   "work": {
     "work_id": "01250",
     "title": "genetic",
     "year": 2020,
     "year_display": "c. 2001-11",
-    "medium": "audio files (mp3/FLAC/wav)",
-    "height_cm": 30.0,
-    "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 3543,
+    "height_cm": 30,
+    "width_cm": 30,
+    "medium": "audio files (mp3/FLAC/wav)",
     "media_version": 1,
     "series_id": "069",
     "links": [
@@ -22,11 +22,6 @@
         "label": "Bandcamp"
       }
     ],
-    "galleries": [
-      {
-        "gallery_id": "069",
-        "title": "genetic (2020)"
-      }
-    ]
+    "galleries": []
   }
 }

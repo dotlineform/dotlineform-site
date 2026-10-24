@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-55776d31d853d71ea23168e0faf91292",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-e984ede39aa851bfc4481ada7bd4403b",
+    "generated_at_utc": "2026-10-24T18:21:09Z"
   },
   "work": {
     "work_id": "01969",
     "title": "Michelle Pfeiffer - page 1",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "colour photographs mounted in A4 booklet",
     "width_px": 4038,
     "height_px": 5712,
+    "medium": "colour photographs mounted in A4 booklet",
     "media_version": 1,
-    "series_id": "026",
+    "series_id": "160",
     "galleries": [
       {
-        "gallery_id": "146",
-        "title": "Michelle Pfeiffer (details)"
+        "gallery_id": "332",
+        "title": "Michelle Pfeiffer"
       }
     ]
   }

@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "190"
-            },
-            "label": "forms scan 5 (working)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "129"
             },
             "label": "string theory",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

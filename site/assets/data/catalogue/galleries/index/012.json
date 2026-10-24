@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T17:51:28Z",
     "gallery_id": "012"
   },
   "gallery": {
@@ -16,6 +16,38 @@
     {
       "work_id": "00752",
       "title": "all the little cracks again"
+    },
+    {
+      "work_id": "03359",
+      "title": "all the little cracks - detail 1"
+    },
+    {
+      "work_id": "03360",
+      "title": "all the little cracks - detail 2"
+    },
+    {
+      "work_id": "03361",
+      "title": "all the little cracks - detail 3"
+    },
+    {
+      "work_id": "03362",
+      "title": "all the little cracks - detail 4"
+    },
+    {
+      "work_id": "03363",
+      "title": "all the little cracks again - detail 1"
+    },
+    {
+      "work_id": "03364",
+      "title": "all the little cracks again - detail 2"
+    },
+    {
+      "work_id": "03365",
+      "title": "all the little cracks again - detail 3"
+    },
+    {
+      "work_id": "03366",
+      "title": "all the little cracks again - detail 4"
     }
   ]
 }

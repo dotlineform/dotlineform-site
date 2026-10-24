@@ -62,22 +62,6 @@
             },
             "label": "moments",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "213"
-            },
-            "label": "all the little cracks (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "214"
-            },
-            "label": "all the little cracks again (details)",
-            "relation": "series"
           }
         ],
         "entry": {

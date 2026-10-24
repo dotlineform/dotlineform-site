@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-71e6ef83a1fb7d13dc46c1c3e88047ea",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-db75f6cd9fa8c01ecb15552616f0e5b3",
+    "generated_at_utc": "2026-10-24T17:46:53Z"
   },
   "work": {
     "work_id": "04408",
     "title": "mean rush",
     "year": 2008,
     "year_display": "2008",
-    "medium": "giclée print",
     "width_px": 1600,
     "height_px": 1553,
+    "medium": "giclée print",
     "media_version": 1,
     "series_id": "126",
     "galleries": [
       {
-        "gallery_id": "287",
-        "title": "spine symbols (symbols)"
+        "gallery_id": "126",
+        "title": "spine symbols"
       }
     ]
   }

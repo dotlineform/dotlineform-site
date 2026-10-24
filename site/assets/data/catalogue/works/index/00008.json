@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-35bb812e0dffecebbe9d038c065724e2",
-    "generated_at_utc": "2026-10-21T20:31:26Z"
+    "version": "blake2b-188b624b0288fdb737a208623c511e7f",
+    "generated_at_utc": "2026-10-24T17:42:33Z"
   },
   "work": {
     "work_id": "00008",
@@ -34,11 +34,6 @@
         "url": "https://media.dotlineform.com/works/files/00008-nerve.docx"
       }
     ],
-    "galleries": [
-      {
-        "gallery_id": "105",
-        "title": "nerve"
-      }
-    ]
+    "galleries": []
   }
 }

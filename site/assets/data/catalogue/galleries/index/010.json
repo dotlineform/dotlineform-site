@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T17:49:52Z",
     "gallery_id": "010"
   },
   "gallery": {
@@ -16,6 +16,30 @@
     {
       "work_id": "00735",
       "title": "a theory of happiness is a theory of everything (64°)"
+    },
+    {
+      "work_id": "03289",
+      "title": "buddhism"
+    },
+    {
+      "work_id": "03290",
+      "title": "chemicals"
+    },
+    {
+      "work_id": "03291",
+      "title": "colour"
+    },
+    {
+      "work_id": "03292",
+      "title": "music"
+    },
+    {
+      "work_id": "03293",
+      "title": "physics"
+    },
+    {
+      "work_id": "03294",
+      "title": "words"
     }
   ]
 }

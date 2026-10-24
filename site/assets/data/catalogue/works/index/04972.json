@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-163b24e0619cf28300f6e76548c80b6e",
-    "generated_at_utc": "2026-10-23T14:05:51Z"
+    "version": "blake2b-98f350949038f9ff23c1b11111f30132",
+    "generated_at_utc": "2026-10-24T17:50:42Z"
   },
   "work": {
     "work_id": "04972",
@@ -18,8 +18,8 @@
     "series_id": "152",
     "galleries": [
       {
-        "gallery_id": "322",
-        "title": "a world of non-linearity (moments)"
+        "gallery_id": "321",
+        "title": "a world of non-linearity"
       }
     ]
   }

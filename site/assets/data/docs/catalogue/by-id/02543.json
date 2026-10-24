@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "155"
-            },
-            "label": "spiders (photos)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "125"
             },
             "label": "spiders",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

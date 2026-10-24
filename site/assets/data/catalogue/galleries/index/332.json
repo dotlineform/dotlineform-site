@@ -1,14 +1,18 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
-    "gallery_id": "146"
+    "generated_at_utc": "2026-10-24T18:21:09Z",
+    "gallery_id": "332"
   },
   "gallery": {
-    "gallery_id": "146",
-    "title": "Michelle Pfeiffer (details)"
+    "gallery_id": "332",
+    "title": "Michelle Pfeiffer"
   },
   "member_works": [
+    {
+      "work_id": "00159",
+      "title": "Michelle Pfeiffer"
+    },
     {
       "work_id": "01969",
       "title": "Michelle Pfeiffer - page 1"

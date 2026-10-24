@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-5e42b109613286677c2a5f573d0f6e22",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-2d6731f31d40a9dd9888a03953c3f6fe",
+    "generated_at_utc": "2026-10-24T17:46:53Z"
   },
   "work": {
     "work_id": "04379",
     "title": "daydream",
     "year": 2008,
     "year_display": "2008",
-    "medium": "giclée print",
     "width_px": 1600,
     "height_px": 1454,
+    "medium": "giclée print",
     "media_version": 1,
     "series_id": "126",
     "galleries": [
       {
-        "gallery_id": "287",
-        "title": "spine symbols (symbols)"
+        "gallery_id": "126",
+        "title": "spine symbols"
       }
     ]
   }

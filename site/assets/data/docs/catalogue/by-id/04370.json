@@ -50,26 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "287"
-            },
-            "label": "spine symbols (symbols)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "126"
             },
             "label": "spine symbols",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "288"
-            },
-            "label": "spine symbols (source)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

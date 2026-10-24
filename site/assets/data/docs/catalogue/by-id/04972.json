@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "322"
-            },
-            "label": "a world of non-linearity (moments)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "321"
             },
             "label": "a world of non-linearity",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "211"
-            },
-            "label": "a theory of happiness is a theory of everything (layers)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "010"
             },
             "label": "a theory of happiness is a theory of everything",
-            "relation": "series"
+            "relation": "direct"
           },
           {
             "target": {

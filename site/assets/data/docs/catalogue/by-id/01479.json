@@ -54,14 +54,6 @@
             },
             "label": "olive tree",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "275"
-            },
-            "label": "olive tree (details)",
-            "relation": "series"
           }
         ],
         "entry": {
