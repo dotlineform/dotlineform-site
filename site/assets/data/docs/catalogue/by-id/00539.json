@@ -54,14 +54,6 @@
             },
             "label": "models",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "189"
-            },
-            "label": "model 2 (details)",
-            "relation": "series"
           }
         ],
         "entry": {

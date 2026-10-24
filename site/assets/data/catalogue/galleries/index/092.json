@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T17:37:14Z",
     "gallery_id": "092"
   },
   "gallery": {
@@ -12,6 +12,34 @@
     {
       "work_id": "00463",
       "title": "living surface hand form"
+    },
+    {
+      "work_id": "02879",
+      "title": "living surface hand form (original painting, 1989)"
+    },
+    {
+      "work_id": "02880",
+      "title": "living surface (version 1)"
+    },
+    {
+      "work_id": "02881",
+      "title": "living surface (version 2)"
+    },
+    {
+      "work_id": "02882",
+      "title": "living surface (version 3)"
+    },
+    {
+      "work_id": "02883",
+      "title": "living surface (version 3) detail"
+    },
+    {
+      "work_id": "02884",
+      "title": "living surface (version 4)"
+    },
+    {
+      "work_id": "02885",
+      "title": "living surface (version 4) detail"
     }
   ]
 }

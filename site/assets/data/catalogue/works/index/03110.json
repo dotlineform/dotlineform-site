@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-c2e456442403b1e9573b965cdc53d6fc",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-9fb279e1b3ad52fe41ce8a7120298f75",
+    "generated_at_utc": "2026-10-24T17:38:01Z"
   },
   "work": {
     "work_id": "03110",
     "title": "model 2 - 001",
     "year": 1994,
     "year_display": "1994",
-    "medium": "magazine collage, tracing paper",
     "width_px": 3031,
     "height_px": 4629,
+    "medium": "magazine collage, tracing paper",
     "media_version": 1,
     "series_id": "099",
     "galleries": [
       {
-        "gallery_id": "189",
-        "title": "model 2 (details)"
+        "gallery_id": "099",
+        "title": "models"
       }
     ]
   }

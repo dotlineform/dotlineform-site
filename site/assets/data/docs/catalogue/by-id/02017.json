@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "153"
-            },
-            "label": "glass forms (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "070"
             },
             "label": "glass forms",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

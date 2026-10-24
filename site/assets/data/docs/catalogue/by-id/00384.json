@@ -54,14 +54,6 @@
             },
             "label": "glass forms",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "153"
-            },
-            "label": "glass forms (details)",
-            "relation": "series"
           }
         ],
         "entry": {

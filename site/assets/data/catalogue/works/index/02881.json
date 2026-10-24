@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-4885dfe6b4683ffacbc07aa9f5f49ae3",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-6ceb056fb17023975b95529f4b959c53",
+    "generated_at_utc": "2026-10-24T17:37:14Z"
   },
   "work": {
     "work_id": "02881",
     "title": "living surface (version 2)",
     "year": 2004,
     "year_display": "1989, 2004",
-    "medium": "digital c-type print",
     "width_px": 7087,
     "height_px": 7087,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "092",
     "galleries": [
       {
-        "gallery_id": "163",
-        "title": "living surface hand form (versions)"
+        "gallery_id": "092",
+        "title": "living surface hand form"
       }
     ]
   }

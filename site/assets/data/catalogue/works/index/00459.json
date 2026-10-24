@@ -1,26 +1,21 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-f615969d434f828cd2c0148651aa1467",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-ceda7a4f0d6b28ac1b93128a8b7d5ee1",
+    "generated_at_utc": "2026-10-24T17:38:49Z"
   },
   "work": {
     "work_id": "00459",
     "title": "molecule forms",
     "year": 2013,
     "year_display": "2013",
-    "medium": "digital c-type print",
-    "height_cm": 81.3,
-    "width_cm": 81.3,
     "width_px": 9600,
     "height_px": 9600,
+    "height_cm": 81.3,
+    "width_cm": 81.3,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "100",
-    "galleries": [
-      {
-        "gallery_id": "100",
-        "title": "molecule forms"
-      }
-    ]
+    "galleries": []
   }
 }

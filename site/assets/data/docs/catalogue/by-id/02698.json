@@ -54,14 +54,6 @@
             },
             "label": "molecule forms (molecules)",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "100"
-            },
-            "label": "molecule forms",
-            "relation": "series"
           }
         ],
         "entry": {

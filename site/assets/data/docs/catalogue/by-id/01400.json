@@ -46,16 +46,7 @@
           "height_px": 2964
         },
         "new_tab_target": "https://media.dotlineform.com/works/img/01400-primary-1600.webp?v=1",
-        "galleries": [
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "086"
-            },
-            "label": "landscape for symbols",
-            "relation": "direct"
-          }
-        ],
+        "galleries": [],
         "entry": {
           "metadata_lines": [
             "2021",

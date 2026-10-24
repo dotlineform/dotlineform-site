@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T17:33:19Z"
+    "generated_at_utc": "2026-10-24T17:38:49Z"
   },
   "series_galleries": {
     "001": [
@@ -558,10 +558,6 @@
       {
         "gallery_id": "070",
         "title": "glass forms"
-      },
-      {
-        "gallery_id": "153",
-        "title": "glass forms (details)"
       }
     ],
     "071": [
@@ -648,12 +644,7 @@
         "title": "interior design 3 (details)"
       }
     ],
-    "081": [
-      {
-        "gallery_id": "081",
-        "title": "intuition (2020)"
-      }
-    ],
+    "081": [],
     "082": [
       {
         "gallery_id": "082",
@@ -718,24 +709,14 @@
         "title": "kylie wax model 5.0 (iterations)"
       }
     ],
-    "086": [
-      {
-        "gallery_id": "086",
-        "title": "landscape for symbols"
-      }
-    ],
+    "086": [],
     "087": [
       {
         "gallery_id": "087",
         "title": "landscapes"
       }
     ],
-    "088": [
-      {
-        "gallery_id": "088",
-        "title": "leaf"
-      }
-    ],
+    "088": [],
     "089": [
       {
         "gallery_id": "089",
@@ -752,24 +733,11 @@
         "title": "lights"
       }
     ],
-    "091": [
-      {
-        "gallery_id": "091",
-        "title": "lipseyes"
-      }
-    ],
+    "091": [],
     "092": [
       {
         "gallery_id": "092",
         "title": "living surface hand form"
-      },
-      {
-        "gallery_id": "162",
-        "title": "living surface hand form (original painting)"
-      },
-      {
-        "gallery_id": "163",
-        "title": "living surface hand form (versions)"
       }
     ],
     "093": [
@@ -812,17 +780,9 @@
       {
         "gallery_id": "099",
         "title": "models"
-      },
-      {
-        "gallery_id": "189",
-        "title": "model 2 (details)"
       }
     ],
     "100": [
-      {
-        "gallery_id": "100",
-        "title": "molecule forms"
-      },
       {
         "gallery_id": "159",
         "title": "molecule forms (molecules)"

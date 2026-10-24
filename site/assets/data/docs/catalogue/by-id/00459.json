@@ -50,14 +50,6 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "100"
-            },
-            "label": "molecule forms",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "159"
             },
             "label": "molecule forms (molecules)",

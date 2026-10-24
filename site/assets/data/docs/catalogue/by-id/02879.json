@@ -50,26 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "162"
-            },
-            "label": "living surface hand form (original painting)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "092"
             },
             "label": "living surface hand form",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "163"
-            },
-            "label": "living surface hand form (versions)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {
