@@ -58,10 +58,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "274"
+              "id": "331"
             },
-            "label": "matter (details)",
-            "relation": "series"
+            "label": "composites (book, 2023)",
+            "relation": "direct"
           }
         ],
         "entry": {

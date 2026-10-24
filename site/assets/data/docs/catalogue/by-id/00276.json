@@ -54,14 +54,6 @@
             },
             "label": "collected digital c. 1998",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "151"
-            },
-            "label": "untitled [227] (reverse)",
-            "relation": "series"
           }
         ],
         "entry": {

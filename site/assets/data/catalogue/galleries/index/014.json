@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T16:20:33Z",
     "gallery_id": "014"
   },
   "gallery": {
@@ -20,6 +20,42 @@
     {
       "work_id": "00755",
       "title": "assembly code 3"
+    },
+    {
+      "work_id": "03367",
+      "title": "assembly code 1 (detail 1)"
+    },
+    {
+      "work_id": "03368",
+      "title": "assembly code 1 (detail 2)"
+    },
+    {
+      "work_id": "03369",
+      "title": "assembly code 1 (detail 3)"
+    },
+    {
+      "work_id": "03370",
+      "title": "assembly code 2 (detail 1)"
+    },
+    {
+      "work_id": "03371",
+      "title": "assembly code 2 (detail 2)"
+    },
+    {
+      "work_id": "03372",
+      "title": "assembly code 2 (detail 3)"
+    },
+    {
+      "work_id": "03373",
+      "title": "assembly code 3 (detail 1)"
+    },
+    {
+      "work_id": "03374",
+      "title": "assembly code 3 (detail 2)"
+    },
+    {
+      "work_id": "03375",
+      "title": "assembly code 3 (detail 3)"
     }
   ]
 }

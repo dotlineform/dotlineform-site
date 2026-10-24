@@ -54,38 +54,6 @@
             },
             "label": "kylie structures",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "176"
-            },
-            "label": "kylie structure 1 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "177"
-            },
-            "label": "kylie structure 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "178"
-            },
-            "label": "kylie structure 3 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "179"
-            },
-            "label": "kylie structure 4 (details)",
-            "relation": "series"
           }
         ],
         "entry": {

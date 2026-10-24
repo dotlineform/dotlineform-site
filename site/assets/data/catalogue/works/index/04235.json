@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-5c51bf95485ddfe83dc4c7abdbeacdaa",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-ac9f2eed8684578f028f0bfb68aaa647",
+    "generated_at_utc": "2026-10-24T16:06:20Z"
   },
   "work": {
     "work_id": "04235",
     "title": "home 1 - detail 2",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "077",
     "galleries": [
       {
-        "gallery_id": "261",
-        "title": "home 1 (details)"
+        "gallery_id": "077",
+        "title": "home"
       }
     ]
   }

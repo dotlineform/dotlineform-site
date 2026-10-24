@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T10:48:21Z"
+    "generated_at_utc": "2026-10-24T16:20:33Z"
   },
   "series_galleries": {
     "001": [
@@ -134,18 +134,6 @@
       {
         "gallery_id": "014",
         "title": "assembly codes"
-      },
-      {
-        "gallery_id": "215",
-        "title": "assembly code 1 (details)"
-      },
-      {
-        "gallery_id": "216",
-        "title": "assembly code 2 (details)"
-      },
-      {
-        "gallery_id": "217",
-        "title": "assembly code 3 (details)"
       }
     ],
     "015": [
@@ -231,10 +219,6 @@
       {
         "gallery_id": "027",
         "title": "collected digital c. 1998"
-      },
-      {
-        "gallery_id": "151",
-        "title": "untitled [227] (reverse)"
       }
     ],
     "028": [
@@ -579,22 +563,6 @@
       {
         "gallery_id": "062",
         "title": "forests (2023)"
-      },
-      {
-        "gallery_id": "167",
-        "title": "forest 1 (details)"
-      },
-      {
-        "gallery_id": "168",
-        "title": "forest 2 (details)"
-      },
-      {
-        "gallery_id": "169",
-        "title": "forest 3 (details)"
-      },
-      {
-        "gallery_id": "170",
-        "title": "forest 4 (details)"
       }
     ],
     "063": [
@@ -725,26 +693,6 @@
       {
         "gallery_id": "077",
         "title": "home"
-      },
-      {
-        "gallery_id": "261",
-        "title": "home 1 (details)"
-      },
-      {
-        "gallery_id": "262",
-        "title": "home 2 (details)"
-      },
-      {
-        "gallery_id": "263",
-        "title": "home 3 (details)"
-      },
-      {
-        "gallery_id": "264",
-        "title": "home 4 (details)"
-      },
-      {
-        "gallery_id": "265",
-        "title": "home 5 (details)"
       }
     ],
     "078": [
@@ -819,22 +767,6 @@
       {
         "gallery_id": "084",
         "title": "kylie structures"
-      },
-      {
-        "gallery_id": "176",
-        "title": "kylie structure 1 (details)"
-      },
-      {
-        "gallery_id": "177",
-        "title": "kylie structure 2 (details)"
-      },
-      {
-        "gallery_id": "178",
-        "title": "kylie structure 3 (details)"
-      },
-      {
-        "gallery_id": "179",
-        "title": "kylie structure 4 (details)"
       }
     ],
     "085": [
@@ -873,18 +805,6 @@
       {
         "gallery_id": "087",
         "title": "landscapes"
-      },
-      {
-        "gallery_id": "172",
-        "title": "landscape 1 (details)"
-      },
-      {
-        "gallery_id": "173",
-        "title": "landscape 2 (details)"
-      },
-      {
-        "gallery_id": "174",
-        "title": "landscape 2.1 (details)"
       }
     ],
     "088": [
@@ -939,10 +859,6 @@
       {
         "gallery_id": "094",
         "title": "matter"
-      },
-      {
-        "gallery_id": "274",
-        "title": "matter (details)"
       }
     ],
     "095": [
@@ -1245,10 +1161,6 @@
         "title": "state of mind"
       },
       {
-        "gallery_id": "289",
-        "title": "state of mind (details)"
-      },
-      {
         "gallery_id": "290",
         "title": "state of mind (source)"
       }
@@ -1323,56 +1235,12 @@
       {
         "gallery_id": "137",
         "title": "tulips"
-      },
-      {
-        "gallery_id": "293",
-        "title": "tulips 1 (details)"
-      },
-      {
-        "gallery_id": "294",
-        "title": "tulips 2 (details)"
-      },
-      {
-        "gallery_id": "295",
-        "title": "tulips 3 (details)"
-      },
-      {
-        "gallery_id": "296",
-        "title": "tulips 4 (details)"
-      },
-      {
-        "gallery_id": "297",
-        "title": "tulips 5 (details)"
       }
     ],
     "138": [
       {
         "gallery_id": "138",
         "title": "untitled composites"
-      },
-      {
-        "gallery_id": "298",
-        "title": "untitled composite 1 (details)"
-      },
-      {
-        "gallery_id": "299",
-        "title": "untitled composite 2 (details)"
-      },
-      {
-        "gallery_id": "300",
-        "title": "untitled composite 3 (details)"
-      },
-      {
-        "gallery_id": "301",
-        "title": "untitled composite 4 (details)"
-      },
-      {
-        "gallery_id": "302",
-        "title": "untitled composite 5 (details)"
-      },
-      {
-        "gallery_id": "303",
-        "title": "untitled composite 6 (details)"
       }
     ],
     "139": [
@@ -1397,18 +1265,6 @@
       {
         "gallery_id": "142",
         "title": "water sea pond"
-      },
-      {
-        "gallery_id": "304",
-        "title": "water (details)"
-      },
-      {
-        "gallery_id": "305",
-        "title": "sea (details)"
-      },
-      {
-        "gallery_id": "306",
-        "title": "pond (details)"
       }
     ],
     "144": [],

@@ -58,10 +58,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "289"
+              "id": "331"
             },
-            "label": "state of mind (details)",
-            "relation": "series"
+            "label": "composites (book, 2023)",
+            "relation": "direct"
           },
           {
             "target": {

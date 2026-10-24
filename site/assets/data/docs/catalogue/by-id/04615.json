@@ -50,34 +50,18 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "304"
+              "id": "142"
             },
-            "label": "water (details)",
+            "label": "water sea pond",
             "relation": "direct"
           },
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "142"
+              "id": "331"
             },
-            "label": "water sea pond",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "305"
-            },
-            "label": "sea (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "306"
-            },
-            "label": "pond (details)",
-            "relation": "series"
+            "label": "composites (book, 2023)",
+            "relation": "direct"
           }
         ],
         "entry": {

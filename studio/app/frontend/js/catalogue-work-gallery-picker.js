@@ -1,5 +1,5 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
-import { normalizeText } from "./catalogue-work-fields.js";
+import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { createStudioIcon } from "./studio-icon.js";
 
 function disabled(state) {
@@ -12,8 +12,7 @@ function matches(state) {
   const selected = new Set(state.draft.gallery_ids || []);
   return Array.from(state.galleriesById.entries())
     .filter(([id, record]) => !selected.has(id) && (id.includes(query) || record.title.toLowerCase().includes(query)))
-    .sort(([idA, a], [idB, b]) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: "base" }) || idA.localeCompare(idB))
-    .slice(0, 12);
+    .sort(([idA, a], [idB, b]) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: "base" }) || idA.localeCompare(idB));
 }
 
 function node(tag, className, text = "") {
@@ -21,23 +20,6 @@ function node(tag, className, text = "") {
   element.className = className;
   element.textContent = text;
   return element;
-}
-
-function renderMatches(state) {
-  const picker = state.galleryPicker;
-  picker.popupNode.replaceChildren();
-  if (disabled(state)) {
-    picker.popupNode.hidden = true;
-    return;
-  }
-  for (const [id, record] of matches(state)) {
-    const button = node("button", "sharedSearchList__option");
-    button.type = "button";
-    button.dataset.galleryId = id;
-    button.append(node("span", "catalogueGallerySearch__title", record.title));
-    picker.popupNode.append(button);
-  }
-  picker.popupNode.hidden = !picker.popupNode.childElementCount;
 }
 
 /** Render exact canonical Gallery selections; titles are lookup labels only. */
@@ -64,7 +46,7 @@ export function renderWorkGalleryPicker(state) {
   }
   if (!ids.length) picker.chipsNode.append(node("span", "studioForm__meta", "No galleries selected."));
   picker.searchInput.value = "";
-  picker.popupNode.hidden = true;
+  picker.searchController.close();
   setWorkGalleryPickerAvailability(state);
 }
 
@@ -75,7 +57,7 @@ export function setWorkGalleryPickerAvailability(state) {
   const busy = disabled(state);
   picker.searchInput.disabled = busy;
   picker.wrapper.querySelectorAll("button").forEach(button => { button.disabled = busy; });
-  if (busy) picker.popupNode.hidden = true;
+  if (busy) picker.searchController.close();
 }
 
 /** Mount the Work-owned multiple Gallery picker using the existing Series picker styles. */
@@ -109,7 +91,7 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   control.append(chipsNode, searchRow);
   wrapper.append(label, control);
   fieldsNode.append(wrapper);
-  state.galleryPicker = { wrapper, chipsNode, searchInput, popupNode };
+  state.galleryPicker = { wrapper, chipsNode, searchInput, popupNode, searchController: null };
 
   function changeSelection(ids) {
     if (disabled(state)) return;
@@ -124,24 +106,28 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
     changeSelection([...state.draft.gallery_ids, id]);
   }
 
-  searchInput.addEventListener("input", () => renderMatches(state));
-  searchInput.addEventListener("focus", () => renderMatches(state));
+  const searchController = bindSearchList(searchInput, popupNode, {
+    id: "catalogueWorkGallerySearchList",
+    freeEntry: true,
+    shouldOpen: () => !disabled(state) && searchInput.value.trim().length > 0,
+    loadOptions: () => matches(state),
+    filterOptions: items => items,
+    getOptionValue: ([, record]) => record.title,
+    renderOption: ([, record]) => node("span", "catalogueGallerySearch__title", record.title).outerHTML,
+    noResultsText: "No matching galleries.",
+    onCommit: ([id]) => {
+      add(id);
+      searchInput.focus();
+    }
+  });
+  state.galleryPicker.searchController = searchController;
   searchInput.addEventListener("keydown", event => {
-    if (event.key === "Escape") popupNode.hidden = true;
-    if (event.key !== "Enter" || disabled(state)) return;
+    // Preserve direct Enter selection; the shared list handles a navigated result.
+    if (event.key !== "Enter" || event.defaultPrevented || disabled(state)) return;
     event.preventDefault();
-    const first = matches(state)[0];
+    if (!searchInput.value.trim()) return;
+    const first = searchController.matches[0];
     if (first) add(first[0]);
-  });
-  popupNode.addEventListener("mousedown", event => {
-    // Keep input focus until click selects the result; WebKit can blur without focusing the button.
-    if (event.button === 0 && event.target.closest("[data-gallery-id]")) event.preventDefault();
-  });
-  popupNode.addEventListener("click", event => {
-    const button = event.target.closest("[data-gallery-id]");
-    if (!button || disabled(state)) return;
-    add(normalizeText(button.dataset.galleryId));
-    searchInput.focus();
   });
   chipsNode.addEventListener("click", event => {
     const edit = event.target.closest("[data-edit-gallery-id]");
@@ -153,9 +139,6 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
     if (!button || disabled(state)) return;
     changeSelection(state.draft.gallery_ids.filter(id => id !== button.dataset.removeGalleryId));
     searchInput.focus();
-  });
-  wrapper.addEventListener("focusout", event => {
-    if (!wrapper.contains(event.relatedTarget)) popupNode.hidden = true;
   });
   renderWorkGalleryPicker(state);
 }

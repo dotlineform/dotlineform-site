@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e15cc9d3393fa532e4736066c1c60290",
-    "generated_at_utc": "2026-10-24T09:29:05Z"
+    "version": "blake2b-a28d3b2cc9205196b7d24d94499c4829",
+    "generated_at_utc": "2026-10-24T16:06:20Z"
   },
   "work": {
     "work_id": "04044",
@@ -18,6 +18,10 @@
       {
         "gallery_id": "052",
         "title": "flowers"
+      },
+      {
+        "gallery_id": "331",
+        "title": "composites (book, 2023)"
       }
     ]
   }

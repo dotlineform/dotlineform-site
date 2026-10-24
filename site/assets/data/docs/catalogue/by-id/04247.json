@@ -50,50 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "264"
-            },
-            "label": "home 4 (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "077"
             },
             "label": "home",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "261"
-            },
-            "label": "home 1 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "262"
-            },
-            "label": "home 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "263"
-            },
-            "label": "home 3 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "265"
-            },
-            "label": "home 5 (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

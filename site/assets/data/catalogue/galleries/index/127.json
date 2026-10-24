@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T16:10:06Z",
     "gallery_id": "127"
   },
   "gallery": {
@@ -12,6 +12,30 @@
     {
       "work_id": "01721",
       "title": "state of mind"
+    },
+    {
+      "work_id": "04438",
+      "title": "state of mind - detail (jewels)"
+    },
+    {
+      "work_id": "04439",
+      "title": "state of mind - detail (leaf)"
+    },
+    {
+      "work_id": "04440",
+      "title": "state of mind - detail (thorns)"
+    },
+    {
+      "work_id": "04441",
+      "title": "state of mind - detail 1"
+    },
+    {
+      "work_id": "04442",
+      "title": "state of mind - detail 2"
+    },
+    {
+      "work_id": "04443",
+      "title": "state of mind - detail 3"
     }
   ]
 }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-22"
+last_updated: "2026-10-24"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -91,7 +91,7 @@ Every import includes every supported direct image, including a repeated import 
 
 ## Gallery And Series Definitions
 
-Gallery pills and search results display titles only. The Gallery dropdown shares the Series dropdown's popup and result-row styling.
+Gallery pills and search results display titles only. The Gallery dropdown uses the same shared search-list control as Medium: Down enters the matching results, Up/Down changes the highlighted Gallery, Enter adds it, and Escape closes the list while keeping the query. Enter before arrow navigation retains the first-result shortcut. Matching uses the loaded Gallery registry, excludes selected memberships, and keeps the existing title/ID search, alphabetical order and 12-result limit. No matches displays a message; an empty query closes the list. Selection clears the query and returns to the field for another Gallery.
 
 New beside the Gallery field or the left-panel Series search opens a New modal with OK and Cancel. Clicking a Gallery pill's title or the left-panel Series Edit opens an Edit modal with OK, Cancel and Delete. Series Edit targets the browsed Series. Delete is inside Edit. Edit never changes into New.
 

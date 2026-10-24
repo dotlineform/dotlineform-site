@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "289"
-            },
-            "label": "state of mind (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "127"
             },
             "label": "state of mind",
-            "relation": "series"
+            "relation": "direct"
           },
           {
             "target": {

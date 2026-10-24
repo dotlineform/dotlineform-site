@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-3d74dfb81ccb1df71a52c2272c3e3f66",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-72613e28b77c37da5f0dfd1c53699fc7",
+    "generated_at_utc": "2026-10-24T16:14:15Z"
   },
   "work": {
     "work_id": "02948",
     "title": "forest 1 - detail 3",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 4000,
     "height_px": 4000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "062",
     "galleries": [
       {
-        "gallery_id": "167",
-        "title": "forest 1 (details)"
+        "gallery_id": "062",
+        "title": "forests (2023)"
       }
     ]
   }

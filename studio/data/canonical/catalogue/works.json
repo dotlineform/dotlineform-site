@@ -80974,6 +80974,22 @@
       "width_px": 3543,
       "height_px": 3543,
       "medium": "digital c-type print"
+    },
+    "05213": {
+      "work_id": "05213",
+      "series_id": "144",
+      "project_folder": "unsolved equations",
+      "project_filename": "water mist.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "water mist",
+      "width_cm": 70,
+      "height_cm": 70,
+      "year": 2023,
+      "year_display": "2023",
+      "medium": "digital c-type print",
+      "width_px": 8268,
+      "height_px": 8268
     }
   }
 }

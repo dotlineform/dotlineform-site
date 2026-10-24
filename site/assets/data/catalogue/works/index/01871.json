@@ -1,25 +1,29 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-caa0c819cbf4d3765ca7870fb2e56984",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-bf27b8163165b28e0cd605b112c0ce1b",
+    "generated_at_utc": "2026-10-24T16:10:06Z"
   },
   "work": {
     "work_id": "01871",
     "title": "tulips 3",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
-    "height_cm": 70.0,
-    "width_cm": 70.0,
     "width_px": 8268,
     "height_px": 8268,
+    "height_cm": 70,
+    "width_cm": 70,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "137",
     "galleries": [
       {
         "gallery_id": "137",
         "title": "tulips"
+      },
+      {
+        "gallery_id": "331",
+        "title": "composites (book, 2023)"
       }
     ]
   }

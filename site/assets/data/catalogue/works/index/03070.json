@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d51ee798fbebd8ab63f005c9595286fa",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-75229473050088dbe29b4e5c5960affe",
+    "generated_at_utc": "2026-10-24T16:19:22Z"
   },
   "work": {
     "work_id": "03070",
     "title": "kylie structure 3.1",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 3316,
     "height_px": 3316,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "084",
     "galleries": [
       {
-        "gallery_id": "178",
-        "title": "kylie structure 3 (details)"
+        "gallery_id": "084",
+        "title": "kylie structures"
       }
     ]
   }

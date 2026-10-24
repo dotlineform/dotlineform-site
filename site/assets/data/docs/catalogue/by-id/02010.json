@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "151"
-            },
-            "label": "untitled [227] (reverse)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "027"
             },
             "label": "collected digital c. 1998",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

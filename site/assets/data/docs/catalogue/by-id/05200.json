@@ -54,6 +54,14 @@
             },
             "label": "moments",
             "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "331"
+            },
+            "label": "composites (book, 2023)",
+            "relation": "direct"
           }
         ],
         "entry": {

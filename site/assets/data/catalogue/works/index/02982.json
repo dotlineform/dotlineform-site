@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-7848a85398712fcb03b49e53a0f9f745",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-715018d7b1a816a95528e9ac0c60e058",
+    "generated_at_utc": "2026-10-24T16:19:22Z"
   },
   "work": {
     "work_id": "02982",
     "title": "landscape 2.1 - detail 3",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 2362,
     "height_px": 2362,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "087",
     "galleries": [
       {
-        "gallery_id": "174",
-        "title": "landscape 2.1 (details)"
+        "gallery_id": "087",
+        "title": "landscapes"
       }
     ]
   }

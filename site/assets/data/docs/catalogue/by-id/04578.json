@@ -50,50 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "295"
-            },
-            "label": "tulips 3 (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "137"
             },
             "label": "tulips",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "293"
-            },
-            "label": "tulips 1 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "294"
-            },
-            "label": "tulips 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "296"
-            },
-            "label": "tulips 4 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "297"
-            },
-            "label": "tulips 5 (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e0d9b4799672ddc338d97ad4658b08ae",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-00033800589d4d75dfbf916736b26333",
+    "generated_at_utc": "2026-10-24T14:32:52Z"
   },
   "work": {
     "work_id": "04597",
     "title": "untitled composite 3 - detail 2",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "138",
     "galleries": [
       {
-        "gallery_id": "300",
-        "title": "untitled composite 3 (details)"
+        "gallery_id": "138",
+        "title": "untitled composites"
       }
     ]
   }

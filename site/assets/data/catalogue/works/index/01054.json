@@ -1,25 +1,29 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-065df725461cb6a468a7defaa2ab6aaa",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-a57388825ad9c1a231ab1df302a0d9ff",
+    "generated_at_utc": "2026-10-24T16:06:20Z"
   },
   "work": {
     "work_id": "01054",
     "title": "flowers 3",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
-    "height_cm": 50.0,
-    "width_cm": 120.0,
     "width_px": 14173,
     "height_px": 5906,
+    "height_cm": 50,
+    "width_cm": 120,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "052",
     "galleries": [
       {
         "gallery_id": "052",
         "title": "flowers"
+      },
+      {
+        "gallery_id": "331",
+        "title": "composites (book, 2023)"
       }
     ]
   }

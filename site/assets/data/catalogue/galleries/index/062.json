@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T16:14:15Z",
     "gallery_id": "062"
   },
   "gallery": {
@@ -24,6 +24,66 @@
     {
       "work_id": "00468",
       "title": "forest 4"
+    },
+    {
+      "work_id": "02946",
+      "title": "forest 1 - detail 1"
+    },
+    {
+      "work_id": "02947",
+      "title": "forest 1 - detail 2"
+    },
+    {
+      "work_id": "02948",
+      "title": "forest 1 - detail 3"
+    },
+    {
+      "work_id": "02949",
+      "title": "forest 2 - detail 1"
+    },
+    {
+      "work_id": "02950",
+      "title": "forest 2 - detail 2"
+    },
+    {
+      "work_id": "02951",
+      "title": "forest 2 - detail 3"
+    },
+    {
+      "work_id": "02952",
+      "title": "forest 3 - detail 1"
+    },
+    {
+      "work_id": "02953",
+      "title": "forest 3 - detail 2"
+    },
+    {
+      "work_id": "02954",
+      "title": "forest 3 - detail 3"
+    },
+    {
+      "work_id": "02955",
+      "title": "forest 4 - detail 1"
+    },
+    {
+      "work_id": "02956",
+      "title": "forest 4 - detail 2"
+    },
+    {
+      "work_id": "02957",
+      "title": "forest 4 - detail 3"
+    },
+    {
+      "work_id": "02958",
+      "title": "forest 4 - detail 4"
+    },
+    {
+      "work_id": "02959",
+      "title": "forest 4 - detail 5"
+    },
+    {
+      "work_id": "02960",
+      "title": "forest 4 - detail 6"
     }
   ]
 }

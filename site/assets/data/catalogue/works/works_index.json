@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-24T10:48:21Z"
+    "generated_at_utc": "2026-10-24T14:39:02Z"
   },
   "works": {
     "00001": {
@@ -20627,6 +20627,46 @@
     "05203": {
       "work_id": "05203",
       "title": "flowers"
+    },
+    "05204": {
+      "work_id": "05204",
+      "title": "untitled composite 7"
+    },
+    "05205": {
+      "work_id": "05205",
+      "title": "untitled composite 8"
+    },
+    "05206": {
+      "work_id": "05206",
+      "title": "untitled composite 9"
+    },
+    "05207": {
+      "work_id": "05207",
+      "title": "untitled composite 7 - detail 1"
+    },
+    "05208": {
+      "work_id": "05208",
+      "title": "untitled composite 7 - detail 2"
+    },
+    "05209": {
+      "work_id": "05209",
+      "title": "untitled composite 8 - detail 1"
+    },
+    "05210": {
+      "work_id": "05210",
+      "title": "untitled composite 9 - detail 2"
+    },
+    "05211": {
+      "work_id": "05211",
+      "title": "untitled composite 8 - detail 2"
+    },
+    "05212": {
+      "work_id": "05212",
+      "title": "untitled composite 9 - detail 1"
+    },
+    "05213": {
+      "work_id": "05213",
+      "title": "water mist"
     }
   }
 }

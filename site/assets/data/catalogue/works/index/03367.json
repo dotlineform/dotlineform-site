@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-f233cda5bd04bfb12e1ed0e8c7225536",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-4e7402959d0d9bda0c494e25c7064ad2",
+    "generated_at_utc": "2026-10-24T16:20:33Z"
   },
   "work": {
     "work_id": "03367",
     "title": "assembly code 1 (detail 1)",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 2000,
     "height_px": 2000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "014",
     "galleries": [
       {
-        "gallery_id": "215",
-        "title": "assembly code 1 (details)"
+        "gallery_id": "014",
+        "title": "assembly codes"
       }
     ]
   }

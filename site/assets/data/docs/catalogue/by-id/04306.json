@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "274"
-            },
-            "label": "matter (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "094"
             },
             "label": "matter",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

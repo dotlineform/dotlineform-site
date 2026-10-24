@@ -1,25 +1,29 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d48039f5b367d607119b59ba85aca221",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-d4bb6933f98c93a6d5137a4e4db7a1ed",
+    "generated_at_utc": "2026-10-24T16:19:22Z"
   },
   "work": {
     "work_id": "01422",
     "title": "matter",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
-    "height_cm": 54.0,
-    "width_cm": 96.0,
     "width_px": 11339,
     "height_px": 6378,
+    "height_cm": 54,
+    "width_cm": 96,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "094",
     "galleries": [
       {
         "gallery_id": "094",
         "title": "matter"
+      },
+      {
+        "gallery_id": "331",
+        "title": "composites (book, 2023)"
       }
     ]
   }

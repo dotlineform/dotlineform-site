@@ -50,34 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "215"
-            },
-            "label": "assembly code 1 (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "014"
             },
             "label": "assembly codes",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "216"
-            },
-            "label": "assembly code 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "217"
-            },
-            "label": "assembly code 3 (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

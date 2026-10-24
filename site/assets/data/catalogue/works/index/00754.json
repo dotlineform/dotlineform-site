@@ -1,25 +1,29 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-8bc5ac0b9f1088b2a38c066d5dd6b300",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-f8ae858f6c6a5f0beef5d0b5c8c0f959",
+    "generated_at_utc": "2026-10-24T16:20:33Z"
   },
   "work": {
     "work_id": "00754",
     "title": "assembly code 2",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
-    "height_cm": 50.0,
-    "width_cm": 120.0,
     "width_px": 14173,
     "height_px": 5906,
+    "height_cm": 50,
+    "width_cm": 120,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "014",
     "galleries": [
       {
         "gallery_id": "014",
         "title": "assembly codes"
+      },
+      {
+        "gallery_id": "331",
+        "title": "composites (book, 2023)"
       }
     ]
   }

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-cc88b7704236e0bfc4895ca0d48a0377",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-91f8ca29b70cb71531665bf9ee43d82e",
+    "generated_at_utc": "2026-10-24T16:10:06Z"
   },
   "work": {
     "work_id": "04567",
     "title": "tulips 1 - detail 1",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "137",
     "galleries": [
       {
-        "gallery_id": "293",
-        "title": "tulips 1 (details)"
+        "gallery_id": "137",
+        "title": "tulips"
       }
     ]
   }

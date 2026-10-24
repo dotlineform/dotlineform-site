@@ -50,34 +50,18 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "173"
+              "id": "087"
             },
-            "label": "landscape 2 (details)",
+            "label": "landscapes",
             "relation": "direct"
           },
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "087"
+              "id": "331"
             },
-            "label": "landscapes",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "172"
-            },
-            "label": "landscape 1 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "174"
-            },
-            "label": "landscape 2.1 (details)",
-            "relation": "series"
+            "label": "composites (book, 2023)",
+            "relation": "direct"
           }
         ],
         "entry": {

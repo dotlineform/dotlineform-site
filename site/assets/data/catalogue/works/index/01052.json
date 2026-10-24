@@ -1,25 +1,29 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-b25b10cd9476f51260786e3607e008c7",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-8ac22041cb742c57baba098b248f0baa",
+    "generated_at_utc": "2026-10-24T16:06:20Z"
   },
   "work": {
     "work_id": "01052",
     "title": "flowers 1",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
-    "height_cm": 50.0,
-    "width_cm": 120.0,
     "width_px": 14173,
     "height_px": 5906,
+    "height_cm": 50,
+    "width_cm": 120,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "052",
     "galleries": [
       {
         "gallery_id": "052",
         "title": "flowers"
+      },
+      {
+        "gallery_id": "331",
+        "title": "composites (book, 2023)"
       }
     ]
   }

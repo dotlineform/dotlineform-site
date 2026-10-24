@@ -50,42 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "167"
-            },
-            "label": "forest 1 (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "062"
             },
             "label": "forests (2023)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "168"
-            },
-            "label": "forest 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "169"
-            },
-            "label": "forest 3 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "170"
-            },
-            "label": "forest 4 (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

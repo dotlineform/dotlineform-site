@@ -50,34 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "172"
-            },
-            "label": "landscape 1 (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "087"
             },
             "label": "landscapes",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "173"
-            },
-            "label": "landscape 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "174"
-            },
-            "label": "landscape 2.1 (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

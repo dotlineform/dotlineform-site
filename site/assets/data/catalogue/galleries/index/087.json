@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T16:19:22Z",
     "gallery_id": "087"
   },
   "gallery": {
@@ -20,6 +20,42 @@
     {
       "work_id": "00518",
       "title": "landscape 2.1"
+    },
+    {
+      "work_id": "02974",
+      "title": "landscape 1 - detail 1"
+    },
+    {
+      "work_id": "02975",
+      "title": "landscape 1 - detail 2"
+    },
+    {
+      "work_id": "02976",
+      "title": "landscape 1 - detail 3"
+    },
+    {
+      "work_id": "02977",
+      "title": "landscape 2 - detail 1"
+    },
+    {
+      "work_id": "02978",
+      "title": "landscape 2 - detail 2"
+    },
+    {
+      "work_id": "02979",
+      "title": "landscape 2 - detail 3"
+    },
+    {
+      "work_id": "02980",
+      "title": "landscape 2.1 - detail 1"
+    },
+    {
+      "work_id": "02981",
+      "title": "landscape 2.1 - detail 2"
+    },
+    {
+      "work_id": "02982",
+      "title": "landscape 2.1 - detail 3"
     }
   ]
 }

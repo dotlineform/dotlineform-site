@@ -58,26 +58,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "215"
+              "id": "331"
             },
-            "label": "assembly code 1 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "216"
-            },
-            "label": "assembly code 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "217"
-            },
-            "label": "assembly code 3 (details)",
-            "relation": "series"
+            "label": "composites (book, 2023)",
+            "relation": "direct"
           }
         ],
         "entry": {

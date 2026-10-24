@@ -58,14 +58,6 @@
             },
             "label": "state of mind",
             "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "289"
-            },
-            "label": "state of mind (details)",
-            "relation": "series"
           }
         ],
         "entry": {

@@ -54,54 +54,6 @@
             },
             "label": "untitled composites",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "298"
-            },
-            "label": "untitled composite 1 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "299"
-            },
-            "label": "untitled composite 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "300"
-            },
-            "label": "untitled composite 3 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "301"
-            },
-            "label": "untitled composite 4 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "302"
-            },
-            "label": "untitled composite 5 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "303"
-            },
-            "label": "untitled composite 6 (details)",
-            "relation": "series"
           }
         ],
         "entry": {
