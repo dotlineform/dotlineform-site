@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-24T23:04:53Z"
+    "generated_at_utc": "2026-10-24T23:20:11Z"
   },
   "galleries": {
     "001": {
@@ -83,10 +83,6 @@
     "024": {
       "gallery_id": "024",
       "title": "changed photos"
-    },
-    "026": {
-      "gallery_id": "026",
-      "title": "collected 1989-1998"
     },
     "027": {
       "gallery_id": "027",
