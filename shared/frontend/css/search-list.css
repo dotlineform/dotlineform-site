@@ -41,7 +41,7 @@
 
 .sharedSearchList__popup[data-navigation="pointer"] .sharedSearchList__option:hover,
 .sharedSearchList__option[aria-selected="true"] {
-  background: var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+  background: var(--shared-search-result-bg);
 }
 
 .sharedSearchList__optionText {

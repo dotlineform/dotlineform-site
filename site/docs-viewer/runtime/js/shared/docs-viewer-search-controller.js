@@ -14,6 +14,7 @@ export function createDocsViewerSearchRouteCommands(context) {
 /** Retain Index results independently of document navigation; providers own input validation. */
 export function initDocsViewerSearchController(context) {
   var searchRecent = context.searchRecent;
+  var searchInput = context.searchInput;
   var resultsStatus = context.resultsStatus;
   var results = context.results;
   var more = context.more;
@@ -279,7 +280,43 @@ export function initDocsViewerSearchController(context) {
   var deletedResults = new Set();
   if (context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(commitDocumentChange);
 
+  /** Move focus through the displayed list; normal links retain opening authority. */
+  function handleResultKeyDown(event) {
+    if (event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (!["ArrowDown", "ArrowUp", "Escape"].includes(event.key)) return;
+    if (!["search-results", "recent-results"].includes(context.activeIndexViewId())) return;
+    if (event.target === searchInput) {
+      if (event.key !== "ArrowDown") return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (searchRecent.searchDebounceId != null) {
+        cancelSearchDebounce();
+        renderSearchMode();
+      }
+      results.querySelector("a[data-result-doc-id]")?.focus();
+      return;
+    }
+    var link = event.target.closest("a[data-result-doc-id]");
+    if (!link || !results.contains(link)) return;
+    if (event.key === "Escape" && !searchInput) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.key === "Escape") {
+      searchInput.focus();
+      return;
+    }
+    var row = link.parentElement;
+    var adjacent = event.key === "ArrowUp" ? row.previousElementSibling : row.nextElementSibling;
+    if (adjacent) {
+      adjacent.querySelector("a[data-result-doc-id]").focus();
+    } else if (event.key === "ArrowUp" && searchInput) {
+      searchInput.focus();
+    }
+  }
+
   function bind() {
+    if (searchInput) searchInput.addEventListener("keydown", handleResultKeyDown);
+    results.addEventListener("keydown", handleResultKeyDown);
     more.addEventListener("click", function (event) {
       if (!event.target.closest("button[data-role='more']")) return;
       searchRecent.searchVisibleCount += context.searchBatchSize;

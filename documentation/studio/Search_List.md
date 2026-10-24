@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260715-084611-99ee19
 title: Search List
 added_date: 2026-07-15 08:46:11
-last_updated: "2026-10-20"
+last_updated: "2026-10-24"
 parent_id: d-20260505-181739-bb5223
 
 ---
@@ -17,6 +17,8 @@ Use Search List to add autocomplete/listbox behaviour to a caller-owned text inp
 - styles: `shared/frontend/css/search-list.css`
 
 Current consumers include Catalogue work/series selection and File Picker folder search. Search imports from `/shared/frontend/js/search-list.js` for the exact set.
+
+The host supplies `--shared-search-result-bg` for hovered and keyboard-active options. Docs Viewer and Studio use the same theme-aware neutral grey as Docs Viewer's toolbar hover; [CSS Ownership](CSS_Ownership.md#search-result-highlight) owns the common colour role. Other focus-ring styling retains its own owner.
 
 ## Stable Boundary
 

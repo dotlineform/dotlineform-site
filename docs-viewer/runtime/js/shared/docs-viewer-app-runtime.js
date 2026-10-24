@@ -450,6 +450,7 @@ export function startDocsViewerRuntime(options) {
     routeCommands: routeWorkflowCommands
   });
   searchController = searchEnabled || recentEnabled ? initDocsViewerSearchController({
+    searchInput: searchInput,
     setSearchInput: function (query) {
       if (searchInput) searchInput.value = query;
     },

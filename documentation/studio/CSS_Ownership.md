@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260511-200845-2a03a0
 title: CSS Ownership
 added_date: "2026-05-11 20:08:45"
-last_updated: "2026-10-18"
+last_updated: "2026-10-24"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -35,6 +35,16 @@ The local Manage shell loads the palette, viewer stylesheet, shared report style
 Management checkbox rows use the shared checkbox-field layout, with a sibling label for consistent spacing. The management stylesheet gives disabled checkboxes' labels the existing disabled-text colour directly from the input's disabled state; Add/Edit image uses this for Preserve original resolution and Create thumb without separate JavaScript styling state.
 
 Local apps serve canonical reader styles under `docs-viewer/`; public preview and GitHub Pages serve their tracked projection under `site/docs-viewer/`. `bin/site-code-update` maintains that projection, so public and Manage do not maintain separate reader styles.
+
+## Search Result Highlight
+
+Docs Viewer and Studio supply `--shared-search-result-bg` as the common neutral-grey fill for search-result hover, keyboard focus and active results. Docs Viewer maps it directly to its toolbar-icon hover background. Studio uses the same 92% panel / 8% text colour mix over its matching light/dark panel and text roles, producing the same grey in either theme. Existing selected-text roles remain readable over that fill.
+
+The role covers Index Search/Recent results, focused collection rows, document/Catalogue destination results, shared autocomplete, file/folder picker choices and selected shared record-list rows. Hosts map the existing record-list selected-background hook to the same role. Shared components consume this supplied colour instead of borrowing a blue focus-ring or selection colour. Highlight geometry, keyboard/pointer navigation, checked selections and query/loading behavior remain with their existing owners. Collection rows retain their accepted 6px leading extension and rounded corners.
+
+This is a CSS-only presentation change: it adds no data request, service work, state, event listener or generation. Public copies of the two shared viewer styles are maintained by the existing projection; Studio and management/picker styles remain local. Visual review owns the final light/dark appearance across both applications.
+
+The 2026-10-24 change passed `bin/site-code-update --check`, `bin/site-validate` and `git diff --check`. The distinct source and Redundancy And Defensive Behavior Review checked host-token inheritance, matching light/dark palette inputs, hover/focus/active selectors, existing record-list colour overrides and local/public serving boundaries. Both existing application roots supply the role to their picker/modal descendants; no new stylesheet, palette copy, compatibility alias, fallback chain, acquisition or behavior change was needed. No actionable findings remained. Tests and browser automation were not run; final visual confirmation remains manual after force-reloading Docs Viewer, Studio and Site Preview. No source/media generation, Search rebuild, Publish, deployment or Git action ran.
 
 ## Extension Method
 

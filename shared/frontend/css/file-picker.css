@@ -127,7 +127,7 @@
 }
 
 .sharedFilePicker__option[aria-selected="true"] {
-  background: var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+  background: var(--shared-search-result-bg);
 }
 
 .sharedFilePicker__option[aria-disabled="true"] {

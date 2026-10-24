@@ -280,6 +280,46 @@ function bindFilterControls(state) {
   });
 }
 
+/** Navigate rendered document links without changing management selection. */
+function bindCollectionKeyboardNavigation(state) {
+  function onKeyDown(event) {
+    if (event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+      || !state.mounted || !state.manifestLoaded || state.root.dataset.reportState !== "list") return;
+    if (!["ArrowDown", "ArrowUp", "Escape"].includes(event.key)) return;
+
+    if (event.target === state.filterInputNode) {
+      if (event.key !== "ArrowDown") return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (state.searchTimer !== null) {
+        cancelCollectionSearch(state);
+        if (!renderListProjectionContained(state, "collection-keyboard-search")) return;
+      }
+      state.rowsNode.querySelector("a.docsViewerReport__collectionButton")?.focus();
+      return;
+    }
+
+    var link = event.target.closest("a.docsViewerReport__collectionButton");
+    if (!link || !state.rowsNode.contains(link)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.key === "Escape") {
+      state.filterInputNode.focus();
+      return;
+    }
+    var row = link.parentElement;
+    var adjacent = event.key === "ArrowUp" ? row.previousElementSibling : row.nextElementSibling;
+    if (adjacent) {
+      adjacent.querySelector("a.docsViewerReport__collectionButton").focus();
+    } else if (event.key === "ArrowUp") {
+      state.filterInputNode.focus();
+    }
+  }
+
+  state.root.addEventListener("keydown", onKeyDown);
+  return function () { state.root.removeEventListener("keydown", onKeyDown); };
+}
+
 function cancelCollectionSearch(state) {
   if (state.searchTimer !== null) {
     clearTimeout(state.searchTimer);
@@ -625,6 +665,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   }
   updateCollectionControls(state);
   bindFilterControls(state);
+  var unbindKeyboardNavigation = bindCollectionKeyboardNavigation(state);
   updateFilterControls(state);
 
   var remembered = createDocsCollectionReportState({
@@ -642,6 +683,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   function dispose() {
     if (!state.mounted) return;
     remembered.dispose();
+    unbindKeyboardNavigation();
     state.mounted = false;
     cancelCollectionSearch(state);
     publishState(state, "unmounted", null, "report-unmount");

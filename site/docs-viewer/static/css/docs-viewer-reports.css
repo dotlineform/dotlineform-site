@@ -131,6 +131,13 @@
   margin: 0;
 }
 
+.docsViewerReport[data-report-collection] .docsViewerReport__row:has(> .docsViewerReport__collectionButton:focus){
+  margin-inline-start: -6px;
+  padding-inline-start: 6px;
+  border-radius: 6px;
+  background: var(--shared-search-result-bg);
+}
+
 .docsViewerReport[data-report-collection="catalogue"] .docsViewerReport__row,
 .docsViewerReport[data-report-collection="concepts"] .docsViewerReport__row,
 .docsViewerReport[data-report-collection="works"] .docsViewerReport__row,
@@ -160,6 +167,11 @@
   font: inherit;
   padding: 0;
   text-align: left;
+}
+
+.docsViewerReport[data-report-collection] .docsViewerReport__collectionButton:focus{
+  outline: none;
+  color: var(--docs-viewer-selection-text);
 }
 
 .docsViewerReport__collectionButton--thumbnail{

@@ -242,16 +242,17 @@
 
 .docsViewerCatalogueTargetPicker__row:hover{
   border-color: var(--docs-viewer-border-strong);
-  background: var(--docs-viewer-panel-2);
+  background: var(--shared-search-result-bg);
 }
 
 .docsViewerCatalogueTargetPicker__row.is-active{
   border-color: var(--docs-viewer-border-strong);
-  background: var(--docs-viewer-selection-bg);
+  background: var(--shared-search-result-bg);
   color: var(--docs-viewer-selection-text);
 }
 
 .docsViewerCatalogueTargetPicker__row:focus-visible{
+  background: var(--shared-search-result-bg);
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
 }

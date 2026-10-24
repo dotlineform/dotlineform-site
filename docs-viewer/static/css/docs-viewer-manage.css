@@ -1059,17 +1059,17 @@ select.docsViewer__positionTargets{
 }
 
 .docsViewer__scopeSelectOption:hover{
-  background: var(--docs-viewer-panel-2);
+  background: var(--shared-search-result-bg);
 }
 
 .docsViewer__scopeSelectOption:focus-visible{
-  background: var(--docs-viewer-panel-2);
+  background: var(--shared-search-result-bg);
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: -2px;
 }
 
 .docsViewer__scopeSelectOption[aria-selected="true"]{
-  background: var(--docs-viewer-selection-bg);
+  background: var(--shared-search-result-bg);
   color: var(--docs-viewer-selection-text);
   font-weight: 700;
 }
