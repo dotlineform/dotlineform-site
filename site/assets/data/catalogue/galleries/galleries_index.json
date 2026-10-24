@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-24T20:10:49Z"
+    "generated_at_utc": "2026-10-24T20:24:38Z"
   },
   "galleries": {
     "001": {
@@ -516,10 +516,6 @@
       "gallery_id": "143",
       "title": "simultaneous equations"
     },
-    "145": {
-      "gallery_id": "145",
-      "title": "grid dissection (details)"
-    },
     "150": {
       "gallery_id": "150",
       "title": "nerve (formaldehyde form)"
@@ -699,6 +695,10 @@
     "337": {
       "gallery_id": "337",
       "title": "kylie wax model iterations"
+    },
+    "338": {
+      "gallery_id": "338",
+      "title": "grid dissection"
     }
   }
 }

@@ -1,14 +1,18 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
-    "gallery_id": "145"
+    "generated_at_utc": "2026-10-24T20:24:38Z",
+    "gallery_id": "338"
   },
   "gallery": {
-    "gallery_id": "145",
-    "title": "grid dissection (details)"
+    "gallery_id": "338",
+    "title": "grid dissection"
   },
   "member_works": [
+    {
+      "work_id": "00158",
+      "title": "grid dissection"
+    },
     {
       "work_id": "01960",
       "title": "grid dissection - cover"

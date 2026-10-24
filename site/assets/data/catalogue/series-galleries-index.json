@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T20:10:49Z"
+    "generated_at_utc": "2026-10-24T20:24:38Z"
   },
   "series_galleries": {
     "001": [
@@ -164,10 +164,6 @@
       {
         "gallery_id": "026",
         "title": "collected 1989-1998"
-      },
-      {
-        "gallery_id": "145",
-        "title": "grid dissection (details)"
       }
     ],
     "027": [
@@ -986,6 +982,12 @@
       {
         "gallery_id": "332",
         "title": "Michelle Pfeiffer"
+      }
+    ],
+    "161": [
+      {
+        "gallery_id": "338",
+        "title": "grid dissection"
       }
     ]
   }

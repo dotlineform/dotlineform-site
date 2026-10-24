@@ -62,14 +62,6 @@
             },
             "label": "moments",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "145"
-            },
-            "label": "grid dissection (details)",
-            "relation": "series"
           }
         ],
         "entry": {

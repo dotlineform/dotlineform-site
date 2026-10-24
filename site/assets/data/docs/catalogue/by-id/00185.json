@@ -54,14 +54,6 @@
             },
             "label": "collected 1989-1998",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "145"
-            },
-            "label": "grid dissection (details)",
-            "relation": "series"
           }
         ],
         "entry": {
