@@ -38,13 +38,16 @@ def bulk_save_payload(
 ) -> tuple[dict[str, Any], CatalogueSourceRecords, CatalogueSourceRecords]:
     """Patch UI-selected metadata/memberships and carry the saved maps into completion.
 
-    Only the allowed bulk metadata fields are accepted. Untouched fields, media
-    references and server-owned staging values remain exactly as saved.
+    The explicit source-folder selection relinks unchanged originals without
+    changing filenames or prepared media. Other untouched fields and server-owned
+    staging values remain exactly as saved; bulk completion does no media work.
     """
     request = extract_bulk_save_request(body)
     kind = request["kind"]
     selected_ids: list[str] = request["ids"]
     set_fields: dict[str, Any] = request["set_fields"]
+    if request["source_folder"] is not None:
+        set_fields = {**set_fields, **request["source_folder"]}
 
     record_payloads: list[dict[str, Any]] = []
     changed_ids: list[str] = []
@@ -70,7 +73,9 @@ def bulk_save_payload(
             raise ValueError(f"work_id not found: {work_id}")
         updated_record = dict(current_record)
         for field, value in set_fields.items():
-            if value is None and field in {"medium", "height_cm", "width_cm", "storage_location"}:
+            if value is None and field in {
+                "medium", "height_cm", "width_cm", "storage_location", "media_source_id", "project_subfolder",
+            }:
                 updated_record.pop(field, None)
             else:
                 updated_record[field] = value
@@ -177,7 +182,7 @@ def _finish_bulk_payload(
 
 def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
     """Validate the request envelope and allowed fields; the UI validates values."""
-    unknown_request_fields = sorted(set(body) - {"kind", "ids", "set_fields", "gallery_ids"})
+    unknown_request_fields = sorted(set(body) - {"kind", "ids", "set_fields", "gallery_ids", "source_folder"})
     if unknown_request_fields:
         raise ValueError(f"bulk save contains unsupported request fields: {', '.join(unknown_request_fields)}")
     kind = body.get("kind")
@@ -199,8 +204,17 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
     if unknown_fields:
         raise ValueError(f"bulk save contains unsupported fields: {', '.join(unknown_fields)}")
 
+    source_folder = None
+    if "source_folder" in body:
+        source_folder = body["source_folder"]
+        if not isinstance(source_folder, dict) or set(source_folder) != {
+            "media_source_id", "project_folder", "project_subfolder",
+        }:
+            raise ValueError("source_folder requires media_source_id, project_folder and project_subfolder")
+
     return {
         "kind": kind,
         "ids": raw_ids,
         "set_fields": raw_set_fields,
+        "source_folder": source_folder,
     }

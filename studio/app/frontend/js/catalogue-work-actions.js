@@ -50,6 +50,7 @@ function buildPayload(state) {
     setFields[field.key] = value ? (field.type === "number" ? Number(value) : value) : null;
   }
   if (Object.keys(setFields).length) payload.set_fields = setFields;
+  if (state.bulkSourceFolder) payload.source_folder = { ...state.bulkSourceFolder };
   if (state.bulkTouchedFields.has("gallery_ids")) {
     payload.gallery_ids = state.draft.gallery_ids.slice();
   }

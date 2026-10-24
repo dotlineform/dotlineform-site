@@ -100,6 +100,8 @@ export function createWorkEditorState(elements, options = {}) {
     bulkRecordHashes: new Map(),
     bulkTouchedFields: new Set(),
     bulkMixedFields: new Set(),
+    /** @type {import("./catalogue-work-source-folder.js").BulkSourceFolder | null} */
+    bulkSourceFolder: null,
     baselineDraft: null,
     draft: {},
     pendingAttachments: new Map(),
@@ -123,8 +125,8 @@ export function createWorkEditorState(elements, options = {}) {
     modalHost: modalHostFactory({ root }),
     activeModalController: null,
     fieldNodes: new Map(),
+    projectMediaFolderButtons: new Map(),
     fieldStatusNodes: new Map(),
-    mediaSourceWrapper: null,
     mediaSourceButton: null,
     messageController: null,
     readonlyNodes: new Map(),

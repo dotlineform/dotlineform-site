@@ -125,12 +125,17 @@ function createProjectMediaPickerConfig(overrides = {}) {
   });
 }
 
-/** Return confined source identities and, in folder mode, all loaded filenames. */
+/**
+ * Return picker-selected source identities and the already loaded folder filenames.
+ * Callers own initialSelection and requireSubfolder when their workflow needs them.
+ * Optional validateSelection returns an authoring error; it receives the completed
+ * selection and must not reread or mutate the picker/draft.
+ */
 export async function openProjectMediaModal(state, options = {}) {
   const host = state.modalHost;
   if (!host || typeof options.loadProjectFiles !== "function" || typeof options.loadProjectFolders !== "function") return null;
   const pickerConfig = createProjectMediaPickerConfig(options.filePickerConfig);
-  const initialSelection = initialProjectMediaSelection(state, options);
+  const initialSelection = options.initialSelection ?? initialProjectMediaSelection(state, options);
   const mediaSourceId = initialSelection.scope;
   const folderMode = options.selectionMode === "folder";
   host.innerHTML = renderStudioModalFrame({
@@ -156,7 +161,7 @@ export async function openProjectMediaModal(state, options = {}) {
     primaryNode,
     config: pickerConfig,
     selectionMode: folderMode ? "folder" : "single",
-    requireSubfolder: folderMode,
+    requireSubfolder: options.requireSubfolder,
     initialSelection,
     loadFolders: () => loadProjectFolders(state, mediaSourceId, options),
     loadFiles: async request => {
@@ -186,16 +191,20 @@ export async function openProjectMediaModal(state, options = {}) {
         if ("status" in result) api.setStatus(result.statusKind || "error", result.status || "");
         return false;
       }
-      const selection = result.selection || {};
-      return {
-        selection: {
-          media_source_id: selection.scope,
-          project_folder: selection.folder,
-          project_subfolder: selection.subfolder || "",
-          project_filename: selection.filename,
-          filenames: selection.filenames
-        }
+      const selected = result.selection;
+      const selection = {
+        media_source_id: selected.scope,
+        project_folder: selected.folder,
+        project_subfolder: selected.subfolder || "",
+        project_filename: selected.filename,
+        filenames: selected.filenames
       };
+      const error = options.validateSelection?.(selection);
+      if (error) {
+        api.setStatus("error", error);
+        return false;
+      }
+      return { selection };
     }
   });
   pickerController.ready.then(() => {
@@ -219,7 +228,7 @@ export async function openProjectMediaPickerForCurrentDraft(state, options = {})
 /** Confirm an unsaved batch; Save alone persists it and completes local media. */
 export async function openProjectMediaFolderForCurrentDraft(state, options = {}) {
   if (state.mode !== "new") return null;
-  const result = await openProjectMediaModal(state, { ...options, selectionMode: "folder" });
+  const result = await openProjectMediaModal(state, { ...options, selectionMode: "folder", requireSubfolder: true });
   if (!result?.confirmed) return result;
   const selection = result.selection;
   clearWorkImagePreview(state);

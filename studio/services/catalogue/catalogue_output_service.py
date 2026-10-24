@@ -53,8 +53,9 @@ def complete_saved_catalogue_edit(
     Mutation owners carry before/after records through completion. Media
     persistence updates the supplied current map only after its write succeeds,
     so final editor records and queues use that same completed state. Bulk Save
-    supplies final records and changes no media; only single/batch Work actions
-    select media candidates and require editor-record completion after media.
+    supplies final records, including relinked source folders, and preserves all
+    prepared media; only single/batch Work actions select media candidates and
+    require editor-record completion after media.
     """
     shared = response.pop("_shared_changes", None)
     if context.dry_run or not response.get("ok"):

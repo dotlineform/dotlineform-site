@@ -136,6 +136,7 @@ function draftHasChanges(state) {
     draft: state.draft,
     baselineDraft: state.baselineDraft,
     touchedFields: state.bulkTouchedFields,
+    bulkModeChanged: () => state.bulkTouchedFields.size > 0 || state.bulkSourceFolder !== null,
     canonicalizeScalar,
     extraComparisons: [
       {

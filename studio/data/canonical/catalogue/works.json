@@ -2711,7 +2711,7 @@
     "00159": {
       "work_id": "00159",
       "series_id": "160",
-      "project_folder": "collected 1989-1998",
+      "project_folder": "Michelle Pfeiffer",
       "project_filename": "Michelle Pfeiffer.jpg",
       "media_version": 1,
       "image_staged": false,
@@ -31826,8 +31826,7 @@
     "01969": {
       "work_id": "01969",
       "series_id": "160",
-      "project_folder": "collected 1989-1998",
-      "project_subfolder": "details",
+      "project_folder": "Michelle Pfeiffer",
       "project_filename": "Michelle Pfeiffer - page 1.jpg",
       "media_version": 1,
       "image_staged": false,
@@ -31841,8 +31840,7 @@
     "01970": {
       "work_id": "01970",
       "series_id": "160",
-      "project_folder": "collected 1989-1998",
-      "project_subfolder": "details",
+      "project_folder": "Michelle Pfeiffer",
       "project_filename": "Michelle Pfeiffer - pages 2-3.jpg",
       "media_version": 1,
       "image_staged": false,

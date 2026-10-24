@@ -3,6 +3,7 @@ import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { renderWorkMediumField } from "./catalogue-work-medium.js";
+import { openBulkWorkSourceFolder } from "./catalogue-work-source-folder.js";
 import { clearAutomaticWorkDimensions, clearWorkImagePreview } from "./catalogue-work-image-preview.js";
 import { BULK_WORK_METADATA_FIELDS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
@@ -68,10 +69,19 @@ function updateMediaSourceButton(state) {
   button.dataset.mediaSourceId = currentSourceId;
   button.setAttribute(
     "aria-label",
-    nextSourceId
+    state.mode === "bulk" && nextSourceId
+      ? `Choose source folder in ${nextLabel}.`
+      : nextSourceId
       ? `Media source: ${currentLabel}. Select ${nextLabel}.`
       : `Media source: ${currentLabel}.`
   );
+}
+
+async function chooseBulkSourceFolder(state, options, mediaSourceId) {
+  const result = await openBulkWorkSourceFolder(state, options, mediaSourceId);
+  if (!result?.confirmed) return;
+  applyDraftToInputs(state);
+  notifyStateChange(options);
 }
 
 export function applyWorkMediaSourceConfig(state, payload) {
@@ -241,12 +251,19 @@ function renderMediaSourceField(field, fieldsNode, state, options) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "studioUi__button catalogueWorkMediaSource__button";
-  button.addEventListener("click", () => {
+  button.addEventListener("click", event => {
     const config = mediaSourceConfig(state);
     const currentSourceId = resolvedWorkMediaSourceId(state);
     const currentIndex = config.sourceIds.indexOf(currentSourceId);
     if (currentIndex < 0 || config.sourceIds.length !== 2) return;
     const nextSourceId = config.sourceIds[(currentIndex + 1) % config.sourceIds.length];
+    if (state.mode === "bulk") {
+      event.stopPropagation();
+      chooseBulkSourceFolder(state, options, nextSourceId).catch(error => {
+        console.warn("catalogue_work_form: failed to choose source folder", error);
+      });
+      return;
+    }
     const storedSourceId = nextSourceId === config.defaultSourceId ? "" : nextSourceId;
     state.draft.media_source_id = storedSourceId;
     clearWorkImagePreview(state);
@@ -277,7 +294,6 @@ function renderMediaSourceField(field, fieldsNode, state, options) {
   fieldsNode.appendChild(wrapper);
   state.fieldNodes.set(field.key, input);
   state.fieldStatusNodes.set(field.key, message);
-  state.mediaSourceWrapper = wrapper;
   state.mediaSourceButton = button;
   updateMediaSourceButton(state);
 }
@@ -313,7 +329,7 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
   input.type = "hidden";
   control.appendChild(input);
 
-  if (field.key === "project_subfolder") {
+  if (field.key === "project_folder" || field.key === "project_subfolder") {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "studioUi__iconButton";
@@ -322,12 +338,15 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
     button.setAttribute("aria-label", "Open subfolder");
     button.addEventListener("click", event => {
       event.stopPropagation();
-      openProjectMediaFolderForCurrentDraft(state, options).catch(error => {
+      const selection = state.mode === "bulk"
+        ? chooseBulkSourceFolder(state, options, resolvedWorkMediaSourceId(state))
+        : openProjectMediaFolderForCurrentDraft(state, options);
+      selection.catch(error => {
         console.warn("catalogue_work_form: failed to open project folder picker", error);
       });
     });
     control.appendChild(button);
-    state.projectMediaFolderButton = button;
+    state.projectMediaFolderButtons.set(field.key, button);
   }
 
   if (field.key === "project_filename") {
@@ -559,20 +578,19 @@ export function setModeFieldAvailability(state) {
   if (state.projectMediaChooseButton) {
     state.projectMediaChooseButton.disabled = state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting;
   }
-  if (state.projectMediaFolderButton) {
-    state.projectMediaFolderButton.hidden = state.mode !== "new";
-    state.projectMediaFolderButton.disabled = busy || !state.serverAvailable;
-  }
+  state.projectMediaFolderButtons.forEach((button, fieldKey) => {
+    button.hidden = !isBulk && !(state.mode === "new" && fieldKey === "project_subfolder");
+    button.disabled = busy || !state.serverAvailable;
+    const label = isBulk ? "Choose source folder" : "Open subfolder";
+    button.title = label;
+    button.setAttribute("aria-label", label);
+  });
   if (state.mediaSourceButton) {
     updateMediaSourceButton(state);
-    state.mediaSourceButton.disabled = state.mode === "bulk"
-      || state.isSaving
+    state.mediaSourceButton.disabled = state.isSaving
       || state.isBuilding
       || state.isDeleting
       || !state.serverAvailable;
-  }
-  if (state.mediaSourceWrapper) {
-    state.mediaSourceWrapper.hidden = state.mode === "bulk";
   }
 }
 

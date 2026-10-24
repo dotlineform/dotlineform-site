@@ -81,6 +81,7 @@ function resetBulkState(state) {
   state.bulkRecordHashes = new Map();
   state.bulkTouchedFields = new Set();
   state.bulkMixedFields = new Set();
+  state.bulkSourceFolder = null;
 }
 
 const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
@@ -144,6 +145,7 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   state.draft = { ...bulkDraft };
   state.bulkTouchedFields = new Set();
   state.bulkMixedFields = mixedFields;
+  state.bulkSourceFolder = null;
   state.searchNode.value = "";
   callback(options, "setOpenInputMode");
   callback(options, "applyDraftToInputs");
