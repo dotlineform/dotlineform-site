@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T16:32:06Z",
     "gallery_id": "046"
   },
   "gallery": {
@@ -12,6 +12,34 @@
     {
       "work_id": "01037",
       "title": "egg forms"
+    },
+    {
+      "work_id": "03588",
+      "title": "egg forms - detail 1"
+    },
+    {
+      "work_id": "03589",
+      "title": "egg forms - detail 2"
+    },
+    {
+      "work_id": "03590",
+      "title": "egg forms - detail 3"
+    },
+    {
+      "work_id": "03591",
+      "title": "egg forms - detail 4"
+    },
+    {
+      "work_id": "03592",
+      "title": "egg forms - detail 5"
+    },
+    {
+      "work_id": "03593",
+      "title": "egg forms - detail 6"
+    },
+    {
+      "work_id": "03594",
+      "title": "egg forms - detail 7"
     }
   ]
 }

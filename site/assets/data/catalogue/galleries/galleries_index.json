@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-24T16:20:33Z"
+    "generated_at_utc": "2026-10-24T17:14:07Z"
   },
   "galleries": {
     "001": {
@@ -712,18 +712,6 @@
       "gallery_id": "200",
       "title": "bits symbols 1 (details ^2)"
     },
-    "201": {
-      "gallery_id": "201",
-      "title": "10,000 (1) (details)"
-    },
-    "202": {
-      "gallery_id": "202",
-      "title": "10,000 (2) (details)"
-    },
-    "203": {
-      "gallery_id": "203",
-      "title": "10,000 (3) (details)"
-    },
     "211": {
       "gallery_id": "211",
       "title": "a theory of happiness is a theory of everything (layers)"
@@ -743,26 +731,6 @@
     "220": {
       "gallery_id": "220",
       "title": "book dna sequence (dna)"
-    },
-    "221": {
-      "gallery_id": "221",
-      "title": "colours 1958-2001 (versions)"
-    },
-    "222": {
-      "gallery_id": "222",
-      "title": "colours belsen (versions)"
-    },
-    "223": {
-      "gallery_id": "223",
-      "title": "colours dachau (versions)"
-    },
-    "224": {
-      "gallery_id": "224",
-      "title": "colours kylie (versions)"
-    },
-    "225": {
-      "gallery_id": "225",
-      "title": "colours marilyn (versions)"
     },
     "226": {
       "gallery_id": "226",
@@ -812,10 +780,6 @@
       "gallery_id": "238",
       "title": "dots (equations particles) (details)"
     },
-    "239": {
-      "gallery_id": "239",
-      "title": "egg forms (details)"
-    },
     "240": {
       "gallery_id": "240",
       "title": "egg forms (work in progress)"
@@ -823,10 +787,6 @@
     "241": {
       "gallery_id": "241",
       "title": "entangled form' (details)"
-    },
-    "242": {
-      "gallery_id": "242",
-      "title": "espresso (espressos)"
     },
     "243": {
       "gallery_id": "243",

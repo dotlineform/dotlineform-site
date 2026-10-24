@@ -50,50 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "223"
-            },
-            "label": "colours dachau (versions)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "029"
             },
             "label": "colours",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "221"
-            },
-            "label": "colours 1958-2001 (versions)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "222"
-            },
-            "label": "colours belsen (versions)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "224"
-            },
-            "label": "colours kylie (versions)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "225"
-            },
-            "label": "colours marilyn (versions)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

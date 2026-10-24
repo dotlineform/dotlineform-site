@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-0d78558aa8f0706b139bec8b57568f8c",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-355db6f2fa79632b32bcdfe8e28645c4",
+    "generated_at_utc": "2026-10-24T17:14:07Z"
   },
   "work": {
     "work_id": "03634",
     "title": "espresso 6",
     "year": 2012,
     "year_display": "2012",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "049",
     "galleries": [
       {
-        "gallery_id": "242",
-        "title": "espresso (espressos)"
+        "gallery_id": "049",
+        "title": "espresso"
       }
     ]
   }

@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-647df3c9bb7d8ed90361bd483b6250bf",
-    "generated_at_utc": "2026-10-08T09:34:59Z"
+    "version": "blake2b-2843adf3b48d4e313d1ce841bdafa38d",
+    "generated_at_utc": "2026-10-24T16:29:53Z"
   },
   "work": {
     "work_id": "04625",
     "title": "10,000 (1.4)",
     "year": 2026,
     "year_display": "2026",
-    "medium": "digital c-type print",
-    "height_cm": 30.0,
-    "width_cm": 50.0,
     "width_px": 5906,
     "height_px": 3544,
+    "height_cm": 30,
+    "width_cm": 50,
+    "medium": "digital c-type print",
     "media_version": 3,
     "series_id": "001",
     "galleries": [
       {
-        "gallery_id": "201",
-        "title": "10,000 (1) (details)"
+        "gallery_id": "001",
+        "title": "10,000"
       }
     ]
   }

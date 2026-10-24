@@ -54,14 +54,6 @@
             },
             "label": "espresso",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "242"
-            },
-            "label": "espresso (espressos)",
-            "relation": "series"
           }
         ],
         "entry": {

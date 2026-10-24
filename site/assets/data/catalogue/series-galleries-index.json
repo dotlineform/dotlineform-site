@@ -1,25 +1,13 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T16:20:33Z"
+    "generated_at_utc": "2026-10-24T17:14:07Z"
   },
   "series_galleries": {
     "001": [
       {
         "gallery_id": "001",
         "title": "10,000"
-      },
-      {
-        "gallery_id": "201",
-        "title": "10,000 (1) (details)"
-      },
-      {
-        "gallery_id": "202",
-        "title": "10,000 (2) (details)"
-      },
-      {
-        "gallery_id": "203",
-        "title": "10,000 (3) (details)"
       }
     ],
     "003": [
@@ -231,26 +219,6 @@
       {
         "gallery_id": "029",
         "title": "colours"
-      },
-      {
-        "gallery_id": "221",
-        "title": "colours 1958-2001 (versions)"
-      },
-      {
-        "gallery_id": "222",
-        "title": "colours belsen (versions)"
-      },
-      {
-        "gallery_id": "223",
-        "title": "colours dachau (versions)"
-      },
-      {
-        "gallery_id": "224",
-        "title": "colours kylie (versions)"
-      },
-      {
-        "gallery_id": "225",
-        "title": "colours marilyn (versions)"
       }
     ],
     "030": [
@@ -419,10 +387,6 @@
         "title": "egg forms"
       },
       {
-        "gallery_id": "239",
-        "title": "egg forms (details)"
-      },
-      {
         "gallery_id": "240",
         "title": "egg forms (work in progress)"
       }
@@ -447,10 +411,6 @@
       {
         "gallery_id": "049",
         "title": "espresso"
-      },
-      {
-        "gallery_id": "242",
-        "title": "espresso (espressos)"
       }
     ],
     "050": [

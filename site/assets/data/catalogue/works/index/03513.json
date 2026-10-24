@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e6c69561cc436faf525793b172dcb763",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-faac67af3dbff4e0f919320054342e5c",
+    "generated_at_utc": "2026-10-24T16:31:14Z"
   },
   "work": {
     "work_id": "03513",
     "title": "colours kylie.5",
     "year": 2008,
     "year_display": "2008",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 5906,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "029",
     "galleries": [
       {
-        "gallery_id": "224",
-        "title": "colours kylie (versions)"
+        "gallery_id": "029",
+        "title": "colours"
       }
     ]
   }

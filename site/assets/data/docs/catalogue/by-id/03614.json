@@ -62,14 +62,6 @@
             },
             "label": "egg forms",
             "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "239"
-            },
-            "label": "egg forms (details)",
-            "relation": "series"
           }
         ],
         "entry": {

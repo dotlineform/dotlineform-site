@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-2fd668565e95c3b9f9e78476ca587582",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-f9e6054f7d46d816007c73f9b5789e4a",
+    "generated_at_utc": "2026-10-24T17:14:07Z"
   },
   "work": {
     "work_id": "03650",
     "title": "espresso 22",
     "year": 2012,
     "year_display": "2012",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "049",
     "galleries": [
       {
-        "gallery_id": "242",
-        "title": "espresso (espressos)"
+        "gallery_id": "049",
+        "title": "espresso"
       }
     ]
   }

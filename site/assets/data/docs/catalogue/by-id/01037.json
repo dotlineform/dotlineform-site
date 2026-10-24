@@ -58,14 +58,6 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "239"
-            },
-            "label": "egg forms (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "240"
             },
             "label": "egg forms (work in progress)",

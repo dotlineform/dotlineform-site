@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "239"
-            },
-            "label": "egg forms (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "046"
             },
             "label": "egg forms",
-            "relation": "series"
+            "relation": "direct"
           },
           {
             "target": {

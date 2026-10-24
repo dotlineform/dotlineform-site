@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-43c1b3f56375fdf5b90c9e4f71202622",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-bc980e7855e7a8339e7edb5432f42bbe",
+    "generated_at_utc": "2026-10-24T16:32:06Z"
   },
   "work": {
     "work_id": "03591",
     "title": "egg forms - detail 4",
     "year": 2024,
     "year_display": "2024",
-    "medium": "ink on paper",
     "width_px": 4032,
     "height_px": 2268,
+    "medium": "ink on paper",
     "media_version": 1,
     "series_id": "046",
     "galleries": [
       {
-        "gallery_id": "239",
-        "title": "egg forms (details)"
+        "gallery_id": "046",
+        "title": "egg forms"
       }
     ]
   }
