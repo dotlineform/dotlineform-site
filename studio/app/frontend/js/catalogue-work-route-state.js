@@ -75,6 +75,14 @@ function syncUrl(workValue, mode = "") {
   window.history.replaceState({}, "", url.toString());
 }
 
+/** Update the browsed Series bookmark while preserving Work/New state, without navigation. */
+export function syncWorkSeriesUrl(seriesId) {
+  const url = new URL(window.location.href);
+  if (seriesId) url.searchParams.set("series", seriesId);
+  else url.searchParams.delete("series");
+  window.history.replaceState({}, "", url.toString());
+}
+
 function resetBulkState(state) {
   state.bulkWorkIds = [];
   state.bulkRecords = new Map();

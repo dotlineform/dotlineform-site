@@ -34,7 +34,6 @@ function applySeriesResult(state, response) {
     if (state.draft.series_id === id) state.draft.series_id = "";
   } else {
     state.seriesById.set(id, response.record);
-    if (response.created && state.mode !== "bulk") state.draft.series_id = id;
   }
 }
 

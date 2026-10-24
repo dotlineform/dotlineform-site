@@ -4,6 +4,7 @@ import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { buildWorkThumbPreview } from "./catalogue-media-preview.js";
 import { getSeriesSearchMatches } from "./catalogue-series-records.js";
+import { syncWorkSeriesUrl } from "./catalogue-work-route-state.js";
 
 const workTitleCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
@@ -17,7 +18,7 @@ function escapeHtml(value) {
 }
 
 /** Browse saved Series membership and manage Series definitions.
- * Browsing preserves Work assignment; creation selects the Series in an editable Work draft.
+ * Browsing and Series creation preserve the current Work draft and assignment.
  * Uses the route's canonical search projections; only opening a Work reads its full record.
  */
 export function createWorkSeriesBrowser(state, elements, options) {
@@ -33,6 +34,12 @@ export function createWorkSeriesBrowser(state, elements, options) {
   let bulkRecords = null;
   let currentWorkId = "";
   let mode = "";
+
+  function setBrowsedSeriesId(id) {
+    if (seriesId === id) return;
+    seriesId = id;
+    syncWorkSeriesUrl(id);
+  }
 
   function busy() {
     return opening || editingSeries || state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
@@ -151,7 +158,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
 
   function selectSeries(id) {
     if (busy()) return;
-    seriesId = id;
+    setBrowsedSeriesId(id);
     status.textContent = "";
     delete status.dataset.state;
     restoreSearch();
@@ -167,8 +174,8 @@ export function createWorkSeriesBrowser(state, elements, options) {
     try {
       const result = await options.onEditDefinition("Series", create ? "" : seriesId, create ? newButton : edit);
       if (!result?.confirmed) return;
-      if (result.response.created) seriesId = result.response.series_id;
-      if (result.response.deleted) seriesId = "";
+      if (result.response.created) setBrowsedSeriesId(result.response.series_id);
+      if (result.response.deleted) setBrowsedSeriesId("");
       restoreSearch();
       renderMembers();
       if (result.response.created) members.scrollTop = 0;
@@ -215,7 +222,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
     const initialSeriesId = currentRecord?.series_id || (mode === "new" ? state.draft.series_id
       : state.bulkRecords.values().next().value?.series_id);
     if (!seriesId && initialSeriesId && state.seriesById.has(initialSeriesId)) {
-      seriesId = initialSeriesId;
+      setBrowsedSeriesId(initialSeriesId);
       restoreSearch();
     }
     if (!opening) renderMembers();
@@ -230,7 +237,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
     /** Return the displayed Series independently of the loaded Work or draft. */
     getSelectedSeriesId: () => seriesId,
     refresh() {
-      if (seriesId && !state.seriesById.has(seriesId)) seriesId = "";
+      if (seriesId && !state.seriesById.has(seriesId)) setBrowsedSeriesId("");
       restoreSearch();
       renderMembers();
       syncAvailability();

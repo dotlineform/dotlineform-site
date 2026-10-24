@@ -626,6 +626,34 @@
     "161": {
       "series_id": "161",
       "title": "grid dissection"
+    },
+    "162": {
+      "series_id": "162",
+      "title": "all chemical"
+    },
+    "163": {
+      "series_id": "163",
+      "title": "body cast"
+    },
+    "164": {
+      "series_id": "164",
+      "title": "body forms"
+    },
+    "165": {
+      "series_id": "165",
+      "title": "body series"
+    },
+    "166": {
+      "series_id": "166",
+      "title": "cell"
+    },
+    "167": {
+      "series_id": "167",
+      "title": "nude frame"
+    },
+    "168": {
+      "series_id": "168",
+      "title": "slaughter"
     }
   }
 }

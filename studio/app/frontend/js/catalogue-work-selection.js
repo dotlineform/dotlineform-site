@@ -219,6 +219,7 @@ export async function applyInitialWorkRouteSelection(state, context) {
   const requestedSeriesId = normalizeSeriesId(requestedSeriesRaw);
   if (requestedWorkValue) {
     try {
+      if (requestedSeriesId && state.seriesById.has(requestedSeriesId)) context.selectSeries(requestedSeriesId);
       await openWorkById(state, requestedWorkValue, context);
     } catch (error) {
       console.warn("catalogue_work_editor: failed to open requested work", error);
