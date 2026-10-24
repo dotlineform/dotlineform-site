@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-6d0692fe2a8a8a104a27f871341cc878",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-6878d10715e3b84232104532d5ce9b33",
+    "generated_at_utc": "2026-10-24T19:30:46Z"
   },
   "work": {
     "work_id": "03148",
     "title": "qrnt - Searching for God exhibition - install 2",
     "year": 2009,
     "year_display": "2009",
-    "medium": "giclée print",
     "width_px": 1600,
     "height_px": 1200,
+    "medium": "giclée print",
     "media_version": 1,
     "series_id": "118",
     "galleries": [
       {
-        "gallery_id": "196",
-        "title": "quantum random number theory (install)"
+        "gallery_id": "118",
+        "title": "quantum random number theory"
       }
     ]
   }

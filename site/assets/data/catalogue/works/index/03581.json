@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-1de706b28935fd6c0d650eaecdd61b4f",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-79ba44beabc007bba647c7ac5836665c",
+    "generated_at_utc": "2026-10-24T19:15:21Z"
   },
   "work": {
     "work_id": "03581",
     "title": "dots (equations) [detail 1]",
     "year": 2010,
     "year_display": "2010",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 5906,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "044",
     "galleries": [
       {
-        "gallery_id": "237",
-        "title": "dots (equations) (details)"
+        "gallery_id": "044",
+        "title": "dots"
       }
     ]
   }

@@ -54,38 +54,6 @@
             },
             "label": "pi particles",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "278"
-            },
-            "label": "pi (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "279"
-            },
-            "label": "pi molecule grid (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "280"
-            },
-            "label": "pi circle (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "281"
-            },
-            "label": "all the particles are connected (details)",
-            "relation": "series"
           }
         ],
         "entry": {

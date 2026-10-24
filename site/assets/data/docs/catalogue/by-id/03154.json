@@ -50,9 +50,9 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "198"
+              "id": "333"
             },
-            "label": "bits symbols 1 (versions)",
+            "label": "bits symbols",
             "relation": "direct"
           },
           {
@@ -69,38 +69,6 @@
               "id": "195"
             },
             "label": "quantum random number theory (versions)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "196"
-            },
-            "label": "quantum random number theory (install)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "197"
-            },
-            "label": "quantum random number theory (form) (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "199"
-            },
-            "label": "bits symbols 1 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "200"
-            },
-            "label": "bits symbols 1 (details ^2)",
             "relation": "series"
           }
         ],

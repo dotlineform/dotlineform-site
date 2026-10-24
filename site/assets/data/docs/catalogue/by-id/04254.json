@@ -50,34 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "266"
-            },
-            "label": "interior design 1 (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "080"
             },
             "label": "interior design",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "267"
-            },
-            "label": "interior design 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "268"
-            },
-            "label": "interior design 3 (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

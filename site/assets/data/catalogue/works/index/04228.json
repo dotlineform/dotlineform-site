@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-befbce450d3d13cc24e04d89def22e92",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-0961c2bac1dc23caa50673542a54b890",
+    "generated_at_utc": "2026-10-24T19:21:06Z"
   },
   "work": {
     "work_id": "04228",
     "title": "heaven and earth (grey 1)",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 4429,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "076",
     "galleries": [
       {
-        "gallery_id": "259",
-        "title": "heaven and earth (grey series) (details)"
+        "gallery_id": "076",
+        "title": "heaven and earth"
       }
     ]
   }

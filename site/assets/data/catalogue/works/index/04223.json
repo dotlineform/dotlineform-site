@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-4474cccb1b17a6d8e39c35964c29c2e3",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-d4dd9879d602e4b02d1ba25e497dfcdb",
+    "generated_at_utc": "2026-10-24T19:11:56Z"
   },
   "work": {
     "work_id": "04223",
     "title": "forms painting - detail 1",
     "year": 1990,
     "year_display": "c. 1990-92?",
-    "medium": "mixed media on canvas",
     "width_px": 2535,
     "height_px": 2535,
+    "medium": "mixed media on canvas",
     "media_version": 1,
     "series_id": "066",
     "galleries": [
       {
-        "gallery_id": "258",
-        "title": "forms painting (details)"
+        "gallery_id": "066",
+        "title": "forms painting"
       }
     ]
   }

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-f06c4c6eacae73bacbf326b50c910b16",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-d2c2d3c040686e1e462c42f746a9ae62",
+    "generated_at_utc": "2026-10-24T19:24:25Z"
   },
   "work": {
     "work_id": "01979",
     "title": "mouse story - detail 4",
     "year": 1991,
     "year_display": "1991",
-    "medium": "typed text, 5 pages",
     "width_px": 4179,
     "height_px": 2350,
+    "medium": "typed text, 5 pages",
     "media_version": 1,
     "series_id": "104",
     "galleries": [
       {
-        "gallery_id": "148",
-        "title": "mouse story (details)"
+        "gallery_id": "104",
+        "title": "mouse story"
       }
     ]
   }

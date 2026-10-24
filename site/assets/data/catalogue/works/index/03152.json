@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-cc6ebaaf50566d4232416a5f6e8c8605",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-5327d13dc3bdde9dd5f2560ffaa3dc98",
+    "generated_at_utc": "2026-10-24T19:33:19Z"
   },
   "work": {
     "work_id": "03152",
     "title": "qrnt form (2015-06-06) detail 2",
     "year": 2015,
     "year_display": "2015",
-    "medium": "pencil on giclée print",
     "width_px": 3088,
     "height_px": 3088,
+    "medium": "pencil on giclée print",
     "media_version": 1,
     "series_id": "118",
     "galleries": [
       {
-        "gallery_id": "197",
-        "title": "quantum random number theory (form) (details)"
+        "gallery_id": "118",
+        "title": "quantum random number theory"
       }
     ]
   }

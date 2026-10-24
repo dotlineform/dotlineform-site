@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "258"
-            },
-            "label": "forms painting (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "066"
             },
             "label": "forms painting",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

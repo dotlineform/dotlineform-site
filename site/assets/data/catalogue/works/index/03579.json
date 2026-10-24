@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-9b65eb510b3d4954c61180a0079538d8",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-409cd02d9ee6f4a786b6a45fae5c63e9",
+    "generated_at_utc": "2026-10-24T19:15:21Z"
   },
   "work": {
     "work_id": "03579",
     "title": "dots (second normal form) [detail 2]",
     "year": 2010,
     "year_display": "2010",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 5906,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "044",
     "galleries": [
       {
-        "gallery_id": "236",
-        "title": "dots (second normal form) (details)"
+        "gallery_id": "044",
+        "title": "dots"
       }
     ]
   }

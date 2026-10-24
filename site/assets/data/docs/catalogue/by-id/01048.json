@@ -54,22 +54,6 @@
             },
             "label": "field",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "243"
-            },
-            "label": "field I (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "244"
-            },
-            "label": "field II (details)",
-            "relation": "series"
           }
         ],
         "entry": {

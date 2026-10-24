@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "241"
-            },
-            "label": "entangled form' (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "048"
             },
             "label": "entangled form",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

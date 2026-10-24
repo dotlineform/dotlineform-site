@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T18:21:09Z"
+    "generated_at_utc": "2026-10-24T19:33:19Z"
   },
   "series_galleries": {
     "001": [
@@ -328,30 +328,6 @@
       {
         "gallery_id": "044",
         "title": "dots"
-      },
-      {
-        "gallery_id": "158",
-        "title": "dots (details)"
-      },
-      {
-        "gallery_id": "234",
-        "title": "dots (inside) (details)"
-      },
-      {
-        "gallery_id": "235",
-        "title": "dots (first normal form) (details)"
-      },
-      {
-        "gallery_id": "236",
-        "title": "dots (second normal form) (details)"
-      },
-      {
-        "gallery_id": "237",
-        "title": "dots (equations) (details)"
-      },
-      {
-        "gallery_id": "238",
-        "title": "dots (equations particles) (details)"
       }
     ],
     "045": [
@@ -380,10 +356,6 @@
       {
         "gallery_id": "048",
         "title": "entangled form"
-      },
-      {
-        "gallery_id": "241",
-        "title": "entangled form' (details)"
       }
     ],
     "049": [
@@ -396,14 +368,6 @@
       {
         "gallery_id": "050",
         "title": "field"
-      },
-      {
-        "gallery_id": "243",
-        "title": "field I (details)"
-      },
-      {
-        "gallery_id": "244",
-        "title": "field II (details)"
       }
     ],
     "051": [
@@ -412,20 +376,8 @@
         "title": "fireworks form"
       },
       {
-        "gallery_id": "245",
-        "title": "fireworks form (details)"
-      },
-      {
-        "gallery_id": "246",
-        "title": "fireworks particles (details)"
-      },
-      {
         "gallery_id": "247",
-        "title": "fireworks particles (particles)"
-      },
-      {
-        "gallery_id": "248",
-        "title": "fireworks particles version (details)"
+        "title": "fireworks particles"
       }
     ],
     "052": [
@@ -509,10 +461,6 @@
       {
         "gallery_id": "066",
         "title": "forms painting"
-      },
-      {
-        "gallery_id": "258",
-        "title": "forms painting (details)"
       }
     ],
     "067": [
@@ -572,14 +520,6 @@
       {
         "gallery_id": "076",
         "title": "heaven and earth"
-      },
-      {
-        "gallery_id": "259",
-        "title": "heaven and earth (grey series) (details)"
-      },
-      {
-        "gallery_id": "260",
-        "title": "heaven and earth (colour series) (details)"
       }
     ],
     "077": [
@@ -604,18 +544,6 @@
       {
         "gallery_id": "080",
         "title": "interior design"
-      },
-      {
-        "gallery_id": "266",
-        "title": "interior design 1 (details)"
-      },
-      {
-        "gallery_id": "267",
-        "title": "interior design 2 (details)"
-      },
-      {
-        "gallery_id": "268",
-        "title": "interior design 3 (details)"
       }
     ],
     "081": [],
@@ -623,32 +551,12 @@
       {
         "gallery_id": "082",
         "title": "k crystals"
-      },
-      {
-        "gallery_id": "192",
-        "title": "k crystals (derivation)"
-      },
-      {
-        "gallery_id": "193",
-        "title": "k crystals (transparent) (details)"
-      },
-      {
-        "gallery_id": "194",
-        "title": "k crystals (squared transparent) (details)"
       }
     ],
     "083": [
       {
         "gallery_id": "083",
         "title": "k particles"
-      },
-      {
-        "gallery_id": "276",
-        "title": "k particles (details)"
-      },
-      {
-        "gallery_id": "277",
-        "title": "k particles grid (details)"
       }
     ],
     "084": [
@@ -786,14 +694,6 @@
       {
         "gallery_id": "104",
         "title": "mouse story"
-      },
-      {
-        "gallery_id": "147",
-        "title": "mouse story (pages)"
-      },
-      {
-        "gallery_id": "148",
-        "title": "mouse story (details)"
       }
     ],
     "105": [
@@ -852,22 +752,6 @@
       {
         "gallery_id": "113",
         "title": "pi particles"
-      },
-      {
-        "gallery_id": "278",
-        "title": "pi (details)"
-      },
-      {
-        "gallery_id": "279",
-        "title": "pi molecule grid (details)"
-      },
-      {
-        "gallery_id": "280",
-        "title": "pi circle (details)"
-      },
-      {
-        "gallery_id": "281",
-        "title": "all the particles are connected (details)"
       }
     ],
     "114": [
@@ -908,24 +792,8 @@
         "title": "quantum random number theory (versions)"
       },
       {
-        "gallery_id": "196",
-        "title": "quantum random number theory (install)"
-      },
-      {
-        "gallery_id": "197",
-        "title": "quantum random number theory (form) (details)"
-      },
-      {
-        "gallery_id": "198",
-        "title": "bits symbols 1 (versions)"
-      },
-      {
-        "gallery_id": "199",
-        "title": "bits symbols 1 (details)"
-      },
-      {
-        "gallery_id": "200",
-        "title": "bits symbols 1 (details ^2)"
+        "gallery_id": "333",
+        "title": "bits symbols"
       }
     ],
     "119": [

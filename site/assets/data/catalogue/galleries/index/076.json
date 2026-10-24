@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:21:06Z",
     "gallery_id": "076"
   },
   "gallery": {
@@ -20,6 +20,30 @@
     {
       "work_id": "01366",
       "title": "heaven and earth (colour series)"
+    },
+    {
+      "work_id": "04228",
+      "title": "heaven and earth (grey 1)"
+    },
+    {
+      "work_id": "04229",
+      "title": "heaven and earth (grey 2)"
+    },
+    {
+      "work_id": "04230",
+      "title": "heaven and earth (grey 3)"
+    },
+    {
+      "work_id": "04231",
+      "title": "heaven and earth (blue)"
+    },
+    {
+      "work_id": "04232",
+      "title": "heaven and earth (cyan)"
+    },
+    {
+      "work_id": "04233",
+      "title": "heaven and earth (green)"
     }
   ]
 }

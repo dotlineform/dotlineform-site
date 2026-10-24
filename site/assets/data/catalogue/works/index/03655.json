@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-861bb434557f67f7ef7da1123c1dc9d5",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-8199c774531ef3eb88a05da26f461d53",
+    "generated_at_utc": "2026-10-24T19:11:19Z"
   },
   "work": {
     "work_id": "03655",
     "title": "field I - detail 2",
     "year": 2025,
     "year_display": "2025",
-    "medium": "acrylic on canvas",
     "width_px": 2000,
     "height_px": 1125,
+    "medium": "acrylic on canvas",
     "media_version": 1,
     "series_id": "050",
     "galleries": [
       {
-        "gallery_id": "243",
-        "title": "field I (details)"
+        "gallery_id": "050",
+        "title": "field"
       }
     ]
   }

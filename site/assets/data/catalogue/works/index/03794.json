@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-cf0ccc8a0034b54ccd65e4ae5f37a48a",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-a114455d6c5b2d697f140710e9f8fba3",
+    "generated_at_utc": "2026-10-24T19:17:50Z"
   },
   "work": {
     "work_id": "03794",
     "title": "particle 123",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 1890,
     "height_px": 1890,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "051",
     "galleries": [
       {
         "gallery_id": "247",
-        "title": "fireworks particles (particles)"
+        "title": "fireworks particles"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:11:56Z",
     "gallery_id": "066"
   },
   "gallery": {
@@ -16,6 +16,26 @@
     {
       "work_id": "01201",
       "title": "forms painting (reverse)"
+    },
+    {
+      "work_id": "04223",
+      "title": "forms painting - detail 1"
+    },
+    {
+      "work_id": "04224",
+      "title": "forms painting - detail 2"
+    },
+    {
+      "work_id": "04225",
+      "title": "forms painting - detail 3"
+    },
+    {
+      "work_id": "04226",
+      "title": "forms painting - detail 4"
+    },
+    {
+      "work_id": "04227",
+      "title": "forms painting - detail 5"
     }
   ]
 }

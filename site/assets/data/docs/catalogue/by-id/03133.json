@@ -50,34 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "193"
-            },
-            "label": "k crystals (transparent) (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "082"
             },
             "label": "k crystals",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "192"
-            },
-            "label": "k crystals (derivation)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "194"
-            },
-            "label": "k crystals (squared transparent) (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

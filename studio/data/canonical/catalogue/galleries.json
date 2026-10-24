@@ -523,14 +523,6 @@
       "gallery_id": "145",
       "title": "grid dissection (details)"
     },
-    "147": {
-      "gallery_id": "147",
-      "title": "mouse story (pages)"
-    },
-    "148": {
-      "gallery_id": "148",
-      "title": "mouse story (details)"
-    },
     "150": {
       "gallery_id": "150",
       "title": "nerve (formaldehyde form)"
@@ -550,10 +542,6 @@
     "157": {
       "gallery_id": "157",
       "title": "dotlineform (2023) [work in progress]"
-    },
-    "158": {
-      "gallery_id": "158",
-      "title": "dots (details)"
     },
     "159": {
       "gallery_id": "159",
@@ -599,41 +587,9 @@
       "gallery_id": "191",
       "title": "harmony 3 (version) (details)"
     },
-    "192": {
-      "gallery_id": "192",
-      "title": "k crystals (derivation)"
-    },
-    "193": {
-      "gallery_id": "193",
-      "title": "k crystals (transparent) (details)"
-    },
-    "194": {
-      "gallery_id": "194",
-      "title": "k crystals (squared transparent) (details)"
-    },
     "195": {
       "gallery_id": "195",
       "title": "quantum random number theory (versions)"
-    },
-    "196": {
-      "gallery_id": "196",
-      "title": "quantum random number theory (install)"
-    },
-    "197": {
-      "gallery_id": "197",
-      "title": "quantum random number theory (form) (details)"
-    },
-    "198": {
-      "gallery_id": "198",
-      "title": "bits symbols 1 (versions)"
-    },
-    "199": {
-      "gallery_id": "199",
-      "title": "bits symbols 1 (details)"
-    },
-    "200": {
-      "gallery_id": "200",
-      "title": "bits symbols 1 (details ^2)"
     },
     "212": {
       "gallery_id": "212",
@@ -671,85 +627,17 @@
       "gallery_id": "233",
       "title": "dotlineform (2021) [details]"
     },
-    "234": {
-      "gallery_id": "234",
-      "title": "dots (inside) (details)"
-    },
-    "235": {
-      "gallery_id": "235",
-      "title": "dots (first normal form) (details)"
-    },
-    "236": {
-      "gallery_id": "236",
-      "title": "dots (second normal form) (details)"
-    },
-    "237": {
-      "gallery_id": "237",
-      "title": "dots (equations) (details)"
-    },
-    "238": {
-      "gallery_id": "238",
-      "title": "dots (equations particles) (details)"
-    },
     "240": {
       "gallery_id": "240",
       "title": "egg forms (work in progress)"
     },
-    "241": {
-      "gallery_id": "241",
-      "title": "entangled form' (details)"
-    },
-    "243": {
-      "gallery_id": "243",
-      "title": "field I (details)"
-    },
-    "244": {
-      "gallery_id": "244",
-      "title": "field II (details)"
-    },
-    "245": {
-      "gallery_id": "245",
-      "title": "fireworks form (details)"
-    },
-    "246": {
-      "gallery_id": "246",
-      "title": "fireworks particles (details)"
-    },
     "247": {
       "gallery_id": "247",
-      "title": "fireworks particles (particles)"
-    },
-    "248": {
-      "gallery_id": "248",
-      "title": "fireworks particles version (details)"
+      "title": "fireworks particles"
     },
     "253": {
       "gallery_id": "253",
       "title": "form space 1 (noise particles)"
-    },
-    "258": {
-      "gallery_id": "258",
-      "title": "forms painting (details)"
-    },
-    "259": {
-      "gallery_id": "259",
-      "title": "heaven and earth (grey series) (details)"
-    },
-    "260": {
-      "gallery_id": "260",
-      "title": "heaven and earth (colour series) (details)"
-    },
-    "266": {
-      "gallery_id": "266",
-      "title": "interior design 1 (details)"
-    },
-    "267": {
-      "gallery_id": "267",
-      "title": "interior design 2 (details)"
-    },
-    "268": {
-      "gallery_id": "268",
-      "title": "interior design 3 (details)"
     },
     "269": {
       "gallery_id": "269",
@@ -770,30 +658,6 @@
     "273": {
       "gallery_id": "273",
       "title": "kylie wax model 5.0 (iterations)"
-    },
-    "276": {
-      "gallery_id": "276",
-      "title": "k particles (details)"
-    },
-    "277": {
-      "gallery_id": "277",
-      "title": "k particles grid (details)"
-    },
-    "278": {
-      "gallery_id": "278",
-      "title": "pi (details)"
-    },
-    "279": {
-      "gallery_id": "279",
-      "title": "pi molecule grid (details)"
-    },
-    "280": {
-      "gallery_id": "280",
-      "title": "pi circle (details)"
-    },
-    "281": {
-      "gallery_id": "281",
-      "title": "all the particles are connected (details)"
     },
     "282": {
       "gallery_id": "282",
@@ -910,6 +774,10 @@
     "332": {
       "gallery_id": "332",
       "title": "Michelle Pfeiffer"
+    },
+    "333": {
+      "gallery_id": "333",
+      "title": "bits symbols"
     }
   }
 }

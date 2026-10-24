@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-18c387bae6a97de583f1404697c02543",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-bd00b95cd70d80fd8f1e7e90c06f2073",
+    "generated_at_utc": "2026-10-24T19:17:50Z"
   },
   "work": {
     "work_id": "03668",
     "title": "fireworks particles - detail 3",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "051",
     "galleries": [
       {
-        "gallery_id": "246",
-        "title": "fireworks particles (details)"
+        "gallery_id": "051",
+        "title": "fireworks form"
       }
     ]
   }

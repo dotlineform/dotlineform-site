@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:25:24Z",
     "gallery_id": "113"
   },
   "gallery": {
@@ -24,6 +24,66 @@
     {
       "work_id": "01526",
       "title": "all the particles are connected"
+    },
+    {
+      "work_id": "04321",
+      "title": "pi - detail 1"
+    },
+    {
+      "work_id": "04322",
+      "title": "pi - detail 2"
+    },
+    {
+      "work_id": "04323",
+      "title": "pi - detail 3"
+    },
+    {
+      "work_id": "04324",
+      "title": "pi - detail 4"
+    },
+    {
+      "work_id": "04325",
+      "title": "pi - detail 5"
+    },
+    {
+      "work_id": "04326",
+      "title": "pi molecule grid - detail 1"
+    },
+    {
+      "work_id": "04327",
+      "title": "pi molecule grid - detail 2"
+    },
+    {
+      "work_id": "04328",
+      "title": "pi molecule grid - detail 3"
+    },
+    {
+      "work_id": "04329",
+      "title": "pi circle - detail 1"
+    },
+    {
+      "work_id": "04330",
+      "title": "pi circle - detail 2"
+    },
+    {
+      "work_id": "04331",
+      "title": "pi circle - detail 3"
+    },
+    {
+      "work_id": "04332",
+      "title": "all the particles are connected - detail 1"
+    },
+    {
+      "work_id": "04333",
+      "title": "all the particles are connected - detail 2"
+    },
+    {
+      "work_id": "04334",
+      "title": "all the particles are connected - detail 3"
+    },
+    {
+      "work_id": "04335",
+      "title": "all the particles are connected - detail 4"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:23:22Z",
     "gallery_id": "083"
   },
   "gallery": {
@@ -20,6 +20,38 @@
     {
       "work_id": "01500",
       "title": "k particles grid"
+    },
+    {
+      "work_id": "04313",
+      "title": "k particles - detail 1"
+    },
+    {
+      "work_id": "04314",
+      "title": "k particles - detail 2"
+    },
+    {
+      "work_id": "04315",
+      "title": "k particles - detail 3"
+    },
+    {
+      "work_id": "04316",
+      "title": "k particles - detail 4"
+    },
+    {
+      "work_id": "04317",
+      "title": "k particles grid - detail 1"
+    },
+    {
+      "work_id": "04318",
+      "title": "k particles grid - detail 2"
+    },
+    {
+      "work_id": "04319",
+      "title": "k particles grid - detail 3"
+    },
+    {
+      "work_id": "04320",
+      "title": "k particles grid - detail 4"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:11:19Z",
     "gallery_id": "050"
   },
   "gallery": {
@@ -16,6 +16,30 @@
     {
       "work_id": "01048",
       "title": "field II"
+    },
+    {
+      "work_id": "03654",
+      "title": "field I - detail 1"
+    },
+    {
+      "work_id": "03655",
+      "title": "field I - detail 2"
+    },
+    {
+      "work_id": "03656",
+      "title": "field I - detail 3"
+    },
+    {
+      "work_id": "03657",
+      "title": "field II - detail 1"
+    },
+    {
+      "work_id": "03658",
+      "title": "field II - detail 2"
+    },
+    {
+      "work_id": "03659",
+      "title": "field II - detail 3"
     }
   ]
 }

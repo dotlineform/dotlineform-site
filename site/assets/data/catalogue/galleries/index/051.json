@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:17:50Z",
     "gallery_id": "051"
   },
   "gallery": {
@@ -20,6 +20,78 @@
     {
       "work_id": "01051",
       "title": "fireworks particles version"
+    },
+    {
+      "work_id": "03660",
+      "title": "fireworks form - detail 1"
+    },
+    {
+      "work_id": "03661",
+      "title": "fireworks form - detail 2"
+    },
+    {
+      "work_id": "03662",
+      "title": "fireworks form - detail 3"
+    },
+    {
+      "work_id": "03663",
+      "title": "fireworks form - detail 4"
+    },
+    {
+      "work_id": "03664",
+      "title": "fireworks form - detail 5"
+    },
+    {
+      "work_id": "03665",
+      "title": "fireworks form - detail 6"
+    },
+    {
+      "work_id": "03666",
+      "title": "fireworks particles - detail 1"
+    },
+    {
+      "work_id": "03667",
+      "title": "fireworks particles - detail 2"
+    },
+    {
+      "work_id": "03668",
+      "title": "fireworks particles - detail 3"
+    },
+    {
+      "work_id": "03669",
+      "title": "fireworks particles - detail 4"
+    },
+    {
+      "work_id": "03670",
+      "title": "fireworks particles - detail 5"
+    },
+    {
+      "work_id": "03671",
+      "title": "fireworks particles - detail 6"
+    },
+    {
+      "work_id": "04033",
+      "title": "fireworks particles version - detail 1"
+    },
+    {
+      "work_id": "04034",
+      "title": "fireworks particles version - detail 2"
+    },
+    {
+      "work_id": "04035",
+      "title": "fireworks particles version - detail 3"
+    },
+    {
+      "work_id": "04036",
+      "title": "fireworks particles version - detail 4"
+    },
+    {
+      "work_id": "04037",
+      "title": "fireworks particles version - detail 5"
+    },
+    {
+      "work_id": "04038",
+      "title": "fireworks particles version - detail 6"
     }
   ]
 }

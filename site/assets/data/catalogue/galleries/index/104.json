@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:24:25Z",
     "gallery_id": "104"
   },
   "gallery": {
@@ -20,6 +20,46 @@
     {
       "work_id": "00162",
       "title": "mouse story (fragment)"
+    },
+    {
+      "work_id": "01971",
+      "title": "mouse story - 1"
+    },
+    {
+      "work_id": "01972",
+      "title": "mouse story - 2"
+    },
+    {
+      "work_id": "01973",
+      "title": "mouse story - 3"
+    },
+    {
+      "work_id": "01974",
+      "title": "mouse story - 4"
+    },
+    {
+      "work_id": "01975",
+      "title": "mouse story - 5"
+    },
+    {
+      "work_id": "01976",
+      "title": "mouse story - detail 1"
+    },
+    {
+      "work_id": "01977",
+      "title": "mouse story - detail 2"
+    },
+    {
+      "work_id": "01978",
+      "title": "mouse story - detail 3"
+    },
+    {
+      "work_id": "01979",
+      "title": "mouse story - detail 4"
+    },
+    {
+      "work_id": "01980",
+      "title": "mouse story - detail 5"
     }
   ]
 }

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-68a02ec266d7f5cd0f80eaa3d236fe1f",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-f9018a0ceebb5b78c1b3110a4e9cdde9",
+    "generated_at_utc": "2026-10-24T19:21:06Z"
   },
   "work": {
     "work_id": "04231",
     "title": "heaven and earth (blue)",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 4429,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "076",
     "galleries": [
       {
-        "gallery_id": "260",
-        "title": "heaven and earth (colour series) (details)"
+        "gallery_id": "076",
+        "title": "heaven and earth"
       }
     ]
   }

@@ -50,26 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "148"
-            },
-            "label": "mouse story (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "104"
             },
             "label": "mouse story",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "147"
-            },
-            "label": "mouse story (pages)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

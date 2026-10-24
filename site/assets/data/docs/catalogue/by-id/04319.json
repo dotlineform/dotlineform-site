@@ -50,26 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "277"
-            },
-            "label": "k particles grid (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "083"
             },
             "label": "k particles",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "276"
-            },
-            "label": "k particles (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

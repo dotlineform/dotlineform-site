@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:15:21Z",
     "gallery_id": "044"
   },
   "gallery": {
@@ -36,6 +36,98 @@
     {
       "work_id": "01006",
       "title": "dots (equations sample grid)"
+    },
+    {
+      "work_id": "02598",
+      "title": "dots [detail 1]"
+    },
+    {
+      "work_id": "02599",
+      "title": "dots [detail 2]"
+    },
+    {
+      "work_id": "02600",
+      "title": "dots [detail 3]"
+    },
+    {
+      "work_id": "02601",
+      "title": "dots [detail 4]"
+    },
+    {
+      "work_id": "02602",
+      "title": "dots [detail 5]"
+    },
+    {
+      "work_id": "03570",
+      "title": "dots (inside) [detail 1]"
+    },
+    {
+      "work_id": "03571",
+      "title": "dots (inside) [detail 2]"
+    },
+    {
+      "work_id": "03572",
+      "title": "dots (inside) [detail 3]"
+    },
+    {
+      "work_id": "03573",
+      "title": "dots (inside) [detail 4]"
+    },
+    {
+      "work_id": "03574",
+      "title": "dots (inside) [detail 5]"
+    },
+    {
+      "work_id": "03575",
+      "title": "dots (first normal form) [detail 1]"
+    },
+    {
+      "work_id": "03576",
+      "title": "dots (first normal form) [detail 2]"
+    },
+    {
+      "work_id": "03577",
+      "title": "dots (first normal form) [detail 3]"
+    },
+    {
+      "work_id": "03578",
+      "title": "dots (second normal form) [detail 1]"
+    },
+    {
+      "work_id": "03579",
+      "title": "dots (second normal form) [detail 2]"
+    },
+    {
+      "work_id": "03580",
+      "title": "dots (second normal form) [detail 3]"
+    },
+    {
+      "work_id": "03581",
+      "title": "dots (equations) [detail 1]"
+    },
+    {
+      "work_id": "03582",
+      "title": "dots (equations) [detail 2]"
+    },
+    {
+      "work_id": "03583",
+      "title": "dots (equations) [detail 3]"
+    },
+    {
+      "work_id": "03584",
+      "title": "dots (equations) [detail 4]"
+    },
+    {
+      "work_id": "03585",
+      "title": "dots (equations particles) [detail 1]"
+    },
+    {
+      "work_id": "03586",
+      "title": "dots (equations particles) [detail 2]"
+    },
+    {
+      "work_id": "03587",
+      "title": "dots (equations particles) [detail 3]"
     }
   ]
 }

@@ -54,14 +54,6 @@
             },
             "label": "forms painting",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "258"
-            },
-            "label": "forms painting (details)",
-            "relation": "series"
           }
         ],
         "entry": {

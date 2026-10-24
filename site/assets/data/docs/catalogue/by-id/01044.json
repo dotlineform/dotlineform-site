@@ -54,14 +54,6 @@
             },
             "label": "entangled form",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "241"
-            },
-            "label": "entangled form' (details)",
-            "relation": "series"
           }
         ],
         "entry": {

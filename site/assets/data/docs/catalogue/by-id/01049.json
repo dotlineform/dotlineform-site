@@ -58,33 +58,9 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "245"
-            },
-            "label": "fireworks form (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "246"
-            },
-            "label": "fireworks particles (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "247"
             },
-            "label": "fireworks particles (particles)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "248"
-            },
-            "label": "fireworks particles version (details)",
+            "label": "fireworks particles",
             "relation": "series"
           }
         ],

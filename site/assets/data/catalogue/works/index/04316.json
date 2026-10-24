@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-921b60ec321f5db67f8993567df2eccd",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-c514a0751855c4583d96b8c429fe0914",
+    "generated_at_utc": "2026-10-24T19:23:22Z"
   },
   "work": {
     "work_id": "04316",
     "title": "k particles - detail 4",
     "year": 2008,
     "year_display": "2008",
-    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "083",
     "galleries": [
       {
-        "gallery_id": "276",
-        "title": "k particles (details)"
+        "gallery_id": "083",
+        "title": "k particles"
       }
     ]
   }

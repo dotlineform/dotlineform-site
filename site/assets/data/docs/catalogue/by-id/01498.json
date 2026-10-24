@@ -54,22 +54,6 @@
             },
             "label": "k particles",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "276"
-            },
-            "label": "k particles (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "277"
-            },
-            "label": "k particles grid (details)",
-            "relation": "series"
           }
         ],
         "entry": {

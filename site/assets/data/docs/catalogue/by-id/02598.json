@@ -50,58 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "158"
-            },
-            "label": "dots (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "044"
             },
             "label": "dots",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "234"
-            },
-            "label": "dots (inside) (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "235"
-            },
-            "label": "dots (first normal form) (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "236"
-            },
-            "label": "dots (second normal form) (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "237"
-            },
-            "label": "dots (equations) (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "238"
-            },
-            "label": "dots (equations particles) (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

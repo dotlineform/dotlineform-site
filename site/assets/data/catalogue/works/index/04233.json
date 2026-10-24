@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-11bc83967c374951c1610a5be42be148",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-7c0445f0476f4cf400a3986e61e100b7",
+    "generated_at_utc": "2026-10-24T19:21:06Z"
   },
   "work": {
     "work_id": "04233",
     "title": "heaven and earth (green)",
     "year": 2011,
     "year_display": "2011",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 4429,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "076",
     "galleries": [
       {
-        "gallery_id": "260",
-        "title": "heaven and earth (colour series) (details)"
+        "gallery_id": "076",
+        "title": "heaven and earth"
       }
     ]
   }

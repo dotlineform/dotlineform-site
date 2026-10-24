@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T19:21:59Z",
     "gallery_id": "080"
   },
   "gallery": {
@@ -20,6 +20,42 @@
     {
       "work_id": "01393",
       "title": "interior design 3"
+    },
+    {
+      "work_id": "04254",
+      "title": "interior design 1 - detail 1"
+    },
+    {
+      "work_id": "04255",
+      "title": "interior design 1 - detail 2"
+    },
+    {
+      "work_id": "04256",
+      "title": "interior design 1 - detail 3"
+    },
+    {
+      "work_id": "04257",
+      "title": "interior design 2 - detail 1"
+    },
+    {
+      "work_id": "04258",
+      "title": "interior design 2 - detail 2"
+    },
+    {
+      "work_id": "04259",
+      "title": "interior design 2 - detail 3"
+    },
+    {
+      "work_id": "04260",
+      "title": "interior design 3 - detail 1"
+    },
+    {
+      "work_id": "04261",
+      "title": "interior design 3 - detail 2"
+    },
+    {
+      "work_id": "04262",
+      "title": "interior design 3 - detail 3"
     }
   ]
 }

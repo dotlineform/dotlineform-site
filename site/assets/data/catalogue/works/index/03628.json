@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-28e35078523d000ab7a8dad62a23a50b",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-0c66c91ae67948e280ead91c391d7747",
+    "generated_at_utc": "2026-10-24T19:09:54Z"
   },
   "work": {
     "work_id": "03628",
     "title": "entangled form' - spider (detail)",
     "year": 2023,
     "year_display": "2023",
-    "medium": "ink and paint on paper",
     "width_px": 2000,
     "height_px": 2000,
+    "medium": "ink and paint on paper",
     "media_version": 1,
     "series_id": "048",
     "galleries": [
       {
-        "gallery_id": "241",
-        "title": "entangled form' (details)"
+        "gallery_id": "048",
+        "title": "entangled form"
       }
     ]
   }

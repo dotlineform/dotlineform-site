@@ -50,26 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "260"
-            },
-            "label": "heaven and earth (colour series) (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "076"
             },
             "label": "heaven and earth",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "259"
-            },
-            "label": "heaven and earth (grey series) (details)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

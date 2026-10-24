@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-932fd790dfd6fcf65e59270074f97046",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-8db0363538ce492a9ffa6dbf77b2d08d",
+    "generated_at_utc": "2026-10-24T19:22:43Z"
   },
   "work": {
     "work_id": "03133",
     "title": "k crystals (transparent) - detail 3",
     "year": 2009,
     "year_display": "2009",
-    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 4134,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "082",
     "galleries": [
       {
-        "gallery_id": "193",
-        "title": "k crystals (transparent) (details)"
+        "gallery_id": "082",
+        "title": "k crystals"
       }
     ]
   }
