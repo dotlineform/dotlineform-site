@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "191"
-            },
-            "label": "harmony 3 (version) (details)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "075"
             },
             "label": "harmony",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

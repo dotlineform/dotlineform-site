@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T19:58:28Z"
+    "generated_at_utc": "2026-10-24T20:10:49Z"
   },
   "series_galleries": {
     "001": [
@@ -138,7 +138,7 @@
       },
       {
         "gallery_id": "220",
-        "title": "book dna sequence (dna)"
+        "title": "book dna sequence"
       }
     ],
     "022": [
@@ -224,12 +224,8 @@
         "title": "curve machine"
       },
       {
-        "gallery_id": "226",
-        "title": "curves (versions)"
-      },
-      {
         "gallery_id": "227",
-        "title": "holes (details)"
+        "title": "curve machine holes"
       }
     ],
     "036": [
@@ -272,20 +268,12 @@
       {
         "gallery_id": "042",
         "title": "dotlineform (2021)"
-      },
-      {
-        "gallery_id": "233",
-        "title": "dotlineform (2021) [details]"
       }
     ],
     "043": [
       {
         "gallery_id": "043",
         "title": "dotlineform (2023)"
-      },
-      {
-        "gallery_id": "156",
-        "title": "dotlineform (2023) [details]"
       },
       {
         "gallery_id": "157",
@@ -478,10 +466,6 @@
       {
         "gallery_id": "075",
         "title": "harmony"
-      },
-      {
-        "gallery_id": "191",
-        "title": "harmony 3 (version) (details)"
       }
     ],
     "076": [
@@ -539,24 +523,8 @@
         "title": "kylie wax model"
       },
       {
-        "gallery_id": "269",
-        "title": "kylie wax model 1.0 (iterations)"
-      },
-      {
-        "gallery_id": "270",
-        "title": "kylie wax model 2.0 (iterations)"
-      },
-      {
-        "gallery_id": "271",
-        "title": "kylie wax model 3.0 (iterations)"
-      },
-      {
-        "gallery_id": "272",
-        "title": "kylie wax model 4.0 (iterations)"
-      },
-      {
-        "gallery_id": "273",
-        "title": "kylie wax model 5.0 (iterations)"
+        "gallery_id": "337",
+        "title": "kylie wax model iterations"
       }
     ],
     "086": [],

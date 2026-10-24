@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-a70ced96c4737f86193e853b2b3c968c",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-0e3dfc8499c3ce28807f5d13038fe23b",
+    "generated_at_utc": "2026-10-24T20:03:28Z"
   },
   "work": {
     "work_id": "03496",
     "title": "book dna 75",
     "year": 2010,
     "year_display": "2010",
-    "medium": "digital c-type print",
     "width_px": 1200,
     "height_px": 1200,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "021",
     "galleries": [
       {
         "gallery_id": "220",
-        "title": "book dna sequence (dna)"
+        "title": "book dna sequence"
       }
     ]
   }

@@ -62,14 +62,6 @@
             },
             "label": "moments",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "233"
-            },
-            "label": "dotlineform (2021) [details]",
-            "relation": "series"
           }
         ],
         "entry": {

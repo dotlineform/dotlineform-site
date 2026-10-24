@@ -527,10 +527,6 @@
       "gallery_id": "154",
       "title": "certainty (photos)"
     },
-    "156": {
-      "gallery_id": "156",
-      "title": "dotlineform (2023) [details]"
-    },
     "157": {
       "gallery_id": "157",
       "title": "dotlineform (2023) [work in progress]"
@@ -555,10 +551,6 @@
       "gallery_id": "183",
       "title": "body residue"
     },
-    "191": {
-      "gallery_id": "191",
-      "title": "harmony 3 (version) (details)"
-    },
     "195": {
       "gallery_id": "195",
       "title": "quantum random number theory (versions)"
@@ -569,19 +561,11 @@
     },
     "220": {
       "gallery_id": "220",
-      "title": "book dna sequence (dna)"
-    },
-    "226": {
-      "gallery_id": "226",
-      "title": "curves (versions)"
+      "title": "book dna sequence"
     },
     "227": {
       "gallery_id": "227",
-      "title": "holes (details)"
-    },
-    "233": {
-      "gallery_id": "233",
-      "title": "dotlineform (2021) [details]"
+      "title": "curve machine holes"
     },
     "240": {
       "gallery_id": "240",
@@ -594,26 +578,6 @@
     "253": {
       "gallery_id": "253",
       "title": "form space 1 (noise particles)"
-    },
-    "269": {
-      "gallery_id": "269",
-      "title": "kylie wax model 1.0 (iterations)"
-    },
-    "270": {
-      "gallery_id": "270",
-      "title": "kylie wax model 2.0 (iterations)"
-    },
-    "271": {
-      "gallery_id": "271",
-      "title": "kylie wax model 3.0 (iterations)"
-    },
-    "272": {
-      "gallery_id": "272",
-      "title": "kylie wax model 4.0 (iterations)"
-    },
-    "273": {
-      "gallery_id": "273",
-      "title": "kylie wax model 5.0 (iterations)"
     },
     "282": {
       "gallery_id": "282",
@@ -730,6 +694,10 @@
     "336": {
       "gallery_id": "336",
       "title": "body curves"
+    },
+    "337": {
+      "gallery_id": "337",
+      "title": "kylie wax model iterations"
     }
   }
 }

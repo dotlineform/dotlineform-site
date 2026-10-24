@@ -52,7 +52,7 @@
               "kind": "catalogue-gallery",
               "id": "227"
             },
-            "label": "holes (details)",
+            "label": "curve machine holes",
             "relation": "direct"
           },
           {
@@ -61,14 +61,6 @@
               "id": "035"
             },
             "label": "curve machine",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "226"
-            },
-            "label": "curves (versions)",
             "relation": "series"
           }
         ],

@@ -54,14 +54,6 @@
             },
             "label": "harmony",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "191"
-            },
-            "label": "harmony 3 (version) (details)",
-            "relation": "series"
           }
         ],
         "entry": {

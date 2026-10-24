@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T20:05:18Z",
     "gallery_id": "035"
   },
   "gallery": {
@@ -28,6 +28,54 @@
     {
       "work_id": "00871",
       "title": "loops"
+    },
+    {
+      "work_id": "03519",
+      "title": "curve machine [1]"
+    },
+    {
+      "work_id": "03520",
+      "title": "curve machine [2]"
+    },
+    {
+      "work_id": "03521",
+      "title": "curve machine [3]"
+    },
+    {
+      "work_id": "03522",
+      "title": "curve machine [4]"
+    },
+    {
+      "work_id": "03523",
+      "title": "curve machine [5]"
+    },
+    {
+      "work_id": "03524",
+      "title": "curve machine [6]"
+    },
+    {
+      "work_id": "03525",
+      "title": "curve machine [7]"
+    },
+    {
+      "work_id": "03526",
+      "title": "curve machine [8]"
+    },
+    {
+      "work_id": "03527",
+      "title": "curve machine [9]"
+    },
+    {
+      "work_id": "03528",
+      "title": "curve machine [10]"
+    },
+    {
+      "work_id": "03529",
+      "title": "curve machine [11]"
+    },
+    {
+      "work_id": "03530",
+      "title": "curve machine [12]"
     }
   ]
 }

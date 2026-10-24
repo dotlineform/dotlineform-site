@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-2e4c4308242d752bf21df40df86cdf2f",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-56afa45532e98108a5624dc4692263a6",
+    "generated_at_utc": "2026-10-24T20:07:09Z"
   },
   "work": {
     "work_id": "03116",
     "title": "harmony 3.5",
     "year": 2009,
     "year_display": "2009",
-    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "075",
     "galleries": [
       {
-        "gallery_id": "191",
-        "title": "harmony 3 (version) (details)"
+        "gallery_id": "075",
+        "title": "harmony"
       }
     ]
   }

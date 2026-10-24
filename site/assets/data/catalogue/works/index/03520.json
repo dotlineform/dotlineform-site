@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-a2026e7f1ff3224054bfa0098ae06914",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-096e93e756032d9654947dba27439ad8",
+    "generated_at_utc": "2026-10-24T20:05:18Z"
   },
   "work": {
     "work_id": "03520",
     "title": "curve machine [2]",
     "year": 2020,
     "year_display": "2020",
-    "medium": "digital c-type print",
     "width_px": 3024,
     "height_px": 4032,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "035",
     "galleries": [
       {
-        "gallery_id": "226",
-        "title": "curves (versions)"
+        "gallery_id": "035",
+        "title": "curve machine"
       }
     ]
   }

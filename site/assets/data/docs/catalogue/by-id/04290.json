@@ -50,9 +50,9 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "272"
+              "id": "337"
             },
-            "label": "kylie wax model 4.0 (iterations)",
+            "label": "kylie wax model iterations",
             "relation": "direct"
           },
           {
@@ -61,38 +61,6 @@
               "id": "085"
             },
             "label": "kylie wax model",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "269"
-            },
-            "label": "kylie wax model 1.0 (iterations)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "270"
-            },
-            "label": "kylie wax model 2.0 (iterations)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "271"
-            },
-            "label": "kylie wax model 3.0 (iterations)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "273"
-            },
-            "label": "kylie wax model 5.0 (iterations)",
             "relation": "series"
           }
         ],

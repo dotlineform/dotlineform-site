@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-24T20:06:14Z",
     "gallery_id": "042"
   },
   "gallery": {
@@ -148,6 +148,26 @@
     {
       "work_id": "00983",
       "title": "dotlineform surface (34)"
+    },
+    {
+      "work_id": "03565",
+      "title": "001 - 2021-08-27 20꞉06"
+    },
+    {
+      "work_id": "03566",
+      "title": "002 - 2021-08-27 20꞉07"
+    },
+    {
+      "work_id": "03567",
+      "title": "003 - 2021-08-27 20꞉07"
+    },
+    {
+      "work_id": "03568",
+      "title": "004 - 2021-08-27 20꞉07"
+    },
+    {
+      "work_id": "03569",
+      "title": "005 - 2024-05-10 18꞉52"
     }
   ]
 }

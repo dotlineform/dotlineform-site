@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "233"
-            },
-            "label": "dotlineform (2021) [details]",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "042"
             },
             "label": "dotlineform (2021)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

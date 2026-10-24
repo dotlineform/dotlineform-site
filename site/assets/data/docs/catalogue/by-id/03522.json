@@ -50,25 +50,17 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "226"
-            },
-            "label": "curves (versions)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "035"
             },
             "label": "curve machine",
-            "relation": "series"
+            "relation": "direct"
           },
           {
             "target": {
               "kind": "catalogue-gallery",
               "id": "227"
             },
-            "label": "holes (details)",
+            "label": "curve machine holes",
             "relation": "series"
           }
         ],

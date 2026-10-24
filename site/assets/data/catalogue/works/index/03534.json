@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-56f65ab8f2d7c5c71d5f9d7d924e6168",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-7092d9b23417cec7f7b3685d90b24788",
+    "generated_at_utc": "2026-10-24T20:05:18Z"
   },
   "work": {
     "work_id": "03534",
     "title": "dots 4",
     "year": 2020,
     "year_display": "2020",
-    "medium": "digital c-type print",
     "width_px": 3024,
     "height_px": 3024,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "035",
     "galleries": [
       {
         "gallery_id": "227",
-        "title": "holes (details)"
+        "title": "curve machine holes"
       }
     ]
   }
