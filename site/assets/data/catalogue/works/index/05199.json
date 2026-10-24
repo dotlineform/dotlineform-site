@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-6216e1ec287dacb91316ab3015462ff1",
+    "generated_at_utc": "2026-10-24T08:14:57Z"
+  },
+  "work": {
+    "work_id": "05199",
+    "title": "composites (book, 2023)",
+    "year": 2023,
+    "year_display": "2023",
+    "width_px": 1628,
+    "height_px": 1208,
+    "height_cm": 21,
+    "width_cm": 30,
+    "medium": "book, hardback 52pp",
+    "media_version": 1,
+    "series_id": "158",
+    "galleries": [
+      {
+        "gallery_id": "331",
+        "title": "composites (book, 2023)"
+      }
+    ]
+  }
+}

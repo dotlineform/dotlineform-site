@@ -54,14 +54,6 @@
             },
             "label": "all the colours",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "314"
-            },
-            "label": "all the colours forms",
-            "relation": "series"
           }
         ],
         "entry": {

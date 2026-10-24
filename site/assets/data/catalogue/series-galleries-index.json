@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-23T22:31:45Z"
+    "generated_at_utc": "2026-10-24T10:48:21Z"
   },
   "series_galleries": {
     "001": [
@@ -26,18 +26,6 @@
       {
         "gallery_id": "003",
         "title": "16 forms"
-      },
-      {
-        "gallery_id": "208",
-        "title": "16 forms (source)"
-      },
-      {
-        "gallery_id": "209",
-        "title": "16 forms (forms)"
-      },
-      {
-        "gallery_id": "210",
-        "title": "16 forms (transformed forms)"
       }
     ],
     "004": [
@@ -74,22 +62,6 @@
       {
         "gallery_id": "005",
         "title": "3 symbols"
-      },
-      {
-        "gallery_id": "204",
-        "title": "3 symbols (versions)"
-      },
-      {
-        "gallery_id": "205",
-        "title": "3 symbols (details)"
-      },
-      {
-        "gallery_id": "206",
-        "title": "3 symbols (source)"
-      },
-      {
-        "gallery_id": "207",
-        "title": "3 symbols (composites)"
       },
       {
         "gallery_id": "319",
@@ -192,22 +164,9 @@
       {
         "gallery_id": "017",
         "title": "birth of healing forms"
-      },
-      {
-        "gallery_id": "218",
-        "title": "birth of healing forms (details)"
-      },
-      {
-        "gallery_id": "219",
-        "title": "birth of healing forms (versions)"
       }
     ],
-    "018": [
-      {
-        "gallery_id": "018",
-        "title": "body form"
-      }
-    ],
+    "018": [],
     "019": [
       {
         "gallery_id": "019",
@@ -237,10 +196,6 @@
       }
     ],
     "023": [
-      {
-        "gallery_id": "023",
-        "title": "certainty"
-      },
       {
         "gallery_id": "154",
         "title": "certainty (photos)"
@@ -554,18 +509,6 @@
       {
         "gallery_id": "052",
         "title": "flowers"
-      },
-      {
-        "gallery_id": "249",
-        "title": "flowers 1 (details)"
-      },
-      {
-        "gallery_id": "250",
-        "title": "flowers 2 (details)"
-      },
-      {
-        "gallery_id": "251",
-        "title": "flowers 3 (details)"
       }
     ],
     "053": [
@@ -1088,6 +1031,10 @@
       {
         "gallery_id": "150",
         "title": "nerve (formaldehyde form)"
+      },
+      {
+        "gallery_id": "309",
+        "title": "nerve abattoir"
       }
     ],
     "106": [
@@ -1489,10 +1436,6 @@
     ],
     "148": [
       {
-        "gallery_id": "314",
-        "title": "all the colours forms"
-      },
-      {
         "gallery_id": "315",
         "title": "all the colours"
       }
@@ -1566,6 +1509,13 @@
         "gallery_id": "330",
         "title": "mm negative future"
       }
-    ]
+    ],
+    "158": [
+      {
+        "gallery_id": "331",
+        "title": "composites (book, 2023)"
+      }
+    ],
+    "159": []
   }
 }

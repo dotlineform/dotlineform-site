@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-23T22:31:45Z"
+    "generated_at_utc": "2026-10-24T10:48:21Z"
   },
   "galleries": {
     "001": {
@@ -64,10 +64,6 @@
       "gallery_id": "017",
       "title": "birth of healing forms"
     },
-    "018": {
-      "gallery_id": "018",
-      "title": "body form"
-    },
     "019": {
       "gallery_id": "019",
       "title": "body space"
@@ -83,10 +79,6 @@
     "022": {
       "gallery_id": "022",
       "title": "book of curves"
-    },
-    "023": {
-      "gallery_id": "023",
-      "title": "certainty"
     },
     "024": {
       "gallery_id": "024",
@@ -780,34 +772,6 @@
       "gallery_id": "203",
       "title": "10,000 (3) (details)"
     },
-    "204": {
-      "gallery_id": "204",
-      "title": "3 symbols (versions)"
-    },
-    "205": {
-      "gallery_id": "205",
-      "title": "3 symbols (details)"
-    },
-    "206": {
-      "gallery_id": "206",
-      "title": "3 symbols (source)"
-    },
-    "207": {
-      "gallery_id": "207",
-      "title": "3 symbols (composites)"
-    },
-    "208": {
-      "gallery_id": "208",
-      "title": "16 forms (source)"
-    },
-    "209": {
-      "gallery_id": "209",
-      "title": "16 forms (forms)"
-    },
-    "210": {
-      "gallery_id": "210",
-      "title": "16 forms (transformed forms)"
-    },
     "211": {
       "gallery_id": "211",
       "title": "a theory of happiness is a theory of everything (layers)"
@@ -835,14 +799,6 @@
     "217": {
       "gallery_id": "217",
       "title": "assembly code 3 (details)"
-    },
-    "218": {
-      "gallery_id": "218",
-      "title": "birth of healing forms (details)"
-    },
-    "219": {
-      "gallery_id": "219",
-      "title": "birth of healing forms (versions)"
     },
     "220": {
       "gallery_id": "220",
@@ -955,18 +911,6 @@
     "248": {
       "gallery_id": "248",
       "title": "fireworks particles version (details)"
-    },
-    "249": {
-      "gallery_id": "249",
-      "title": "flowers 1 (details)"
-    },
-    "250": {
-      "gallery_id": "250",
-      "title": "flowers 2 (details)"
-    },
-    "251": {
-      "gallery_id": "251",
-      "title": "flowers 3 (details)"
     },
     "252": {
       "gallery_id": "252",
@@ -1216,10 +1160,6 @@
       "gallery_id": "313",
       "title": "abstract paintings (2024) details"
     },
-    "314": {
-      "gallery_id": "314",
-      "title": "all the colours forms"
-    },
     "315": {
       "gallery_id": "315",
       "title": "all the colours"
@@ -1279,6 +1219,10 @@
     "330": {
       "gallery_id": "330",
       "title": "mm negative future"
+    },
+    "331": {
+      "gallery_id": "331",
+      "title": "composites (book, 2023)"
     }
   }
 }

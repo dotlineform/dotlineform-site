@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-23T08:31:29Z",
+    "generated_at_utc": "2026-10-24T10:48:21Z",
     "gallery_id": "005"
   },
   "gallery": {
@@ -22,12 +22,124 @@
       "title": "3 symbols (untreated)"
     },
     {
-      "work_id": "04913",
-      "title": "3 symbols cards - face"
+      "work_id": "03190",
+      "title": "3 symbols (detail 1)"
     },
     {
-      "work_id": "04914",
-      "title": "3 symbols cards - back"
+      "work_id": "03191",
+      "title": "3 symbols (detail 2)"
+    },
+    {
+      "work_id": "03192",
+      "title": "3 symbols (detail 3)"
+    },
+    {
+      "work_id": "03193",
+      "title": "3 symbols (detail 4)"
+    },
+    {
+      "work_id": "03194",
+      "title": "3 symbols (detail 5)"
+    },
+    {
+      "work_id": "03195",
+      "title": "3 symbols (detail 6)"
+    },
+    {
+      "work_id": "03196",
+      "title": "3 symbols (detail 7)"
+    },
+    {
+      "work_id": "03197",
+      "title": "3 symbols (detail 8)"
+    },
+    {
+      "work_id": "03198",
+      "title": "source - bandage"
+    },
+    {
+      "work_id": "03199",
+      "title": "source - before"
+    },
+    {
+      "work_id": "03200",
+      "title": "source - blessing"
+    },
+    {
+      "work_id": "03201",
+      "title": "source - blindness"
+    },
+    {
+      "work_id": "03202",
+      "title": "source - bridge"
+    },
+    {
+      "work_id": "03203",
+      "title": "source - burma"
+    },
+    {
+      "work_id": "03204",
+      "title": "source - burn"
+    },
+    {
+      "work_id": "03205",
+      "title": "source - genocide"
+    },
+    {
+      "work_id": "03206",
+      "title": "source - gesture"
+    },
+    {
+      "work_id": "03207",
+      "title": "source - give"
+    },
+    {
+      "work_id": "03208",
+      "title": "source - grave"
+    },
+    {
+      "work_id": "03209",
+      "title": "source - grieve"
+    },
+    {
+      "work_id": "03210",
+      "title": "source - grow"
+    },
+    {
+      "work_id": "03211",
+      "title": "source - guilt"
+    },
+    {
+      "work_id": "03212",
+      "title": "source - radius"
+    },
+    {
+      "work_id": "03213",
+      "title": "source - rarefied"
+    },
+    {
+      "work_id": "03214",
+      "title": "source - reincarnation"
+    },
+    {
+      "work_id": "03215",
+      "title": "source - replenish"
+    },
+    {
+      "work_id": "03216",
+      "title": "source - restrict"
+    },
+    {
+      "work_id": "03217",
+      "title": "source - ruin"
+    },
+    {
+      "work_id": "03218",
+      "title": "source - rwanda"
+    },
+    {
+      "work_id": "03219",
+      "title": "source grid"
     }
   ]
 }

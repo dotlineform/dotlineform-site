@@ -1,0 +1,60 @@
+{
+  "doc_id": "d-20261024-095656-151301",
+  "title": "moments in an unfinished painting",
+  "added_date": "2026-10-24 09:56:56",
+  "last_updated": "2026-10-24 10:04:47",
+  "draft": false,
+  "has_thumbnail": true,
+  "content_html": "<h1>moments in an unfinished painting</h1>\n<p class=\"momentDate\">Jun 29 2025</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05201\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open moments in an unfinished painting\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05201-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05201-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05201-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05201-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"moments in an unfinished painting\" width=\"3152\" height=\"1776\" decoding=\"async\"><span data-docs-media-placeholder hidden>moments in an unfinished painting</span></button></figure></div>\n<pre class=\"moment-text\">\na painting is a living thing\nit flows from life and reveals life\nwhilst being outside of life\nit is born but it never breathes\nas if it is constantly in the process of birth\n<p>yet it bares many scars, already\nscratched, dissolved, scrubbed\nyet every violent act is done with love\nand hope\nthat the layers will reveal an impermanence</p>\n<p>many years pass… it is still not yet ready\nit is still of the unnameable\nand when it becomes time\nit will rest, still\nbeyond the reach of clocks\n</pre></p>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05201"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:05201": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05201"
+        },
+        "label": "moments in an unfinished painting",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/05201-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/05201-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05201-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05201-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "moments in an unfinished painting",
+          "width_px": 3152,
+          "height_px": 1776
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/05201-primary-1600.webp?v=1",
+        "galleries": []
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-23T08:39:17Z",
+  "generated_at": "2026-10-24T11:08:30Z",
   "docs": [
     {
       "collection": "works",
@@ -9,7 +9,7 @@
       "doc_id": "d-20260801-212422-df11f3",
       "report_doc_id": "d-20260801-073826-8865a8",
       "title": "3 symbols",
-      "timestamp": "2026-10-23"
+      "timestamp": "2026-10-24"
     },
     {
       "collection": "library",

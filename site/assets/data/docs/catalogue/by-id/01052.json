@@ -54,30 +54,6 @@
             },
             "label": "flowers",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "249"
-            },
-            "label": "flowers 1 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "250"
-            },
-            "label": "flowers 2 (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "251"
-            },
-            "label": "flowers 3 (details)",
-            "relation": "series"
           }
         ],
         "entry": {

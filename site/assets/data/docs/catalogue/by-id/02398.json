@@ -54,14 +54,6 @@
             },
             "label": "certainty (photos)",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "023"
-            },
-            "label": "certainty",
-            "relation": "series"
           }
         ],
         "entry": {

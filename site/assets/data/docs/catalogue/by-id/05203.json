@@ -1,0 +1,62 @@
+{
+  "doc_id": "05203",
+  "title": "flowers",
+  "added_date": "2026-10-24 10:46:03",
+  "last_updated": "2026-10-24 10:46:03",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>flowers</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05203\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2102 / 1696;\" data-docs-media-open aria-label=\"Open flowers\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05203-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05203-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05203-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05203-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"flowers\" width=\"2102\" height=\"1696\" decoding=\"async\"><span data-docs-media-placeholder hidden>flowers</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2022<br>acrylic on board<br><br>cat. 05203</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05203"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:05203": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05203"
+        },
+        "label": "flowers",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/05203-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/05203-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05203-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05203-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "flowers",
+          "width_px": 2102,
+          "height_px": 1696
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/05203-primary-1600.webp?v=1",
+        "galleries": [],
+        "entry": {
+          "metadata_lines": [
+            "2022",
+            "acrylic on board",
+            "",
+            "cat. 05203"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

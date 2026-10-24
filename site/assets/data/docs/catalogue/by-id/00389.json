@@ -50,14 +50,6 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "023"
-            },
-            "label": "certainty",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "154"
             },
             "label": "certainty (photos)",

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-de4f12fdc31cbd4faf17488ac7aaa97d",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-6a3a877780fa897b53a4bfc5b825370a",
+    "generated_at_utc": "2026-10-24T09:42:08Z"
   },
   "work": {
     "work_id": "03285",
     "title": "transformed form 13",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 1600,
     "height_px": 1600,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "003",
     "galleries": [
       {
-        "gallery_id": "210",
-        "title": "16 forms (transformed forms)"
+        "gallery_id": "003",
+        "title": "16 forms"
       }
     ]
   }

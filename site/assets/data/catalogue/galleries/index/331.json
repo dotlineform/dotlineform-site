@@ -1,0 +1,17 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T08:14:57Z",
+    "gallery_id": "331"
+  },
+  "gallery": {
+    "gallery_id": "331",
+    "title": "composites (book, 2023)"
+  },
+  "member_works": [
+    {
+      "work_id": "05199",
+      "title": "composites (book, 2023)"
+    }
+  ]
+}

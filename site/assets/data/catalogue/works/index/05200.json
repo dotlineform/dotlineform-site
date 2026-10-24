@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-fc5278f14c3d05dcd0fdf553ea5025cf",
+    "generated_at_utc": "2026-10-24T08:49:55Z"
+  },
+  "work": {
+    "work_id": "05200",
+    "title": "bird wing",
+    "year": 2023,
+    "year_display": "2023",
+    "width_px": 1600,
+    "height_px": 1282,
+    "height_cm": 10.9,
+    "width_cm": 13.5,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

@@ -1,23 +1,23 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-9ff2f1f47c2177c63f7150d597fcd6c7",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-f9266f21e65acad135267b5dfe3a6b0a",
+    "generated_at_utc": "2026-10-24T09:29:05Z"
   },
   "work": {
     "work_id": "04042",
     "title": "flowers 2 - detail 1",
     "year": 2023,
     "year_display": "2023",
-    "medium": "digital c-type print",
     "width_px": 2000,
     "height_px": 2000,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "052",
     "galleries": [
       {
-        "gallery_id": "250",
-        "title": "flowers 2 (details)"
+        "gallery_id": "052",
+        "title": "flowers"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-23T22:31:45Z"
+    "generated_at_utc": "2026-10-24T10:48:21Z"
   },
   "works": {
     "00001": {
@@ -12780,90 +12780,6 @@
       "work_id": "03219",
       "title": "source grid"
     },
-    "03220": {
-      "work_id": "03220",
-      "title": "composite - bandage"
-    },
-    "03221": {
-      "work_id": "03221",
-      "title": "composite - before"
-    },
-    "03222": {
-      "work_id": "03222",
-      "title": "composite - blessing"
-    },
-    "03223": {
-      "work_id": "03223",
-      "title": "composite - blindness"
-    },
-    "03224": {
-      "work_id": "03224",
-      "title": "composite - bridge"
-    },
-    "03225": {
-      "work_id": "03225",
-      "title": "composite - burma"
-    },
-    "03226": {
-      "work_id": "03226",
-      "title": "composite - burn"
-    },
-    "03227": {
-      "work_id": "03227",
-      "title": "composite - genocide"
-    },
-    "03228": {
-      "work_id": "03228",
-      "title": "composite - gesture"
-    },
-    "03229": {
-      "work_id": "03229",
-      "title": "composite - give"
-    },
-    "03230": {
-      "work_id": "03230",
-      "title": "composite - grave"
-    },
-    "03231": {
-      "work_id": "03231",
-      "title": "composite - grieve"
-    },
-    "03232": {
-      "work_id": "03232",
-      "title": "composite - grow"
-    },
-    "03233": {
-      "work_id": "03233",
-      "title": "composite - guilt"
-    },
-    "03234": {
-      "work_id": "03234",
-      "title": "composite - radius"
-    },
-    "03235": {
-      "work_id": "03235",
-      "title": "composite - rarefied"
-    },
-    "03236": {
-      "work_id": "03236",
-      "title": "composite - reincarnation"
-    },
-    "03237": {
-      "work_id": "03237",
-      "title": "composite - replenish"
-    },
-    "03238": {
-      "work_id": "03238",
-      "title": "composite - restrict"
-    },
-    "03239": {
-      "work_id": "03239",
-      "title": "composite - ruin"
-    },
-    "03240": {
-      "work_id": "03240",
-      "title": "composite - rwanda"
-    },
     "03241": {
       "work_id": "03241",
       "title": "16 forms - source photo"
@@ -13406,35 +13322,35 @@
     },
     "03376": {
       "work_id": "03376",
-      "title": "birth of forms - detail 1"
+      "title": "birth of healing forms - detail 1"
     },
     "03377": {
       "work_id": "03377",
-      "title": "birth of forms - detail 2"
+      "title": "birth of healing forms - detail 2"
     },
     "03378": {
       "work_id": "03378",
-      "title": "birth of forms - detail 3"
+      "title": "birth of healing forms - detail 3"
     },
     "03379": {
       "work_id": "03379",
-      "title": "birth of forms - detail 4"
+      "title": "birth of healing forms - detail 4"
     },
     "03380": {
       "work_id": "03380",
-      "title": "birth of forms (generation 3 version 1)"
+      "title": "birth of healing forms (generation 3 version 1)"
     },
     "03381": {
       "work_id": "03381",
-      "title": "birth of forms (generation 3 version 2)"
+      "title": "birth of healing forms (generation 3 version 2)"
     },
     "03382": {
       "work_id": "03382",
-      "title": "birth of forms (generation 3 version 3)"
+      "title": "birth of healing forms (generation 3 version 3)"
     },
     "03383": {
       "work_id": "03383",
-      "title": "birth of forms (generation 3 version 4)"
+      "title": "birth of healing forms (generation 3 version 4)"
     },
     "03384": {
       "work_id": "03384",
@@ -20691,6 +20607,26 @@
     "05198": {
       "work_id": "05198",
       "title": "mm version 4.4.05"
+    },
+    "05199": {
+      "work_id": "05199",
+      "title": "composites (book, 2023)"
+    },
+    "05200": {
+      "work_id": "05200",
+      "title": "bird wing"
+    },
+    "05201": {
+      "work_id": "05201",
+      "title": "moments in an unfinished painting"
+    },
+    "05202": {
+      "work_id": "05202",
+      "title": "flowers"
+    },
+    "05203": {
+      "work_id": "05203",
+      "title": "flowers"
     }
   }
 }

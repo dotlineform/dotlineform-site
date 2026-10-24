@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-916e50468252e48abf91a2e3dc8dd233",
-    "generated_at_utc": "2026-10-23T22:31:45Z"
+    "version": "blake2b-77fdd3ad9b789a22ce663c1c1191d46f",
+    "generated_at_utc": "2026-10-24T06:50:22Z"
   },
   "work": {
     "work_id": "05185",
     "title": "mm version 4.3.05",
-    "year": 2004,
-    "year_display": "2004",
+    "year": 2022,
+    "year_display": "2022",
     "width_px": 2000,
     "height_px": 2000,
     "height_cm": 17,

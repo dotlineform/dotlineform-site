@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-41c41fea3f21bdd0b02903285664f577",
-    "generated_at_utc": "2026-10-23T08:31:29Z"
+    "version": "blake2b-4d2d9a36a7f2c15d4808d1eb6e1c2ae7",
+    "generated_at_utc": "2026-10-24T10:48:21Z"
   },
   "work": {
     "work_id": "04914",
@@ -18,8 +18,8 @@
     "series_id": "005",
     "galleries": [
       {
-        "gallery_id": "005",
-        "title": "3 symbols"
+        "gallery_id": "319",
+        "title": "3 symbols - cards"
       }
     ]
   }

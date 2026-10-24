@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-102e06d4a0edcdec17afb26d28b89c09",
-    "generated_at_utc": "2026-10-23T08:31:29Z"
+    "version": "blake2b-ae80479ab5ce46c4e8acc0c2279000a9",
+    "generated_at_utc": "2026-10-24T10:48:21Z"
   },
   "work": {
     "work_id": "03219",
@@ -16,8 +16,8 @@
     "series_id": "005",
     "galleries": [
       {
-        "gallery_id": "206",
-        "title": "3 symbols (source)"
+        "gallery_id": "005",
+        "title": "3 symbols"
       }
     ]
   }

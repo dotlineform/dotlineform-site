@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d439feae07aa95894978a0824d18422d",
-    "generated_at_utc": "2026-10-22T21:20:54Z"
+    "version": "blake2b-8febd6ccd996e7ac23265de9325dfde0",
+    "generated_at_utc": "2026-10-24T09:54:55Z"
   },
   "work": {
     "work_id": "04783",
@@ -18,8 +18,8 @@
     "series_id": "148",
     "galleries": [
       {
-        "gallery_id": "314",
-        "title": "all the colours forms"
+        "gallery_id": "315",
+        "title": "all the colours"
       }
     ]
   }

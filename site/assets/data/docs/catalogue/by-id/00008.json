@@ -62,6 +62,14 @@
             },
             "label": "nerve (formaldehyde form)",
             "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "309"
+            },
+            "label": "nerve abattoir",
+            "relation": "series"
           }
         ],
         "entry": {

@@ -54,22 +54,6 @@
             },
             "label": "birth of healing forms",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "218"
-            },
-            "label": "birth of healing forms (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "219"
-            },
-            "label": "birth of healing forms (versions)",
-            "relation": "series"
           }
         ],
         "entry": {

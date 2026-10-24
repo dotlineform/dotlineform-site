@@ -50,34 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "210"
-            },
-            "label": "16 forms (transformed forms)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "003"
             },
             "label": "16 forms",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "208"
-            },
-            "label": "16 forms (source)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "209"
-            },
-            "label": "16 forms (forms)",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

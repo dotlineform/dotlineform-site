@@ -62,38 +62,6 @@
             },
             "label": "3 symbols",
             "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "204"
-            },
-            "label": "3 symbols (versions)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "205"
-            },
-            "label": "3 symbols (details)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "206"
-            },
-            "label": "3 symbols (source)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "207"
-            },
-            "label": "3 symbols (composites)",
-            "relation": "series"
           }
         ],
         "entry": {

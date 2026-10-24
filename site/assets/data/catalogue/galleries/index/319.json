@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-23T08:31:29Z",
+    "generated_at_utc": "2026-10-24T10:48:21Z",
     "gallery_id": "319"
   },
   "gallery": {
@@ -9,6 +9,14 @@
     "title": "3 symbols - cards"
   },
   "member_works": [
+    {
+      "work_id": "04913",
+      "title": "3 symbols cards - face"
+    },
+    {
+      "work_id": "04914",
+      "title": "3 symbols cards - back"
+    },
     {
       "work_id": "04915",
       "title": "_system - back"

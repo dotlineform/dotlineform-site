@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-2bbb10759b38697e250d19d307f44015",
+    "generated_at_utc": "2026-10-24T09:04:07Z"
+  },
+  "work": {
+    "work_id": "05201",
+    "title": "moments in an unfinished painting",
+    "year": 2025,
+    "year_display": "2025",
+    "width_px": 3152,
+    "height_px": 1776,
+    "height_cm": 15,
+    "width_cm": 26.7,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": []
+  }
+}

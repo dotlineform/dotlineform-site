@@ -178,7 +178,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
     """Handoff queued Works, preserve completed readiness and return final editor records.
 
     Follow the app-generated queue without validating queue or saved contents.
-    Shared output retains unchanged content;
+    Work by-ID and shared output retain unchanged content;
     Work metadata/media and canonical flag clears complete before readiness.
     Failure retains completed effects and exact shared selections. Only full
     completion advances the last successful time.
@@ -298,8 +298,14 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                         source = output_path((staging if download["staged"] else working).work_files, name)
                         _handoff_file(source, output_path(working.work_files, name))
                     phase = "metadata handoff"
-                    _write_payload(path, payloads[f"works/index/{work_id}.json"])
-                    output["written"].append(f"works/index/{work_id}.json")
+                    work_payload = payloads[f"works/index/{work_id}.json"]
+                    try:
+                        previous_version = json.loads(path.read_text(encoding="utf-8"))["header"]["version"]
+                    except FileNotFoundError:
+                        previous_version = None
+                    if previous_version != work_payload["header"]["version"]:
+                        _write_payload(path, work_payload)
+                        output["written"].append(f"works/index/{work_id}.json")
                     phase = "staging flags"
                     flags_changed = entry["image"] and record["image_staged"]
                     if entry["image"]:

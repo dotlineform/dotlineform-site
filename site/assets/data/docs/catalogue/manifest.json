@@ -5816,6 +5816,11 @@
       "last_updated": "2026-10-23"
     },
     {
+      "doc_id": "05200",
+      "title": "bird wing",
+      "last_updated": "2026-10-24"
+    },
+    {
       "doc_id": "00774",
       "title": "birds [1]",
       "last_updated": "2026-10-01"
@@ -5856,49 +5861,29 @@
       "last_updated": "2026-10-01"
     },
     {
-      "doc_id": "03380",
-      "title": "birth of forms (generation 3 version 1)",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03381",
-      "title": "birth of forms (generation 3 version 2)",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03382",
-      "title": "birth of forms (generation 3 version 3)",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03383",
-      "title": "birth of forms (generation 3 version 4)",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03376",
-      "title": "birth of forms - detail 1",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03377",
-      "title": "birth of forms - detail 2",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03378",
-      "title": "birth of forms - detail 3",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03379",
-      "title": "birth of forms - detail 4",
-      "last_updated": "2026-10-01"
-    },
-    {
       "doc_id": "00782",
       "title": "birth of healing forms",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "03380",
+      "title": "birth of healing forms (generation 3 version 1)",
+      "last_updated": "2026-10-24"
+    },
+    {
+      "doc_id": "03381",
+      "title": "birth of healing forms (generation 3 version 2)",
+      "last_updated": "2026-10-24"
+    },
+    {
+      "doc_id": "03382",
+      "title": "birth of healing forms (generation 3 version 3)",
+      "last_updated": "2026-10-24"
+    },
+    {
+      "doc_id": "03383",
+      "title": "birth of healing forms (generation 3 version 4)",
+      "last_updated": "2026-10-24"
     },
     {
       "doc_id": "03384",
@@ -6089,6 +6074,26 @@
       "doc_id": "03421",
       "title": "birth of healing forms - 3.08",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "03376",
+      "title": "birth of healing forms - detail 1",
+      "last_updated": "2026-10-24"
+    },
+    {
+      "doc_id": "03377",
+      "title": "birth of healing forms - detail 2",
+      "last_updated": "2026-10-24"
+    },
+    {
+      "doc_id": "03378",
+      "title": "birth of healing forms - detail 3",
+      "last_updated": "2026-10-24"
+    },
+    {
+      "doc_id": "03379",
+      "title": "birth of healing forms - detail 4",
+      "last_updated": "2026-10-24"
     },
     {
       "doc_id": "00634",
@@ -8041,109 +8046,9 @@
       "last_updated": "2026-10-01"
     },
     {
-      "doc_id": "03220",
-      "title": "composite - bandage",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03221",
-      "title": "composite - before",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03222",
-      "title": "composite - blessing",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03223",
-      "title": "composite - blindness",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03224",
-      "title": "composite - bridge",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03225",
-      "title": "composite - burma",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03226",
-      "title": "composite - burn",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03227",
-      "title": "composite - genocide",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03228",
-      "title": "composite - gesture",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03229",
-      "title": "composite - give",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03230",
-      "title": "composite - grave",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03231",
-      "title": "composite - grieve",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03232",
-      "title": "composite - grow",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03233",
-      "title": "composite - guilt",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03234",
-      "title": "composite - radius",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03235",
-      "title": "composite - rarefied",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03236",
-      "title": "composite - reincarnation",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03237",
-      "title": "composite - replenish",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03238",
-      "title": "composite - restrict",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03239",
-      "title": "composite - ruin",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "03240",
-      "title": "composite - rwanda",
-      "last_updated": "2026-10-01"
+      "doc_id": "05199",
+      "title": "composites (book, 2023)",
+      "last_updated": "2026-10-24"
     },
     {
       "doc_id": "00827",
@@ -10079,6 +9984,16 @@
       "doc_id": "04038",
       "title": "fireworks particles version - detail 6",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05202",
+      "title": "flowers",
+      "last_updated": "2026-10-24"
+    },
+    {
+      "doc_id": "05203",
+      "title": "flowers",
+      "last_updated": "2026-10-24"
     },
     {
       "doc_id": "01052",
@@ -17944,6 +17859,11 @@
       "doc_id": "00461",
       "title": "molecules symbols",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05201",
+      "title": "moments in an unfinished painting",
+      "last_updated": "2026-10-24"
     },
     {
       "doc_id": "00214",
