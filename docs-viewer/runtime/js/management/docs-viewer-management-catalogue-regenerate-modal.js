@@ -3,74 +3,39 @@ import {
   openDocsViewerManagementModal
 } from "./docs-viewer-management-modal-shell.js";
 
-/** Keep the modal busy through queued regeneration and report refresh. */
+/** Show a completed regeneration result or error with Close ready on opening. */
 export function openCatalogueRegenerateModal(options) {
-  var result = null;
-  var phase = "ready";
-  var api;
-  var primary;
-  var closeButton;
+  var result = options.payload;
+  var error = options.error;
   var content;
-
-  function setBusy(busy) {
-    api.setBusy(busy);
-    options.onBusyChange(busy);
-  }
-
-  function finish() {
-    setBusy(false);
-    closeButton.hidden = true;
-    primary.textContent = "Close";
-    primary.disabled = false;
-  }
-
-  function run() {
-    phase = "running";
-    api.setStatus("");
-    setBusy(true);
-    content.textContent = "";
-    options.run().then(function (payload) {
-      result = payload;
-      phase = "result";
-      var counts = payload.counts;
-      content.innerHTML = "<div>" + escapeHtml("Updated " + counts.updated) + "</div>"
-        + "<div>" + escapeHtml("Created " + counts.create) + "</div>"
-        + "<div>" + escapeHtml("Deleted " + counts.delete) + "</div>";
-    }).catch(function (error) {
-      phase = "error";
-      result = { ...error.payload, ok: false, error: error.message };
-      if (error.payload?.ok) {
-        content.textContent = "Catalogue documents were updated, but the report could not refresh.";
-      } else if (result.committed_source_operations) {
-        content.textContent = "Source operations completed: " + result.committed_source_operations + ". Inspect the error before retrying.";
-      } else {
-        content.textContent = "Regenerate stopped before completing.";
-      }
-      api.setStatus(error.message);
-    }).finally(finish);
+  if (error) {
+    result = { ...error.payload, ok: false, error: error.message };
+    var message;
+    if (error.payload?.ok) {
+      message = "Catalogue documents were updated, but the report could not refresh.";
+    } else if (result.committed_source_operations) {
+      message = "Source operations completed: " + result.committed_source_operations + ". Inspect the error before retrying.";
+    } else {
+      message = "Regenerate stopped before completing.";
+    }
+    content = "<div>" + escapeHtml(message) + "</div>";
+  } else {
+    var counts = result.counts;
+    content = "<div>" + escapeHtml("Updated " + counts.updated) + "</div>"
+      + "<div>" + escapeHtml("Created " + counts.create) + "</div>"
+      + "<div>" + escapeHtml("Deleted " + counts.delete) + "</div>";
   }
 
   return openDocsViewerManagementModal({
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: "Regenerate Catalogue",
-    bodyHtml: '<p>Regenerate refreshed Catalogue updates.</p><div data-regenerate-result aria-live="polite"></div>',
+    bodyHtml: content,
     actions: [
-      { role: "modal-primary", label: "Run" },
-      { role: "modal-cancel", label: "Close" }
+      { role: "modal-primary", label: "Close" }
     ],
-    focusSelector: '[data-role="modal-primary"]',
     onOpen: function (modalApi) {
-      api = modalApi;
-      api.host.querySelector('[data-role="docs-viewer-management-modal"]').dataset.suppressBusyCursor = "true";
-      primary = api.host.querySelector('[data-role="modal-primary"]');
-      closeButton = api.host.querySelector('button[data-role="modal-cancel"]');
-      content = api.host.querySelector("[data-regenerate-result]");
-    },
-    onSubmit: function () {
-      if (phase === "result" || phase === "error") return { confirmed: true };
-      if (phase === "ready") run();
-      return false;
+      if (error) modalApi.setStatus(error.message);
     }
   }).then(function () { return result; });
 }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-20"
+last_updated: "2026-10-24"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -222,6 +222,10 @@ This operation uses the complete generator and the same member/envelope projecto
 The 2026-10-10 member-merging adoption completed the one-time v4-to-v5 updates conversion after user-confirmed relationship Publish. It added empty creation/member arrays and preserved the Refresh time; publication remained v4 at that cutover. The completed migration script is retired. Incremental Document Publish subsequently adopted publication v5 without progress flags. Current queues both use v5, with no old-schema acceptance or automatic repair. Existing v3 Gallery files required no output conversion or publication for the member-merging change.
 
 ## Regenerate Timing
+
+The Catalogue collection's Regenerate toolbar icon starts the operation immediately, without a separate Run confirmation. The page remains busy through queued regeneration and the required collection report refresh. Only after that work settles does the result modal open, already populated with completion counts or the existing error details and with Close enabled. This is a browser-owned presentation change; the service request and queue lifecycle retain their existing owners.
+
+The 2026-10-24 confirmation removal and result-modal sequencing passed focused JavaScript lint for the workflow and modal owners, plus whitespace checks. Code and redundancy review kept the single Regenerate request and conditional report refresh in the workflow owner, removed modal-owned operation/busy callbacks and the empty live result container, and retained escaped completion/error content, partial-completion details and shared modal dismissal/focus behavior. The caller owns page busy state through the operation; the result modal performs no service work. No validation, retry or compatibility behavior was added. The modules remain local-only, so no public projection is required. Tests and live regeneration were not run; the page busy cursor, fully populated success/error modal and dismissal remain manual checks after force-reloading Docs Viewer.
 
 Regenerate consumes refreshed queued Work entries and carries sources, generated Work records, collection metadata and public preparation state through exact builds. Completed public artifacts and Catalogue publication selections are persisted before updates removal. The publication queue uses `catalogue_publish_pending_v5` with no Preview progress flag; current media selections merge with existing effects and exact refreshed download references. Failures report the reached Work/phase and retained completed effects. Definition-only shared output still follows Save/Delete → Refresh → Publish. [Catalogue Deployment](Catalogue_Deployment.md) owns selected distribution.
 
