@@ -12,11 +12,17 @@ function title(row, key) {
 function sortRows(state) {
   const secondary = state.sortKey === "series" ? "gallery" : "series";
   return state.rows.slice().sort((left, right) => {
-    const first = title(left, state.sortKey);
-    const second = title(right, state.sortKey);
-    const primary = Number(left[state.sortKey] !== null) - Number(right[state.sortKey] !== null) || SORTER.compare(first, second);
+    let primary;
+    if (state.sortKey === "works") {
+      primary = Number(left.gallery !== null) - Number(right.gallery !== null)
+        || (left.gallery === null ? 0 : left.gallery.work_count) - (right.gallery === null ? 0 : right.gallery.work_count);
+    } else {
+      primary = Number(left[state.sortKey] !== null) - Number(right[state.sortKey] !== null)
+        || SORTER.compare(title(left, state.sortKey), title(right, state.sortKey));
+    }
     return primary * (state.sortDir === "desc" ? -1 : 1)
       || SORTER.compare(title(left, secondary), title(right, secondary))
+      || (state.sortKey === "works" ? SORTER.compare(title(left, "gallery"), title(right, "gallery")) : 0)
       || (left.series === null ? "" : left.series.series_id).localeCompare(right.series === null ? "" : right.series.series_id)
       || (left.gallery === null ? "" : left.gallery.gallery_id).localeCompare(right.gallery === null ? "" : right.gallery.gallery_id);
   });
@@ -85,6 +91,10 @@ function renderRows(state) {
       } else cell.textContent = "—";
       rowNode.appendChild(cell);
     }
+    const worksCell = state.document.createElement("span");
+    worksCell.setAttribute("role", "cell");
+    worksCell.textContent = row.gallery === null ? "—" : String(row.gallery.work_count);
+    rowNode.appendChild(worksCell);
     state.rowsNode.appendChild(rowNode);
   });
   setBusy(state, state.busy);
@@ -134,7 +144,7 @@ export function mountSeriesGalleriesReport(context) {
   const root = context.reportRoot;
   const document = root.ownerDocument;
   root.replaceChildren();
-  root.dataset.reportColumns = "2";
+  root.dataset.reportColumns = "3";
   const toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar";
   const search = document.createElement("span");
@@ -155,7 +165,7 @@ export function mountSeriesGalleriesReport(context) {
   const statusNode = document.createElement("p");
   statusNode.className = "docsViewerReport__status";
   statusNode.setAttribute("aria-live", "polite");
-  toolbar.append(search, refreshButton, statusNode);
+  toolbar.append(refreshButton, search, statusNode);
   const tableNode = document.createElement("div");
   tableNode.className = "docsViewerReport__table";
   tableNode.setAttribute("role", "table");
@@ -175,7 +185,7 @@ export function mountSeriesGalleriesReport(context) {
   const state = { root, document, context, searchInput, refreshButton, statusNode, tableNode, rowsNode, emptyNode,
     studioLinks: createStudioWorkEditorLinks(context.studioBaseUrl),
     busy: false, released: false, rows: [], searchText: "", sortKey: "series", sortDir: "asc", controls: [] };
-  state.controls = [["series", "Series"], ["gallery", "Gallery"]].map(([key, label]) => {
+  state.controls = [["series", "Series"], ["gallery", "Gallery"], ["works", "Works"]].map(([key, label]) => {
     const cell = document.createElement("span");
     cell.className = "docsViewerReport__headLabel";
     cell.setAttribute("role", "columnheader");

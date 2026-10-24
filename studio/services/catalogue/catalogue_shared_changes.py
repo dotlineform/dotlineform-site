@@ -88,6 +88,8 @@ def work_shared_changes(
         old, new = previous.get(work_id), current.get(work_id)
         outputs.update(changed_work_report_inputs(old, new))
         before, after = set(previous_memberships.get(work_id, [])), set(current_memberships.get(work_id, []))
+        if before != after:
+            outputs.add(RELATIONSHIP_REPORT)
         identity_changed = old is None or new is None
         member_changed = identity_changed or (old or {}).get("title") != (new or {}).get("title")
         if before != after or member_changed:

@@ -38,11 +38,14 @@ def catalogue_payloads(
         raise ValueError("Catalogue generation selected an output without a builder")
     selected_galleries = set(galleries.galleries) if gallery_ids is None else gallery_ids
     works_by_gallery: dict[str, list[str]] = {gid: [] for gid in selected_galleries}
-    if selected_galleries:
+    report_work_counts = dict.fromkeys(galleries.galleries, 0) if RELATIONSHIP_REPORT in shared else {}
+    if selected_galleries or report_work_counts:
         for wid, ids in galleries.works.items():
             for gid in ids:
                 if gid in works_by_gallery:
                     works_by_gallery[gid].append(wid)
+                if gid in report_work_counts:
+                    report_work_counts[gid] += 1
     payloads: dict[str, dict[str, Any]] = {}
     media_config = None
     if "media-config.json" in shared:
@@ -88,7 +91,7 @@ def catalogue_payloads(
         payloads[RELATIONSHIP_INDEX] = series_galleries_index_payload(series_galleries, timestamp=timestamp)
     if RELATIONSHIP_REPORT in shared:
         payloads[SERIES_GALLERIES_REPORT_PATH] = series_galleries_report_payload(
-            records.series, galleries.galleries, series_galleries, timestamp=timestamp,
+            records.series, galleries.galleries, series_galleries, work_counts=report_work_counts, timestamp=timestamp,
         )
     payloads.update(catalogue_report_input_payloads(
         records.works, records.series, timestamp=timestamp, selected=shared & INPUT_SCHEMAS.keys(),

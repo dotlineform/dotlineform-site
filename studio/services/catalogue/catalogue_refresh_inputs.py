@@ -44,15 +44,19 @@ def read_refresh_inputs(
         SERIES_PATH,
     }))
     galleries_needed = current_works or relationships or current_galleries
+    pairs = CatalogueSeriesGalleries({
+        sid: tuple(ids) for sid, ids in _read_map(source_dir, SERIES_GALLERIES_FILE, "pairs_by_series").items()
+    }) if relationships else CatalogueSeriesGalleries({})
+    report_memberships = RELATIONSHIP_REPORT in outputs and (
+        current_galleries or any(pairs.pairs_by_series.get(sid) for sid in pending["current_series"])
+    )
+    memberships_needed = current_works or member_rows or report_memberships
     records = CatalogueSourceRecords(
         works=works,
         series=_read_map(source_dir, SOURCE_FILES["series"], "series") if series_needed else {},
     )
     galleries = CatalogueGalleries(
         galleries=_read_map(source_dir, GALLERIES_FILE, "galleries") if galleries_needed else {},
-        works=_read_map(source_dir, MEMBERSHIPS_FILE, "works") if current_works or member_rows else {},
+        works=_read_map(source_dir, MEMBERSHIPS_FILE, "works") if memberships_needed else {},
     )
-    pairs = CatalogueSeriesGalleries({
-        sid: tuple(ids) for sid, ids in _read_map(source_dir, SERIES_GALLERIES_FILE, "pairs_by_series").items()
-    }) if relationships else CatalogueSeriesGalleries({})
     return records, galleries, pairs

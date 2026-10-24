@@ -45,6 +45,11 @@
   grid-template-columns: minmax(0, 1fr) 7rem;
 }
 
+.docsViewerReport[data-report-id="series_galleries"] .docsViewerReport__head,
+.docsViewerReport[data-report-id="series_galleries"] .docsViewerReport__row{
+  grid-template-columns: repeat(2, minmax(0, 1fr)) 7rem;
+}
+
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__row{
   grid-template-columns: minmax(7rem, 10rem) minmax(4rem, 6rem) minmax(12rem, 1fr) minmax(12rem, 18rem) minmax(12rem, 20rem);

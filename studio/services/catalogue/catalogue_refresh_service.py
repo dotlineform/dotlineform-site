@@ -18,7 +18,7 @@ from catalogue.catalogue_refresh_inputs import read_refresh_inputs
 from catalogue.catalogue_gallery_records import merge_gallery_record
 from catalogue.catalogue_series_galleries import read_series_galleries, validate_series_galleries
 from catalogue.catalogue_series_galleries_index import merge_series_galleries_index, series_gallery_links, series_galleries_index_payload
-from catalogue.catalogue_series_galleries_report import merge_series_galleries_report, series_galleries_report_payload
+from catalogue.catalogue_series_galleries_report import gallery_work_counts, merge_series_galleries_report, series_galleries_report_payload
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
 from catalogue.catalogue_staged_media import catalogue_staging_assets, work_rendition_paths
 from catalogue.catalogue_source import payload_for_map
@@ -117,7 +117,10 @@ def refresh_series_galleries(repo_root: Path) -> dict[str, Any]:
                for sid in sorted(records.series)}
     payloads = {
         RELATIONSHIP_INDEX: series_galleries_index_payload(mapping, timestamp=timestamp),
-        RELATIONSHIP_REPORT: series_galleries_report_payload(records.series, galleries.galleries, mapping, timestamp=timestamp),
+        RELATIONSHIP_REPORT: series_galleries_report_payload(
+            records.series, galleries.galleries, mapping,
+            work_counts=gallery_work_counts(galleries.works, galleries.galleries), timestamp=timestamp,
+        ),
     }
     written = _write_shared_payloads(catalogue_workspace_config(repo_root).catalogue.working, payloads)
     merge_completed_shared(repo_root, {**empty_shared_changes(), "shared_outputs": sorted(payloads)})
@@ -221,6 +224,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         if RELATIONSHIP_REPORT in shared["shared_outputs"]:
             payload = merge_series_galleries_report(
                 output_path(workspace.catalogue.working, RELATIONSHIP_REPORT), records.series, galleries.galleries, pairs,
+                memberships=galleries.works,
                 current_series=shared["current_series"], deleted_series=shared["deleted_series"],
                 current_galleries=shared["current_galleries"], deleted_galleries=shared["deleted_galleries"], timestamp=timestamp,
             )

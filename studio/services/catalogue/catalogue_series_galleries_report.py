@@ -11,7 +11,18 @@ from studio.services.catalogue.catalogue_series_galleries_index import definitio
 
 
 METADATA_PATH = "reports/series-galleries/metadata.json"
-REPORT_SCHEMA = "catalogue_series_galleries_report_v2"
+REPORT_SCHEMA = "catalogue_series_galleries_report_v3"
+
+
+def gallery_work_counts(memberships: Mapping[str, list[str]], gallery_ids: Iterable[str]) -> dict[str, int]:
+    """Count supplied Gallery endpoints in one pass over loaded Work memberships."""
+    counts = dict.fromkeys(gallery_ids, 0)
+    if counts:
+        for ids in memberships.values():
+            for gallery_id in ids:
+                if gallery_id in counts:
+                    counts[gallery_id] += 1
+    return counts
 
 
 def _row_key(row: dict[str, Any]) -> tuple[str | None, str | None]:
@@ -30,14 +41,19 @@ def _payload(rows: Mapping[tuple[str | None, str | None], Any], timestamp: str) 
 
 def series_galleries_report_payload(
     series: Mapping[str, Any], galleries: Mapping[str, Any],
-    series_galleries: Mapping[str, list[dict[str, str]]], *, timestamp: str,
+    series_galleries: Mapping[str, list[dict[str, str]]], *, work_counts: Mapping[str, int], timestamp: str,
 ) -> dict[str, Any]:
     """Project validated definitions and the same relationships as the public index.
 
     Every pair has one row. Empty Series and unassociated Galleries have one
     row with a null opposite cell; no Work-membership relationship is inferred.
+    Gallery cells carry the supplied total membership, independent of Series.
     """
     rows = []
+    gallery_cells = {
+        gid: {**definition_cell("gallery", gid, galleries), "work_count": work_counts[gid]}
+        for gid in galleries
+    }
     associated_gallery_ids = set()
     for series_id in sorted(series):
         label = definition_cell("series", series_id, series)
@@ -45,22 +61,23 @@ def series_galleries_report_payload(
         if not related:
             rows.append({"series": label, "gallery": None})
         for gallery in related:
-            rows.append({"series": label, "gallery": dict(gallery)})
+            rows.append({"series": label, "gallery": gallery_cells[gallery["gallery_id"]]})
             associated_gallery_ids.add(gallery["gallery_id"])
     for gallery_id in sorted(galleries.keys() - associated_gallery_ids):
-        rows.append({"series": None, "gallery": definition_cell("gallery", gallery_id, galleries)})
+        rows.append({"series": None, "gallery": gallery_cells[gallery_id]})
     return _payload({_row_key(row): row for row in rows}, timestamp)
 
 
 def merge_series_galleries_report(
     path: Path, series: Mapping[str, Any], galleries: Mapping[str, Any], pairs: CatalogueSeriesGalleries,
-    *, current_series: Iterable[str], deleted_series: Iterable[str], current_galleries: Iterable[str],
+    *, memberships: Mapping[str, list[str]], current_series: Iterable[str], deleted_series: Iterable[str], current_galleries: Iterable[str],
     deleted_galleries: Iterable[str], timestamp: str,
 ) -> dict[str, Any] | None:
     """Replace rows touching supplied endpoints, preserving unrelated pair rows.
 
     Current empty Series and unassociated Galleries get explicit placeholders.
     One relationship pass looks up only the selected current Gallery endpoints.
+    Count only replacement Galleries in one pass over supplied memberships.
     Parse saved rows without auditing their contents or the queued endpoints.
     Unreadable output stops without invoking full generation.
     """
@@ -96,6 +113,13 @@ def merge_series_galleries_report(
             key = (series_id, gallery_id)
             if key not in replacements:
                 replacements[key] = {"series": definition_cell("series", series_id, series), "gallery": label}
+    counts = gallery_work_counts(memberships, {
+        row["gallery"]["gallery_id"] for row in replacements.values() if row["gallery"] is not None
+    })
+    for row in replacements.values():
+        gallery = row["gallery"]
+        if gallery is not None:
+            gallery["work_count"] = counts[gallery["gallery_id"]]
     if previous == replacements:
         return None
     for key in previous:

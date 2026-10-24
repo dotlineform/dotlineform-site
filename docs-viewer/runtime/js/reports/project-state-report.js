@@ -225,7 +225,7 @@ function loadReport(state, refresh) {
     return Promise.resolve();
   }
   setBusy(state, true);
-  state.statusNode.textContent = "";
+  state.statusNode.textContent = state.snapshot ? runContext(state.snapshot) : "";
   return (refresh ? service.refreshProjectState() : service.readProjectState())
     .then((payload) => {
       if (state.released) return;
