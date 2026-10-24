@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-24T22:16:07Z"
+    "generated_at_utc": "2026-10-24T23:04:53Z"
   },
   "galleries": {
     "001": {
@@ -763,6 +763,10 @@
     "358": {
       "gallery_id": "358",
       "title": "mesh"
+    },
+    "359": {
+      "gallery_id": "359",
+      "title": "uncarved block"
     }
   }
 }

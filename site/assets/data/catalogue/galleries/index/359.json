@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-24T23:04:53Z",
+    "gallery_id": "359"
+  },
+  "gallery": {
+    "gallery_id": "359",
+    "title": "uncarved block"
+  },
+  "member_works": [
+    {
+      "work_id": "00233",
+      "title": "untitled [0233]"
+    },
+    {
+      "work_id": "00234",
+      "title": "untitled [0234]"
+    },
+    {
+      "work_id": "00247",
+      "title": "untitled [0247]"
+    }
+  ]
+}

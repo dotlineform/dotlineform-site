@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T21:41:32Z",
+    "generated_at_utc": "2026-10-24T22:53:00Z",
     "gallery_id": "351"
   },
   "gallery": {
@@ -52,6 +52,14 @@
     {
       "work_id": "00030",
       "title": "forms"
+    },
+    {
+      "work_id": "00045",
+      "title": "outline form"
+    },
+    {
+      "work_id": "00056",
+      "title": "open form"
     },
     {
       "work_id": "00106",

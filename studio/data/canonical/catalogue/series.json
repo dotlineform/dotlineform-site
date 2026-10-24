@@ -95,10 +95,6 @@
       "series_id": "025",
       "title": "closeness"
     },
-    "026": {
-      "series_id": "026",
-      "title": "collected 1989-1998"
-    },
     "027": {
       "series_id": "027",
       "title": "collected digital c. 1998"
@@ -706,6 +702,14 @@
     "181": {
       "series_id": "181",
       "title": "nature"
+    },
+    "182": {
+      "series_id": "182",
+      "title": "mandala forms"
+    },
+    "183": {
+      "series_id": "183",
+      "title": "uncarved block"
     }
   }
 }
