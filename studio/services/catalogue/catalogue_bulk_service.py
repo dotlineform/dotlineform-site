@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from catalogue.catalogue_revisions import record_hash
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_galleries import (
     MEMBERSHIPS_FILE,
@@ -94,7 +93,7 @@ def bulk_save_payload(
             affected_gallery_ids.update(gallery_ids)
         record_payloads.append({
             "work_id": work_id, "record": updated_record,
-            "record_hash": record_hash(updated_record), "gallery_ids": sorted(gallery_ids),
+            "gallery_ids": sorted(gallery_ids),
         })
         if not fields_changed:
             continue

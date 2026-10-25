@@ -2,9 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Dict, Mapping
 
-from catalogue.catalogue_revisions import record_hash
-from catalogue.catalogue_source import CatalogueSourceRecords
-
 SCHEMAS = {
     "work_search": "studio_catalogue_lookup_work_search_v3",
     "series_search": "studio_catalogue_lookup_series_search_v2",
@@ -19,7 +16,6 @@ def build_work_search_item(work_id: str, record: Mapping[str, Any]) -> Dict[str,
     """Project canonical fields for Work search and versioned Series thumbnails."""
     return {
         "work_id": work_id,
-        "record_hash": record_hash(record),
         "title": record["title"],
         "year": record["year"],
         "year_display": record["year_display"],
@@ -48,7 +44,6 @@ def build_work_lookup_payload(works: Mapping[str, Mapping[str, Any]], work_id: s
             "schema": SCHEMAS["work_record"],
         },
         "work": dict(record),
-        "record_hash": record_hash(record),
     }
 
 
@@ -57,9 +52,10 @@ def work_medium_values(works: Mapping[str, Mapping[str, Any]]) -> list[str]:
     return list(dict.fromkeys(record["medium"] for record in works.values() if record.get("medium")))
 
 
-def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
+def build_work_search_payload(works: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any]:
+    """Project Work search and Medium suggestions from one supplied Work map."""
     items = []
-    for work_id, record in records.works.items():
+    for work_id, record in works.items():
         items.append(build_work_search_item(work_id, record))
     items.sort(key=lambda item: item["work_id"])
     return {
@@ -68,13 +64,14 @@ def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]
             "count": len(items),
         },
         "items": items,
-        "medium_values": work_medium_values(records.works),
+        "medium_values": work_medium_values(works),
     }
 
 
-def build_series_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
+def build_series_search_payload(series: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any]:
+    """Project Series search from one supplied Series map."""
     items = []
-    for series_id, record in records.series.items():
+    for series_id, record in series.items():
         items.append(build_series_search_item(series_id, record))
     items.sort(key=lambda item: item["series_id"])
     return {

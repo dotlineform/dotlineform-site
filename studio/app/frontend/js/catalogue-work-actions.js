@@ -129,7 +129,7 @@ export async function saveCurrentWork(state, context) {
         throw new Error("Saved Work response does not match the selected Works.");
       }
       applyBulkWorkRecordMutations(state, changedRecords);
-      setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, context.workRouteStateOptions({keepResult: true}));
+      setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, context.workRouteStateOptions({keepResult: true}));
       const completionError = catalogueSaveCompletionError(response);
       setTextWithState(context, state.resultNode, completionError || "Saved " + (response.changed_count || 0) + " work records.", completionError ? "error" : "success");
       if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(state, removedGalleryIds);
@@ -145,12 +145,10 @@ export async function saveCurrentWork(state, context) {
       }
       applyWorkRecordMutation(state, {
         workId: state.currentWorkId,
-        record,
-        recordHash: response.record_hash
+        record
       });
       const completionError = catalogueSaveCompletionError(response);
       setLoadedWorkRecord(state, state.currentWorkId, record, context.workRouteStateOptions({
-        recordHash: response.record_hash,
         keepResult: true,
         preserveMediaIntent: response.media?.status !== "completed"
       }));
@@ -200,11 +198,10 @@ export async function saveNewWork(state, context) {
     if (workId !== createPayload.work_id || !record) {
       throw new Error("create response does not match the new Work");
     }
-    applyWorkRecordMutation(state, { workId, record, recordHash: response.record_hash });
+    applyWorkRecordMutation(state, { workId, record });
     state.nextSuggestedWorkId = suggestNextWorkId([...state.workSearchById.values()]);
     const completionError = catalogueSaveCompletionError(response);
     setLoadedWorkRecord(state, workId, record, context.workRouteStateOptions({
-      recordHash: response.record_hash,
       keepResult: true,
       preserveMediaIntent: response.media?.status !== "completed"
     }));

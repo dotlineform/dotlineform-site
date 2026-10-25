@@ -12,7 +12,6 @@ import {
   buildWorkDraftFromRecord,
   WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
   normalizeSeriesId,
-  normalizeText,
   normalizeWorkId,
   suggestNextWorkId
 } from "./catalogue-work-fields.js";
@@ -86,7 +85,6 @@ export function syncWorkSeriesUrl(seriesId) {
 function resetBulkState(state) {
   state.bulkWorkIds = [];
   state.bulkRecords = new Map();
-  state.bulkRecordHashes = new Map();
   state.bulkTouchedFields = new Set();
   state.bulkMixedFields = new Set();
 }
@@ -117,7 +115,6 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
   state.currentWorkId = workId;
   state.currentRecord = record;
   state.pendingSourceFolder = null;
-  state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   resetBulkState(state);
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
@@ -138,15 +135,13 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
   callback(options, "updateEditorState");
 }
 
-export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, options = {}) {
+export function setLoadedBulkWorks(state, workIds, recordsById, options = {}) {
   clearWorkMediaIntent(state);
   state.mode = "bulk";
   state.currentWorkId = "";
   state.currentRecord = null;
-  state.currentRecordHash = "";
   state.bulkWorkIds = workIds.slice();
   state.bulkRecords = new Map(recordsById);
-  state.bulkRecordHashes = new Map(recordHashes);
   const records = workIds.map((workId) => recordsById.get(workId)).filter(Boolean);
   const { draft: bulkDraft, mixedFields } = buildBulkDraftFromRecords(records);
   state.baselineDraft = { ...bulkDraft };
@@ -179,7 +174,6 @@ export function setNewWorkMode(state, options = {}) {
   state.mode = "new";
   state.currentWorkId = "";
   state.currentRecord = null;
-  state.currentRecordHash = "";
   resetBulkState(state);
   state.draft = {};
   EDITABLE_FIELDS.forEach((field) => {
@@ -212,7 +206,6 @@ export function setEmptySearchMode(state, options = {}) {
   state.mode = "single";
   state.currentWorkId = "";
   state.currentRecord = null;
-  state.currentRecordHash = "";
   resetBulkState(state);
   state.baselineDraft = null;
   state.draft = {};

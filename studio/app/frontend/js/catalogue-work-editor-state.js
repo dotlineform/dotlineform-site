@@ -93,11 +93,9 @@ export function createWorkEditorState(elements, options = {}) {
     sourceWorkRecordsById: new Map(),
     currentWorkId: "",
     currentRecord: null,
-    currentRecordHash: "",
     nextSuggestedWorkId: "",
     bulkWorkIds: [],
     bulkRecords: new Map(),
-    bulkRecordHashes: new Map(),
     bulkTouchedFields: new Set(),
     bulkMixedFields: new Set(),
     /** @type {import("./catalogue-work-source-folder.js").WorkSourceFolder | null} */

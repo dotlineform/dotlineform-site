@@ -11,7 +11,6 @@ from catalogue.catalogue_galleries import (
     read_galleries,
     with_work_memberships,
 )
-from catalogue.catalogue_revisions import record_hash
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
@@ -64,7 +63,6 @@ def work_create_payload(
     payload: dict[str, Any] = {
         "ok": True,
         "work_id": work_id,
-        "record_hash": record_hash(mutation_plan.updated_record),
         "created": True,
         "changed": True,
         "changed_fields": changed_fields,
@@ -134,7 +132,6 @@ def work_save_payload(
     payload: dict[str, Any] = {
         "ok": True, "work_id": work_id, "changed": changed,
         "changed_fields": changed_fields, "record": plan.updated_record,
-        "record_hash": record_hash(plan.updated_record),
         "gallery_ids": sorted(updated_galleries.works.get(work_id, [])),
         "affected_gallery_ids": sorted(set(galleries.works.get(work_id, [])) | set(updated_galleries.works.get(work_id, []))),
         "_shared_changes": work_shared_changes(

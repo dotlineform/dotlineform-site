@@ -57,20 +57,20 @@ export async function saveNewWorkBatch(state, context) {
     if (!Array.isArray(ids) || !ids.length || ids.length !== request.folder_selection.filenames.length
       || ids.some(id => typeof id !== "string" || !/^\d{5}$/.test(id)) || new Set(ids).size !== ids.length
       || !Array.isArray(records) || records.length !== ids.length
-      || records.some((item, index) => item.work_id !== ids[index] || !item.record || !item.record_hash || !Array.isArray(item.gallery_ids))
+      || records.some((item, index) => item.work_id !== ids[index] || !item.record || !Array.isArray(item.gallery_ids))
       || records.map(item => item.record.project_filename).sort().join("\n") !== request.folder_selection.filenames.slice().sort().join("\n")) {
       throw new Error("Batch create response does not match the confirmed images.");
     }
     for (const item of records) {
       applyWorkRecordMutation(state, {
-        workId: item.work_id, record: { ...item.record, gallery_ids: item.gallery_ids }, recordHash: item.record_hash
+        workId: item.work_id, record: { ...item.record, gallery_ids: item.gallery_ids }
       });
     }
     state.nextSuggestedWorkId = suggestNextWorkId([...state.workSearchById.values()]);
     const first = records[0];
     const completionError = catalogueSaveCompletionError(response);
     setLoadedWorkRecord(state, first.work_id, { ...first.record, gallery_ids: first.gallery_ids }, context.workRouteStateOptions({
-      recordHash: first.record_hash, keepResult: true
+      keepResult: true
     }));
     const message = completionError || `Saved ${ids.length} Works.`;
     context.setTextWithState(state.resultNode, message, completionError ? "error" : "success");

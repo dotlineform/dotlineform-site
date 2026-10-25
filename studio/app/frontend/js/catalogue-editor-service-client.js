@@ -35,8 +35,8 @@ export function createCatalogueWorkBatch(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.createWorkBatch, payload);
 }
 
-/** Await a revision-checked Work Save and its local media completion in one request.
- * @param {Object} payload Canonical draft, Work revision and Gallery revisions.
+/** Await Work Save and its local media completion in one request.
+ * @param {Object} payload Canonical draft, Work identity and Gallery memberships.
  * @param {WorkSaveMedia} media Draft-held media operations submitted with this Save.
  */
 export function saveCatalogueWork(payload, media) {

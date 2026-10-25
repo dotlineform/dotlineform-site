@@ -22,7 +22,6 @@ from catalogue.catalogue_series_galleries_report import gallery_work_counts, mer
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
 from catalogue.catalogue_staged_media import catalogue_staging_assets, work_rendition_paths
 from catalogue.catalogue_source import payload_for_map
-from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_shared_changes import REFRESH_FIELDS, WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
 from catalogue.catalogue_pending_publication import merge_completed_shared
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, SERIES_PATH, catalogue_report_input_payloads, merge_catalogue_report_input
@@ -324,7 +323,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                     for source in staged_sources:
                         source.unlink()
                     editor_records.append({"work_id": work_id, "record": dict(record),
-                                           "record_hash": record_hash(record), "gallery_ids": galleries.works.get(work_id, [])})
+                                           "gallery_ids": galleries.works.get(work_id, [])})
                 phase = "readiness"
                 entry["refreshed"] = True
                 persist_pending_queue(queue_path, pending, progress="refreshed")

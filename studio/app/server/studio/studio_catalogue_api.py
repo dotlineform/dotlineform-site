@@ -38,7 +38,6 @@ from catalogue.catalogue_source import (  # noqa: E402
     SOURCE_FILES,
     load_json_file,
     read_source_map,
-    records_from_json_source,
     slug_id,
 )
 from catalogue_work_media_sources import (  # noqa: E402
@@ -149,15 +148,14 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         memberships = read_gallery_memberships(paths["source_dir"])
         payload["gallery_ids"] = sorted(memberships.get(work_id, []))
         return payload
-    source_records = records_from_json_source(paths["source_dir"])
     if key == "catalogue_lookup_work_search":
-        payload = build_work_search_payload(source_records)
+        payload = build_work_search_payload(read_source_map(paths["source_dir"], "works"))
         memberships = read_gallery_memberships(paths["source_dir"])
         for item in payload["items"]:
             item["gallery_ids"] = sorted(memberships.get(item["work_id"], []))
         return payload
     if key == "catalogue_lookup_series_search":
-        return build_series_search_payload(source_records)
+        return build_series_search_payload(read_source_map(paths["source_dir"], "series"))
     raise ValueError(f"unsupported catalogue read key: {key}")
 
 

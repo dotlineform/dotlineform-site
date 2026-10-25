@@ -242,11 +242,10 @@ async function runCatalogueRefresh(state) {
     for (const item of response.records) {
       const record = { ...item.record, gallery_ids: item.gallery_ids };
       applyWorkRecordMutation(state, {
-        workId: item.work_id, record, recordHash: item.record_hash, updateBulk: state.mode === "bulk"
+        workId: item.work_id, record, updateBulk: state.mode === "bulk"
       });
       if (state.mode === "single" && state.currentWorkId === item.work_id) {
         state.currentRecord = record;
-        state.currentRecordHash = item.record_hash;
       }
     }
     renderWorkCurrentPreview(state);
@@ -408,15 +407,15 @@ function workRouteStateOptions(state, overrides = {}) {
 function workSelectionOptions(state) {
   return {
     loadWorkLookupRecord,
-    setLoadedBulkWorks: (workIds, recordsById, recordHashes) => {
+    setLoadedBulkWorks: (workIds, recordsById) => {
       for (const workId of workIds) {
-        applyWorkRecordMutation(state, { workId, record: recordsById.get(workId), recordHash: recordHashes.get(workId) });
+        applyWorkRecordMutation(state, { workId, record: recordsById.get(workId) });
       }
-      setLoadedBulkWorks(state, workIds, recordsById, recordHashes, workRouteStateOptions(state));
+      setLoadedBulkWorks(state, workIds, recordsById, workRouteStateOptions(state));
     },
-    setLoadedWorkRecord: (workId, record, options = {}) => {
-      applyWorkRecordMutation(state, { workId, record, recordHash: options.recordHash });
-      setLoadedWorkRecord(state, workId, record, workRouteStateOptions(state, options));
+    setLoadedWorkRecord: (workId, record) => {
+      applyWorkRecordMutation(state, { workId, record });
+      setLoadedWorkRecord(state, workId, record, workRouteStateOptions(state));
     },
     updateEditorState: () => updateEditorState(state),
     saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),

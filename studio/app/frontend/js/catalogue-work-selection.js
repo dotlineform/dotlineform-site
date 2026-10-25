@@ -98,7 +98,6 @@ export async function openSelectedWorks(state, workIds, context) {
   setWorkSelectionPopupVisibility(state, false);
   const lookups = await Promise.all(workIds.map((workId) => context.loadWorkLookupRecord(workId)));
   const recordsById = new Map();
-  const recordHashes = new Map();
   for (let index = 0; index < workIds.length; index += 1) {
     const workId = workIds[index];
     const lookup = lookups[index];
@@ -107,9 +106,8 @@ export async function openSelectedWorks(state, workIds, context) {
       throw new Error(`work source missing record for ${workId}`);
     }
     recordsById.set(workId, record);
-    recordHashes.set(workId, normalizeText(lookup.record_hash));
   }
-  context.setLoadedBulkWorks(workIds, recordsById, recordHashes);
+  context.setLoadedBulkWorks(workIds, recordsById);
 }
 
 export async function openWorkById(state, requestedWorkId, context) {
@@ -136,9 +134,7 @@ export async function openWorkById(state, requestedWorkId, context) {
   if (!record) {
     throw new Error(`work source missing record for ${workId}`);
   }
-  context.setLoadedWorkRecord(workId, record, {
-    recordHash: normalizeText(lookup.record_hash)
-  });
+  context.setLoadedWorkRecord(workId, record);
 }
 
 /** Bind Work lookup; the explicit × also releases an unsaved New Work draft. */

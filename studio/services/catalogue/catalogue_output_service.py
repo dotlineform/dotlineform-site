@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from catalogue.catalogue_output_media import MEDIA_SOURCE_FIELDS, complete_catalogue_media
-from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_service_context import CatalogueWriteContext
 from catalogue.catalogue_source import CatalogueSourceRecords, work_resource_entries
 from catalogue.catalogue_pending_updates import accumulate_work_changes
@@ -99,14 +98,14 @@ def complete_saved_catalogue_edit(
         if "record" in response and response.get("work_id"):
             record = current.works.get(response["work_id"])
             if record:
-                response.update(record=record, record_hash=record_hash(record))
+                response["record"] = record
         # Reuse supplied bulk/batch records unless media completion could change them.
         for entry in response.get("records", []):
             if entry["work_id"] not in media_work_ids:
                 continue
             record = current.works.get(entry.get("work_id"))
             if record:
-                entry.update(record=record, record_hash=record_hash(record))
+                entry["record"] = record
         work_response = "work_id" in response or "records" in response or response.get("kind") == "works"
         if work_response and (
             response.get("created") or response.get("created_ids") or response.get("deleted")
