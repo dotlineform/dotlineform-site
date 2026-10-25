@@ -76,6 +76,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
         });
         return {
           workId: record.work_id, title: record.title,
+          titleTooltip: `${record.title}\nYear: ${record.year}\nYear display: ${record.year_display}`,
           galleries: record.gallery_ids.map(id => state.galleriesById.get(id).title).join(", "),
           thumbSrc: preview.src, thumbSrcset: preview.srcset, thumbSizes: "48px",
           thumbWidth: 48, thumbHeight: 48, thumbAlt: "", thumbFallback: "No preview"
@@ -104,7 +105,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
           widthKey: "thumbWidth", heightKey: "thumbHeight", altKey: "thumbAlt",
           fallbackTextKey: "thumbFallback", truncate: false
         },
-        { key: "title", label: "title", formatText: value => value, width: "minmax(0, 1fr)", truncate: true },
+        { key: "title", label: "title", formatText: value => value, tooltipKey: "titleTooltip", width: "minmax(0, 1fr)", truncate: true },
         { key: "galleries", label: "galleries", formatText: value => value, width: "minmax(0, 1fr)", truncate: false }
       ],
       showHeader: false,

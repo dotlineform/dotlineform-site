@@ -56,6 +56,10 @@ function columnRecordValue(column, record, index, optionKey) {
   return record && option ? record[option] : "";
 }
 
+function columnTooltip(column, record, index, text) {
+  return column.tooltipKey ? columnRecordValue(column, record, index, "tooltipKey") : text;
+}
+
 function recordId(options, record, index) {
   if (typeof options.getRecordId === "function") return normalizeText(options.getRecordId(record, index));
   if (record && record.id != null) return normalizeText(record.id);
@@ -167,10 +171,9 @@ function appendCell(rowNode, column, record, index, role) {
     return;
   }
 
-  if (column.truncate !== false) {
-    cell.classList.add("sharedRecordList__cell--truncate");
-    cell.title = text;
-  }
+  const tooltip = columnTooltip(column, record, index, text);
+  if (column.truncate !== false) cell.classList.add("sharedRecordList__cell--truncate");
+  if (column.tooltipKey || column.truncate !== false) cell.title = tooltip;
 
   if (column.type === "link") {
     const href = safeUrl(column.hrefKey ? record && record[column.hrefKey] : rawValue);
@@ -179,7 +182,7 @@ function appendCell(rowNode, column, record, index, role) {
       link.className = "sharedRecordList__link";
       link.href = href;
       link.textContent = text;
-      link.title = text;
+      link.title = tooltip;
       if (column.external !== false) {
         link.target = "_blank";
         link.rel = "noopener noreferrer";
@@ -457,6 +460,7 @@ function renderActions(controller) {
 /** Render a record list. Multiple selection is opt-in; selection() returns one item only.
  * selections() and selection-change payloads expose all selected items in row order.
  * Icon columns supply type="icon" and iconClass (string or record callback); their value is the accessible label.
+ * Text/link columns may supply tooltipKey for native hover text independent of the visible value.
  * The caller owns artwork CSS. updateCells remains restricted to text columns.
  */
 export function createRecordList(rootNode, options = {}) {
@@ -512,7 +516,7 @@ export function createRecordList(rootNode, options = {}) {
             const cell = [...row.children].find(node => node.dataset.recordListCell === key);
             const text = columnText(column, columnValue(column, record, index), record, index);
             cell.textContent = text;
-            if (column.truncate !== false) cell.title = text;
+            if (column.tooltipKey || column.truncate !== false) cell.title = columnTooltip(column, record, index, text);
           }
           records[index] = record;
         }

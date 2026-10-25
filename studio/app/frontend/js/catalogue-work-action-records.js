@@ -8,6 +8,7 @@ export function projectWorkSearchRecord(workId, record, recordHash = "") {
   return {
     work_id: workId,
     title: record.title,
+    year: record.year,
     year_display: record.year_display,
     series_id: record.series_id,
     media_version: record.media_version,

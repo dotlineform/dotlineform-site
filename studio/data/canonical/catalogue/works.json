@@ -1926,23 +1926,6 @@
       "width_px": 4961,
       "height_px": 7016
     },
-    "00113": {
-      "work_id": "00113",
-      "series_id": "177",
-      "project_folder": "gesture in grey",
-      "project_filename": "gesture in grey 1.jpg",
-      "media_version": 1,
-      "image_staged": false,
-      "title": "gesture in grey 1",
-      "width_cm": 17,
-      "height_cm": 12.7,
-      "year": 1989,
-      "year_display": "c. 1989-98",
-      "medium": "acrylic on paper",
-      "storage_location": "1",
-      "width_px": 4129,
-      "height_px": 3071
-    },
     "00114": {
       "work_id": "00114",
       "series_id": "089",
@@ -14536,7 +14519,7 @@
       "series_id": "037",
       "project_folder": "doll",
       "project_filename": "doll formaldehyde form [2].jpg",
-      "media_version": 1,
+      "media_version": 2,
       "image_staged": false,
       "title": "doll formaldehyde form [2]",
       "width_cm": 26,
@@ -14545,8 +14528,8 @@
       "year_display": "c. 1990",
       "medium": "digital c-type print",
       "storage_location": "extant",
-      "width_px": 2093,
-      "height_px": 1769
+      "width_px": 3071,
+      "height_px": 2598
     },
     "00889": {
       "work_id": "00889",
@@ -81062,6 +81045,39 @@
       "width_px": 3024,
       "height_px": 4032,
       "medium": "digital c-type print"
+    },
+    "05222": {
+      "work_id": "05222",
+      "series_id": "037",
+      "project_folder": "doll",
+      "project_filename": "doll frame [2].jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "doll frame [2]",
+      "width_cm": 9.7,
+      "height_cm": 14.4,
+      "year": 1990,
+      "year_display": "c. 1990",
+      "medium": "digital c-type print",
+      "width_px": 1150,
+      "height_px": 1700
+    },
+    "05223": {
+      "work_id": "05223",
+      "series_id": "177",
+      "project_folder": "gesture in grey",
+      "project_filename": "gesture in grey 2.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "gesture in grey 2",
+      "width_cm": 17,
+      "height_cm": 12.7,
+      "year": 1989,
+      "year_display": "c. 1989-98",
+      "medium": "acrylic on paper",
+      "storage_location": "1",
+      "width_px": 4115,
+      "height_px": 3071
     }
   }
 }
