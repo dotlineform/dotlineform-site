@@ -1,0 +1,24 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-b25b667df370ead30e3602ddf9ff5e3a",
+    "generated_at_utc": "2026-10-25T19:45:53Z"
+  },
+  "work": {
+    "work_id": "05237",
+    "title": "wa (yoko takenami) detail 2",
+    "year": 2008,
+    "year_display": "2008",
+    "width_px": 2226,
+    "height_px": 2334,
+    "medium": "ink on paper",
+    "media_version": 1,
+    "series_id": "140",
+    "galleries": [
+      {
+        "gallery_id": "140",
+        "title": "wa"
+      }
+    ]
+  }
+}

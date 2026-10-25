@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-48a95aabf6bb3b2f56478f8221ba4838",
+    "generated_at_utc": "2026-10-25T19:08:07Z"
+  },
+  "work": {
+    "work_id": "05227",
+    "title": "mandala form iteration 1",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "width_px": 3544,
+    "height_px": 3544,
+    "height_cm": 30,
+    "width_cm": 30,
+    "media_version": 1,
+    "series_id": "182",
+    "galleries": [
+      {
+        "gallery_id": "360",
+        "title": "mandala form"
+      }
+    ]
+  }
+}

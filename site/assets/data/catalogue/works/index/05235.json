@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-e4c0d1d7057ee5e768dbab24a1464caa",
+    "generated_at_utc": "2026-10-25T19:24:28Z"
+  },
+  "work": {
+    "work_id": "05235",
+    "title": "nerve - back cover",
+    "year": 1995,
+    "year_display": "1995",
+    "width_px": 2472,
+    "height_px": 3498,
+    "height_cm": 29.6,
+    "width_cm": 20.9,
+    "medium": "loose bound book, 48p",
+    "media_version": 1,
+    "series_id": "105",
+    "galleries": []
+  }
+}

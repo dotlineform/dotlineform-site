@@ -3,7 +3,7 @@
   "title": "nerve forms",
   "added_date": "2026-09-17 21:55:33",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>nerve forms</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00581\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 8975 / 5904;\" data-docs-media-open aria-label=\"Open nerve forms\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00581-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00581-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00581-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00581-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"nerve forms\" width=\"8975\" height=\"5904\" decoding=\"async\"><span data-docs-media-placeholder hidden>nerve forms</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2004<br>digital c-type print<br>50 × 76 cm<br><br>cat. 00581</p></div></article></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>nerve forms</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00581\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 8975 / 5905;\" data-docs-media-open aria-label=\"Open nerve forms\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00581-primary-800.webp?v=2\" srcset=\"https://media.dotlineform.com/works/img/00581-primary-800.webp?v=2 800w, https://media.dotlineform.com/works/img/00581-primary-1200.webp?v=2 1200w, https://media.dotlineform.com/works/img/00581-primary-1600.webp?v=2 1600w\" sizes=\"100vw\" alt=\"nerve forms\" width=\"8975\" height=\"5905\" decoding=\"async\"><span data-docs-media-placeholder hidden>nerve forms</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2004<br>digital c-type print<br>50 × 76 cm<br><br>cat. 00581</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -26,26 +26,26 @@
         },
         "label": "nerve forms",
         "image": {
-          "src": "https://media.dotlineform.com/works/img/00581-primary-800.webp?v=1",
+          "src": "https://media.dotlineform.com/works/img/00581-primary-800.webp?v=2",
           "candidates": [
             {
-              "src": "https://media.dotlineform.com/works/img/00581-primary-800.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00581-primary-800.webp?v=2",
               "width_px": 800
             },
             {
-              "src": "https://media.dotlineform.com/works/img/00581-primary-1200.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00581-primary-1200.webp?v=2",
               "width_px": 1200
             },
             {
-              "src": "https://media.dotlineform.com/works/img/00581-primary-1600.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00581-primary-1600.webp?v=2",
               "width_px": 1600
             }
           ],
           "alt": "nerve forms",
           "width_px": 8975,
-          "height_px": 5904
+          "height_px": 5905
         },
-        "new_tab_target": "https://media.dotlineform.com/works/img/00581-primary-1600.webp?v=1",
+        "new_tab_target": "https://media.dotlineform.com/works/img/00581-primary-1600.webp?v=2",
         "galleries": [
           {
             "target": {

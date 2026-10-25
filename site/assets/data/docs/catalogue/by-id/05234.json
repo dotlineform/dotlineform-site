@@ -1,0 +1,72 @@
+{
+  "doc_id": "05234",
+  "title": "model 7 - reverse",
+  "added_date": "2026-10-25 19:19:46",
+  "last_updated": "2026-10-25 19:19:46",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>model 7 - reverse</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05234\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2906 / 3565;\" data-docs-media-open aria-label=\"Open model 7 - reverse\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05234-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05234-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05234-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05234-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"model 7 - reverse\" width=\"2906\" height=\"3565\" decoding=\"async\"><span data-docs-media-placeholder hidden>model 7 - reverse</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1994<br>paper collage<br>30.2 × 24.6 cm<br><br>cat. 05234</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05234"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:05234": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05234"
+        },
+        "label": "model 7 - reverse",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/05234-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/05234-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05234-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05234-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "model 7 - reverse",
+          "width_px": 2906,
+          "height_px": 3565
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/05234-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "099"
+            },
+            "label": "models",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "1994",
+            "paper collage",
+            "30.2 × 24.6 cm",
+            "",
+            "cat. 05234"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

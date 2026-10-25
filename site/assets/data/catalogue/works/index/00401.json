@@ -1,20 +1,20 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-59eafb9ce3c101469eb86904c595b77a",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-98d9e1fca9b2e00038154d7c307a8728",
+    "generated_at_utc": "2026-10-25T19:39:46Z"
   },
   "work": {
     "work_id": "00401",
-    "title": "wa",
+    "title": "wa (1)",
     "year": 2008,
     "year_display": "2008",
+    "width_px": 3543,
+    "height_px": 3543,
+    "height_cm": 27,
+    "width_cm": 24,
     "medium": "ink on paper",
-    "height_cm": 27.0,
-    "width_cm": 24.0,
-    "width_px": 2835,
-    "height_px": 3189,
-    "media_version": 1,
+    "media_version": 2,
     "series_id": "140",
     "galleries": [
       {

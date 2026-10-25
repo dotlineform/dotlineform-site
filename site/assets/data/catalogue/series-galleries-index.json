@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-24T23:05:44Z"
+    "generated_at_utc": "2026-10-25T19:08:07Z"
   },
   "series_galleries": {
     "001": [
@@ -1088,7 +1088,12 @@
       }
     ],
     "181": [],
-    "182": [],
+    "182": [
+      {
+        "gallery_id": "360",
+        "title": "mandala form"
+      }
+    ],
     "183": [
       {
         "gallery_id": "359",

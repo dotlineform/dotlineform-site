@@ -1,0 +1,72 @@
+{
+  "doc_id": "05225",
+  "title": "hand life 6",
+  "added_date": "2026-10-25 18:17:40",
+  "last_updated": "2026-10-25 18:17:40",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>hand life 6</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05225\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3504 / 3699;\" data-docs-media-open aria-label=\"Open hand life 6\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05225-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05225-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05225-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05225-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"hand life 6\" width=\"3504\" height=\"3699\" decoding=\"async\"><span data-docs-media-placeholder hidden>hand life 6</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1989<br>ink on paper<br>31.3 × 29.7 cm<br><br>cat. 05225</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05225"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:05225": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05225"
+        },
+        "label": "hand life 6",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/05225-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/05225-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05225-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05225-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "hand life 6",
+          "width_px": 3504,
+          "height_px": 3699
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/05225-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "352"
+            },
+            "label": "hand life",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "1989",
+            "ink on paper",
+            "31.3 × 29.7 cm",
+            "",
+            "cat. 05225"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

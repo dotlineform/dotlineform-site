@@ -1,20 +1,20 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-c59485e88ef78699f2354ab352d40ca4",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-78484d10a1607695bfd9b532df09c84f",
+    "generated_at_utc": "2026-10-25T19:22:08Z"
   },
   "work": {
     "work_id": "00581",
     "title": "nerve forms",
     "year": 2004,
     "year_display": "2004",
-    "medium": "digital c-type print",
-    "height_cm": 50.0,
-    "width_cm": 76.0,
     "width_px": 8975,
-    "height_px": 5904,
-    "media_version": 1,
+    "height_px": 5905,
+    "height_cm": 50,
+    "width_cm": 76,
+    "medium": "digital c-type print",
+    "media_version": 2,
     "series_id": "106",
     "galleries": [
       {

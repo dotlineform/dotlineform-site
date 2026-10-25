@@ -1,9 +1,9 @@
 {
   "doc_id": "00401",
-  "title": "wa",
+  "title": "wa (1)",
   "added_date": "2026-09-17 21:55:31",
-  "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>wa</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00401\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2835 / 3189;\" data-docs-media-open aria-label=\"Open wa\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00401-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00401-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00401-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00401-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"wa\" width=\"2835\" height=\"3189\" decoding=\"async\"><span data-docs-media-placeholder hidden>wa</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2008<br>ink on paper<br>27 × 24 cm<br><br>cat. 00401</p></div></article></div>\n",
+  "last_updated": "2026-10-25 19:39:58",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>wa (1)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00401\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 3543;\" data-docs-media-open aria-label=\"Open wa (1)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00401-primary-800.webp?v=2\" srcset=\"https://media.dotlineform.com/works/img/00401-primary-800.webp?v=2 800w, https://media.dotlineform.com/works/img/00401-primary-1200.webp?v=2 1200w, https://media.dotlineform.com/works/img/00401-primary-1600.webp?v=2 1600w\" sizes=\"100vw\" alt=\"wa (1)\" width=\"3543\" height=\"3543\" decoding=\"async\"><span data-docs-media-placeholder hidden>wa (1)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2008<br>ink on paper<br>27 × 24 cm<br><br>cat. 00401</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -24,28 +24,28 @@
           "kind": "catalogue-work",
           "id": "00401"
         },
-        "label": "wa",
+        "label": "wa (1)",
         "image": {
-          "src": "https://media.dotlineform.com/works/img/00401-primary-800.webp?v=1",
+          "src": "https://media.dotlineform.com/works/img/00401-primary-800.webp?v=2",
           "candidates": [
             {
-              "src": "https://media.dotlineform.com/works/img/00401-primary-800.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00401-primary-800.webp?v=2",
               "width_px": 800
             },
             {
-              "src": "https://media.dotlineform.com/works/img/00401-primary-1200.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00401-primary-1200.webp?v=2",
               "width_px": 1200
             },
             {
-              "src": "https://media.dotlineform.com/works/img/00401-primary-1600.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00401-primary-1600.webp?v=2",
               "width_px": 1600
             }
           ],
-          "alt": "wa",
-          "width_px": 2835,
-          "height_px": 3189
+          "alt": "wa (1)",
+          "width_px": 3543,
+          "height_px": 3543
         },
-        "new_tab_target": "https://media.dotlineform.com/works/img/00401-primary-1600.webp?v=1",
+        "new_tab_target": "https://media.dotlineform.com/works/img/00401-primary-1600.webp?v=2",
         "galleries": [
           {
             "target": {

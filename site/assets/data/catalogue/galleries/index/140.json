@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-25T19:45:53Z",
     "gallery_id": "140"
   },
   "gallery": {
@@ -39,7 +39,7 @@
     },
     {
       "work_id": "00401",
-      "title": "wa"
+      "title": "wa (1)"
     },
     {
       "work_id": "00600",
@@ -104,6 +104,14 @@
     {
       "work_id": "00615",
       "title": "wa 16"
+    },
+    {
+      "work_id": "05236",
+      "title": "wa (yoko takenami) detail 1"
+    },
+    {
+      "work_id": "05237",
+      "title": "wa (yoko takenami) detail 2"
     }
   ]
 }

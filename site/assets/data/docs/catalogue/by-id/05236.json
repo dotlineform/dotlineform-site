@@ -1,0 +1,71 @@
+{
+  "doc_id": "05236",
+  "title": "wa (yoko takenami) detail 1",
+  "added_date": "2026-10-25 19:42:37",
+  "last_updated": "2026-10-25 19:42:37",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>wa (yoko takenami) detail 1</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05236\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1280 / 1871;\" data-docs-media-open aria-label=\"Open wa (yoko takenami) detail 1\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05236-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05236-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05236-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05236-primary-1600.webp?v=1 1280w\" sizes=\"100vw\" alt=\"wa (yoko takenami) detail 1\" width=\"1280\" height=\"1871\" decoding=\"async\"><span data-docs-media-placeholder hidden>wa (yoko takenami) detail 1</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2008<br>ink on paper<br><br>cat. 05236</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05236"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:05236": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05236"
+        },
+        "label": "wa (yoko takenami) detail 1",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/05236-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/05236-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05236-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05236-primary-1600.webp?v=1",
+              "width_px": 1280
+            }
+          ],
+          "alt": "wa (yoko takenami) detail 1",
+          "width_px": 1280,
+          "height_px": 1871
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/05236-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "140"
+            },
+            "label": "wa",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2008",
+            "ink on paper",
+            "",
+            "cat. 05236"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

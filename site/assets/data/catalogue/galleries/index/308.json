@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T22:20:27Z",
+    "generated_at_utc": "2026-10-25T19:35:54Z",
     "gallery_id": "308"
   },
   "gallery": {
@@ -11,7 +11,7 @@
   "member_works": [
     {
       "work_id": "00165",
-      "title": "angels"
+      "title": "angels text"
     },
     {
       "work_id": "00182",

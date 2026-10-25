@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-41792427a6291f66aa9866415f18e958",
-    "generated_at_utc": "2026-10-24T21:51:06Z"
+    "version": "blake2b-383698cad93ad6702b4d65d5fe3a0bd3",
+    "generated_at_utc": "2026-10-25T15:12:14Z"
   },
   "work": {
-    "work_id": "00113",
-    "title": "gesture in grey 1",
+    "work_id": "05223",
+    "title": "gesture in grey 2",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "width_px": 4129,
+    "width_px": 4115,
     "height_px": 3071,
     "height_cm": 12.7,
     "width_cm": 17,

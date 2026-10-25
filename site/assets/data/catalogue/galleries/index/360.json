@@ -1,0 +1,49 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-25T19:08:07Z",
+    "gallery_id": "360"
+  },
+  "gallery": {
+    "gallery_id": "360",
+    "title": "mandala form"
+  },
+  "member_works": [
+    {
+      "work_id": "00011",
+      "title": "prototype for repeating pattern"
+    },
+    {
+      "work_id": "05226",
+      "title": "mandala form"
+    },
+    {
+      "work_id": "05227",
+      "title": "mandala form iteration 1"
+    },
+    {
+      "work_id": "05228",
+      "title": "mandala form iteration 2"
+    },
+    {
+      "work_id": "05229",
+      "title": "mandala form living surface 1"
+    },
+    {
+      "work_id": "05230",
+      "title": "mandala form living surface 2"
+    },
+    {
+      "work_id": "05231",
+      "title": "mandala form living surface 3"
+    },
+    {
+      "work_id": "05232",
+      "title": "mandala form living surface 4"
+    },
+    {
+      "work_id": "05233",
+      "title": "mandala form structure"
+    }
+  ]
+}

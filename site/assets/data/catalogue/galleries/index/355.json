@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T21:51:06Z",
+    "generated_at_utc": "2026-10-25T15:12:14Z",
     "gallery_id": "355"
   },
   "gallery": {
@@ -14,8 +14,8 @@
       "title": "gesture in grey 1"
     },
     {
-      "work_id": "00113",
-      "title": "gesture in grey 1"
+      "work_id": "05223",
+      "title": "gesture in grey 2"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-8385f8dc3115ba5bbb9c16744e71e7ee",
-    "generated_at_utc": "2026-10-24T17:47:44Z"
+    "version": "blake2b-b94f8690fe8574a44484dd95b4b39fba",
+    "generated_at_utc": "2026-10-25T19:49:09Z"
   },
   "work": {
     "work_id": "03111",
@@ -11,6 +11,8 @@
     "year_display": "2005",
     "width_px": 3264,
     "height_px": 2448,
+    "height_cm": 20.7,
+    "width_cm": 27.6,
     "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "129",

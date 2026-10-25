@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-ac27e58d082da28ad93a54b7c5226b98",
+    "generated_at_utc": "2026-10-25T19:08:07Z"
+  },
+  "work": {
+    "work_id": "05230",
+    "title": "mandala form living surface 2",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "width_px": 3543,
+    "height_px": 5012,
+    "height_cm": 30,
+    "width_cm": 42.4,
+    "medium": "digital c-type print",
+    "media_version": 2,
+    "series_id": "182",
+    "galleries": [
+      {
+        "gallery_id": "360",
+        "title": "mandala form"
+      }
+    ]
+  }
+}

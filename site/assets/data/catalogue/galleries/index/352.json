@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T21:44:15Z",
+    "generated_at_utc": "2026-10-25T18:17:35Z",
     "gallery_id": "352"
   },
   "gallery": {
@@ -28,6 +28,14 @@
     {
       "work_id": "00171",
       "title": "hand life 7"
+    },
+    {
+      "work_id": "05224",
+      "title": "hand life 4"
+    },
+    {
+      "work_id": "05225",
+      "title": "hand life 6"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T22:07:37Z",
+    "generated_at_utc": "2026-10-25T15:08:30Z",
     "gallery_id": "037"
   },
   "gallery": {
@@ -212,6 +212,10 @@
     {
       "work_id": "03561",
       "title": "doll still life 1 (version 6)"
+    },
+    {
+      "work_id": "05222",
+      "title": "doll frame [2]"
     }
   ]
 }

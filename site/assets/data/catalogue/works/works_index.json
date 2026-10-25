@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-25T14:59:58Z"
+    "generated_at_utc": "2026-10-25T19:42:15Z"
   },
   "works": {
     "00001": {
@@ -452,10 +452,6 @@
       "work_id": "00112",
       "title": "life"
     },
-    "00113": {
-      "work_id": "00113",
-      "title": "gesture in grey 1"
-    },
     "00114": {
       "work_id": "00114",
       "title": "learning to draw landscapes 1"
@@ -654,7 +650,7 @@
     },
     "00165": {
       "work_id": "00165",
-      "title": "angels"
+      "title": "angels text"
     },
     "00166": {
       "work_id": "00166",
@@ -1578,7 +1574,7 @@
     },
     "00401": {
       "work_id": "00401",
-      "title": "wa"
+      "title": "wa (1)"
     },
     "00402": {
       "work_id": "00402",
@@ -20687,6 +20683,70 @@
     "05221": {
       "work_id": "05221",
       "title": "saturday night - detail 6"
+    },
+    "05222": {
+      "work_id": "05222",
+      "title": "doll frame [2]"
+    },
+    "05223": {
+      "work_id": "05223",
+      "title": "gesture in grey 2"
+    },
+    "05224": {
+      "work_id": "05224",
+      "title": "hand life 4"
+    },
+    "05225": {
+      "work_id": "05225",
+      "title": "hand life 6"
+    },
+    "05226": {
+      "work_id": "05226",
+      "title": "mandala form"
+    },
+    "05227": {
+      "work_id": "05227",
+      "title": "mandala form iteration 1"
+    },
+    "05228": {
+      "work_id": "05228",
+      "title": "mandala form iteration 2"
+    },
+    "05229": {
+      "work_id": "05229",
+      "title": "mandala form living surface 1"
+    },
+    "05230": {
+      "work_id": "05230",
+      "title": "mandala form living surface 2"
+    },
+    "05231": {
+      "work_id": "05231",
+      "title": "mandala form living surface 3"
+    },
+    "05232": {
+      "work_id": "05232",
+      "title": "mandala form living surface 4"
+    },
+    "05233": {
+      "work_id": "05233",
+      "title": "mandala form structure"
+    },
+    "05234": {
+      "work_id": "05234",
+      "title": "model 7 - reverse"
+    },
+    "05235": {
+      "work_id": "05235",
+      "title": "nerve - back cover"
+    },
+    "05236": {
+      "work_id": "05236",
+      "title": "wa (yoko takenami) detail 1"
+    },
+    "05237": {
+      "work_id": "05237",
+      "title": "wa (yoko takenami) detail 2"
     }
   }
 }

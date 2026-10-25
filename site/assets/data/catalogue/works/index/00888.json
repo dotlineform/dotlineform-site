@@ -1,20 +1,20 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-6fc2a4972d77a30c6d1ed5087d14418f",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-e59d3acc1d95cc60580d9de88eaf5c3b",
+    "generated_at_utc": "2026-10-25T15:05:26Z"
   },
   "work": {
     "work_id": "00888",
     "title": "doll formaldehyde form [2]",
     "year": 1990,
     "year_display": "c. 1990",
+    "width_px": 3071,
+    "height_px": 2598,
+    "height_cm": 22,
+    "width_cm": 26,
     "medium": "digital c-type print",
-    "height_cm": 22.0,
-    "width_cm": 26.0,
-    "width_px": 2093,
-    "height_px": 1769,
-    "media_version": 1,
+    "media_version": 2,
     "series_id": "037",
     "galleries": [
       {

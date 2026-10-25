@@ -5461,14 +5461,14 @@
       "last_updated": "2026-10-01"
     },
     {
-      "doc_id": "00165",
-      "title": "angels",
-      "last_updated": "2026-10-01"
-    },
-    {
       "doc_id": "04648",
       "title": "angels",
       "last_updated": "2026-10-22"
+    },
+    {
+      "doc_id": "00165",
+      "title": "angels text",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "04788",
@@ -8599,6 +8599,11 @@
       "doc_id": "00889",
       "title": "doll frame [1]",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05222",
+      "title": "doll frame [2]",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00890",
@@ -12476,9 +12481,9 @@
       "last_updated": "2026-10-01"
     },
     {
-      "doc_id": "00113",
-      "title": "gesture in grey 1",
-      "last_updated": "2026-10-01"
+      "doc_id": "05223",
+      "title": "gesture in grey 2",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "04935",
@@ -13231,9 +13236,19 @@
       "last_updated": "2026-10-01"
     },
     {
+      "doc_id": "05224",
+      "title": "hand life 4",
+      "last_updated": "2026-10-25"
+    },
+    {
       "doc_id": "00170",
       "title": "hand life 5",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05225",
+      "title": "hand life 6",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00171",
@@ -14956,6 +14971,46 @@
       "last_updated": "2026-10-01"
     },
     {
+      "doc_id": "05226",
+      "title": "mandala form",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05227",
+      "title": "mandala form iteration 1",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05228",
+      "title": "mandala form iteration 2",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05229",
+      "title": "mandala form living surface 1",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05230",
+      "title": "mandala form living surface 2",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05231",
+      "title": "mandala form living surface 3",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05232",
+      "title": "mandala form living surface 4",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05233",
+      "title": "mandala form structure",
+      "last_updated": "2026-10-25"
+    },
+    {
       "doc_id": "00055",
       "title": "mannequin (legs)",
       "last_updated": "2026-10-01"
@@ -16439,6 +16494,11 @@
       "doc_id": "00541",
       "title": "model 7",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05234",
+      "title": "model 7 - reverse",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00542",
@@ -18119,6 +18179,11 @@
       "doc_id": "02009",
       "title": "nerve (formaldehyde form) - back cover",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05235",
+      "title": "nerve - back cover",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00385",
@@ -25647,8 +25712,8 @@
     },
     {
       "doc_id": "00401",
-      "title": "wa",
-      "last_updated": "2026-10-01"
+      "title": "wa (1)",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00400",
@@ -25684,6 +25749,16 @@
       "doc_id": "00394",
       "title": "wa (yoko takenami)",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05236",
+      "title": "wa (yoko takenami) detail 1",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05237",
+      "title": "wa (yoko takenami) detail 2",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00600",
