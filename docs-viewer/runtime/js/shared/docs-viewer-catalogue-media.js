@@ -1,6 +1,8 @@
 import { docsViewerSafeMediaTarget, normalizeDocsViewerCatalogueGroupTarget } from "./docs-viewer-media-presentation.js";
 import { catalogueThumbnailSettings } from "./docs-viewer-catalogue-media-policy.js";
 
+const WORK_TITLE_ORDER = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
+
 /** Work image targets use only the exact five-digit Catalogue Work identity. */
 export function catalogueMediaTarget(workId) {
   if (typeof workId !== "string" || !/^\d{5}$/.test(workId)) {
@@ -42,7 +44,7 @@ export function catalogueWorkThumbnail(workId, title, settings) {
     alt: title, width_px: settings.size, height_px: settings.size };
 }
 
-/** Gallery selection reads one generated membership record, with no Series inference. */
+/** Project Gallery members in natural title order from one generated membership record. */
 export function catalogueGalleryMediaPresentation(payload, galleryId, mediaPolicy, thumbnailBaseUrl) {
   var gallery = galleryRecord(payload, galleryId);
   return groupMediaPresentation(payload, catalogueGalleryTarget(galleryId), gallery.title, [], mediaPolicy, thumbnailBaseUrl);
@@ -56,6 +58,9 @@ function groupMediaPresentation(payload, target, title, metadata, mediaPolicy, t
       members: payload.member_works.map(function (member) {
         return { target: catalogueMediaTarget(member.work_id), label: member.title,
           thumbnail: catalogueWorkThumbnail(member.work_id, member.title, thumbnailSettings) };
+      }).sort(function (left, right) {
+        return WORK_TITLE_ORDER.compare(left.label, right.label)
+          || WORK_TITLE_ORDER.compare(left.target.id, right.target.id);
       }) }
   };
   return presentation;

@@ -81078,6 +81078,38 @@
       "storage_location": "1",
       "width_px": 4115,
       "height_px": 3071
+    },
+    "05224": {
+      "work_id": "05224",
+      "series_id": "174",
+      "project_folder": "hand life",
+      "project_filename": "hand life 4.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "hand life 4",
+      "width_cm": 29.7,
+      "height_cm": 27,
+      "year": 1989,
+      "year_display": "1989",
+      "medium": "ink on paper",
+      "width_px": 3504,
+      "height_px": 3189
+    },
+    "05225": {
+      "work_id": "05225",
+      "series_id": "174",
+      "project_folder": "hand life",
+      "project_filename": "hand life 6.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "hand life 6",
+      "width_cm": 29.7,
+      "height_cm": 31.3,
+      "year": 1989,
+      "year_display": "1989",
+      "medium": "ink on paper",
+      "width_px": 3504,
+      "height_px": 3699
     }
   }
 }
