@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-25T13:17:56Z"
+    "generated_at_utc": "2026-10-25T14:59:58Z"
   },
   "works": {
     "00001": {
@@ -20663,6 +20663,30 @@
     "05215": {
       "work_id": "05215",
       "title": "found form (2017-06-29)"
+    },
+    "05216": {
+      "work_id": "05216",
+      "title": "saturday night - detail 1"
+    },
+    "05217": {
+      "work_id": "05217",
+      "title": "saturday night - detail 2"
+    },
+    "05218": {
+      "work_id": "05218",
+      "title": "saturday night - detail 3"
+    },
+    "05219": {
+      "work_id": "05219",
+      "title": "saturday night - detail 4"
+    },
+    "05220": {
+      "work_id": "05220",
+      "title": "saturday night - detail 5"
+    },
+    "05221": {
+      "work_id": "05221",
+      "title": "saturday night - detail 6"
     }
   }
 }

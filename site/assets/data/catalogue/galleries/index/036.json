@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-25T13:17:56Z",
+    "generated_at_utc": "2026-10-25T15:01:12Z",
     "gallery_id": "036"
   },
   "gallery": {
@@ -376,6 +376,30 @@
     {
       "work_id": "02014",
       "title": "the eye - detail 4"
+    },
+    {
+      "work_id": "05216",
+      "title": "saturday night - detail 1"
+    },
+    {
+      "work_id": "05217",
+      "title": "saturday night - detail 2"
+    },
+    {
+      "work_id": "05218",
+      "title": "saturday night - detail 3"
+    },
+    {
+      "work_id": "05219",
+      "title": "saturday night - detail 4"
+    },
+    {
+      "work_id": "05220",
+      "title": "saturday night - detail 5"
+    },
+    {
+      "work_id": "05221",
+      "title": "saturday night - detail 6"
     }
   ]
 }

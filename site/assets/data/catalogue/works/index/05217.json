@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-6d9d911f3828e64ea03b0096e70228f4",
+    "generated_at_utc": "2026-10-25T15:01:12Z"
+  },
+  "work": {
+    "work_id": "05217",
+    "title": "saturday night - detail 2",
+    "year": 2025,
+    "year_display": "2025",
+    "width_px": 3024,
+    "height_px": 4032,
+    "height_cm": 34.1,
+    "width_cm": 25.6,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "036",
+    "galleries": [
+      {
+        "gallery_id": "036",
+        "title": "curve poems"
+      }
+    ]
+  }
+}

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-10da8df69237af9024f6a23f0d567f36",
-    "generated_at_utc": "2026-10-24T19:54:37Z"
+    "version": "blake2b-61384a7bd2011862e5d0f5d9597a24f8",
+    "generated_at_utc": "2026-10-25T14:09:16Z"
   },
   "work": {
     "work_id": "02011",
@@ -14,7 +14,7 @@
     "height_cm": 25.6,
     "width_cm": 25.6,
     "medium": "ink and pencil on paper",
-    "media_version": 1,
+    "media_version": 2,
     "series_id": "036",
     "galleries": [
       {
