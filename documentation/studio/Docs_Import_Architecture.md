@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-164722-3de65e
 title: Docs Import Architecture
 added_date: "2026-05-14 16:47:22"
-last_updated: "2026-10-20"
+last_updated: "2026-10-25"
 summary: Configuration, registries, source confinement, execution paths, extension methods, and weak spots for Docs Viewer imports.
 parent_id: d-20260424-000000-50b63f
 
@@ -78,6 +78,10 @@ The native owner writes one request-local temporary converter input, then calls 
 The browser owns source selection, the destination and normal confirmation state. Python owns format conversion, SVG sanitization or raster decoding, exact configured media paths, writes and generation. One `ImportMediaPreparation` carries the resolved document-media owner, final document identity and prepared inline bytes through each conversion. Ordinary creation allocates its ID before conversion; collection planning supplies its already resolved create/overwrite ID. The standalone preview CLI resolves one media owner and lets conversion derive its preview identity from the source.
 
 Converters construct media filenames, document-owned artifact identities and Markdown tokens once using that supplied owner and identity. Generated import filenames use `image-NN.<ext>` or `attachment-NN.<ext>` beneath the resolved document-ID folder, without repeating that ID in the basename. Existing saved filenames remain valid literal identities. Markdown-package image labels retain their source-derived wording independently of storage identity. Package filename collision checks use the exact configured document folder from the same preparation object; they do not derive a second destination identity from the preview summary. Media planners perform no workspace reloads, and document planning does not rebuild media plans or rewrite their tokens.
+
+Extracted HTML-inline SVGs use the canonical `[[image:…]]` form from `docs_image_tokens.serialize_image_token`, with the sanitized SVG title (or the existing numbered inline-image label) as alt text, full-column placement, natural width and no caption or summary. The converter carries the already resolved `media_path` directly into the serializer. Source's existing Edit image parser can therefore reopen the imported reference without a Markdown-image editing alias or another media lookup. This applies to new conversion output; existing saved Markdown-image references remain ordinary rendered content.
+
+The 2026-10-25 code and redundancy review traced SVG extraction, canonical serialization, media materialisation and Source editing. Import retains conversion ownership; the shared serializer owns source grammar, the sanitizer owns XML safety, and storage retains selected confinement and transfer verification. Prepared SVG bytes and resolved identities are reused without another read, parse, scan or compatibility path. Focused Python lint, compilation and whitespace review passed for `docs_import_media.py`; tests and live Import/Edit image interaction were not run. Interaction and visual confirmation remain through ordinary use.
 
 Each inline raster data URL is decoded once and each HTML-inline SVG is sanitized once per operation. Prepared immutable bytes are held separately from JSON preview metadata, keyed by media family and filename, and passed through the internal document plan to materialisation. The original HTML and base64 Markdown are no longer retained for re-extraction. Materialisation consumes those exact bytes without another source read, decode, SVG parse, positional count audit or fallback conversion. The preparation object remains in memory until its operation completes; there is no saved cache or cross-request handoff. A separate confirmed request still performs its own conversion.
 

@@ -16,6 +16,7 @@ from docs_import_common import (
     MARKDOWN_INLINE_RASTER_IMAGE_PATTERN,
     normalize_space,
 )
+from docs_image_tokens import serialize_image_token
 from docs_workspace_config import (
     DocsManagedMediaConfig, DocsStageConfig, DocsCollectionConfig,
     managed_media_config,
@@ -175,6 +176,7 @@ def apply_inline_svg_media_plans(
     *,
     source_svg_markup: str,
 ) -> None:
+    """Prepare extracted SVG bytes and emit canonical, Source-editable image tokens."""
     markdown = str(summary.get("markdown_preview") or "")
     if "<svg" not in markdown.lower():
         return
@@ -219,8 +221,10 @@ def apply_inline_svg_media_plans(
         preparation.inline_bytes[("svg", filename)] = sanitized.bytes
         inline_plans.append(plan)
         warnings.extend(sanitized.warnings)
-        safe_alt = title.replace("[", r"\[").replace("]", r"\]")
-        return f"![{safe_alt}]({plan['media_token']})"
+        return serialize_image_token(
+            media_path=plan["media_path"], alt=title,
+            placement="full", fill_width=False,
+        )
 
     normalized = INLINE_SVG_PATTERN.sub(replace, markdown)
     if inline_plans:
