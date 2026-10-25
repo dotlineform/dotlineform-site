@@ -179,7 +179,8 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
 
     Follow the app-generated queue without validating queue or saved contents.
     Work by-ID and shared output retain unchanged content;
-    Work metadata/media and canonical flag clears complete before readiness.
+    Work metadata/media, canonical flag clears and staged-source cleanup complete
+    before readiness.
     Failure retains completed effects and exact shared selections. Only full
     completion advances the last successful time.
     """
@@ -281,13 +282,15 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                     output["deleted"].append(f"works/index/{work_id}.json")
                 else:
                     record = records.works[work_id]
+                    staged_sources = []
                     if entry["image"]:
                         if record["image_staged"] and staging is None:
                             staging = catalogue_staging_assets(repo_root, config=media_config)
                         destinations = work_rendition_paths(work_id, working, config=media_config)
                         sources = work_rendition_paths(work_id, staging if record["image_staged"] else working, config=media_config)
                         for source, destination in zip(sources, destinations, strict=True):
-                            _handoff_file(source, destination)
+                            if _handoff_file(source, destination):
+                                staged_sources.append(source)
                     downloads = {item["filename"]: item for item in record.get("downloads", [])} if entry["file_names"] else {}
                     for name in entry["file_names"]:
                         download = downloads[name]
@@ -296,7 +299,9 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                                 media_config = load_pipeline_config(repo_root=repo_root)
                             staging = catalogue_staging_assets(repo_root, config=media_config)
                         source = output_path((staging if download["staged"] else working).work_files, name)
-                        _handoff_file(source, output_path(working.work_files, name))
+                        destination = output_path(working.work_files, name)
+                        if _handoff_file(source, destination):
+                            staged_sources.append(source)
                     phase = "metadata handoff"
                     work_payload = payloads[f"works/index/{work_id}.json"]
                     try:
@@ -315,6 +320,9 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                         downloads[name]["staged"] = False
                     if flags_changed:
                         _write_payload(source_dir / SOURCE_FILES["works"], payload_for_map("works", records.works))
+                    phase = "staging cleanup"
+                    for source in staged_sources:
+                        source.unlink()
                     editor_records.append({"work_id": work_id, "record": dict(record),
                                            "record_hash": record_hash(record), "gallery_ids": galleries.works.get(work_id, [])})
                 phase = "readiness"
@@ -388,10 +396,12 @@ def _write_payload(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def _handoff_file(source: Path, destination: Path) -> None:
+def _handoff_file(source: Path, destination: Path) -> bool:
+    """Return whether selected bytes were copied from a separate source."""
     if source == destination:
-        return
+        return False
     if source.is_symlink() or destination.is_symlink():
         raise ValueError("Catalogue media handoff must not use a symlink")
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_bytes(source.read_bytes())
+    return True
