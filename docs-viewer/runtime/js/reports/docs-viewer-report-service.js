@@ -110,6 +110,9 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    readUncatalogedFiles: function () {
+      return fetchReportJson("/docs/uncataloged-files", Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
+    },
     runUncatalogedFiles: function () {
       return fetchReportJson("/docs/uncataloged-files", Object.assign({}, serviceOptions, {
         method: "POST",

@@ -64,7 +64,7 @@
     {
       "report_id": "uncataloged_files",
       "title": "Uncataloged Files",
-      "description": "Lists live images in represented source folders that are absent from refreshed Work source registrations.",
+      "description": "Shows saved uncatalogued images in represented source folders; Refresh scans and saves current results.",
       "loader_id": "uncataloged_files"
     },
     {

@@ -4,6 +4,7 @@
   "projects_report_metadata": "working/generated/reports/projects/metadata.json",
   "broken_links_report": "working/generated/reports/broken-links/report.json",
   "links_report": "working/generated/reports/links/report.json",
+  "uncataloged_files_report": "working/generated/reports/uncataloged-files/report.json",
   "assets": {
     "roots": {
       "working": "working/assets",

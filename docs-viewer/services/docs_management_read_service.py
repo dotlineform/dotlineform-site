@@ -12,6 +12,7 @@ import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_media_metadata
 import docs_project_state
+import docs_uncataloged_files
 from docs_management_broken_links_service import read_broken_links
 import docs_unpublishable_report
 from docs_selected_documents import read_selected
@@ -84,6 +85,10 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         if params:
             raise ValueError("Projects metadata reads do not accept parameters")
         return docs_project_state.read_project_state_metadata(repo_root)
+    if path == routes.UNCATALOGED_FILES_PATH:
+        if params:
+            raise ValueError("Uncatalogued Images reads do not accept parameters")
+        return docs_uncataloged_files.read_uncataloged_files_report(repo_root)
     if path == routes.DOCUMENT_LINK_TARGETS_PATH:
         return read_document_link_targets(
             repo_root,

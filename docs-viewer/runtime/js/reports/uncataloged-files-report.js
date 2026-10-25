@@ -8,6 +8,7 @@ function reportService(context) {
   const service = context && context.reportService;
   return (
     service
+    && typeof service.readUncatalogedFiles === "function"
     && typeof service.runUncatalogedFiles === "function"
     && typeof service.openLocalTarget === "function"
   ) ? service : null;
@@ -32,12 +33,15 @@ function appendFileCell(rowNode, row) {
 
 function renderRows(state) {
   clearNode(state.rowsNode);
-  state.emptyNode.hidden = state.rows.length > 0;
-  if (!state.rows.length) {
-    state.emptyNode.textContent = "No uncataloged files were found.";
+  const rows = state.report ? state.report.rows : [];
+  state.emptyNode.hidden = rows.length > 0;
+  if (!rows.length) {
+    state.emptyNode.textContent = state.report
+      ? "No uncatalogued images were found."
+      : "Refresh to generate this report.";
     return;
   }
-  state.rows.forEach((row) => {
+  rows.forEach((row) => {
     const rowNode = document.createElement("li");
     rowNode.className = "docsViewerReport__row";
     appendTextCell(rowNode, row.folder.replace(/^projects\//, ""));
@@ -52,33 +56,25 @@ function setBusy(state, busy) {
   state.runButton.setAttribute("aria-busy", state.busy ? "true" : "false");
 }
 
-function runReport(state) {
+function loadReport(state, refresh = false) {
   const service = reportService(state.context);
-  state.rows = [];
-  clearNode(state.rowsNode);
-  state.emptyNode.hidden = true;
   if (!service) {
     state.statusNode.textContent = "Local docs-management server is not configured.";
-    state.emptyNode.hidden = false;
-    state.emptyNode.textContent = "The current Uncataloged Files run could not complete.";
     return Promise.resolve();
   }
   setBusy(state, true);
   state.statusNode.textContent = "";
-  return service.runUncatalogedFiles()
+  return (refresh ? service.runUncatalogedFiles() : service.readUncatalogedFiles())
     .then((payload) => {
-      state.rows = payload.report.rows;
+      state.report = payload.report;
       state.statusNode.textContent = "";
       renderRows(state);
     })
     .catch((error) => {
-      state.rows = [];
-      clearNode(state.rowsNode);
-      state.statusNode.textContent = error && error.message
+      const message = error && error.message
         ? error.message
-        : "Uncataloged Files refresh failed.";
-      state.emptyNode.hidden = false;
-      state.emptyNode.textContent = "The current Uncataloged Files run could not complete.";
+        : "Uncatalogued Images could not complete the request.";
+      state.statusNode.textContent = message + (state.report ? " Showing the last saved report." : "");
     })
     .finally(() => {
       setBusy(state, false);
@@ -104,7 +100,7 @@ function openFile(state, target) {
 
 function attachEvents(state) {
   state.runButton.addEventListener("click", () => {
-    if (!state.busy) runReport(state);
+    if (!state.busy) loadReport(state, true);
   });
   state.rowsNode.addEventListener("click", (event) => {
     const link = event.target instanceof Element
@@ -127,8 +123,8 @@ function renderShell(root) {
   runButton.id = "docsUncatalogedFilesReportRun";
   runButton.type = "button";
   runButton.className = "docsViewer__toolbarIconButton";
-  runButton.setAttribute("aria-label", "Run/Refresh");
-  runButton.title = "Run/Refresh";
+  runButton.setAttribute("aria-label", "Refresh");
+  runButton.title = "Refresh";
   runButton.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--refresh-cw"));
   toolbar.appendChild(runButton);
 
@@ -170,9 +166,10 @@ export function mountUncatalogedFilesReport(context) {
   const state = Object.assign({
     busy: false,
     context,
-    rows: []
+    report: null
   }, nodes);
   attachEvents(state);
   setBusy(state, false);
-  return runReport(state);
+  renderRows(state);
+  return loadReport(state);
 }

@@ -176,12 +176,10 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_project_state.refresh_project_state_metadata(repo_root)
     if path == routes.UNCATALOGED_FILES_PATH:
         if body:
-            raise ValueError("Uncataloged Files request must be empty")
-        payload = docs_uncataloged_files.uncataloged_files_report(repo_root)
-        payload["ok"] = True
-        payload["dry_run"] = dry_run
-        payload["summary_text"] = "Uncataloged Files refreshed."
-        return HTTPStatus.OK, payload
+            raise ValueError("Uncatalogued Images refresh requires an empty request object")
+        if dry_run:
+            raise ValueError("Uncatalogued Images refresh does not support dry_run")
+        return HTTPStatus.OK, docs_uncataloged_files.refresh_uncataloged_files_report(repo_root)
     if path == routes.MISSING_SOURCE_FILES_PATH:
         if body:
             raise ValueError("Missing Source Files request must be empty")

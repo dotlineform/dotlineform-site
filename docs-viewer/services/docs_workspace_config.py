@@ -258,6 +258,7 @@ class DocsWorkspaceConfig:
     projects_report_metadata: ArtifactLocation
     broken_links_report: ArtifactLocation
     links_report: ArtifactLocation
+    uncataloged_files_report: ArtifactLocation
 
 
 def default_repo_root() -> Path:
@@ -587,6 +588,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     payload = _object(raw, field="Docs workspace", required={
         "schema_version", "public_viewer_base_url", "default_doc_id", "public_projection", "search_fields", "recent_limit", "stages",
         "assets", "catalogue", "media_report_metadata", "projects_report_metadata", "broken_links_report", "links_report",
+        "uncataloged_files_report",
     })
     if payload["schema_version"] != SCHEMA_VERSION:
         raise ValueError(f"Docs workspace schema_version must be {SCHEMA_VERSION}")
@@ -622,6 +624,10 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     if not links_report_path.is_relative_to(Path("working/generated/reports")) or links_report_path.name != "report.json":
         raise ValueError("links_report must name report.json within working/generated/reports")
     links_report = location_child(workspace_root, links_report_path)
+    uncataloged_files_path = safe_relative_path(payload["uncataloged_files_report"], field="uncataloged_files_report")
+    if not uncataloged_files_path.is_relative_to(Path("working/generated/reports")) or uncataloged_files_path.name != "report.json":
+        raise ValueError("uncataloged_files_report must name report.json within working/generated/reports")
+    uncataloged_files_report = location_child(workspace_root, uncataloged_files_path)
     preview = _preview(location_child(workspace_root, Path("preview")))
     projection = _public_projection(payload["public_projection"])
     working = _object(settings["working"], field="stages.working", required={
@@ -674,6 +680,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         projects_report_metadata,
         broken_links_report,
         links_report,
+        uncataloged_files_report,
     )
 
 
