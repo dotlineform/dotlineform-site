@@ -1,12 +1,12 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-6e7653ee67e35f07768885e7de798f75",
-    "generated_at_utc": "2026-10-24T23:04:53Z"
+    "version": "blake2b-c4aafd5bf34ba9c47202078f763504c9",
+    "generated_at_utc": "2026-10-25T21:20:59Z"
   },
   "work": {
     "work_id": "00233",
-    "title": "untitled [0233]",
+    "title": "untitled [00233]",
     "year": 1989,
     "year_display": "c. 1989-98",
     "width_px": 2480,
@@ -14,12 +14,12 @@
     "height_cm": 29.7,
     "width_cm": 21,
     "medium": "pen on paper",
-    "media_version": 1,
+    "media_version": 2,
     "series_id": "183",
     "galleries": [
       {
         "gallery_id": "359",
-        "title": "uncarved block"
+        "title": "untitled drawings"
       }
     ]
   }

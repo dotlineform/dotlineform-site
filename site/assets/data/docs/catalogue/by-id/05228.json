@@ -3,7 +3,7 @@
   "title": "mandala form iteration 2",
   "added_date": "2026-10-25 19:08:12",
   "last_updated": "2026-10-25 19:08:12",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>mandala form iteration 2</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05228\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 3543;\" data-docs-media-open aria-label=\"Open mandala form iteration 2\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05228-primary-800.webp?v=3\" srcset=\"https://media.dotlineform.com/works/img/05228-primary-800.webp?v=3 800w, https://media.dotlineform.com/works/img/05228-primary-1200.webp?v=3 1200w, https://media.dotlineform.com/works/img/05228-primary-1600.webp?v=3 1600w\" sizes=\"100vw\" alt=\"mandala form iteration 2\" width=\"3543\" height=\"3543\" decoding=\"async\"><span data-docs-media-placeholder hidden>mandala form iteration 2</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>digital c-type print<br>30 × 30 cm<br><br>cat. 05228</p></div></article></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>mandala form iteration 2</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05228\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 3543;\" data-docs-media-open aria-label=\"Open mandala form iteration 2\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05228-primary-800.webp?v=3\" srcset=\"https://media.dotlineform.com/works/img/05228-primary-800.webp?v=3 800w, https://media.dotlineform.com/works/img/05228-primary-1200.webp?v=3 1200w, https://media.dotlineform.com/works/img/05228-primary-1600.webp?v=3 1600w\" sizes=\"100vw\" alt=\"mandala form iteration 2\" width=\"3543\" height=\"3543\" decoding=\"async\"><span data-docs-media-placeholder hidden>mandala form iteration 2</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1998, 2009<br>digital c-type print<br>30 × 30 cm<br><br>cat. 05228</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -58,7 +58,7 @@
         ],
         "entry": {
           "metadata_lines": [
-            "c. 1989-98",
+            "1998, 2009",
             "digital c-type print",
             "30 × 30 cm",
             "",

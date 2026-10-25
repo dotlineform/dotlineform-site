@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-25T15:08:30Z",
+    "generated_at_utc": "2026-10-25T20:43:27Z",
     "gallery_id": "037"
   },
   "gallery": {
@@ -216,6 +216,14 @@
     {
       "work_id": "05222",
       "title": "doll frame [2]"
+    },
+    {
+      "work_id": "05242",
+      "title": "doll cannot speak"
+    },
+    {
+      "work_id": "05243",
+      "title": "doll movement"
     }
   ]
 }

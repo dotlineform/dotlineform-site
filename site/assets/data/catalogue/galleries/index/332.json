@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T21:57:18Z",
+    "generated_at_utc": "2026-10-25T20:56:16Z",
     "gallery_id": "332"
   },
   "gallery": {
@@ -32,6 +32,10 @@
     {
       "work_id": "01970",
       "title": "Michelle Pfeiffer - pages 2-3"
+    },
+    {
+      "work_id": "05245",
+      "title": "Michelle Pfeiffer eye"
     }
   ]
 }

@@ -8416,9 +8416,24 @@
       "last_updated": "2026-10-01"
     },
     {
+      "doc_id": "05239",
+      "title": "dissection (flower)",
+      "last_updated": "2026-10-25"
+    },
+    {
       "doc_id": "00090",
       "title": "dissection (identification of points on a surface)",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05241",
+      "title": "dissection (internal organs dissection)",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05240",
+      "title": "dissection (meatflower)",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00096",
@@ -8449,6 +8464,11 @@
       "doc_id": "00872",
       "title": "doll bandage",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05242",
+      "title": "doll cannot speak",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00875",
@@ -8689,6 +8709,11 @@
       "doc_id": "00895",
       "title": "doll moiré structures",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05243",
+      "title": "doll movement",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00909",
@@ -11774,6 +11799,11 @@
       "doc_id": "00044",
       "title": "form symbol (superimposed) 2",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05246",
+      "title": "forming",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00028",
@@ -15006,8 +15036,13 @@
       "last_updated": "2026-10-25"
     },
     {
-      "doc_id": "05233",
+      "doc_id": "05238",
       "title": "mandala form structure",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05233",
+      "title": "mandala form structure dissolve",
       "last_updated": "2026-10-25"
     },
     {
@@ -15534,6 +15569,11 @@
       "doc_id": "01970",
       "title": "Michelle Pfeiffer - pages 2-3",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05245",
+      "title": "Michelle Pfeiffer eye",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00470",
@@ -17924,6 +17964,16 @@
       "doc_id": "01447",
       "title": "mother and child",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05247",
+      "title": "mother and child (detail)",
+      "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "05244",
+      "title": "mother and child (negative)",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00160",
@@ -24232,18 +24282,18 @@
     },
     {
       "doc_id": "00233",
-      "title": "untitled [0233]",
-      "last_updated": "2026-10-01"
+      "title": "untitled [00233]",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00234",
-      "title": "untitled [0234]",
-      "last_updated": "2026-10-01"
+      "title": "untitled [00234]",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "00247",
-      "title": "untitled [0247]",
-      "last_updated": "2026-10-01"
+      "title": "untitled [00247]",
+      "last_updated": "2026-10-25"
     },
     {
       "doc_id": "01893",

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-1848b72b60751e022f31b96353fe7486",
-    "generated_at_utc": "2026-10-25T19:08:07Z"
+    "version": "blake2b-f4d8e58aa2c01fa00c98a640bbf71463",
+    "generated_at_utc": "2026-10-25T20:21:59Z"
   },
   "work": {
     "work_id": "05232",
     "title": "mandala form living surface 4",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1998,
+    "year_display": "1998, 2009",
     "width_px": 3543,
     "height_px": 5012,
     "height_cm": 42.4,

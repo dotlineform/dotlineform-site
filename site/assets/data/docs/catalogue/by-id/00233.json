@@ -1,9 +1,9 @@
 {
   "doc_id": "00233",
-  "title": "untitled [0233]",
+  "title": "untitled [00233]",
   "added_date": "2026-09-17 21:55:30",
-  "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>untitled [0233]</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00233\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2480 / 3508;\" data-docs-media-open aria-label=\"Open untitled [0233]\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00233-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00233-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00233-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00233-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"untitled [0233]\" width=\"2480\" height=\"3508\" decoding=\"async\"><span data-docs-media-placeholder hidden>untitled [0233]</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>pen on paper<br>29.7 × 21 cm<br><br>cat. 00233</p></div></article></div>\n",
+  "last_updated": "2026-10-25 21:21:22",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>untitled [00233]</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00233\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2480 / 3508;\" data-docs-media-open aria-label=\"Open untitled [00233]\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00233-primary-800.webp?v=2\" srcset=\"https://media.dotlineform.com/works/img/00233-primary-800.webp?v=2 800w, https://media.dotlineform.com/works/img/00233-primary-1200.webp?v=2 1200w, https://media.dotlineform.com/works/img/00233-primary-1600.webp?v=2 1600w\" sizes=\"100vw\" alt=\"untitled [00233]\" width=\"2480\" height=\"3508\" decoding=\"async\"><span data-docs-media-placeholder hidden>untitled [00233]</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>pen on paper<br>29.7 × 21 cm<br><br>cat. 00233</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -24,35 +24,35 @@
           "kind": "catalogue-work",
           "id": "00233"
         },
-        "label": "untitled [0233]",
+        "label": "untitled [00233]",
         "image": {
-          "src": "https://media.dotlineform.com/works/img/00233-primary-800.webp?v=1",
+          "src": "https://media.dotlineform.com/works/img/00233-primary-800.webp?v=2",
           "candidates": [
             {
-              "src": "https://media.dotlineform.com/works/img/00233-primary-800.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00233-primary-800.webp?v=2",
               "width_px": 800
             },
             {
-              "src": "https://media.dotlineform.com/works/img/00233-primary-1200.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00233-primary-1200.webp?v=2",
               "width_px": 1200
             },
             {
-              "src": "https://media.dotlineform.com/works/img/00233-primary-1600.webp?v=1",
+              "src": "https://media.dotlineform.com/works/img/00233-primary-1600.webp?v=2",
               "width_px": 1600
             }
           ],
-          "alt": "untitled [0233]",
+          "alt": "untitled [00233]",
           "width_px": 2480,
           "height_px": 3508
         },
-        "new_tab_target": "https://media.dotlineform.com/works/img/00233-primary-1600.webp?v=1",
+        "new_tab_target": "https://media.dotlineform.com/works/img/00233-primary-1600.webp?v=2",
         "galleries": [
           {
             "target": {
               "kind": "catalogue-gallery",
               "id": "359"
             },
-            "label": "uncarved block",
+            "label": "untitled drawings",
             "relation": "direct"
           }
         ],

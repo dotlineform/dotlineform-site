@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-25T19:08:07Z",
+    "generated_at_utc": "2026-10-25T20:18:10Z",
     "gallery_id": "360"
   },
   "gallery": {
@@ -43,6 +43,10 @@
     },
     {
       "work_id": "05233",
+      "title": "mandala form structure dissolve"
+    },
+    {
+      "work_id": "05238",
       "title": "mandala form structure"
     }
   ]

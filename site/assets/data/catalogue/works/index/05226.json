@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-dd2df8f5d79eeb4f8470c4cfb2a248a1",
-    "generated_at_utc": "2026-10-25T19:08:07Z"
+    "version": "blake2b-88f4d8f92727acf2a5c4e83cc601d02f",
+    "generated_at_utc": "2026-10-25T20:21:59Z"
   },
   "work": {
     "work_id": "05226",
     "title": "mandala form",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1998,
+    "year_display": "1998, 2009",
     "width_px": 3544,
     "height_px": 3544,
     "height_cm": 30,

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-25T19:42:15Z"
+    "generated_at_utc": "2026-10-25T21:20:59Z"
   },
   "works": {
     "00001": {
@@ -922,11 +922,11 @@
     },
     "00233": {
       "work_id": "00233",
-      "title": "untitled [0233]"
+      "title": "untitled [00233]"
     },
     "00234": {
       "work_id": "00234",
-      "title": "untitled [0234]"
+      "title": "untitled [00234]"
     },
     "00235": {
       "work_id": "00235",
@@ -978,7 +978,7 @@
     },
     "00247": {
       "work_id": "00247",
-      "title": "untitled [0247]"
+      "title": "untitled [00247]"
     },
     "00248": {
       "work_id": "00248",
@@ -20730,7 +20730,7 @@
     },
     "05233": {
       "work_id": "05233",
-      "title": "mandala form structure"
+      "title": "mandala form structure dissolve"
     },
     "05234": {
       "work_id": "05234",
@@ -20747,6 +20747,46 @@
     "05237": {
       "work_id": "05237",
       "title": "wa (yoko takenami) detail 2"
+    },
+    "05238": {
+      "work_id": "05238",
+      "title": "mandala form structure"
+    },
+    "05239": {
+      "work_id": "05239",
+      "title": "dissection (flower)"
+    },
+    "05240": {
+      "work_id": "05240",
+      "title": "dissection (meatflower)"
+    },
+    "05241": {
+      "work_id": "05241",
+      "title": "dissection (internal organs dissection)"
+    },
+    "05242": {
+      "work_id": "05242",
+      "title": "doll cannot speak"
+    },
+    "05243": {
+      "work_id": "05243",
+      "title": "doll movement"
+    },
+    "05244": {
+      "work_id": "05244",
+      "title": "mother and child (negative)"
+    },
+    "05245": {
+      "work_id": "05245",
+      "title": "Michelle Pfeiffer eye"
+    },
+    "05246": {
+      "work_id": "05246",
+      "title": "forming"
+    },
+    "05247": {
+      "work_id": "05247",
+      "title": "mother and child (detail)"
     }
   }
 }

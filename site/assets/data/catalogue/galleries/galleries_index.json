@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-25T19:08:07Z"
+    "generated_at_utc": "2026-10-25T21:20:59Z"
   },
   "galleries": {
     "001": {
@@ -762,7 +762,7 @@
     },
     "359": {
       "gallery_id": "359",
-      "title": "uncarved block"
+      "title": "untitled drawings"
     },
     "360": {
       "gallery_id": "360",

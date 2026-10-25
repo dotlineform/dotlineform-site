@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e1f1b0f360130805cea6e84958d33219",
-    "generated_at_utc": "2026-10-24T13:31:07Z"
+    "version": "blake2b-45557eed176d6d775c60777970e1f514",
+    "generated_at_utc": "2026-10-25T21:28:35Z"
   },
   "work": {
     "work_id": "02010",
@@ -11,8 +11,10 @@
     "year_display": "c. 1998",
     "width_px": 2480,
     "height_px": 3508,
+    "height_cm": 29.7,
+    "width_cm": 21,
     "medium": "laserjet print",
-    "media_version": 1,
+    "media_version": 2,
     "series_id": "027",
     "galleries": [
       {

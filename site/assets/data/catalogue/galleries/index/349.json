@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T22:04:59Z",
+    "generated_at_utc": "2026-10-25T20:31:28Z",
     "gallery_id": "349"
   },
   "gallery": {
@@ -56,6 +56,18 @@
     {
       "work_id": "00101",
       "title": "dissection in progress"
+    },
+    {
+      "work_id": "05239",
+      "title": "dissection (flower)"
+    },
+    {
+      "work_id": "05240",
+      "title": "dissection (meatflower)"
+    },
+    {
+      "work_id": "05241",
+      "title": "dissection (internal organs dissection)"
     }
   ]
 }
