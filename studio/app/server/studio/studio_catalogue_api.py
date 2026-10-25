@@ -37,6 +37,7 @@ from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
     load_json_file,
+    read_source_map,
     records_from_json_source,
     slug_id,
 )
@@ -140,6 +141,14 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         definitions = read_gallery_definitions(paths["source_dir"])
         pairs = read_series_galleries(paths["source_dir"])
         return gallery_record_payload(definitions, pairs, record_id)
+    if key == "catalogue_work_record":
+        work_id = slug_id(record_id)
+        if not work_id:
+            raise ValueError("record_id is required for work lookup reads")
+        payload = build_work_lookup_payload(read_source_map(paths["source_dir"], "works"), work_id)
+        memberships = read_gallery_memberships(paths["source_dir"])
+        payload["gallery_ids"] = sorted(memberships.get(work_id, []))
+        return payload
     source_records = records_from_json_source(paths["source_dir"])
     if key == "catalogue_lookup_work_search":
         payload = build_work_search_payload(source_records)
@@ -149,14 +158,6 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         return payload
     if key == "catalogue_lookup_series_search":
         return build_series_search_payload(source_records)
-    if key == "catalogue_work_record":
-        work_id = slug_id(record_id)
-        if not work_id:
-            raise ValueError("record_id is required for work lookup reads")
-        payload = build_work_lookup_payload(source_records, work_id)
-        memberships = read_gallery_memberships(paths["source_dir"])
-        payload["gallery_ids"] = sorted(memberships.get(work_id, []))
-        return payload
     raise ValueError(f"unsupported catalogue read key: {key}")
 
 

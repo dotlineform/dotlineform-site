@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, Mapping
 
 from catalogue.catalogue_revisions import record_hash
-from catalogue.catalogue_source import CatalogueSourceRecords, normalize_text, work_resource_entries
+from catalogue.catalogue_source import CatalogueSourceRecords
 
 SCHEMAS = {
     "work_search": "studio_catalogue_lookup_work_search_v3",
@@ -13,7 +13,6 @@ SCHEMAS = {
 
 WORK_SEARCH_FIELDS = frozenset({"work_id", "title", "year", "year_display", "series_id", "media_version", "image_staged"})
 SERIES_SEARCH_FIELDS = frozenset({"series_id", "title"})
-WORK_SERIES_SUMMARY_FIELDS = frozenset({"title"})
 
 
 def build_work_search_item(work_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
@@ -38,23 +37,11 @@ def build_series_search_item(series_id: str, record: Mapping[str, Any]) -> Dict[
     }
 
 
-def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> Dict[str, Any]:
-    record = records.works.get(work_id)
+def build_work_lookup_payload(works: Mapping[str, Mapping[str, Any]], work_id: str) -> Dict[str, Any]:
+    """Build one Work response from the supplied Work map without Series inputs."""
+    record = works.get(work_id)
     if not isinstance(record, Mapping):
         raise KeyError(f"work_id not found: {work_id}")
-
-    series_title_by_id = {
-        series_id: normalize_text(series_record.get("title"))
-        for series_id, series_record in records.series.items()
-    }
-
-    series_summary = [
-        {
-            "series_id": series_id,
-            "title": series_title_by_id[series_id],
-        }
-        for series_id in ([record["series_id"]] if record.get("series_id") is not None else [])
-    ]
 
     return {
         "header": {
@@ -62,9 +49,6 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
         },
         "work": dict(record),
         "record_hash": record_hash(record),
-        "downloads": list(work_resource_entries(record, "downloads")),
-        "links": list(work_resource_entries(record, "links")),
-        "series_summary": series_summary,
     }
 
 
