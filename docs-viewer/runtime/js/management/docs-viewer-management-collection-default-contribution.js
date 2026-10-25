@@ -1,5 +1,6 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { createDocsViewerEditMenuItem } from "./docs-viewer-management-edit-menu.js";
+import { mountDocsViewerPaginationControl } from "./docs-viewer-pagination-control.js";
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
@@ -604,24 +605,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       paginationDefault: false,
       resetSelection: selectionOwner.done,
       mountPaginationControl: function ({ host, change }) {
-        var button = host.ownerDocument.createElement("button");
-        button.type = "button";
-        button.className = "docsViewer__toolbarIconButton";
-        var icon = createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--dlf-paginate-off");
-        button.appendChild(icon);
-        host.appendChild(button);
-        var pagination = false;
-        button.addEventListener("click", function () { change(!pagination); });
-        return {
-          update: function (enabled) {
-            pagination = enabled;
-            icon.classList.toggle("docsViewer__icon--dlf-paginate-on", enabled);
-            icon.classList.toggle("docsViewer__icon--dlf-paginate-off", !enabled);
-            button.setAttribute("aria-pressed", String(enabled));
-            button.title = enabled ? "Pagination on. Show all documents." : "Pagination off. Show pages.";
-            button.setAttribute("aria-label", button.title);
-          }
-        };
+        return mountDocsViewerPaginationControl({ host, enabled: false, itemsLabel: "documents", change });
       }
     } : {}),
     captureListState: selectionOwner.snapshot,

@@ -29,7 +29,7 @@ WORK_FIELDS = ("work_id", "title", "year", "year_display")
 def _project_work(records: CatalogueSourceRecords, work_id: str) -> dict[str, Any]:
     source = records.works[work_id]
     row = {field: source[field] for field in WORK_FIELDS}
-    for field in ("storage_location", "medium"):
+    for field in ("storage_location", "medium", "project_folder", "project_subfolder", "project_filename"):
         row[field] = source.get(field)
     row["series"] = []
     if "series_id" in source:

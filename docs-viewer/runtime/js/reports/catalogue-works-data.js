@@ -7,7 +7,8 @@ export const COLUMN_MODEL = Object.freeze([
   { id: "title", label: "Title", visibility: "both", sortable: true, copy: "both" },
   { id: "series", label: "Series", visibility: "both", sortable: true, copy: "both" },
   { id: "storage", label: "Storage", visibility: "both", sortable: true, copy: "both" },
-  { id: "medium", label: "Medium", visibility: "expanded", sortable: false, copy: "expanded" }
+  { id: "medium", label: "Medium", visibility: "expanded", sortable: false, copy: "expanded" },
+  { id: "source", label: "Source image", visibility: "expanded", sortable: false, copy: "expanded" }
 ].map((column) => Object.freeze(column)));
 export const COPY_COLUMN_IDS = Object.freeze(COLUMN_MODEL.filter((column) => column.copy === "both").map((column) => column.id));
 export const PRESENTATION_COLUMNS = Object.freeze(COLUMN_MODEL.map((column) => Object.freeze({
@@ -22,6 +23,16 @@ function searchString(value) {
   return visibleString(value).normalize("NFKC").toLocaleLowerCase("en");
 }
 
+function sourceImagePath(value) {
+  const folder = value.project_folder;
+  const subfolder = value.project_subfolder;
+  const filename = value.project_filename;
+  if (folder === null || folder === "" || filename === null || filename === "") return "";
+  return subfolder === null || subfolder === ""
+    ? folder + "/" + filename
+    : folder + "/" + subfolder + "/" + filename;
+}
+
 /** Trust saved identities/labels; normalize only derived search and sort values. */
 export function prepareCatalogueWorksRows(payload) {
   return Object.values(payload.works).map((value) => {
@@ -31,6 +42,7 @@ export function prepareCatalogueWorksRows(payload) {
       searchValues: [value.work_id, value.title, ...series.flatMap((record) => [record.seriesId, record.title])].map(searchString),
       series,
       seriesSortValue: series.map((record) => visibleString(record.title) + " " + record.seriesId).join(" "),
+      sourceImagePath: sourceImagePath(value),
       storage: value.storage_location,
       title: value.title,
       workId: value.work_id,
@@ -78,7 +90,7 @@ export function serializeCatalogueWorksTsv(rows, columnIds) {
   rows.forEach((row) => {
     const values = {
       work: row.workId, year: row.yearDisplay, title: row.title,
-      series: seriesCellText(row), storage: row.storage, medium: row.medium
+      series: seriesCellText(row), storage: row.storage, medium: row.medium, source: row.sourceImagePath
     };
     lines.push(columnIds.map((id) => tsvCell(values[id])).join("\t"));
   });

@@ -1,5 +1,6 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { mountDocsViewerPaginationControl } from "../management/docs-viewer-pagination-control.js";
 import {
   COLUMN_MODEL, COPY_COLUMN_IDS, PRESENTATION_COLUMNS,
   prepareCatalogueWorksRows, projectCatalogueWorks, serializeCatalogueWorksTsv
@@ -92,6 +93,7 @@ function appendRow(state, row) {
 
   appendTextCell(rowNode, "storage", row.storage === null ? "" : row.storage, "catalogueWorksReport__cellMeta");
   appendTextCell(rowNode, "medium", row.medium === null ? "" : row.medium, "catalogueWorksReport__cellMeta");
+  appendTextCell(rowNode, "source", row.sourceImagePath, "catalogueWorksReport__cellMeta");
   state.rowsNode.appendChild(rowNode);
 }
 
@@ -154,7 +156,8 @@ function renderCurrent(state) {
     state.statusNode.textContent = "0 of " + projection.totalCount + " Works";
   } else {
     const start = state.pageIndex * PAGE_SIZE;
-    projection.rows.slice(start, start + PAGE_SIZE).forEach((row) => appendRow(state, row));
+    const visibleRows = state.paginationEnabled ? projection.rows.slice(start, start + PAGE_SIZE) : projection.rows;
+    visibleRows.forEach((row) => appendRow(state, row));
     state.tableNode.hidden = false;
     state.emptyNode.hidden = true;
     state.emptyNode.textContent = "";
@@ -169,8 +172,10 @@ function updateControls(state) {
   const resultsUnavailable = state.busy || state.failed || state.searchTimer !== null;
   state.searchInputNode.disabled = state.busy || state.failed;
   state.copyButton.disabled = resultsUnavailable || !state.projection.rows.length;
+  state.paginationControl.button.disabled = resultsUnavailable;
+  state.paginationControl.update(state.paginationEnabled);
   const pageCount = Math.ceil(state.projection.rows.length / PAGE_SIZE);
-  state.paginationNode.hidden = pageCount <= 1;
+  state.paginationNode.hidden = !state.paginationEnabled || pageCount <= 1;
   state.previousPageButton.disabled = resultsUnavailable || state.pageIndex === 0;
   state.nextPageButton.disabled = resultsUnavailable || pageCount <= 1;
   const nextLabel = pageCount > 1 && state.pageIndex + 1 >= pageCount ? "First page" : "Next page";
@@ -257,6 +262,17 @@ function attachEvents(state) {
   state.previousPageButton.addEventListener("click", () => changePage(-1));
   state.nextPageButton.addEventListener("click", () => changePage(1));
   state.copyButton.addEventListener("click", () => copyCurrentTable(state));
+  state.paginationControl = mountDocsViewerPaginationControl({
+    host: state.toolbarNode,
+    enabled: state.paginationEnabled,
+    itemsLabel: "works",
+    change: (enabled) => {
+      if (state.released || state.busy || state.failed || state.searchTimer !== null) return;
+      state.paginationEnabled = enabled;
+      state.pageIndex = 0;
+      renderCurrent(state);
+    }
+  });
 }
 
 function renderShell(root) {
@@ -354,6 +370,8 @@ export function mountCatalogueWorksReport(context) {
     failed: false,
     released: false,
     pageIndex: 0,
+    paginationControl: null,
+    paginationEnabled: true,
     presentationListeners: new Set(),
     projection: { columns: COPY_COLUMN_IDS, rows: [] },
     searchText: "",
@@ -364,14 +382,19 @@ export function mountCatalogueWorksReport(context) {
   }, nodes);
   if (context.registerRetainedView) context.registerRetainedView({
     id: "catalogue-works",
-    capture: function () { return { query: state.searchText, key: state.sortKey, direction: state.sortDir, page: state.pageIndex }; },
+    capture: function () {
+      return { query: state.searchText, key: state.sortKey, direction: state.sortDir, page: state.pageIndex,
+        pagination: state.paginationEnabled };
+    },
     restore: function (saved) {
       if (state.released) return;
-      if (state.searchTimer === null && state.searchText === saved.query && state.sortKey === saved.key && state.sortDir === saved.direction && state.pageIndex === saved.page) return;
+      if (state.searchTimer === null && state.searchText === saved.query && state.sortKey === saved.key && state.sortDir === saved.direction
+        && state.pageIndex === saved.page && state.paginationEnabled === saved.pagination) return;
       clearTimeout(state.searchTimer); state.searchTimer = null;
       state.searchText = saved.query; state.sortKey = saved.key; state.sortDir = saved.direction;
       state.searchInputNode.value = saved.query;
       state.pageIndex = saved.page;
+      state.paginationEnabled = saved.pagination;
       if (state.busy || state.failed) return;
       state.projection = projectCatalogueWorks(state.sourceRows, state.projection, projectionSettings(state));
       renderCurrent(state);
