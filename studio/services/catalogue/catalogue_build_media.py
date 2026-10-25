@@ -209,7 +209,7 @@ def run_ffmpeg_thumb(src: Path, size: int, dest: Path) -> tuple[int, str]:
         "-map_metadata",
         "-1",
         "-vf",
-        f"scale='if(gt(iw,ih),-1,{size})':'if(gt(iw,ih),{size},-1)':flags=lanczos,crop={size}:{size}",
+        f"scale='if(gt(iw,ih),-1,{size})':'if(gt(iw,ih),{size},-1)':flags=lanczos,format=yuv420p|yuva420p,crop={size}:{size}",
         "-c:v",
         ENCODER_CODEC,
         "-preset",

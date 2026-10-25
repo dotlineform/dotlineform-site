@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-154730-b019e0
 title: Catalogue Media Pipeline Config
 added_date: "2026-03-31 15:47:30"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-25"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -62,6 +62,16 @@ python3 studio/services/media/make_srcset_images.py INPUT_DIR OUTPUT_DIR JOBS
 Omitting the directories uses the configured Work staging and output roots. `--dry-run` previews derivative writes and staged-source cleanup. Optional selected-ID and success-ID manifests plus the default worker count use names defined in `_data/pipeline.json`; run `--help` for the exact current argument and environment contract.
 
 The builder owns image decoding, scaling and cropping, encoding, variant filenames, parallel execution, and staged-source cleanup. It does not read or write canonical catalogue records, select publication scope, generate public JSON or search, copy final assets to R2, or advance canonical media versions. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns local completion/versioning; [Catalogue Deployment](Catalogue_Deployment.md) owns normal public distribution. [Publish Media To R2](Publish_Media_To_R2.md) describes the separate maintenance transport. Full JSON maintenance does not invoke this derivative builder.
+
+### Thumbnail Colour Conversion
+
+Work thumbnail generation explicitly selects `format=yuv420p|yuva420p` between Lanczos scaling and the square crop in both `catalogue_build_media.run_ffmpeg_thumb` and standalone `make_srcset_images.make_thumb`. The allowed list keeps opaque inputs in YUV420 and retains the alpha-capable YUVA420 format for transparent inputs. Supplying these lossy WebP formats avoids the automatic BGRA intermediate that introduced a green tint when the installed FFmpeg build reduced some JPEG inputs to the configured thumbnail size. This is an encoding choice owned by the two existing server conversion functions; the browser keeps its existing image selection and display responsibilities.
+
+The 2026-10-25 diagnosis used Work `02014`, an sRGB 3024×3024 JPEG decoded as full-range 4:2:2. The existing 96px thumbnail and a temporary reproduction had the same green cast; the larger saved primary was unaffected. Removing the crop retained the tint, and a BGRA PNG reproduction showed it before WebP encoding. Selecting YUV420 explicitly corrected the temporary thumbnail at the existing size and quality. Existing stored thumbnails require explicit image regeneration: confirm Choose image for each affected Work, Save and Refresh Catalogue; public distribution follows the normal separate workflow. No automatic corpus scan or regeneration is added.
+
+Implementation verification passed explicit-path Python lint for both changed converters, Python compilation and whitespace checks. Direct diagnostic calls to both production thumbnail functions converted the original `02014` image successfully into temporary files with the corrected colour. The final YUV420/YUVA420 allowed-list output matched each visually reviewed YUV420 result byte for byte. These seconds-long checks wrote only disposable thumbnails and ignored caches, without app Save, canonical/media persistence, Refresh or Publish. Tests and fixtures remain unchanged and unrun; other source formats, transparency and full application interaction remain manual evidence gaps.
+
+The distinct code and Redundancy And Defensive Behavior Review covered both conversion call paths, pixel-format negotiation before cropping, configured size/quality, alpha handling and existing FFmpeg failure propagation. Review caught the alpha loss caused by forcing only `yuv420p`; allowing `yuva420p` preserves the alpha-capable path while excluding BGRA. The correction adds no metadata inspection, validation, source scan, extra conversion pass, fallback, compatibility option or recovery behavior. Existing source-path confinement, subprocess argument arrays, temporary preparation and Save/Refresh completion keep their owners. Restart Local Studio before explicit image regeneration; no public runtime code projection is required.
 
 ## Retired Comparison Tool
 
