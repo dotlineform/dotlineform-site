@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-25T13:15:42Z",
     "gallery_id": "067"
   },
   "gallery": {
@@ -9,10 +9,6 @@
     "title": "found forms"
   },
   "member_works": [
-    {
-      "work_id": "00403",
-      "title": "found form (2017-06-29)"
-    },
     {
       "work_id": "00404",
       "title": "found form (2017-07-09)"
@@ -212,6 +208,10 @@
     {
       "work_id": "00453",
       "title": "found form 38"
+    },
+    {
+      "work_id": "05215",
+      "title": "found form (2017-06-29)"
     }
   ]
 }

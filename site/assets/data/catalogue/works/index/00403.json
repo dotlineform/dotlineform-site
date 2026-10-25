@@ -1,25 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d7ec14c7121cfd4cd69fe98d4de7c680",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-e93a63f96a7136434484d1db1b7e9cb8",
+    "generated_at_utc": "2026-10-25T13:17:56Z"
   },
   "work": {
     "work_id": "00403",
-    "title": "found form (2017-06-29)",
-    "year": 2017,
-    "year_display": "2017",
-    "medium": "digital c-type print",
-    "height_cm": 30.0,
-    "width_cm": 30.0,
-    "width_px": 3543,
-    "height_px": 3543,
+    "title": "saturday night",
+    "year": 2025,
+    "year_display": "2025",
+    "width_px": 7559,
+    "height_px": 5906,
+    "height_cm": 50,
+    "width_cm": 64,
+    "medium": "ink on paper",
     "media_version": 1,
-    "series_id": "067",
+    "series_id": "036",
     "galleries": [
       {
-        "gallery_id": "067",
-        "title": "found forms"
+        "gallery_id": "036",
+        "title": "curve poems"
       }
     ]
   }
