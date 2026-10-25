@@ -1,6 +1,7 @@
 /* Local-only Docs Viewer report implementations and controls. */
 
-.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__toolbar{
+.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__toolbar,
+.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__toolbar{
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 }
@@ -17,8 +18,13 @@
   justify-self: center;
 }
 
-.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__filter{
+.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__filter,
+.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__filter{
   border: 0;
+}
+
+.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__search{
+  min-width: 0;
 }
 
 .docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__title,
@@ -89,16 +95,6 @@
 .docsViewerReport[data-report-id="catalogue_medium"][aria-busy="true"],
 .docsViewerReport[data-report-id="catalogue_medium"][aria-busy="true"] *{
   cursor: progress;
-}
-
-.docsViewerReport__collectionSelect{
-  height: var(--docs-viewer-report-control-height);
-  padding: 0 0.4rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 6px;
-  background: var(--docs-viewer-panel);
-  color: var(--docs-viewer-text);
-  font: inherit;
 }
 
 .docsViewerReport__seriesWorksViewport{

@@ -80932,6 +80932,22 @@
       "medium": "digital c-type print",
       "width_px": 8268,
       "height_px": 8268
+    },
+    "05214": {
+      "work_id": "05214",
+      "series_id": "023",
+      "project_folder": "certainty",
+      "project_filename": "uncertainty.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "uncertainty",
+      "width_cm": 30,
+      "height_cm": 20,
+      "year": 2026,
+      "year_display": "2001-26",
+      "medium": "digital c-type print",
+      "width_px": 3544,
+      "height_px": 2363
     }
   }
 }

@@ -225,19 +225,37 @@ function renderResultStatus(state) {
 function renderCollectionFilter(state) {
   clearNode(state.collectionFilterNode);
   [{ collection: "*", title: "All" }, ...state.snapshot.owners].forEach((owner) => {
-    const option = document.createElement("option");
-    option.value = owner.collection;
-    option.textContent = owner.title;
-    state.collectionFilterNode.appendChild(option);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "docsViewerReport__filter";
+    button.dataset.docsMediaCollectionFilter = owner.collection;
+    const title = owner.collection === "" ? "Index" : owner.title;
+    button.title = title;
+    button.setAttribute("aria-label", owner.collection === "*" ? "Show all media" : `Show media in ${title}`);
+    if (owner.collection === "*") {
+      button.textContent = title;
+    } else {
+      const iconUrl = owner.collection
+        ? state.context.workspaceConfig.collectionsById.get(owner.collection).iconUrl
+        : new URL("../../../static/icons/dlf-doc.svg", import.meta.url).href;
+      const icon = document.createElement("span");
+      icon.className = "docsViewer__toolbarIcon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.style.maskImage = `url("${iconUrl}")`;
+      button.appendChild(icon);
+    }
+    state.collectionFilterNode.appendChild(button);
   });
-  state.collectionFilterNode.value = state.collectionFilter;
 }
 
 function updateControls(state) {
   state.runButton.disabled = state.busy;
   state.runButton.setAttribute("aria-busy", state.busy ? "true" : "false");
   state.searchInputNode.disabled = state.busy;
-  state.collectionFilterNode.disabled = state.busy || !state.snapshot;
+  state.collectionFilterNode.querySelectorAll("[data-docs-media-collection-filter]").forEach((button) => {
+    button.disabled = state.busy || !state.snapshot;
+    button.setAttribute("aria-pressed", String(button.dataset.docsMediaCollectionFilter === state.collectionFilter));
+  });
   state.headNode.querySelectorAll("[data-report-sort]").forEach((button) => {
     button.disabled = state.busy;
   });
@@ -318,8 +336,12 @@ function attachEvents(state) {
   state.runButton.addEventListener("click", () => {
     if (!state.busy) loadMedia(state, true);
   });
-  state.collectionFilterNode.addEventListener("change", () => {
-    state.collectionFilter = state.collectionFilterNode.value;
+  state.collectionFilterNode.addEventListener("click", (event) => {
+    const button = event.target instanceof Element
+      ? event.target.closest("[data-docs-media-collection-filter]")
+      : null;
+    if (!button || state.busy || !state.snapshot || button.dataset.docsMediaCollectionFilter === state.collectionFilter) return;
+    state.collectionFilter = button.dataset.docsMediaCollectionFilter;
     renderResultStatus(state);
     renderRows(state);
     updateControls(state);
@@ -361,11 +383,13 @@ function renderShell(root) {
   root.dataset.reportColumns = "5";
   root.innerHTML = [
     '<div class="docsViewerReport__toolbar">',
-    '  <button id="docsMediaReportRun" type="button" class="docsViewer__toolbarIconButton" aria-label="Refresh" title="Refresh"></button>',
-    '  <label class="docsViewerReport__selectLabel">Collection <select id="docsMediaReportCollection" class="docsViewerReport__collectionSelect"><option value="*">All</option></select></label>',
-    '  <span class="docsViewerReport__search">',
-    '    <input id="docsMediaReportSearch" class="docsViewerReport__searchInput" type="search" placeholder="Search" aria-label="Search Docs Media">',
-    "  </span>",
+    '  <div class="docsViewerReport__refreshGroup">',
+    '    <button id="docsMediaReportRun" type="button" class="docsViewer__toolbarIconButton" aria-label="Refresh" title="Refresh"></button>',
+    '    <span class="docsViewerReport__search">',
+    '      <input id="docsMediaReportSearch" class="docsViewerReport__searchInput" type="search" placeholder="Search" aria-label="Search Docs Media">',
+    "    </span>",
+    "  </div>",
+    '  <div id="docsMediaReportCollection" class="docsViewerReport__collectionFilters" role="group" aria-label="Filter media by collection"></div>',
     "</div>",
     '<p class="docsViewerReport__status"></p>',
     '<div class="docsViewerReport__table">',
@@ -411,7 +435,6 @@ export function mountDocsMediaReport(context) {
       const sortChanged = state.sortKey !== saved.key || state.sortDir !== saved.direction;
       state.searchText = saved.query; state.collectionFilter = saved.collection; state.sortKey = saved.key; state.sortDir = saved.direction;
       if (sortChanged) updateSort(state);
-      state.collectionFilterNode.value = saved.collection;
       state.searchInputNode.value = saved.query;
       if (!state.busy) renderResultStatus(state);
       renderRows(state); updateControls(state);

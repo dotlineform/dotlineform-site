@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-24"
+last_updated: "2026-10-25"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -225,7 +225,9 @@ The Projects report's Series column links each exact response-owned Series title
 
 The 2026-10-22 link change passed focused JavaScript lint and whitespace checks. Source/redundancy review confirmed both grouping projections reuse the same cells and shared URL safety owner, with no new reads, duplicate validation or route handler. Browser/new-tab confirmation remains manual; no tests were changed or run.
 
-`docs_media` is the local media-to-document inspection report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). Opening reads saved metadata; Run/Refresh explicitly regenerates it across ordinary and configured collection owners, excluding derived thumbnails. The browser owns joins, exact document links and sortable Collection, Type, File name and Documents columns, with a collection filter and immediate search. File names retain the confined Finder action. The report remains absent from public metadata and executable loaders. [Media And Asset Handling](Media_And_Asset_Handling.md#docs-media-inventory-report) owns the saved-data, freshness and storage boundary.
+`docs_media` is the local media-to-document inspection report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). Opening reads saved metadata; Run/Refresh explicitly regenerates it across ordinary and configured collection owners, excluding derived thumbnails. The browser owns joins, exact document links and sortable Collection, Type, File name and Documents columns, with immediate search and Links-style collection icon buttons for All, Index and the saved media owners. The icon group is horizontally centred in the toolbar, with Search immediately after Refresh on the left. Collection selection, search and sorting remain retained through Refresh and Back navigation. File names retain the confined Finder action. The report remains absent from public metadata and executable loaders. [Media And Asset Handling](Media_And_Asset_Handling.md#docs-media-inventory-report) owns the saved-data, freshness and storage boundary.
+
+The 2026-10-25 collection-control update passed focused JavaScript lint and whitespace checks. Code and redundancy review confirmed that the buttons reuse loaded media owners and configured icons, preserve the existing prepared-row filtering and retained state, and add no server requests, validation, fallback or recovery paths. Obsolete dropdown styling and value assignments were removed. Visual and interaction confirmation remains manual; tests were unchanged and unrun.
 
 `work_downloads`, hosted by [Work Downloads](/docs/?doc=d-20261004-202223-1e2205), complements Docs Media with Catalogue attachment coverage. Opening and Run/Refresh resolve workspace configuration once, read the saved Catalogue `private/work-resources.json` and scan direct regular files in the configured Docs workspace `assets.work_files` family live. The service supplies only Works with download references and a filename inventory; the browser matches exact stored filenames, including legacy names, without inferring ownership from Work ID prefixes. Save stages new attachments; Catalogue Refresh advances both their references and Working files before the report adopts them. `.DS_Store` and `.gitkeep` placeholders are ignored, directories are not traversed, and unavailable storage, unreadable JSON, unsafe file identities or symlinks fail visibly. No report snapshot is saved.
 
