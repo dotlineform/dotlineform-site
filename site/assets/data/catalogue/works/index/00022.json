@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-c5e4b0015ee3fb708612590a557add32",
-    "generated_at_utc": "2026-10-24T22:12:22Z"
+    "version": "blake2b-4b236fe2f8f94a8b4d8f5226fa40f083",
+    "generated_at_utc": "2026-10-26T17:20:46Z"
   },
   "work": {
     "work_id": "00022",
     "title": "collage 1",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "magazine collage",
     "media_version": 1,
     "series_id": "167",
     "galleries": [

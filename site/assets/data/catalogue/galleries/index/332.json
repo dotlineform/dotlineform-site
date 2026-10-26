@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-25T20:56:16Z",
+    "generated_at_utc": "2026-10-26T18:42:59Z",
     "gallery_id": "332"
   },
   "gallery": {
@@ -9,18 +9,6 @@
     "title": "Michelle Pfeiffer"
   },
   "member_works": [
-    {
-      "work_id": "00046",
-      "title": "ink legs"
-    },
-    {
-      "work_id": "00102",
-      "title": "ink (front)"
-    },
-    {
-      "work_id": "00103",
-      "title": "ink (back)"
-    },
     {
       "work_id": "00159",
       "title": "Michelle Pfeiffer"

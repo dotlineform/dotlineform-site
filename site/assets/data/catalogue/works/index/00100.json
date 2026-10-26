@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-d85df6d7205f8e86b7a2f23c28e044af",
-    "generated_at_utc": "2026-10-24T21:53:00Z"
+    "version": "blake2b-127e676c525183198978deec86cd2fb3",
+    "generated_at_utc": "2026-10-26T18:16:42Z"
   },
   "work": {
     "work_id": "00100",
     "title": "preparation for dissection",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1992,
+    "year_display": "1992",
     "width_px": 6958,
     "height_px": 4920,
     "height_cm": 21,
     "width_cm": 29.7,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "171",
     "galleries": [

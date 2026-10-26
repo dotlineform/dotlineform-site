@@ -1,9 +1,9 @@
 {
   "doc_id": "04620",
-  "title": "pond - detail 1 test B",
+  "title": "pond - detail 1",
   "added_date": "2026-09-23 10:11:54",
-  "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>pond - detail 1 test B</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04620\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3000 / 3000;\" data-docs-media-open aria-label=\"Open pond - detail 1 test B\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04620-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04620-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04620-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04620-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"pond - detail 1 test B\" width=\"3000\" height=\"3000\" decoding=\"async\"><span data-docs-media-placeholder hidden>pond - detail 1 test B</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2023<br>digital c-type print<br><br>cat. 04620</p></div></article></div>\n",
+  "last_updated": "2026-10-26 17:59:47",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>pond - detail 1</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04620\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3000 / 3000;\" data-docs-media-open aria-label=\"Open pond - detail 1\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04620-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04620-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04620-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04620-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"pond - detail 1\" width=\"3000\" height=\"3000\" decoding=\"async\"><span data-docs-media-placeholder hidden>pond - detail 1</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2023<br>digital c-type print<br><br>cat. 04620</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -24,7 +24,7 @@
           "kind": "catalogue-work",
           "id": "04620"
         },
-        "label": "pond - detail 1 test B",
+        "label": "pond - detail 1",
         "image": {
           "src": "https://media.dotlineform.com/works/img/04620-primary-800.webp?v=1",
           "candidates": [
@@ -41,7 +41,7 @@
               "width_px": 1600
             }
           ],
-          "alt": "pond - detail 1 test B",
+          "alt": "pond - detail 1",
           "width_px": 3000,
           "height_px": 3000
         },

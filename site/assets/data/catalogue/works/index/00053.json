@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-fc4d4b15cb81690349dbb8e23425d66b",
-    "generated_at_utc": "2026-10-24T21:31:49Z"
+    "version": "blake2b-ef547979ef01a323c78112e5bec05d5e",
+    "generated_at_utc": "2026-10-26T18:12:52Z"
   },
   "work": {
     "work_id": "00053",
     "title": "internal organs of doll",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 2004,
+    "year_display": "2004",
     "width_px": 7016,
     "height_px": 4961,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "170",
     "galleries": [

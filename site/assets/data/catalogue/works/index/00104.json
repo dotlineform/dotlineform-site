@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-b11ef074af02b14e7a0fffb4393bf2f2",
-    "generated_at_utc": "2026-10-26T14:57:46Z"
+    "version": "blake2b-bd818d6622d2cb6f594acabfe6dec44d",
+    "generated_at_utc": "2026-10-26T18:42:59Z"
   },
   "work": {
     "work_id": "00104",
     "title": "healing symbol",
-    "year": 1993,
-    "year_display": "1993",
+    "year": 1989,
+    "year_display": "1989",
     "width_px": 4961,
     "height_px": 7015,
     "height_cm": 29.7,

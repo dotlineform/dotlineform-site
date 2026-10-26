@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-639c6f20566caa8bd0afbb9f4558c7d7",
-    "generated_at_utc": "2026-10-24T21:53:00Z"
+    "version": "blake2b-971b19a10cc107d54d61dac0a096fccc",
+    "generated_at_utc": "2026-10-26T18:16:42Z"
   },
   "work": {
     "work_id": "00054",
     "title": "preparation for mannequin",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1991,
+    "year_display": "1991",
     "width_px": 4919,
     "height_px": 6957,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "171",
     "galleries": [

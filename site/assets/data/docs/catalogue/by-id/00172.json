@@ -3,7 +3,7 @@
   "title": "orange mesh",
   "added_date": "2026-09-17 21:55:29",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>orange mesh</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00172\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2436 / 3490;\" data-docs-media-open aria-label=\"Open orange mesh\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00172-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00172-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00172-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00172-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"orange mesh\" width=\"2436\" height=\"3490\" decoding=\"async\"><span data-docs-media-placeholder hidden>orange mesh</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>photocopy<br>29.7 × 21 cm<br><br>cat. 00172</p></div></article></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>orange mesh</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00172\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2436 / 3490;\" data-docs-media-open aria-label=\"Open orange mesh\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00172-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00172-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00172-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00172-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"orange mesh\" width=\"2436\" height=\"3490\" decoding=\"async\"><span data-docs-media-placeholder hidden>orange mesh</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1993<br>photocopy<br>29.7 × 21 cm<br><br>cat. 00172</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -58,7 +58,7 @@
         ],
         "entry": {
           "metadata_lines": [
-            "c. 1989-98",
+            "1993",
             "photocopy",
             "29.7 × 21 cm",
             "",

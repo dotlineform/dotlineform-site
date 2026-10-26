@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-20d4f6a3617d19d0060bdf4d530b0c6b",
-    "generated_at_utc": "2026-10-24T21:35:12Z"
+    "version": "blake2b-5acf1c925983af9a0a293b0310f5fec2",
+    "generated_at_utc": "2026-10-26T17:20:46Z"
   },
   "work": {
     "work_id": "00091",
     "title": "dissection",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1992,
+    "year_display": "1992",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "171",
     "galleries": [

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e898b815bd73333db3047f7aa71928f8",
-    "generated_at_utc": "2026-10-26T14:51:08Z"
+    "version": "blake2b-77e5c6a64a10c13a15abd50f65e5a83a",
+    "generated_at_utc": "2026-10-26T17:59:45Z"
   },
   "work": {
     "work_id": "00106",
@@ -15,11 +15,11 @@
     "width_cm": 21,
     "medium": "pen on paper",
     "media_version": 1,
-    "series_id": "173",
+    "series_id": "164",
     "galleries": [
       {
-        "gallery_id": "351",
-        "title": "forms ink and water"
+        "gallery_id": "342",
+        "title": "body forms"
       }
     ]
   }

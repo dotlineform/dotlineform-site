@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-4edc0b53fadd6ef12572cdea7467d8fd",
-    "generated_at_utc": "2026-10-24T22:16:07Z"
+    "version": "blake2b-3e309f5f2409d0e249b9912da2b835e1",
+    "generated_at_utc": "2026-10-26T17:24:44Z"
   },
   "work": {
     "work_id": "00173",
     "title": "orange mesh compact",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 2442,
     "height_px": 3461,
     "height_cm": 29.7,

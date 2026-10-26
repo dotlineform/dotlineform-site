@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-25T21:20:59Z"
+    "generated_at_utc": "2026-10-26T18:42:59Z"
   },
   "series_galleries": {
     "001": [
@@ -1100,6 +1100,12 @@
         "title": "untitled drawings"
       }
     ],
-    "184": []
+    "184": [],
+    "185": [
+      {
+        "gallery_id": "361",
+        "title": "ink"
+      }
+    ]
   }
 }

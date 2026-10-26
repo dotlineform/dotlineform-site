@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-25T21:20:59Z"
+    "generated_at_utc": "2026-10-26T18:42:59Z"
   },
   "galleries": {
     "001": {
@@ -767,6 +767,10 @@
     "360": {
       "gallery_id": "360",
       "title": "mandala form"
+    },
+    "361": {
+      "gallery_id": "361",
+      "title": "ink"
     }
   }
 }

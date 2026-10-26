@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-f2f7cbacc4074bf5a9bf91e406e4106d",
-    "generated_at_utc": "2026-10-26T15:16:09Z"
+    "version": "blake2b-1a5d8d09cee85743f5ebd184ae20419f",
+    "generated_at_utc": "2026-10-26T18:42:59Z"
   },
   "work": {
     "work_id": "00105",
     "title": "symbol frame",
-    "year": 1993,
-    "year_display": "1993",
+    "year": 1989,
+    "year_display": "1989",
     "width_px": 4961,
     "height_px": 7015,
     "height_cm": 29.7,

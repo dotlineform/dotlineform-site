@@ -35,6 +35,7 @@ export function renderWorkMediumField(field, fieldsNode, state, options) {
   fieldsNode.appendChild(wrapper);
   state.fieldNodes.set(field.key, input);
   state.fieldStatusNodes.set(field.key, message);
+  input.addEventListener("click", () => input.select());
   const notifyInput = () => options.onFieldInput(field.key);
   input.addEventListener("input", notifyInput);
   input.addEventListener("change", notifyInput);

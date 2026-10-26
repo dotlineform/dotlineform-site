@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T16:06:20Z",
+    "generated_at_utc": "2026-10-26T17:59:45Z",
     "gallery_id": "142"
   },
   "gallery": {
@@ -55,7 +55,7 @@
     },
     {
       "work_id": "04620",
-      "title": "pond - detail 1 test B"
+      "title": "pond - detail 1"
     },
     {
       "work_id": "04621",

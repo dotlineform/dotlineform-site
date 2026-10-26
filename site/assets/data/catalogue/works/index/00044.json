@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-07452112c867580a330c02fa6c903178",
-    "generated_at_utc": "2026-10-24T21:38:34Z"
+    "version": "blake2b-cd05d7e9c67b57cf0cec70431b695353",
+    "generated_at_utc": "2026-10-26T17:43:22Z"
   },
   "work": {
     "work_id": "00044",
     "title": "form symbol (superimposed) 2",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,

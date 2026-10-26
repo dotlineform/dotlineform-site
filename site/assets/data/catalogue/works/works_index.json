@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-25T21:20:59Z"
+    "generated_at_utc": "2026-10-26T17:59:45Z"
   },
   "works": {
     "00001": {
@@ -18282,7 +18282,7 @@
     },
     "04620": {
       "work_id": "04620",
-      "title": "pond - detail 1 test B"
+      "title": "pond - detail 1"
     },
     "04621": {
       "work_id": "04621",
