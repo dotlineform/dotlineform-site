@@ -411,7 +411,19 @@ function renderSeriesField(field, fieldsNode, state, options) {
   searchWrap.appendChild(searchInput);
   mountSearchField(searchInput);
   searchWrap.appendChild(popupNode);
-  pickerNode.append(searchWrap);
+  const browseButton = document.createElement("button");
+  browseButton.type = "button";
+  browseButton.className = "studioUi__iconButton";
+  browseButton.title = "Show Series in left panel";
+  browseButton.setAttribute("aria-label", browseButton.title);
+  browseButton.setAttribute("aria-controls", "catalogueWorkSeriesBrowseMembers");
+  browseButton.disabled = true;
+  browseButton.append(createStudioIcon(document, "list"));
+  browseButton.addEventListener("click", () => options.onBrowseSeries(state.draft.series_id));
+  const searchRow = document.createElement("div");
+  searchRow.className = "catalogueWorkSeriesPicker__searchRow";
+  searchRow.append(searchWrap, browseButton);
+  pickerNode.append(searchRow);
 
   wrapper.appendChild(pickerNode);
 
@@ -451,7 +463,7 @@ function renderSeriesField(field, fieldsNode, state, options) {
     if (event.button === 0 && event.target.closest("[data-search-list-index]")) event.preventDefault();
   });
   fieldsNode.appendChild(wrapper);
-  state.seriesPicker = { wrapper, pickerNode, searchWrap, searchInput, popupNode, hiddenInput, searchController };
+  state.seriesPicker = { wrapper, pickerNode, searchWrap, searchInput, popupNode, hiddenInput, searchController, browseButton };
   state.fieldNodes.set(field.key, hiddenInput);
   state.fieldStatusNodes.set(field.key, message);
   renderSeriesPicker(state);
@@ -571,6 +583,7 @@ export function setModeFieldAvailability(state) {
     state.seriesPicker.pickerNode.hidden = false;
     state.seriesPicker.searchWrap.hidden = false;
     state.seriesPicker.searchInput.disabled = busy || !state.serverAvailable;
+    state.seriesPicker.browseButton.disabled = state.seriesPicker.searchInput.disabled || !state.draft.series_id;
     if (state.seriesPicker.searchInput.disabled) {
       renderSeriesPicker(state);
     }

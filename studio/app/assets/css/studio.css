@@ -678,6 +678,7 @@ span.studioUi__input--readonlyDisplay {
 .studioUi__icon--folder-open { mask-image: url("/docs-viewer/static/icons/folder-open.svg"); }
 .studioUi__icon--paperclip { mask-image: url("/docs-viewer/static/icons/paperclip.svg"); }
 .studioUi__icon--link { mask-image: url("/docs-viewer/static/icons/link.svg"); }
+.studioUi__icon--list { mask-image: url("/docs-viewer/static/icons/list.svg"); }
 
 .studioUi__popup {
   position: relative;

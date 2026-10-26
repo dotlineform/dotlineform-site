@@ -352,6 +352,7 @@ function workDefinitionOptions(state) {
 function workFormOptions(state) {
   return {
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
+    onBrowseSeries: seriesId => state.seriesBrowser.selectSeries(seriesId),
     onEditDefinition: (kind, id, restoreFocus) => editWorkDefinition(state, {
       ...workDefinitionOptions(state), kind, id, restoreFocus
     }),
