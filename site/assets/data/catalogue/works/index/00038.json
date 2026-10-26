@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-128fcf304cd2296fd403f486a5212822",
-    "generated_at_utc": "2026-10-24T22:12:22Z"
+    "version": "blake2b-6c8b165a3146f3cd29ddadd562332538",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "00038",
     "title": "nude frame 10 (surface)",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,

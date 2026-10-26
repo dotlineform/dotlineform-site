@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-2b75c76b039f9d9176e9378db4ccff03",
-    "generated_at_utc": "2026-10-24T21:35:12Z"
+    "version": "blake2b-0b7bcf40e85f9735429dec58d4eeff0d",
+    "generated_at_utc": "2026-10-26T14:51:08Z"
   },
   "work": {
     "work_id": "00096",
     "title": "dissection (prepared body 1)",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1991,
+    "year_display": "1991",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,

@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-5644474b9aa91928ac91e7814e98c16c",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-57f6c101d1e9364b7fc0ef46a461c08d",
+    "generated_at_utc": "2026-10-26T14:52:19Z"
   },
   "work": {
     "work_id": "01235",
     "title": "fragment 34",
     "year": 1990,
     "year_display": "1990",
-    "medium": "digital c-type print",
-    "height_cm": 30.0,
-    "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 3543,
+    "height_cm": 30,
+    "width_cm": 30,
+    "medium": "mixed media on paper",
     "media_version": 1,
     "series_id": "068",
     "galleries": [

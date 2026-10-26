@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-2129506fc5f7fe6e84b0b2e012deecf1",
-    "generated_at_utc": "2026-10-24T22:12:22Z"
+    "version": "blake2b-d657c4a10a1ed71ea8b32a51c2bf5ac4",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "00071",
     "title": "nude frame 6",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 7016,
     "height_px": 4961,
     "height_cm": 21,

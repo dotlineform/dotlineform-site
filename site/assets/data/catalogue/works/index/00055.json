@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-99684b59b1b02dbf952efd4ff58d5fa2",
-    "generated_at_utc": "2026-10-24T22:04:59Z"
+    "version": "blake2b-5ccf089395dc8c0250d84410f6f9e0f4",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "00055",
     "title": "mannequin (legs)",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1991,
+    "year_display": "1991",
     "width_px": 5376,
     "height_px": 7280,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "171",
     "galleries": [

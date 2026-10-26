@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-4c95cf400aaf815d89b3274785e153ae",
-    "generated_at_utc": "2026-10-24T22:12:22Z"
+    "version": "blake2b-beb554a0c7e021c6900e9dbe4c06530f",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "00066",
     "title": "nude frame 1",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,

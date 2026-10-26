@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-2c129c66ed6543fadbdf3fa0a5f5fada",
-    "generated_at_utc": "2026-10-24T22:01:35Z"
+    "version": "blake2b-df579ceb21d08927963815161abefe96",
+    "generated_at_utc": "2026-10-26T14:45:29Z"
   },
   "work": {
     "work_id": "00112",
     "title": "life",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "ink on paper",
     "media_version": 1,
     "series_id": "178",
     "galleries": [

@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-a53194b83472729892b345ef165e065e",
-    "generated_at_utc": "2026-10-24T21:29:15Z"
+    "version": "blake2b-f24cf1427816ae1ea857c759aa175c78",
+    "generated_at_utc": "2026-10-26T15:16:09Z"
   },
   "work": {
     "work_id": "00051",
     "title": "perspective 2",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1992,
+    "year_display": "1992",
     "width_px": 7015,
     "height_px": 4961,
     "height_cm": 21,
     "width_cm": 29.7,
-    "medium": "photocopy",
+    "medium": "mixed media",
     "media_version": 1,
     "series_id": "169",
     "galleries": [

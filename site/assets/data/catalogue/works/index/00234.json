@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-af989aaf4db21919ff531799b36217d2",
-    "generated_at_utc": "2026-10-25T21:20:59Z"
+    "version": "blake2b-7fcc0f84a9f37b23c8c5827d1101685c",
+    "generated_at_utc": "2026-10-26T15:16:09Z"
   },
   "work": {
     "work_id": "00234",
     "title": "untitled [00234]",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 2000,
+    "year_display": "2000",
     "width_px": 2480,
     "height_px": 3508,
     "height_cm": 29.7,

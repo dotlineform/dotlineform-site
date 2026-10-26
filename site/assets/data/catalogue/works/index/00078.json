@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e30752879318afbfcb3efbd174e0a6a7",
-    "generated_at_utc": "2026-10-24T20:51:03Z"
+    "version": "blake2b-56b447728f246b518626bf1f5b36ccbb",
+    "generated_at_utc": "2026-10-26T14:32:53Z"
   },
   "work": {
     "work_id": "00078",
     "title": "body forms 5",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1991,
+    "year_display": "1991",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,

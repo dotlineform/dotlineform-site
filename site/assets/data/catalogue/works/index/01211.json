@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-6d0b92e8bbc854c112f5ce844a1655cf",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-ea805bb07448a60bff0a38c5af4ef06b",
+    "generated_at_utc": "2026-10-26T14:52:19Z"
   },
   "work": {
     "work_id": "01211",
     "title": "fragment 10",
     "year": 1990,
     "year_display": "1990",
-    "medium": "digital c-type print",
-    "height_cm": 30.0,
-    "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 3543,
+    "height_cm": 30,
+    "width_cm": 30,
+    "medium": "mixed media on paper",
     "media_version": 1,
     "series_id": "068",
     "galleries": [

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-6fe447c3d612d750bfc8c949219a5571",
-    "generated_at_utc": "2026-10-24T22:12:22Z"
+    "version": "blake2b-03f9dba2402c5bd720982a9923ca063d",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "00072",
     "title": "nude frame 7",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7015,
     "height_cm": 29.7,

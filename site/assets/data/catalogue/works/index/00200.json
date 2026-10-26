@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-14467f3298c3a2aeefecd69faf4126fc",
-    "generated_at_utc": "2026-10-24T21:01:40Z"
+    "version": "blake2b-d0486ab599639728577475e93af5ebc1",
+    "generated_at_utc": "2026-10-26T14:40:03Z"
   },
   "work": {
     "work_id": "00200",
@@ -13,7 +13,7 @@
     "height_px": 3436,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pencil on paper",
     "media_version": 1,
     "series_id": "022",
     "galleries": [

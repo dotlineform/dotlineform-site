@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-c4a2df401cbf5a807bd6d91df05e45e7",
-    "generated_at_utc": "2026-10-24T22:12:22Z"
+    "version": "blake2b-23e9484f35ac960f1ff2e40f819cc5f9",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "00073",
     "title": "nude frame 8 (internal frame)",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7015,
     "height_cm": 29.7,

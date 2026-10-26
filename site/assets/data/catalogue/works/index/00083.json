@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-4647c1488196db81e7a62c7d283f13d9",
-    "generated_at_utc": "2026-10-24T20:54:48Z"
+    "version": "blake2b-d10f5f5e31822ff4bd30d6a21174e3a2",
+    "generated_at_utc": "2026-10-26T14:35:44Z"
   },
   "work": {
     "work_id": "00083",
     "title": "body series dissected 2",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1991,
+    "year_display": "1991",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "165",
     "galleries": [

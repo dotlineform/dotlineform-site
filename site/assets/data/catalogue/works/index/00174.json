@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-6b48195d8aa95795961d62168b82adc6",
-    "generated_at_utc": "2026-10-24T20:40:44Z"
+    "version": "blake2b-9eb1854a9f54562ac12ac6297805e713",
+    "generated_at_utc": "2026-10-26T14:32:53Z"
   },
   "work": {
     "work_id": "00174",
     "title": "all chemical 1",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1994,
+    "year_display": "1994",
     "width_px": 2362,
     "height_px": 3189,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "digital print",
     "media_version": 1,
     "series_id": "162",
     "galleries": [

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-e968b09f8ceaee42b79d59241c39f33e",
-    "generated_at_utc": "2026-10-24T20:51:03Z"
+    "version": "blake2b-bd8568a6229dbdca2ac8d60aaf648473",
+    "generated_at_utc": "2026-10-26T14:32:53Z"
   },
   "work": {
     "work_id": "00081",
     "title": "body forms 8",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1991,
+    "year_display": "1991",
     "width_px": 4961,
     "height_px": 7015,
     "height_cm": 29.7,

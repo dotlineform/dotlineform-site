@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-09d90d0bde3c7eb3e324c015cda1bca0",
-    "generated_at_utc": "2026-10-24T20:56:48Z"
+    "version": "blake2b-b8f50292e6a20baa29570528e159f504",
+    "generated_at_utc": "2026-10-26T14:32:53Z"
   },
   "work": {
     "work_id": "00179",
     "title": "body cast 1",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1998,
+    "year_display": "1998",
     "width_px": 2312,
     "height_px": 2948,
     "height_cm": 25,

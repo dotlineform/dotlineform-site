@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-f733031dbedfac972544b05741ab3786",
-    "generated_at_utc": "2026-10-24T20:51:03Z"
+    "version": "blake2b-bcccd8e0356a176b3d4e5bac885420f9",
+    "generated_at_utc": "2026-10-26T14:32:53Z"
   },
   "work": {
     "work_id": "00077",
     "title": "body forms 4",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1991,
+    "year_display": "1991",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,

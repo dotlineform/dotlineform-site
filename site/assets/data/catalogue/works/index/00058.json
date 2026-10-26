@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-0c8d15fca00cbf8474ea768966c19bb7",
-    "generated_at_utc": "2026-10-24T21:46:15Z"
+    "version": "blake2b-c7862c619f98d7649a5c2b5d06fedb5d",
+    "generated_at_utc": "2026-10-26T15:02:15Z"
   },
   "work": {
     "work_id": "00058",
     "title": "joining forms 2",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "175",
     "galleries": [

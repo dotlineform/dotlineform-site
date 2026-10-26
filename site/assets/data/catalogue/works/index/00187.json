@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-1d3935df62258780a19583c8dbc43fb3",
-    "generated_at_utc": "2026-10-24T21:11:14Z"
+    "version": "blake2b-237f4904f03ccb7fd83ad126157b456c",
+    "generated_at_utc": "2026-10-26T14:41:54Z"
   },
   "work": {
     "work_id": "00187",
     "title": "cell 3",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 1856,
     "height_px": 3040,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "166",
     "galleries": [

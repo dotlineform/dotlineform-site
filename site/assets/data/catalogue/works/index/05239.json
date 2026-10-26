@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-30ac0a12c98e7b62e72f3c9239486199",
-    "generated_at_utc": "2026-10-25T20:31:28Z"
+    "version": "blake2b-29a8d10355ffd7f614aee86243c1f81f",
+    "generated_at_utc": "2026-10-26T14:58:53Z"
   },
   "work": {
     "work_id": "05239",
     "title": "dissection (flower)",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1991,
+    "year_display": "1991",
     "width_px": 2362,
     "height_px": 3543,
     "height_cm": 30,

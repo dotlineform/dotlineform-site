@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-49e64e05154cf53de8bd4161fe11389a",
-    "generated_at_utc": "2026-10-24T21:51:06Z"
+    "version": "blake2b-0a70657e41f1a7ba4cc306fd3b702515",
+    "generated_at_utc": "2026-10-26T14:54:17Z"
   },
   "work": {
     "work_id": "00006",
     "title": "gesture in grey 1",
     "year": 1989,
-    "year_display": "c. 1989-98",
+    "year_display": "1989",
     "width_px": 4129,
     "height_px": 3071,
     "height_cm": 12.7,

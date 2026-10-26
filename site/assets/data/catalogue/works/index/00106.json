@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-50c29e2a8c65e9c21f946b199fbdb4f5",
-    "generated_at_utc": "2026-10-24T21:41:32Z"
+    "version": "blake2b-e898b815bd73333db3047f7aa71928f8",
+    "generated_at_utc": "2026-10-26T14:51:08Z"
   },
   "work": {
     "work_id": "00106",
     "title": "form 1",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "173",
     "galleries": [

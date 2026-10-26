@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-69c4c32b883754887bb90c8da3a1d126",
-    "generated_at_utc": "2026-10-24T22:12:22Z"
+    "version": "blake2b-ddc68ff7302dbb8f409152ead312e9b1",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "00194",
     "title": "nude frame c",
-    "year": 1992,
-    "year_display": "1992",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 2380,
     "height_px": 3396,
     "height_cm": 29.7,

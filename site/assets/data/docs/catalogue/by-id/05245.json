@@ -3,7 +3,7 @@
   "title": "Michelle Pfeiffer eye",
   "added_date": "2026-10-25 20:56:30",
   "last_updated": "2026-10-25 20:56:30",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>Michelle Pfeiffer eye</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05245\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3345 / 4777;\" data-docs-media-open aria-label=\"Open Michelle Pfeiffer eye\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05245-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05245-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05245-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05245-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"Michelle Pfeiffer eye\" width=\"3345\" height=\"4777\" decoding=\"async\"><span data-docs-media-placeholder hidden>Michelle Pfeiffer eye</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1992?<br>ink on photocopy<br>40.4 × 28.3 cm<br><br>cat. 05245</p></div></article></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>Michelle Pfeiffer eye</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05245\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3345 / 4777;\" data-docs-media-open aria-label=\"Open Michelle Pfeiffer eye\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05245-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05245-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05245-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05245-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"Michelle Pfeiffer eye\" width=\"3345\" height=\"4777\" decoding=\"async\"><span data-docs-media-placeholder hidden>Michelle Pfeiffer eye</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1990<br>ink on photocopy<br>40.4 × 28.3 cm<br><br>cat. 05245</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -58,7 +58,7 @@
         ],
         "entry": {
           "metadata_lines": [
-            "c. 1992?",
+            "1990",
             "ink on photocopy",
             "40.4 × 28.3 cm",
             "",

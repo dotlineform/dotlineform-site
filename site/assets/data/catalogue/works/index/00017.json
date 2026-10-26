@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-ad7a2e4188b1151e3e23a3fc052b6fd0",
-    "generated_at_utc": "2026-10-24T21:41:32Z"
+    "version": "blake2b-6f469646988c961694b18c8b5a41516c",
+    "generated_at_utc": "2026-10-26T14:51:08Z"
   },
   "work": {
     "work_id": "00017",
@@ -13,7 +13,7 @@
     "height_px": 7016,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "ink on paper",
     "media_version": 1,
     "series_id": "173",
     "galleries": [

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-09f6ad1a69e578224630d7beae2d36e6",
-    "generated_at_utc": "2026-10-25T20:56:16Z"
+    "version": "blake2b-0b3c7e20aab7e9ef5174234a3855ae04",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "05245",
     "title": "Michelle Pfeiffer eye",
-    "year": 1992,
-    "year_display": "c. 1992?",
+    "year": 1990,
+    "year_display": "1990",
     "width_px": 3345,
     "height_px": 4777,
     "height_cm": 40.4,

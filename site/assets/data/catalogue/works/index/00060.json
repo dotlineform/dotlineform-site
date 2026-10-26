@@ -1,19 +1,19 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-cb5fef115086bfc7c48170038d4c53ad",
-    "generated_at_utc": "2026-10-24T22:23:41Z"
+    "version": "blake2b-944e650851a439c9e9ab0dd6024d031f",
+    "generated_at_utc": "2026-10-26T15:09:57Z"
   },
   "work": {
     "work_id": "00060",
     "title": "mesh forms 1",
-    "year": 1989,
-    "year_display": "c. 1989-98",
+    "year": 1993,
+    "year_display": "1993",
     "width_px": 4961,
     "height_px": 7016,
     "height_cm": 29.7,
     "width_cm": 21,
-    "medium": "photocopy",
+    "medium": "pen on paper",
     "media_version": 1,
     "series_id": "180",
     "galleries": [
