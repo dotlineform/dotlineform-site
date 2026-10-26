@@ -10,6 +10,7 @@ import {
 } from "/shared/frontend/js/search-list.js";
 
 const SEARCH_LIMIT = 20;
+const workTitleCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -26,6 +27,11 @@ function normalizeSearchText(value) {
 
 function workSearchOptions(state) {
   return Array.from(state.workSearchById.entries()).map(([workId, record]) => ({ workId, record }));
+}
+
+function compareWorkSearchTitles(a, b) {
+  return workTitleCollator.compare(a.record.title, b.record.title)
+    || workTitleCollator.compare(a.workId, b.workId);
 }
 
 function singleWorkId(value) {
@@ -61,7 +67,7 @@ export function getWorkSearchMatches(state, rawQuery) {
       matches.push({ workId, record });
     }
   }
-  matches.sort((a, b) => a.workId.localeCompare(b.workId, undefined, { numeric: true, sensitivity: "base" }));
+  matches.sort(compareWorkSearchTitles);
   return matches.slice(0, SEARCH_LIMIT);
 }
 
@@ -157,7 +163,7 @@ export function bindWorkSelectionControls(state, context) {
       const matches = options.filter(({ workId, record }) => (
         hasLetters ? titleMatches(record, query) : workIdPrefixMatches(workId, query)
       ));
-      return matches.sort((a, b) => a.workId.localeCompare(b.workId, undefined, { numeric: true, sensitivity: "base" }));
+      return matches.sort(compareWorkSearchTitles);
     },
     getOptionValue: (option) => option.workId,
     renderOption: ({ workId, record }) => `
