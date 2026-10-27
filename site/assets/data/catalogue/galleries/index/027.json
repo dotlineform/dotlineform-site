@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-24T13:31:07Z",
+    "generated_at_utc": "2026-10-27T18:43:10Z",
     "gallery_id": "027"
   },
   "gallery": {
@@ -224,10 +224,6 @@
     {
       "work_id": "00282",
       "title": "untitled [282]"
-    },
-    {
-      "work_id": "00283",
-      "title": "untitled [283]"
     },
     {
       "work_id": "00284",

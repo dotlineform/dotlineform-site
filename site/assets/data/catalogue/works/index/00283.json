@@ -1,26 +1,21 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-dd9f7427858535b3e128614d67ca76df",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-240ac9878867f8f8359a80ae87cae3c5",
+    "generated_at_utc": "2026-10-27T18:43:10Z"
   },
   "work": {
     "work_id": "00283",
     "title": "untitled [283]",
     "year": 1998,
     "year_display": "c. 1998",
-    "medium": "laserjet print",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 2480,
     "height_px": 3508,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "laserjet print",
     "media_version": 1,
-    "series_id": "027",
-    "galleries": [
-      {
-        "gallery_id": "027",
-        "title": "collected digital c. 1998"
-      }
-    ]
+    "series_id": "184",
+    "galleries": []
   }
 }
