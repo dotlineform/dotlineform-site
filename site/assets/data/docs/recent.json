@@ -1,8 +1,112 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-28T09:55:19Z",
+  "generated_at": "2026-10-28T13:06:27Z",
   "docs": [
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-113959-7459a8",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Field (Physics)",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-115808-756e62",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Field as Collective Memory (Sheldrake)",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-120632-a22f31",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Five Grand Challenges of Memory",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-121000-5d3475",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Forgetting — Lost vs Inaccessible",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-122252-edeac1",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Free Energy Principle (Bayesian thinking)",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261027-171009-d5bac8",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Free Energy Principle (FEP)",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-121736-67f1ea",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Free Energy Principle (FEP) - Perception–action loop",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-123246-8fd28b",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Freedom and Collapse",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-125413-aca68d",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Frequency Origins",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-125921-12ce13",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Future memories",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-130039-134421",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Future Memories — Anticipation, Intention, and the Art of Remembering Forward",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-115351-610a09",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Ontology of Fields",
+      "timestamp": "2026-10-28"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261028-114705-4d73dc",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Square Grid — Field Theory Symbolism",
+      "timestamp": "2026-10-28"
+    },
     {
       "collection": "library",
       "collection_title": "Library",
@@ -57,110 +161,6 @@
       "doc_id": "d-20261027-142333-0630ff",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Entropy",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-143050-6a9898",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Epilogue",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-143142-eb451a",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Episodic vs semantic memory",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-151507-580a1a",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Episodic vs Semantic — Select · Change · Reconstruct",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-151035-c079c8",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Episodic ↔ Semantic Metaphor — Wetland Pools → River System",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-152100-e54ca6",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Epistemic Boundary — I Ching × Quantum Measurement",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-152430-c069d8",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Event Boundaries (Memory) vs Event Horizon (Black Holes)",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-153249-cef53e",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Event Boundaries as Temporal Cuts",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-153445-340fd4",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Evolution of brain",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-153830-259acf",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Evolution of Embedded Memory & Dynamic Architecture",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-155019-5c41cf",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Evolutionary factors in memory",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-a7bc91",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Evolutionary Psychology",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-160843-e2cc33",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Evolutionary Psychology and Memory",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-161049-dd77d8",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Evolutionary Psychology and Sexual Attraction",
       "timestamp": "2026-10-27"
     }
   ]

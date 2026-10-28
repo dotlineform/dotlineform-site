@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20261028-125413-aca68d",
+  "title": "Frequency Origins",
+  "added_date": "2026-10-28 12:54:13",
+  "last_updated": "2026-10-28 12:57:26",
+  "draft": false,
+  "summary": "Is there a physical explanation for why the brain's frequency bands are what they are?",
+  "summary_html": "<p>Is there a physical explanation for why the brain's frequency bands are what they are?</p>",
+  "content_html": "<h1>Frequency Origins</h1>\n<div class=\"docsViewer__summary\"><p>Is there a physical explanation for why the brain's frequency bands are what they are?</p></div>\n<p>Physical time constants, network delays, interneuron-driven E–I loops, and body–environment rhythms act as constraints. Their intersection yields stable, band-limited eigenmodes — the canonical delta–gamma spectrum.</p>\n<!-- dotlineform:image-detail -->\n<figure class=\"docsViewerFigure docsViewerFigure--full-column\"><img src=\"docs-media:collections/library/svg/d-20261028-125413-aca68d/image-01.svg\" alt=\"Frequency Origins (Biophysics → Networks → Ecology → Bands)\" title=\"Frequency Origins (Biophysics → Networks → Ecology → Bands)\"></figure>\n<h2>References</h2>\n<ol>\n<li>Buzsáki, G. (2006). <em>Rhythms of the Brain</em>. Oxford University Press.</li>\n<li>Buzsáki, G., &amp; Draguhn, A. (2004). Neuronal oscillations in cortical networks. <em>Science, 304</em>(5679), 1926–1929. <a href=\"https://doi.org/10.1126/science.1099745\">https://doi.org/10.1126/science.1099745</a></li>\n<li>Fries, P. (2015). Rhythms for cognition: communication through coherence. <em>Neuron, 88</em>(1), 220–235. <a href=\"https://doi.org/10.1016/j.neuron.2015.09.034\">https://doi.org/10.1016/j.neuron.2015.09.034</a></li>\n<li>Nunez, P. L., &amp; Srinivasan, R. (2006). <em>Electric Fields of the Brain</em> (2nd ed.). Oxford University Press.</li>\n<li>Buzsáki, G., Logothetis, N., &amp; Singer, W. (2013). Scaling brain size, laminar structure, and the evolution of rhythmic coordination. <em>Neuron, 80</em>(3), 751–764. <a href=\"https://doi.org/10.1016/j.neuron.2013.10.002\">https://doi.org/10.1016/j.neuron.2013.10.002</a></li>\n</ol>\n<hr />\n<p><small>2025-10-08</small></p>\n"
+}
