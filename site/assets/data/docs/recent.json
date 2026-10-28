@@ -1,167 +1,167 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-25T10:57:17Z",
+  "generated_at": "2026-10-28T09:55:19Z",
   "docs": [
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-084054-bb270a",
+      "doc_id": "d-20261027-164336-ceaab1",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Direct Realism & Enactivism",
-      "timestamp": "2026-10-25"
+      "title": "Decoherence, interference and quantum computation",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-084538-13135e",
+      "doc_id": "d-20261027-154331-7a5001",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dissipative Structures, Boundary Conditions, and Memory",
-      "timestamp": "2026-10-25"
+      "title": "Designed vs. Evolutionary",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-085427-904a56",
+      "doc_id": "d-20261027-084726-91ec87",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dissolving self",
-      "timestamp": "2026-10-25"
+      "title": "Engram Lineage × Select–Change–Reconstruct",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-090028-00ed95",
+      "doc_id": "d-20261027-083644-ed987d",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Distributed Self‑Organization - A Universal Principle",
-      "timestamp": "2026-10-25"
+      "title": "Engram Neuron Synapse Estimates",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-090826-bc4afb",
+      "doc_id": "d-20261027-085236-87b158",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Divine Eye & Past Lives",
-      "timestamp": "2026-10-25"
+      "title": "Engrams",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-091719-c87850",
+      "doc_id": "d-20261027-085402-88d78f",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Does Rebirth Imply Memory Outside the Brain?",
-      "timestamp": "2026-10-25"
+      "title": "Entanglement in quantum computing",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-093413-c0852e",
+      "doc_id": "d-20261027-142333-0630ff",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dream within a Dream",
-      "timestamp": "2026-10-25"
+      "title": "Entropy",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-094254-4845ef",
+      "doc_id": "d-20261027-143050-6a9898",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dreaming & Memory",
-      "timestamp": "2026-10-25"
+      "title": "Epilogue",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-095718-30ac87",
+      "doc_id": "d-20261027-143142-eb451a",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dreams",
-      "timestamp": "2026-10-25"
+      "title": "Episodic vs semantic memory",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-094832-725e2a",
+      "doc_id": "d-20261027-151507-580a1a",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dreams — Philosophy × Psychology Timeline",
-      "timestamp": "2026-10-25"
+      "title": "Episodic vs Semantic — Select · Change · Reconstruct",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-100230-fcf298",
+      "doc_id": "d-20261027-151035-c079c8",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dynamic Equivalence",
-      "timestamp": "2026-10-25"
+      "title": "Episodic ↔ Semantic Metaphor — Wetland Pools → River System",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-100727-066b8e",
+      "doc_id": "d-20261027-152100-e54ca6",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Ecology and mind",
-      "timestamp": "2026-10-25"
+      "title": "Epistemic Boundary — I Ching × Quantum Measurement",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-104717-53432c",
+      "doc_id": "d-20261027-152430-c069d8",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Ecosystem",
-      "timestamp": "2026-10-25"
+      "title": "Event Boundaries (Memory) vs Event Horizon (Black Holes)",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-101228-14ce32",
+      "doc_id": "d-20261027-153249-cef53e",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Ecosystem Beyond Plants and Animals — Microbes, Fungi, Abiotic Forces",
-      "timestamp": "2026-10-25"
+      "title": "Event Boundaries as Temporal Cuts",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-103952-912d31",
+      "doc_id": "d-20261027-153445-340fd4",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Ecosystem memory",
-      "timestamp": "2026-10-25"
+      "title": "Evolution of brain",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261025-105328-cb37fe",
+      "doc_id": "d-20261027-153830-259acf",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Embedded memory",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "collection": "works",
-      "collection_title": "Context",
-      "doc_id": "d-20260801-212422-df11f3",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "title": "3 symbols",
-      "timestamp": "2026-10-24"
+      "title": "Evolution of Embedded Memory & Dynamic Architecture",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261021-215030-5d65bf",
+      "doc_id": "d-20261027-155019-5c41cf",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Deceit and the Ethics of Remembering",
-      "timestamp": "2026-10-21"
+      "title": "Evolutionary factors in memory",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261021-215701-5f389c",
+      "doc_id": "d-20260809-130120-a7bc91",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Default Mode Network — Hubs, Discovery, Timeline",
-      "timestamp": "2026-10-21"
+      "title": "Evolutionary Psychology",
+      "timestamp": "2026-10-27"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261021-220354-62bf68",
+      "doc_id": "d-20261027-160843-e2cc33",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dependable truth",
-      "timestamp": "2026-10-21"
+      "title": "Evolutionary Psychology and Memory",
+      "timestamp": "2026-10-27"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261027-161049-dd77d8",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Evolutionary Psychology and Sexual Attraction",
+      "timestamp": "2026-10-27"
     }
   ]
 }
