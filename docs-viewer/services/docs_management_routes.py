@@ -14,6 +14,7 @@ UNPUBLISHABLE_REPORT_PATH = "/docs/unpublishable-report"
 CATALOGUE_MEDIA_TARGETS_PATH = "/docs/catalogue-media-targets"
 CATALOGUE_MEDIA_CONFIG_PATH = "/docs/catalogue-media-config"
 CATALOGUE_GALLERY_PATH = "/docs/catalogue-gallery"
+CATALOGUE_GALLERY_REPORT_SEARCH_PATH = "/docs/catalogue-gallery-report-search"
 CATALOGUE_WORKS_REPORT_PATH = "/docs/catalogue-works-report"
 SERIES_GALLERIES_REPORT_PATH = "/docs/series-galleries-report"
 CATALOGUE_REGENERATE_PATH = "/docs/catalogue/regenerate"
@@ -67,6 +68,7 @@ GET_PATHS = (
     CATALOGUE_MEDIA_TARGETS_PATH,
     CATALOGUE_MEDIA_CONFIG_PATH,
     CATALOGUE_GALLERY_PATH,
+    CATALOGUE_GALLERY_REPORT_SEARCH_PATH,
     CATALOGUE_WORKS_REPORT_PATH,
     SERIES_GALLERIES_REPORT_PATH,
     SOURCE_PATH,

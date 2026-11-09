@@ -101,6 +101,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return docs_catalogue_media.read_catalogue_gallery(
             repo_root, docs_api_query_value(params, "gallery_id"),
         )
+    if path == routes.CATALOGUE_GALLERY_REPORT_SEARCH_PATH:
+        return docs_catalogue_media.read_catalogue_gallery_report_search(repo_root)
     if path == routes.CATALOGUE_WORKS_REPORT_PATH:
         if params:
             raise ValueError("Catalogue Works report reads do not accept parameters")

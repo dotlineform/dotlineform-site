@@ -16,13 +16,14 @@ from catalogue.generate_work_pages import catalogue_payloads, same_generated_con
 from catalogue.catalogue_galleries import read_galleries, validate_galleries
 from catalogue.catalogue_refresh_inputs import read_refresh_inputs
 from catalogue.catalogue_gallery_records import merge_gallery_record
+from catalogue.catalogue_gallery_report_search import gallery_report_search_payload, merge_gallery_report_search
 from catalogue.catalogue_series_galleries import read_series_galleries, validate_series_galleries
 from catalogue.catalogue_series_galleries_index import merge_series_galleries_index, series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import gallery_work_counts, merge_series_galleries_report, series_galleries_report_payload
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
 from catalogue.catalogue_staged_media import catalogue_staging_assets, work_rendition_paths
 from catalogue.catalogue_source import payload_for_map
-from catalogue.catalogue_shared_changes import REFRESH_FIELDS, WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
+from catalogue.catalogue_shared_changes import REFRESH_FIELDS, WORK_INDEX, GALLERY_INDEX, GALLERY_REPORT_SEARCH, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
 from catalogue.catalogue_pending_publication import merge_completed_shared
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, SERIES_PATH, catalogue_report_input_payloads, merge_catalogue_report_input
 from docs_artifact_locations import ArtifactLocation
@@ -129,6 +130,16 @@ def refresh_series_galleries(repo_root: Path) -> dict[str, Any]:
     return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
 
 
+def seed_gallery_report_search(repo_root: Path) -> dict[str, Any]:
+    """Seed the one report search output from the agreed Studio baseline."""
+    workspace = catalogue_workspace_config(repo_root)
+    galleries = read_galleries(repo_root / DEFAULT_SOURCE_DIR)
+    payload = gallery_report_search_payload(galleries, timestamp=utc_timestamp())
+    written = _write_shared_payloads(workspace.catalogue.working, {GALLERY_REPORT_SEARCH: payload})
+    merge_completed_shared(repo_root, {**empty_shared_changes(), "shared_outputs": [GALLERY_REPORT_SEARCH]}, workspace=workspace)
+    return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
+
+
 def refresh_gallery_records(repo_root: Path) -> dict[str, Any]:
     """Explicit complete Gallery-record baseline/repair; preserve other output work.
 
@@ -165,7 +176,9 @@ def refresh_gallery_records(repo_root: Path) -> dict[str, Any]:
         **empty_shared_changes(), "current_galleries": sorted(galleries.galleries),
         "deleted_galleries": pending["deleted_galleries"],
     })
-    fields = ("created_galleries", "gallery_member_works")
+    fields = ["created_galleries"]
+    if GALLERY_REPORT_SEARCH not in pending["shared_outputs"]:
+        fields.append("gallery_member_works")
     if any(pending[field] for field in fields):
         for field in fields:
             pending[field] = []
@@ -239,6 +252,14 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         member_candidates = set(shared["gallery_member_works"])
         current_members = member_candidates & pending["current_works"].keys()
         deleted_members = member_candidates & pending["deleted_works"].keys()
+        if GALLERY_REPORT_SEARCH in shared["shared_outputs"]:
+            payload = merge_gallery_report_search(
+                output_path(workspace.catalogue.working, GALLERY_REPORT_SEARCH), galleries,
+                current_gallery_ids=shared["current_galleries"], deleted_gallery_ids=shared["deleted_galleries"],
+                work_ids=shared["gallery_member_works"], timestamp=timestamp,
+            )
+            if payload is not None:
+                row_payloads[GALLERY_REPORT_SEARCH] = payload
         for gid in shared["current_galleries"]:
             identity = f"galleries/index/{gid}.json"
             payload = merge_gallery_record(
@@ -255,7 +276,9 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             repo_root, records, galleries, pairs, timestamp=timestamp,
             work_ids=set(selected["current_works"]),
             gallery_ids=set(),
-            shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, *INPUT_SCHEMAS},
+            shared_outputs=set(shared["shared_outputs"]) - {
+                WORK_INDEX, GALLERY_INDEX, GALLERY_REPORT_SEARCH, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, *INPUT_SCHEMAS,
+            },
             pipeline=media_config,
         )
         output = {"status": "completed", "written": [], "deleted": []}

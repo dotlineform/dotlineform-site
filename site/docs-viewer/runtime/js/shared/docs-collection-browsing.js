@@ -10,6 +10,33 @@ function compareText(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
+/** Prepare Gallery title keys once and count direct memberships from the matched Work rows. */
+export function createCatalogueGallerySearch(payload) {
+  if (payload?.header?.schema !== "catalogue_gallery_report_search_v1") {
+    throw new Error("Catalogue Gallery search has an unsupported schema.");
+  }
+  const galleries = Object.entries(payload.galleries).map(([galleryId, title]) => ({
+    galleryId, title, searchTitle: normalizeDocsCollectionFilterValue(title)
+  })).sort((left, right) => compareText(left.searchTitle, right.searchTitle) || compareText(left.galleryId, right.galleryId));
+  const memberships = payload.gallery_ids_by_work;
+  return function project(query, works) {
+    const counts = new Map();
+    for (const work of works) {
+      for (const galleryId of memberships[work.workId] || []) {
+        counts.set(galleryId, (counts.get(galleryId) || 0) + 1);
+      }
+    }
+    const titleMatches = [];
+    const memberMatches = [];
+    for (const gallery of galleries) {
+      if (gallery.searchTitle.includes(query)) titleMatches.push(gallery);
+      else if (counts.has(gallery.galleryId)) memberMatches.push({ ...gallery, matchCount: counts.get(gallery.galleryId) });
+    }
+    memberMatches.sort((left, right) => right.matchCount - left.matchCount);
+    return titleMatches.concat(memberMatches, works);
+  };
+}
+
 /**
  * Shared presentation over completed records: exact URLs, thumbnail choices,
  * search keys and cached ordering. Inventory and edit ownership stay with callers.

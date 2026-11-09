@@ -7,6 +7,7 @@ import {
   COLLECTION_PAGE_SIZE,
   COLLECTION_SEARCH_DELAY_MS,
   appendCollectionThumbnail,
+  createCatalogueGallerySearch,
   createCollectionBrowsingData,
   createCollectionPager,
   loadCatalogueCollectionThumbnailSettings
@@ -158,6 +159,51 @@ function appendDocRow(state, doc, reserveThumbnailSpace) {
   };
 }
 
+function appendGalleryRow(state, gallery) {
+  var row = document.createElement("li");
+  row.className = "docsViewerReport__row docsViewerReport__galleryRow";
+  var button = document.createElement("button");
+  button.type = "button";
+  button.className = "docsViewerReport__collectionButton docsViewerReport__galleryButton";
+  var title = document.createElement("strong");
+  title.textContent = gallery.title;
+  button.append(createDocsViewerToolbarIcon(document, "docsViewerReport__galleryIcon"), title);
+  var label = "Open Gallery " + gallery.title;
+  if (gallery.matchCount) {
+    var count = document.createElement("span");
+    count.className = "docsViewerReport__galleryMatchCount";
+    count.textContent = gallery.matchCount + (gallery.matchCount === 1 ? " matching work" : " matching works");
+    button.appendChild(count);
+    label += ", " + count.textContent;
+  }
+  button.setAttribute("aria-label", label);
+  button.addEventListener("click", async function () {
+    var isCurrent = function () { return state.mounted && state.rowsNode.contains(button); };
+    state.statusNode.textContent = "";
+    state.statusNode.hidden = true;
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    try {
+      await state.openMediaTarget({
+        mediaTarget: { kind: "catalogue-gallery", id: gallery.galleryId },
+        invocationControl: button,
+        documentTarget: { docId: state.parentDocId },
+        isCurrentDocument: isCurrent
+      });
+    } catch (error) {
+      if (isCurrent()) {
+        state.statusNode.textContent = error.message || "Gallery could not open.";
+        state.statusNode.hidden = false;
+      }
+    } finally {
+      button.disabled = false;
+      button.removeAttribute("aria-busy");
+    }
+  });
+  row.appendChild(button);
+  state.rowsNode.appendChild(row);
+}
+
 function renderFilterShell(context, collection) {
   var toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar docsViewerReport__collectionFilterToolbar";
@@ -167,8 +213,8 @@ function renderFilterShell(context, collection) {
   var searchLabel = document.createElement("label");
   searchLabel.className = "docsViewerReport__selectLabel visually-hidden";
   searchLabel.htmlFor = searchId;
-  searchLabel.textContent = "Filter " + collectionItemsLabel(collection)
-    + (collectionId(collection) === "catalogue" ? " by title or Work ID" : " by title");
+  searchLabel.textContent = collectionId(collection) === "catalogue"
+    ? "Filter Works and Galleries by title or Work ID" : "Filter " + collectionItemsLabel(collection) + " by title";
 
   var search = document.createElement("span");
   search.className = "docsViewerReport__search";
@@ -178,7 +224,7 @@ function renderFilterShell(context, collection) {
   input.type = "search";
   input.autocomplete = "off";
   input.spellcheck = false;
-  input.placeholder = ({ catalogue: "work", concepts: "concept", moments: "moment", works: "title" })[collectionId(collection)] || "search";
+  input.placeholder = ({ catalogue: "work or gallery", concepts: "concept", moments: "moment", works: "title" })[collectionId(collection)] || "search";
 
   search.appendChild(input);
   var clear = mountSearchField(input).clearButton;
@@ -253,6 +299,34 @@ function visibleDocuments(state) {
   return state.browsingData.project(state.query, state.sortMode);
 }
 
+function loadGallerySearch(state, search) {
+  if (search.pending || search.project || search.error) return;
+  search.pending = true;
+  function finish() {
+    search.pending = false;
+    if (state.mounted && state.gallerySearch === search && state.root.dataset.reportState === "list"
+      && state.searchTimer === null && normalizeDocsCollectionFilterValue(state.query)) {
+      var focused = state.rowsNode.contains(document.activeElement) && document.activeElement;
+      var workId = focused && focused.closest("[data-report-subdoc-id]")?.dataset.reportSubdocId;
+      if (renderListProjectionContained(state, "gallery-search-loaded") && workId) {
+        var row = state.rowsNode.querySelector('[data-report-subdoc-id="' + CSS.escape(workId) + '"]');
+        (row?.querySelector(".docsViewerReport__collectionButton") || state.filterInputNode).focus({ preventScroll: true });
+      }
+    }
+  }
+  Promise.resolve().then(search.read).then(createCatalogueGallerySearch).then(function (project) {
+    search.project = project;
+    finish();
+  }, function (error) {
+    search.error = error.message ? "Gallery search could not load. " + error.message : "Gallery search could not load.";
+    finish();
+  });
+}
+
+function gallerySearchPending(state) {
+  return Boolean(state.gallerySearch?.pending && normalizeDocsCollectionFilterValue(state.query));
+}
+
 function bindFilterControls(state) {
   state.filterInputNode.addEventListener("input", function () {
     if (!state.mounted) return;
@@ -280,7 +354,7 @@ function bindFilterControls(state) {
   });
 }
 
-/** Navigate rendered document links without changing management selection. */
+/** Navigate rendered results without changing management selection. */
 function bindCollectionKeyboardNavigation(state) {
   function onKeyDown(event) {
     if (event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
@@ -295,11 +369,11 @@ function bindCollectionKeyboardNavigation(state) {
         cancelCollectionSearch(state);
         if (!renderListProjectionContained(state, "collection-keyboard-search")) return;
       }
-      state.rowsNode.querySelector("a.docsViewerReport__collectionButton")?.focus();
+      state.rowsNode.querySelector(".docsViewerReport__collectionButton")?.focus();
       return;
     }
 
-    var link = event.target.closest("a.docsViewerReport__collectionButton");
+    var link = event.target.closest(".docsViewerReport__collectionButton");
     if (!link || !state.rowsNode.contains(link)) return;
     event.preventDefault();
     event.stopPropagation();
@@ -310,7 +384,7 @@ function bindCollectionKeyboardNavigation(state) {
     var row = link.parentElement;
     var adjacent = event.key === "ArrowUp" ? row.previousElementSibling : row.nextElementSibling;
     if (adjacent) {
-      adjacent.querySelector("a.docsViewerReport__collectionButton").focus();
+      adjacent.querySelector(".docsViewerReport__collectionButton")?.focus();
     } else if (event.key === "ArrowUp") {
       state.filterInputNode.focus();
     }
@@ -328,7 +402,7 @@ function cancelCollectionSearch(state) {
   }
 }
 
-function updateCollectionControls(state) {
+function updateCollectionControls(state, pageIndex = state.pageIndex) {
   var pending = state.searchTimer !== null || !state.manifestLoaded;
   state.paginationControl?.update(state.pagedBrowsing);
   var button = state.collectionSortNode;
@@ -347,7 +421,7 @@ function updateCollectionControls(state) {
     button.setAttribute("aria-label", button.title);
   }
   if (state.pager) {
-    state.pager.update(state.matches.length, state.pageIndex, pending, state.pagedBrowsing);
+    state.pager.update(state.matches.length, pageIndex, pending || gallerySearchPending(state), state.pagedBrowsing);
   }
 }
 
@@ -396,12 +470,14 @@ function renderListToolbar(state) {
   state.listToolbarNode = host;
 }
 
-function renderRows(state, docs) {
+function renderRows(state, matches) {
   clearNode(state.rowsNode);
   state.root.removeAttribute("data-report-leading-column");
-  state.statusNode.textContent = "";
-  state.statusNode.hidden = true;
-  if (!docs.length) {
+  var searchError = state.gallerySearch?.error && normalizeDocsCollectionFilterValue(state.query)
+    ? state.gallerySearch.error : "";
+  state.statusNode.textContent = searchError;
+  state.statusNode.hidden = !searchError;
+  if (!matches.length) {
     var empty = document.createElement("li");
     empty.className = "docsViewerReport__empty";
     empty.textContent = state.browsingData.rows.length
@@ -412,8 +488,10 @@ function renderRows(state, docs) {
     return;
   }
   var reserveThumbnailSpace = state.browsingData.hasThumbnails;
-  var rows = docs.map(function (doc) {
-    return appendDocRow(state, doc, reserveThumbnailSpace);
+  var rows = [];
+  matches.forEach(function (match) {
+    if (match.galleryId) appendGalleryRow(state, match);
+    else rows.push(appendDocRow(state, match, reserveThumbnailSpace));
   });
   if (!rows.some(function (record) { return record.hasLeadingContent; })) return;
   state.root.dataset.reportLeadingColumn = "true";
@@ -445,7 +523,10 @@ function publishState(state, reportState, target, reason) {
 function renderListProjection(state) {
   state.listNeedsRender = true;
   var documents = visibleDocuments(state);
-  state.matches = documents;
+  var gallerySearch = state.gallerySearch;
+  var query = gallerySearch ? normalizeDocsCollectionFilterValue(state.query) : "";
+  if (query && gallerySearch) loadGallerySearch(state, gallerySearch);
+  state.matches = query && gallerySearch?.project ? gallerySearch.project(query, documents) : documents;
   state.management?.prepareProjection(documents);
   renderListPage(state);
   state.listNeedsRender = false;
@@ -453,16 +534,18 @@ function renderListProjection(state) {
 
 /** Page turns reuse the complete match list, including management selection eligibility. */
 function renderListPage(state) {
-  var documents = state.matches;
+  var matches = state.matches;
+  var pageIndex = state.pageIndex;
   if (state.pagedBrowsing) {
-    state.pageIndex = Math.min(state.pageIndex, Math.max(0, Math.ceil(documents.length / COLLECTION_PAGE_SIZE) - 1));
+    pageIndex = Math.min(pageIndex, Math.max(0, Math.ceil(matches.length / COLLECTION_PAGE_SIZE) - 1));
+    if (!gallerySearchPending(state)) state.pageIndex = pageIndex;
   }
   updateFilterControls(state);
   renderListToolbar(state);
   renderRows(state, state.pagedBrowsing
-    ? documents.slice(state.pageIndex * COLLECTION_PAGE_SIZE, (state.pageIndex + 1) * COLLECTION_PAGE_SIZE)
-    : documents);
-  updateCollectionControls(state);
+    ? matches.slice(pageIndex * COLLECTION_PAGE_SIZE, (pageIndex + 1) * COLLECTION_PAGE_SIZE)
+    : matches);
+  updateCollectionControls(state, pageIndex);
   state.management?.projected(state.sortMode);
 }
 
@@ -570,9 +653,12 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
 
   var features = collectionBrowsingFeatures(collection);
   var refs = renderShell(context, collection, features);
+  var readGallerySearch = collectionIdValue === "catalogue" && typeof context.openMediaTarget === "function"
+    && context.collectionProvider.readCatalogueGalleryReportSearch;
   var state = {
     root: root,
     openDocument: context.openDocument,
+    openMediaTarget: context.openMediaTarget,
     onDocumentState: context.onCollectionDocumentState,
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
     parentTarget: Object.freeze({
@@ -590,6 +676,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     pagedBrowsing: contribution?.paginationDefault ?? features.pagination,
     paginationControl: null,
     thumbnailSettingsRead: null,
+    gallerySearch: null,
     collectionSortNode: refs.collectionSortNode,
     matches: [],
     pageIndex: 0,
@@ -632,7 +719,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.filterInputNode.disabled = true;
     state.pager = createCollectionPager(root.ownerDocument,
       state.collectionId === "works" ? "document" : collectionItemsLabel(state.collection), function (pageIndex) {
-      if (!state.mounted || state.searchTimer !== null || pageIndex < 0
+      if (!state.mounted || state.searchTimer !== null || gallerySearchPending(state) || pageIndex < 0
         || pageIndex * COLLECTION_PAGE_SIZE >= state.matches.length) return;
       state.pageIndex = pageIndex;
       try {
@@ -692,6 +779,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.browsingData.clear();
     state.matches = [];
     state.thumbnailSettingsRead = null;
+    state.gallerySearch = null;
   }
   lifetime.view = {
     dispose: dispose, capture: remembered.save, restore: restoreRememberedList, resume: restoreRememberedList
@@ -717,6 +805,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
       state.browsingData.replace(payload.docs);
       await resolvePendingThumbnails();
       if (!state.mounted) return false;
+      state.gallerySearch = readGallerySearch ? { read: readGallerySearch } : null;
       state.filterInputNode.disabled = false;
       state.manifestLoaded = true;
       state.listNeedsRender = true;

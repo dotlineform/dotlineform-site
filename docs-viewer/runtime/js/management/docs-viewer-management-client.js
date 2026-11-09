@@ -103,6 +103,11 @@ export function readCatalogueGallery(galleryId,  options) {
     Object.assign({}, options, { cache: "no-cache" }));
 }
 
+export function readCatalogueGalleryReportSearch(options) {
+  return fetchManagementJson("/docs/catalogue-gallery-report-search", "GET", undefined,
+    Object.assign({}, options, { cache: "no-cache" }));
+}
+
 export function readManagedDocsIndex(options) {
   return fetchManagementJson("/docs/index-tree", "GET", undefined, options);
 }

@@ -7,6 +7,7 @@
     "media-config.json",
     "series-galleries-index.json",
     "works/works_index.json",
-    "galleries/galleries_index.json"
+    "galleries/galleries_index.json",
+    "galleries/report-search.json"
   ]
 }

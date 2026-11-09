@@ -16,6 +16,7 @@ from docs_publication_paths import confined, working_owner
 from docs_workspace_config import generated_documents_path
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config, catalogue_output_workspace, output_path
+from studio.services.catalogue.catalogue_shared_changes import GALLERY_REPORT_SEARCH
 
 
 def _read_generated(repo_root: Path, relative: str, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:
@@ -98,6 +99,10 @@ def read_catalogue_series_galleries_index(
 ) -> dict[str, Any]:
     """Read the exact generated Series relevance map, including empty Series."""
     return _read_generated(repo_root, "series-galleries-index.json", workspace=workspace)
+
+
+def read_catalogue_gallery_report_search(repo_root: Path) -> dict[str, Any]:
+    return _read_generated(repo_root, GALLERY_REPORT_SEARCH)
 
 
 def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:

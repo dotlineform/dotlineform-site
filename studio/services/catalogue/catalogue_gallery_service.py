@@ -15,7 +15,7 @@ from catalogue.catalogue_series_galleries import (
 from catalogue.catalogue_service_context import CatalogueWriteContext, load_works_payload, log_event, utc_now
 from catalogue.catalogue_transactions import execute_source_json_write
 from catalogue.catalogue_source import CatalogueSourceRecords
-from catalogue.catalogue_shared_changes import empty_shared_changes, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT
+from catalogue.catalogue_shared_changes import empty_shared_changes, GALLERY_INDEX, GALLERY_REPORT_SEARCH, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT
 
 
 def gallery_record_payload(
@@ -119,10 +119,12 @@ def mutate_gallery_payload(
         shared["deleted_galleries" if operation == "delete" else "current_galleries"] = [gallery_id]
         if operation == "create":
             shared["created_galleries"] = [gallery_id]
+        if operation == "delete":
+            shared["gallery_member_works"] = members
         shared["current_series"] = sorted(affected_series)
         outputs = {RELATIONSHIP_REPORT}
         if definitions_changed:
-            outputs.add(GALLERY_INDEX)
+            outputs.update((GALLERY_INDEX, GALLERY_REPORT_SEARCH))
         if relations_changed or (definitions_changed and affected_series):
             outputs.add(RELATIONSHIP_INDEX)
         shared["shared_outputs"] = sorted(outputs)

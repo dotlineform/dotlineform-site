@@ -133,6 +133,17 @@ export function createDocsViewerWorkspaceProvider(options) {
       return catalogueGalleryMediaPresentation(payload, galleryId, policy, config.catalogueWorkThumbnailsBaseUrl);
     };
   }
+  if (source && typeof source.readCatalogueGalleryReportSearch === "function") {
+    provider.readCatalogueGalleryReportSearch = function () { return source.readCatalogueGalleryReportSearch(); };
+  } else if (routeContext().routeConfig?.appKind === "public") {
+    provider.readCatalogueGalleryReportSearch = async function () {
+      var url = routeContext().routeConfig.catalogueGalleryReportSearchUrl;
+      if (!url) throw new Error("Catalogue Gallery search is not configured.");
+      var response = await settings.window.fetch(url, { cache: "no-cache", headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error("Catalogue Gallery search is unavailable (" + response.status + ").");
+      return response.json();
+    };
+  }
   if (source && typeof source.writeSource === "function") {
     provider.writeSource = function (target, payload, optionsForWrite) {
       return source.writeSource(target, payload, optionsForWrite || {});

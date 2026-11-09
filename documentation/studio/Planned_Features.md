@@ -144,8 +144,6 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Catalogue Index Gallery Results](deliveries/Catalogue_Index_Gallery_Results.md) — Next. Put compact Gallery title and direct-member matches ahead of Works in one paginated result list. Studio Refresh supplies one search payload and Media View loads the selected Gallery on activation.
-
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Parked proposal. Reuse the Work Editor's Series panel to find a Gallery and inspect its saved members.
 
 - [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
@@ -153,6 +151,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
+
+- [Catalogue Index Gallery Results](deliveries/Catalogue_Index_Gallery_Results.md) — Locally accepted and published on 2026-11-09. The runtime and published Gallery search JSON are ready to commit together for Deploy Public.
 
 - [Catalogue Work By-ID Separation](deliveries/Catalogue_Work_By_ID_Separation.md) — Complete and deployed on 2026-11-09. Working conversion, Publish, raw-copy cleanup, site-preview navigation, text-only Export and selected Work removal verified. The live site serves the new reader and the re-added Work `04620`. Retain the delivery pending manual archive. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation), [Catalogue Media View](Catalogue_Media_View.md) and [Catalogue Deployment](Catalogue_Deployment.md) own the shipped behavior.
 

@@ -301,6 +301,7 @@ export function resolveDocsViewerRouteConfig(options) {
     publicPreviewBase: normalizeSiteBase(rawConfig.sites, "public_preview"),
     studioBaseUrl: normalizeSiteBase(rawConfig.sites, "studio"),
     catalogueGalleryRecordsBaseUrl: cleanString(rawConfig.catalogue_paths && rawConfig.catalogue_paths.gallery_records_base_url),
+    catalogueGalleryReportSearchUrl: cleanString(rawConfig.catalogue_paths && rawConfig.catalogue_paths.gallery_report_search_url),
     catalogueMediaConfigUrl: rawConfig.catalogue_paths && rawConfig.catalogue_paths.media_config_url || "",
     catalogueWorkThumbnailsBaseUrl: rawConfig.catalogue_paths && rawConfig.catalogue_paths.work_thumbnails_base_url || "",
     catalogueWorkPrimaryBaseUrl: cleanString(rawConfig.catalogue_paths && rawConfig.catalogue_paths.work_primary_base_url),

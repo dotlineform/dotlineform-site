@@ -192,6 +192,32 @@
   min-width: 0;
 }
 
+.docsViewerReport[data-report-collection="catalogue"] .docsViewerReport__galleryRow{
+  padding-block: var(--docs-viewer-space-2);
+}
+
+.docsViewerReport__galleryButton{
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--docs-viewer-space-2);
+  color: inherit;
+  overflow-wrap: anywhere;
+}
+
+.docsViewerReport__galleryIcon{
+  width: 1em;
+  height: 1em;
+  align-self: center;
+  mask-image: url("../icons/images.svg");
+}
+
+.docsViewerReport__galleryMatchCount{
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small);
+}
+
 .docsViewerReport__collectionPagination{
   --docs-viewer-control-height: var(--docs-viewer-report-control-height);
   display: flex;

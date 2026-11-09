@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT))
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths  # noqa: E402
 
 ensure_studio_python_paths(__file__)
-from catalogue.catalogue_refresh_service import refresh_catalogue, refresh_compact_indexes, refresh_gallery_records, refresh_private_report_inputs, refresh_series_galleries  # noqa: E402
+from catalogue.catalogue_refresh_service import refresh_catalogue, refresh_compact_indexes, refresh_gallery_records, refresh_private_report_inputs, refresh_series_galleries, seed_gallery_report_search  # noqa: E402
 
 
 def main() -> None:
@@ -22,9 +22,12 @@ def main() -> None:
     maintenance.add_argument("--compact-indexes", action="store_true", help="Explicitly generate/repair both compact indexes and queue their publication")
     maintenance.add_argument("--series-galleries", action="store_true", help="Explicitly generate/repair the relationship index and private report")
     maintenance.add_argument("--gallery-records", action="store_true", help="Explicitly generate/repair complete Gallery by-ID records")
+    maintenance.add_argument("--gallery-report-search", action="store_true", help="Seed the Catalogue report Gallery search output and queue its publication")
     args = parser.parse_args()
     if args.gallery_records:
         result = refresh_gallery_records(ROOT)
+    elif args.gallery_report_search:
+        result = seed_gallery_report_search(ROOT)
     elif args.series_galleries:
         result = refresh_series_galleries(ROOT)
     elif args.compact_indexes:

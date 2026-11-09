@@ -16,6 +16,7 @@ SHARED_FIELDS = ("current_galleries", "deleted_galleries", "current_series", "de
 REFRESH_FIELDS = (*SHARED_FIELDS, "created_galleries", "gallery_member_works")
 WORK_INDEX = "works/works_index.json"
 GALLERY_INDEX = "galleries/galleries_index.json"
+GALLERY_REPORT_SEARCH = "galleries/report-search.json"
 RELATIONSHIP_INDEX = "series-galleries-index.json"
 RELATIONSHIP_REPORT = "reports/series-galleries/metadata.json"
 
@@ -89,7 +90,7 @@ def work_shared_changes(
         outputs.update(changed_work_report_inputs(old, new))
         before, after = set(previous_memberships.get(work_id, [])), set(current_memberships.get(work_id, []))
         if before != after:
-            outputs.add(RELATIONSHIP_REPORT)
+            outputs.update((RELATIONSHIP_REPORT, GALLERY_REPORT_SEARCH))
         identity_changed = old is None or new is None
         member_changed = identity_changed or (old or {}).get("title") != (new or {}).get("title")
         if before != after or member_changed:

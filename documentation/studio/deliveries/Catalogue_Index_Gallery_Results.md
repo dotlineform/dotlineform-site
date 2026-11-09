@@ -5,14 +5,14 @@ title: Catalogue Index Gallery Results
 added_date: "2026-11-09 17:50:18"
 last_updated: "2026-11-09"
 summary: Add compact Gallery matches to the paginated Catalogue report using a Studio Refresh projection.
-ui_status: proposed
+ui_status: active
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Index Gallery Results
 
 ## Current And Next State
 
-The result design is agreed. The proposed data shape and Refresh handoff below are ready for review before implementation approval. [Planned Features](../Planned_Features.md) parents this delivery. Studio remains the Gallery authoring and generation owner.
+The user accepted the local result and ran Publish on 2026-11-09. The next gate is to commit the runtime changes and published search JSON together, then run Deploy Public from the committed site snapshot. Studio remains the Gallery authoring and generation owner. [Planned Features](../Planned_Features.md) parents this delivery.
 
 ## Results And Pagination
 
@@ -33,7 +33,7 @@ For `kylie`, the Working snapshot has 71 Work matches and three Gallery title ma
 | `working/generated/collections/catalogue/documents/by-id/<work_id>.json` under `$DOTLINEFORM_DOCS_BASE_DIR` and public `site/assets/data/docs/catalogue/by-id/<work_id>.json` | **Current selection input.** Read when opening a Work or showing its Media View. The report filters the manifest without reading these documents. |
 | `C/galleries/index/<gallery_id>.json` | **Current selection input.** Media View reads the chosen Gallery's title and member Work IDs/titles. Search uses the compact projection below. |
 | `C/galleries/galleries_index.json`, `C/works/works_index.json`, `C/series-galleries-index.json` | **Existing Catalogue outputs outside this report's search path.** The compact Gallery index serves authoring target discovery. The compact Work index serves Work lookup and maintenance. The Series–Gallery index supplies explicit Series relationships for Work adoption. The proposal preserves these contracts. |
-| `C/galleries/report-search.json` | **One proposed additional search input.** A versioned, public-safe payload with `galleries` mapping exact Gallery IDs to titles and `gallery_ids_by_work` mapping exact Work IDs to direct Gallery ID arrays. Omit empty membership rows and retain empty Gallery definitions for title matching. Studio supplies the IDs as strings. |
+| `C/galleries/report-search.json` | **One additional search input.** The `catalogue_gallery_report_search_v1` payload has `galleries` mapping exact Gallery IDs to titles and `gallery_ids_by_work` mapping exact Work IDs to direct Gallery ID arrays. Empty membership rows are omitted and empty Gallery definitions remain searchable by title. Studio supplies the IDs as strings. |
 
 The browser loads `report-search.json` once when the Catalogue report first needs Gallery search, prepares Gallery title keys once and retains the input through queries and paging. The query reuses the existing filtered Work rows to count memberships through direct ID lookups, orders the Gallery rows and combines them with the Work results. Page changes slice the prepared list. The existing report reload boundary revalidates the data when needed. Work browsing can continue while the Gallery payload loads. [Collection browsing](../../../docs-viewer/runtime/js/shared/docs-collection-browsing.js) · [Collection report](../../../docs-viewer/runtime/js/shared/docs-collection-report.js).
 
@@ -47,8 +47,12 @@ Manage needs one narrow read of the saved output through its configured Catalogu
 
 [Studio shared selections](../../../studio/services/catalogue/catalogue_shared_changes.py) · [Refresh owner](../../../studio/services/catalogue/catalogue_refresh_service.py) · [Catalogue artifact inventory](../../../docs-viewer/config/workspace/catalogue-artifacts.json).
 
+The approved Working seed ran on 2026-11-09 using `python3 studio/services/catalogue/catalogue_json_build.py --gallery-report-search --write` with the configured project interpreter. It wrote one file containing 192 Gallery titles and 5,173 Work membership rows and selected it for Publish. After Publish, Working, Preview and `site/assets/data/catalogue/galleries/report-search.json` matched byte for byte. The Docs and Catalogue publication queues were empty.
+
 ## Delivery Steps
 
-- [ ] **Readiness.** Agree the compact payload, exact membership and definition selections, seed and rollout. Confirm sort, counts, one paginated list and Gallery activation through Media View. Obtain implementation approval.
-- [ ] **Implementation.** Add the Studio Refresh projection and shared artifact handoff, then wire the Working and public readers and the Catalogue report rows. Preserve existing Work controls and Back restoration.
-- [ ] **Review and acceptance.** Trace create, rename, delete, membership changes and unrelated saves through the [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review). Check changed owners and the public projection. Confirm `kylie`, Gallery-only title matches, empty queries, page turns and Media View Back in manual use. Verify the request path reuses the search payload and loads member records on activation. Agree live seed, Publish and deployment separately.
+- [x] **Readiness and implementation.** The approved slice uses one shared artifact, exact definition and membership selections, and one paginated list. Studio Refresh and the Working and public readers are wired, with Work controls and Media View Back using their existing owners.
+- [x] **Code review and static checks.** The [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review) traced Gallery create, rename and delete, Work membership changes, unrelated saves and selected transfer. Gallery Delete carries its known former direct members. Gallery-record maintenance preserves those candidates while search output is pending. Refresh reads one saved file and skips unchanged writes. The browser retains the prepared data, counts over Work matches, and fetches an exact Gallery record on activation. Retained checks cover configured output confinement, the browser schema boundary and current document/media selection. Focused Python and JavaScript lint, CLI argument loading, whitespace, public projection and site validation passed.
+- [x] **Working seed.** Generated the report search file and verified the selected publication handoff.
+- [x] **Local acceptance and Publish.** The user reported the result looked good after Publish. Individual browser scenarios and request traces were not itemised. Verified the selected file and drained publication queues.
+- [ ] **Public release.** Commit the implementation and the published artifact together, then run Deploy Public explicitly. Confirm the deployed Catalogue report can load the Gallery search file and open a selected Gallery.
