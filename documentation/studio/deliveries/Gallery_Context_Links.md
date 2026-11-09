@@ -5,14 +5,14 @@ title: Gallery Context Links
 added_date: "2026-11-09 21:04:38"
 last_updated: "2026-11-09"
 summary: Link Gallery Media View to Context documents through authored Gallery references and direct Work membership.
-ui_status: in-progress
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Gallery Context Links
 
 ## Current And Next State
 
-Implemented and seeded in Working. Manual review and the public release remain open. The [Catalogue Media View](../Catalogue_Media_View.md#gallery-presentations) document owns the reader contract. The document-level Gallery picker follows as a separate authoring decision.
+Development closed on 2026-11-09 after the user accepted the Working presentation and requested closeout. Publish transferred the eligible Context manifest into the tracked site, and `33c8925d6c` contains that manifest and the projected runtime. The live site still served the prior Context manifest and Media View runtime at closeout. Deploy Public and a live Gallery check remain release steps. [Catalogue Media View](../Catalogue_Media_View.md#gallery-presentations) owns the reader contract. Retain this delivery pending release and manual archive.
 
 Context is expected to contain tens of thematic documents. The editorial path is Library ↔ Context ↔ Media View ↔ Catalogue. This guides authoring, while the automatic association producer explicitly selects the `works` collection.
 
@@ -47,9 +47,9 @@ For Working review, draft [kylie](/docs/?collection=works&doc=d-20261109-191549-
 
 - [x] **GCL.0 Readiness.** Selected the existing Context manifest and existing publication handoff. The collection render now supplies the completed rows before preparation. Public shares a session read and Working revalidates on entry.
 - [x] **GCL.1 Generate and hand off the Docs data.** The targeted *kylie* dry run scanned one source and selected one manifest update. Initial Context-only generation processed seven sources, changed the management manifest and queued the eligible public manifest. Document by-ID JSON and relationships were unchanged. The eligible manifest is 1,182 bytes and excludes the draft. A targeted Catalogue dry run for Work `00520` predicted no changes.
-- [ ] **GCL.2 Display the links.** Implemented the Context list. Saved-data inspection confirmed *kylie* for Gallery `084` and *3 symbols* for `005` and `319`. Focused lint, public runtime projection and site validation passed. Manual review in Working and public preview still needs to cover navigation, pagination, duplicates, empty results and membership changes.
+- [x] **GCL.2 Display the links.** Saved-data inspection confirmed *kylie* for Gallery `084` and *3 symbols* for `005` and `319`. Focused lint, public runtime projection and site validation passed. The user reviewed the Working links and accepted the final spacing. Navigation, pagination, duplicates, empty results and membership changes were not individually reported.
 - [x] **GCL.3 Code review.** The [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review) traced new and replaced rows, empty associations, eligibility and reader failure. The producer uses rendered references once and touches only the selected rows. The browser uses the supplied member IDs and manifest order. It needs no Work document reads, additional index or second eligibility filter. A failed Context read leaves the Gallery available and clears the failed public read for the next open. Exact route identity checks stay with the existing document link owner.
-- [ ] **GCL.4 Closeout.** Record Working and public acceptance, move shipped behavior to Catalogue Media View and retain this proposal until its release and picker follow-on have been reconciled. Publish and public deployment have their usual separate gates.
+- [x] **GCL.4 Closeout.** Recorded Working acceptance and reconciled the durable Catalogue Media View document. The prepared and tracked public Context manifests match, and the Context manifest queue entry has cleared.
 
 ## Follow-On
 

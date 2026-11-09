@@ -152,7 +152,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
-- [Gallery Context Links](deliveries/Gallery_Context_Links.md) — Automatic links implemented and seeded in Working. Manual review and public release remain open. Consider the document-level Gallery picker as a follow-on.
+- [Gallery Context Links](deliveries/Gallery_Context_Links.md) — Development closed and accepted in Working on 2026-11-09. The published Context manifest and projected runtime are committed in `33c8925d6c`. Deploy Public and live review remain open. Retain the delivery pending manual archive. The document-level Gallery picker remains a follow-on.
 
 - [Catalogue Index Gallery Results](deliveries/Catalogue_Index_Gallery_Results.md) — Complete. The user accepted the local and public results on 2026-11-09. Retain the delivery pending manual archive. [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections) owns the shipped data contract.
 
