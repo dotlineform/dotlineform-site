@@ -1925,11 +1925,29 @@ body.docs-viewer-service{
   padding-top: calc(var(--docs-viewer-font-small) * var(--docs-viewer-line-normal));
 }
 
-.docsViewer__content .docsViewerCatalogueEntry__resources > section > ul{
-  font-size: var(--docs-viewer-font-small);
+.docsViewer__content .docsViewerCatalogueEntry__galleries{
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__galleries > h2{
+  margin-top: 0;
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__galleries > p{
+  margin-bottom: var(--docs-viewer-space-2);
   line-height: var(--docs-viewer-line-normal);
 }
 
+.docsViewer__content .docsViewerCatalogueEntry__resources > [data-catalogue-resource="links"] > ul,
+.docsViewer__content .docsViewerCatalogueEntry__galleries > ul{
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-normal);
+  list-style: none;
+  padding: 0;
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__galleries > h2,
 .docsViewer__content [data-docs-catalogue-ref]:has(> .docsViewerCatalogueEntry) + [data-docs-related-links] h2{
   font-size: var(--docs-viewer-font-small);
   font-weight: 600;
@@ -1940,11 +1958,6 @@ body.docs-viewer-service{
 
 .docsViewer__content [data-docs-catalogue-ref]:has(> .docsViewerCatalogueEntry) + [data-docs-related-links]{
   font-size: var(--docs-viewer-font-small);
-}
-
-.docsViewer__content .docsViewerCatalogueEntry__resources > [data-catalogue-resource="links"] > ul{
-  list-style: none;
-  padding: 0;
 }
 
 @media (max-width: 820px){

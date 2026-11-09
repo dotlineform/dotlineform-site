@@ -81,8 +81,13 @@ Working and public use the same reader contract. Route configuration supplies th
 - [x] **WJ.3 — Verify and review.** Compare selected payloads and request traces for an inline image, a text opener, direct Catalogue entry and Gallery traversal. Confirm that the same prepared candidates resolve against the configured Working and public roots. Exercise the agreed selected Publish and Export cases, including a Work text link’s packaged image and a selected Work removal. Confirm the adoption boundary, exact transfer completion and absence of referrer fanout. Complete the mandatory Redundancy And Defensive Behavior Review before acceptance. Agree live writes and any test or benchmark work separately.
 - [x] **WJ.4 — Closeout.** Update the durable reader and preparation contracts and reconcile the Gallery Ownership delivery’s scope. Follow the [public rollout](#public-rollout) and record conversion, runtime projection, Publish and deployment evidence as separate outcomes.
 
+## Catalogue Page Gallery Links
+
+The shared browser renderer displays the adopted Gallery links after Entry resources and before **context**. It uses one heading, preserves supplied order and uses the first Series-related link to decide where a mixed list needs a plain `related:` label. Each target opens through the existing Media View controls. [Catalogue Media View](../Catalogue_Media_View.md#document-build-and-presentation) owns the heading and display rules.
+
+Code review confirmed that rendering uses the mounted Work payload and skips an empty list. The adapter keeps prepared image handling on image controls and resolves the selected Gallery only on activation. It retains escaped labels and target attributes, the exact Gallery target check and the existing current-mount and error handling. Focused JavaScript lint, whitespace, site projection and site validation passed. Visual layout and interaction remain for manual review.
+
 ## Follow-on
 
-- **Display Gallery links on Catalogue pages.** The Work’s Catalogue JSON already needs these references for Media View. A page section could use the same references to open the selected Gallery, with membership loaded on activation. The existing **context** list remains the related-document section.
 - **Move Gallery ownership to Docs Viewer.** The separate [Gallery Ownership delivery](Docs_Viewer_Gallery_Ownership.md) owns source migration, Gallery production and management UI.
 - **Investigate Related Links in Media View.** Reuse the Work’s document relationships where appropriate and define what makes a document related to a Gallery. This follows separately from Work adoption and Gallery production.

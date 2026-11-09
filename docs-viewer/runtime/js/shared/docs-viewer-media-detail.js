@@ -96,6 +96,7 @@ function mountCatalogueReferences(context) {
     } catch (_error) { return; }
     var inlineImage = control.querySelector("[data-docs-media-image]");
     if (groupTarget(target) && inlineImage) return;
+    var preparedImage = inlineImage && context.preparedImage;
     var placeholder = control.querySelector("[data-docs-media-placeholder]");
     var status = marker.ownerDocument.createElement("span");
     status.setAttribute("role", "status");
@@ -150,14 +151,16 @@ function mountCatalogueReferences(context) {
       message("");
       try {
         if (typeof context.openMediaTarget !== "function") throw new Error("Catalogue media is unavailable in this view.");
-        await context.openMediaTarget(context.preparedImage ? request() : Object.assign(request(), {
-          onPresentation: function (presentation) { projectInlineImage(presentation.image); }
-        }));
-        if (context.preparedImage && inlineImage.hidden) projectInlineImage(context.preparedImage);
+        var selection = request();
+        if (inlineImage && !preparedImage) {
+          selection.onPresentation = function (presentation) { projectInlineImage(presentation.image); };
+        }
+        await context.openMediaTarget(selection);
+        if (preparedImage && inlineImage.hidden) projectInlineImage(preparedImage);
         if (isCurrent()) message("");
       } catch (error) {
         if (isCurrent()) {
-          if (inlineImage && !context.preparedImage) imageFailed();
+          if (inlineImage && !preparedImage) imageFailed();
           message(" " + (error.message || "Catalogue media is unavailable.") + " Try again.");
         }
       } finally {
@@ -170,7 +173,7 @@ function mountCatalogueReferences(context) {
     control.addEventListener("click", handleClick);
     if (inlineImage) {
       inlineImage.addEventListener("error", imageFailed);
-      if (context.preparedImage) projectInlineImage(context.preparedImage);
+      if (preparedImage) projectInlineImage(preparedImage);
       else initialImage();
     }
     cleanups.push(function () {

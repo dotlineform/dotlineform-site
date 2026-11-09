@@ -27,17 +27,43 @@ function imageControl(presentation, entry) {
     + '<span data-docs-media-placeholder hidden>' + title + "</span></button>";
 }
 
-function iconMarkup(kind) {
-  var name = kind === "download" ? "file" : "link";
+function iconMarkup(name) {
   var url = new URL("../../../static/icons/" + name + ".svg", import.meta.url).href;
   return '<span class="docsViewer__inlineIcon" data-docs-icon="' + name + '" aria-hidden="true" style="display:inline-block;width:1em;height:1em;vertical-align:-0.125em;background-color:currentColor;mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-image:url(' + escape(url) + ');"></span>';
 }
 
+function mediaTargetAttributes(target) {
+  return 'data-docs-content-detail="media" data-docs-media-kind="' + escape(target.kind)
+    + '" data-docs-media-id="' + escape(target.id) + '"';
+}
+
+function mediaTextLink(target, label) {
+  return '<span ' + mediaTargetAttributes(target) + '><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>'
+    + escape(label) + "</button></span>";
+}
+
+function galleryListMarkup(galleries) {
+  var rows = galleries.map(function (gallery) {
+    var target = { kind: "catalogue-gallery", id: gallery.id };
+    return "<li>" + iconMarkup("images") + " " + mediaTextLink(target, gallery.label) + "</li>";
+  }).join("");
+  return "<ul>" + rows + "</ul>";
+}
+
+function galleryLinksMarkup(galleries) {
+  if (!galleries.length) return "";
+  var firstRelated = galleries.findIndex(function (gallery) { return gallery.relation === "series"; });
+  var heading = firstRelated === 0 ? "related galleries" : "galleries";
+  var lists = firstRelated > 0
+    ? galleryListMarkup(galleries.slice(0, firstRelated)) + "<p>related:</p>" + galleryListMarkup(galleries.slice(firstRelated))
+    : galleryListMarkup(galleries);
+  return '<section class="docsViewerCatalogueEntry__galleries"><h2>' + heading + "</h2>" + lists + "</section>";
+}
+
 function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
   var options = reference.options;
-  var attrs = 'data-docs-content-detail="media" data-docs-media-kind="' + escape(reference.target.kind)
-    + '" data-docs-media-id="' + escape(reference.target.id) + '"';
-  if (reference.presentation === "media") return '<span ' + attrs + '><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>' + escape(options.label) + "</button></span>";
+  if (reference.presentation === "media") return mediaTextLink(reference.target, options.label);
+  var attrs = mediaTargetAttributes(reference.target);
   var image = imageControl(presentation, reference.presentation === "entry");
   if (reference.presentation === "image") {
     var placement = { full: "docsViewerFigure--full-column", left: "docsViewerFigure--image-left", right: "docsViewerFigure--image-right" }[options.placement];
@@ -49,12 +75,14 @@ function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
   var entry = presentation.entry;
   var rows = entry.resources.map(function (resource) {
     var url = resource.kind === "download" ? downloadUrl(resource.identity) : resourceUrl(resource.url);
-    return "<li>" + iconMarkup(resource.kind) + ' <a href="' + escape(url) + '" target="_blank" rel="noopener noreferrer">' + escape(resource.label) + "</a></li>";
+    var icon = resource.kind === "download" ? "file" : "link";
+    return "<li>" + iconMarkup(icon) + ' <a href="' + escape(url) + '" target="_blank" rel="noopener noreferrer">' + escape(resource.label) + "</a></li>";
   }).join("");
   return '<article class="docsViewerCatalogueEntry"><div class="docsViewerCatalogueEntry__record"><h1>' + escape(presentation.label)
     + '</h1><figure class="docsViewerCatalogueEntry__image" ' + attrs + ">" + image + '</figure><p class="docsViewerCatalogueEntry__metadata">'
     + entry.metadata_lines.map(escape).join("<br>") + "</p></div>"
-    + (rows ? '<div class="docsViewerCatalogueEntry__resources"><section data-catalogue-resource="links"><ul>' + rows + "</ul></section></div>" : "") + "</article>";
+    + (rows ? '<div class="docsViewerCatalogueEntry__resources"><section data-catalogue-resource="links"><ul>' + rows + "</ul></section></div>" : "")
+    + galleryLinksMarkup(presentation.galleries) + "</article>";
 }
 
 /** Mount the prepared display data before any Media View target is selected. */
@@ -66,9 +94,9 @@ export function mountCatalogueDocument(context) {
     try {
       var presentation = null;
       if (reference.presentation !== "media") {
-        var entry = reference.presentation === "entry" ? catalogue.work : null;
-        var image = context.image(entry ? entry.image : reference.render);
-        presentation = { label: image.alt, image: image, entry: entry && entry.entry };
+        var work = reference.presentation === "entry" ? catalogue.work : null;
+        var image = context.image(work ? work.image : reference.render);
+        presentation = { label: image.alt, image: image, entry: work && work.entry, galleries: work && work.galleries };
       }
       slot.innerHTML = catalogueReferenceMarkup(reference, presentation, context.downloadUrl);
       context.bind(slot, presentation && {
