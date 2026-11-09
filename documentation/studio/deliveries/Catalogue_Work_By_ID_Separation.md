@@ -5,14 +5,14 @@ title: Catalogue Work By-ID Separation
 added_date: "2026-11-09 10:36:36"
 last_updated: "2026-11-09"
 summary: Adopt Studio Work records at Catalogue Regenerate and serve document rendering, Media View, Publish and Export from adopted Catalogue documents.
-ui_status: active
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Work By-ID Separation
 
 ## Current And Next State
 
-WJ.3 is complete. Working and site-preview verification, code review and the public cutover are complete through Publish. The shared reader, Publish, Export, content-bearing Prepare Package and Broken Links consume adopted Catalogue documents. WJ.4 awaits release of the prepared site. Commit, push and public deployment are separate actions.
+WJ.4 is complete. The deployed site uses the shared reader and adopted Catalogue documents. Publish, Export, content-bearing Prepare Package and Broken Links consume the same adopted Work data. The delivery and its local cutover selection are ready for manual archive. [Generated Data Contracts](../Generated_Data_Contracts.md#catalogue-reference-and-presentation), [Catalogue Media View](../Catalogue_Media_View.md) and [Catalogue Deployment](../Catalogue_Deployment.md) retain the shipped contracts.
 
 This delivery takes over the Work adoption, document reader and downstream preparation changes currently grouped into GO.2 of [Docs Viewer Gallery Ownership](Docs_Viewer_Gallery_Ownership.md). WJ.0 confirmed the handoffs and consumers and agreed the [baseline, cutover and verification](#wj0-readiness-findings) on 2026-11-09. [Planned Features](../Planned_Features.md) is the parent. [Development Workflow](../Development_Workflow.md) and [Development Checklist](../Development_Checklist.md) govern implementation and review.
 
@@ -26,7 +26,9 @@ Working browser evidence showed zero Work by-ID URLs at the initial *3 symbols* 
 
 Site preview opened *3 symbols* with zero Work by-ID URLs. The first opener loaded `00638`. Gallery `005` loaded only membership and thumbnail policy, and selecting its member loaded `03188`. The direct `03188` page displayed its public image and reused its loaded Work presentation on open.
 
-The user deleted Work `04620` in Studio and ran Refresh, Regenerate and Publish. Its Working source, raw handoff and Working, Preview and tracked public Catalogue payloads are absent. The Catalogue manifests and Gallery `142` omit the Work, the tracked thumbnail is deleted and all queues are empty. The tracked document delta added no referrer payloads beyond the cutover selection. Site validation passed.
+The user deleted Work `04620` in Studio and ran Refresh, Regenerate and Publish. At deletion verification its Working source, raw handoff and Working, Preview and tracked public Catalogue payloads were absent. The Catalogue manifests and Gallery `142` omitted the Work, the tracked thumbnail was deleted and all queues were empty. The tracked document delta added no referrer payloads beyond the cutover selection. Site validation passed.
+
+The user subsequently re-added `04620`, committed the prepared site and reported a successful Deploy Public run. The live Catalogue document for `04620`, the *3 symbols* referrer and the shared workspace provider matched the corresponding files at `7df8ee6222` byte for byte. The retired raw Work URL for `04620` returned HTTP 404. The user confirmed the re-added Work was visible on the public site.
 
 The code review traced exact reads and completion through the renderer, builders, Publish and Export. Work JSON stays scoped to Regenerate. The browser resolves prepared assets and keeps Work and Gallery selection state within the mount. Python projects selected payloads and carries loaded Work data and media identities through each operation. Broken Links uses the shared adopted-document lookup. Retained safeguards cover exact target identity, configured path and symlink confinement, safe URL and markup handling, and verified selected transfers before queue removal.
 
@@ -77,7 +79,7 @@ Working and public use the same reader contract. Route configuration supplies th
 - [x] **WJ.1 — Adopt and project.** Add queue-selected adoption through the document writer, including deletion and ordinary Build preservation. Seed the explicitly agreed Work baseline and prepare the selected Working referrers before switching readers. Produce render-ready referring documents and complete Catalogue Work documents from the adopted data. Keep existing pending effects and the Gallery handoff intact.
 - [x] **WJ.2 — Switch readers and preparation.** Use the document contracts in Working and public Media View. Switch Publish, Export, content-bearing Prepare Package and Broken Links. Retire the raw Work read route and public copy path after consumer and cutover review. Project and validate the public runtime through the normal site tooling.
 - [x] **WJ.3 — Verify and review.** Compare selected payloads and request traces for an inline image, a text opener, direct Catalogue entry and Gallery traversal. Confirm that the same prepared candidates resolve against the configured Working and public roots. Exercise the agreed selected Publish and Export cases, including a Work text link’s packaged image and a selected Work removal. Confirm the adoption boundary, exact transfer completion and absence of referrer fanout. Complete the mandatory Redundancy And Defensive Behavior Review before acceptance. Agree live writes and any test or benchmark work separately.
-- [ ] **WJ.4 — Closeout.** Update the durable reader and preparation contracts and reconcile the Gallery Ownership delivery’s scope. Follow the [public rollout](#public-rollout) and record conversion, runtime projection, Publish and deployment evidence as separate outcomes.
+- [x] **WJ.4 — Closeout.** Update the durable reader and preparation contracts and reconcile the Gallery Ownership delivery’s scope. Follow the [public rollout](#public-rollout) and record conversion, runtime projection, Publish and deployment evidence as separate outcomes.
 
 ## Follow-on
 

@@ -150,7 +150,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
-- [Catalogue Work By-ID Separation](deliveries/Catalogue_Work_By_ID_Separation.md) — Working conversion, queued Publish, raw-copy cleanup, site-preview navigation, text-only Export and selected Work removal verified. The prepared site awaits deployment.
+- [Catalogue Work By-ID Separation](deliveries/Catalogue_Work_By_ID_Separation.md) — Complete and deployed on 2026-11-09. Working conversion, Publish, raw-copy cleanup, site-preview navigation, text-only Export and selected Work removal verified. The live site serves the new reader and the re-added Work `04620`. Retain the delivery pending manual archive. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation), [Catalogue Media View](Catalogue_Media_View.md) and [Catalogue Deployment](Catalogue_Deployment.md) own the shipped behavior.
 
 - [Collection Export](deliveries/Collection_Export.md) — Implemented, consolidated and cleanup-reviewed on 2026-10-19; awaiting manual acceptance. Export is available only in Collection Actions, with one browser workflow and a collection-only snapshot service. The six approved follow-up cleanups remove prior-manifest audits, repeated media work/root resolution, downstream record checks, duplicate directory preparation and browser decision rechecks; exact-bytes confirmation and final verification remain. Focused lint/compilation/import diagnostics, whitespace and bounded code review passed. Tests and live Export remain unrun; restart Docs Viewer and reload Manage before review. [Export](Export.md) owns shipped behavior and the Catalogue external-media limit.
 
