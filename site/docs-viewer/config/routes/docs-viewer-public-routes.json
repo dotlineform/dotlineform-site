@@ -35,7 +35,9 @@
       "catalogue_paths": {
         "gallery_records_base_url": "/assets/data/catalogue/galleries/index/",
         "media_config_url": "/assets/data/catalogue/media-config.json",
-        "work_thumbnails_base_url": "/assets/data/catalogue/works/thumbs/"
+        "work_thumbnails_base_url": "/assets/data/catalogue/works/thumbs/",
+        "work_primary_base_url": "https://media.dotlineform.com/works/img/",
+        "work_files_base_url": "https://media.dotlineform.com/works/files/"
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",

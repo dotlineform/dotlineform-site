@@ -1,6 +1,9 @@
 import {
   readPublicCatalogueGallery,
-  catalogueGalleryMediaPresentation
+  catalogueGalleryMediaPresentation,
+  catalogueAssetUrl,
+  catalogueDocumentImage,
+  catalogueDocumentWorkPresentation
 } from "./docs-viewer-catalogue-media.js";
 import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
 import { documentTarget } from "./docs-viewer-document-target.js";
@@ -104,24 +107,16 @@ export function createDocsViewerWorkspaceProvider(options) {
       return mediaPolicyRead;
     };
   }
-  if (source && typeof source.createCataloguePresentationOperation === "function") {
-    provider.createCataloguePresentationOperation = source.createCataloguePresentationOperation;
-  } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
-    provider.createCataloguePresentationOperation = function (payload) {
-      var embedded = payload && payload.catalogue && payload.catalogue.presentations || {};
-      return { live: false, readWork: async function (workId, optionsForRead) {
-        var key = "catalogue-work:" + workId;
-        if (!optionsForRead || !optionsForRead.navigation) {
-          if (!embedded[key]) throw new Error("Embedded Work presentation is unavailable: " + workId);
-          return embedded[key];
-        }
-        var selected = await readDocument({ collection: "catalogue", doc_id: workId });
-        var presentation = selected.catalogue && selected.catalogue.presentations && selected.catalogue.presentations[key];
-        if (!presentation) throw new Error("Prepared Catalogue Work presentation is unavailable: " + workId);
-        return presentation;
-      } };
-    };
-  }
+  provider.catalogueImage = function (image) {
+    return catalogueDocumentImage(image, routeContext().routeConfig.catalogueWorkPrimaryBaseUrl);
+  };
+  provider.catalogueDownloadUrl = function (identity) {
+    return catalogueAssetUrl(routeContext().routeConfig.catalogueWorkFilesBaseUrl, identity);
+  };
+  provider.readCatalogueWorkPresentation = async function (workId, loadedPayload) {
+    var payload = loadedPayload || await readDocument({ collection: "catalogue", doc_id: workId });
+    return catalogueDocumentWorkPresentation(payload, workId, routeContext().routeConfig.catalogueWorkPrimaryBaseUrl);
+  };
   if (source && typeof source.readCatalogueGallery === "function") {
     provider.readCatalogueGallery = function (galleryId) { return source.readCatalogueGallery(galleryId); };
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {

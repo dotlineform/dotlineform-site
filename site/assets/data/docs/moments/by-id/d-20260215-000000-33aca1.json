@@ -6,7 +6,8 @@
   "date": "2019-04-22",
   "date_display": "22 Apr 2019",
   "draft": false,
-  "content_html": "<h1>leaves</h1>\n<p class=\"momentDate\">22 Apr 2019</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04657\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open leaves\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04657-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04657-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04657-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04657-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"leaves\" width=\"4032\" height=\"3024\" decoding=\"async\"><span data-docs-media-placeholder hidden>leaves</span></button></figure></div>\n<pre class=\"moment-text\">\nleaves float on silky stems\nflowers float just above the ground\nlight infuses everything\n \nis love really like this?\ndoes it sometimes feel like nature\nlimitless and free\n \nor does it constrict\nby circumstance and rules\nour paths, like a twisting thread\n \nis it possible to unravel\nthe curls of our thoughts\nand what will happen if we do?\n \nwill i dissolve into wine\nand be reborn a grape\nsoaking up the sun?\n \nin a field somewhere\nin peace with all the creatures\nall the mice and the birds\n</pre>\n",
+  "has_thumbnail": true,
+  "content_html": "<h1>leaves</h1>\n<p class=\"momentDate\">22 Apr 2019</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<pre class=\"moment-text\">\nleaves float on silky stems\nflowers float just above the ground\nlight infuses everything\n \nis love really like this?\ndoes it sometimes feel like nature\nlimitless and free\n \nor does it constrict\nby circumstance and rules\nour paths, like a twisting thread\n \nis it possible to unravel\nthe curls of our thoughts\nand what will happen if we do?\n \nwill i dissolve into wine\nand be reborn a grape\nsoaking up the sun?\n \nin a field somewhere\nin peace with all the creatures\nall the mice and the birds\n</pre>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -22,50 +23,29 @@
           "summary_html": "",
           "placement": "full",
           "fill_width": true
-        }
-      }
-    ],
-    "presentations": {
-      "catalogue-work:04657": {
-        "schema_version": "docs_media_view_v2",
-        "target": {
-          "kind": "catalogue-work",
-          "id": "04657"
         },
-        "label": "leaves",
-        "image": {
-          "src": "https://media.dotlineform.com/works/img/04657-primary-800.webp?v=1",
+        "render": {
+          "alt": "leaves",
+          "width_px": 4032,
+          "height_px": 3024,
+          "version": 1,
+          "default": "04657-primary-800.webp",
           "candidates": [
             {
-              "src": "https://media.dotlineform.com/works/img/04657-primary-800.webp?v=1",
+              "identity": "04657-primary-800.webp",
               "width_px": 800
             },
             {
-              "src": "https://media.dotlineform.com/works/img/04657-primary-1200.webp?v=1",
+              "identity": "04657-primary-1200.webp",
               "width_px": 1200
             },
             {
-              "src": "https://media.dotlineform.com/works/img/04657-primary-1600.webp?v=1",
+              "identity": "04657-primary-1600.webp",
               "width_px": 1600
             }
-          ],
-          "alt": "leaves",
-          "width_px": 4032,
-          "height_px": 3024
-        },
-        "new_tab_target": "https://media.dotlineform.com/works/img/04657-primary-1600.webp?v=1",
-        "galleries": [
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "308"
-            },
-            "label": "moments",
-            "relation": "direct"
-          }
-        ]
+          ]
+        }
       }
-    }
-  },
-  "has_thumbnail": true
+    ]
+  }
 }

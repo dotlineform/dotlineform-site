@@ -1,4 +1,4 @@
-/** The browser serialization adapter for live references; prepared markup is bound in place. */
+/** Render portable Catalogue references from the loaded document. */
 function escape(value) {
   return String(value).replace(/[&<>"']/g, function (character) {
     return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character];
@@ -33,7 +33,7 @@ function iconMarkup(kind) {
   return '<span class="docsViewer__inlineIcon" data-docs-icon="' + name + '" aria-hidden="true" style="display:inline-block;width:1em;height:1em;vertical-align:-0.125em;background-color:currentColor;mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-image:url(' + escape(url) + ');"></span>';
 }
 
-export function catalogueReferenceMarkup(reference, presentation) {
+function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
   var options = reference.options;
   var attrs = 'data-docs-content-detail="media" data-docs-media-kind="' + escape(reference.target.kind)
     + '" data-docs-media-id="' + escape(reference.target.id) + '"';
@@ -48,7 +48,8 @@ export function catalogueReferenceMarkup(reference, presentation) {
   }
   var entry = presentation.entry;
   var rows = entry.resources.map(function (resource) {
-    return "<li>" + iconMarkup(resource.kind) + ' <a href="' + escape(resourceUrl(resource.url)) + '" target="_blank" rel="noopener noreferrer">' + escape(resource.label) + "</a></li>";
+    var url = resource.kind === "download" ? downloadUrl(resource.identity) : resourceUrl(resource.url);
+    return "<li>" + iconMarkup(resource.kind) + ' <a href="' + escape(url) + '" target="_blank" rel="noopener noreferrer">' + escape(resource.label) + "</a></li>";
   }).join("");
   return '<article class="docsViewerCatalogueEntry"><div class="docsViewerCatalogueEntry__record"><h1>' + escape(presentation.label)
     + '</h1><figure class="docsViewerCatalogueEntry__image" ' + attrs + ">" + image + '</figure><p class="docsViewerCatalogueEntry__metadata">'
@@ -56,41 +57,27 @@ export function catalogueReferenceMarkup(reference, presentation) {
     + (rows ? '<div class="docsViewerCatalogueEntry__resources"><section data-catalogue-resource="links"><ul>' + rows + "</ul></section></div>" : "") + "</article>";
 }
 
-/** Resolve one activation's references and pass carried presentations into interaction binding. */
+/** Mount the prepared display data before any Media View target is selected. */
 export function mountCatalogueDocument(context) {
-  var released = false;
-  var listeners = [];
-  var references = context.payload && context.payload.catalogue && context.payload.catalogue.references || [];
-  var operation = context.createOperation();
-  var mounts = references.map(function (reference) {
+  var catalogue = context.payload.catalogue;
+  catalogue.references.forEach(function (reference) {
     var slot = context.content.querySelector('[data-docs-catalogue-ref="' + reference.reference_id + '"]');
     if (!slot) return;
-    async function mount(selectedOperation) {
-      try {
-        var presentation = reference.presentation !== "media" && reference.target.kind === "catalogue-work"
-          ? await selectedOperation.readWork(reference.target.id) : null;
-        if (released || !context.isCurrent()) return;
-        if (selectedOperation.live) slot.innerHTML = catalogueReferenceMarkup(reference, presentation);
-        context.bind(slot, presentation);
-      } catch (error) {
-        if (released || !context.isCurrent()) return;
-        var status = slot.ownerDocument.createElement("span");
-        status.setAttribute("role", "status");
-        status.textContent = error.message + " ";
-        var retry = slot.ownerDocument.createElement("button");
-        retry.type = "button";
-        retry.textContent = "Retry";
-        var handleRetry = function () { status.remove(); mount(context.createOperation()); };
-        retry.addEventListener("click", handleRetry);
-        listeners.push(function () { retry.removeEventListener("click", handleRetry); status.remove(); });
-        status.appendChild(retry);
-        slot.appendChild(status);
+    try {
+      var presentation = null;
+      if (reference.presentation !== "media") {
+        var entry = reference.presentation === "entry" ? catalogue.work : null;
+        var image = context.image(entry ? entry.image : reference.render);
+        presentation = { label: image.alt, image: image, entry: entry && entry.entry };
       }
+      slot.innerHTML = catalogueReferenceMarkup(reference, presentation, context.downloadUrl);
+      context.bind(slot, presentation && {
+        src: image.src, srcset: image.srcset, alt: image.alt,
+        widthPx: image.width_px, heightPx: image.height_px
+      });
+    } catch (error) {
+      slot.setAttribute("role", "status");
+      slot.textContent = error.message;
     }
-    return mount(operation);
   });
-  return {
-    ready: Promise.all(mounts),
-    release: function () { released = true; listeners.forEach(function (release) { release(); }); }
-  };
 }

@@ -7,7 +7,7 @@
   "date_display": "23 Oct 2024",
   "draft": false,
   "has_thumbnail": true,
-  "content_html": "<h1>13 moments in october</h1>\n<p class=\"momentDate\">23 Oct 2024</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04626\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open 13 moments in october\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04626-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04626-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04626-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04626-primary-1600.webp?v=1 1430w\" sizes=\"100vw\" alt=\"13 moments in october\" width=\"1430\" height=\"1430\" decoding=\"async\"><span data-docs-media-placeholder hidden>13 moments in october</span></button></figure></div>\n<pre class=\"moment-text\">\nwe should be sleeping\nallow the winter to heal\nbut instead we see everything falling apart in clear sight\n \nthere is an internal swell\nwhen everything on the outside is turning cold\nshivers\n \nalways fighting doubt until the light goes out\n</pre>\n",
+  "content_html": "<h1>13 moments in october</h1>\n<p class=\"momentDate\">23 Oct 2024</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<pre class=\"moment-text\">\nwe should be sleeping\nallow the winter to heal\nbut instead we see everything falling apart in clear sight\n \nthere is an internal swell\nwhen everything on the outside is turning cold\nshivers\n \nalways fighting doubt until the light goes out\n</pre>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -23,49 +23,29 @@
           "summary_html": "",
           "placement": "full",
           "fill_width": true
-        }
-      }
-    ],
-    "presentations": {
-      "catalogue-work:04626": {
-        "schema_version": "docs_media_view_v2",
-        "target": {
-          "kind": "catalogue-work",
-          "id": "04626"
         },
-        "label": "13 moments in october",
-        "image": {
-          "src": "https://media.dotlineform.com/works/img/04626-primary-800.webp?v=1",
+        "render": {
+          "alt": "13 moments in october",
+          "width_px": 1430,
+          "height_px": 1430,
+          "version": 1,
+          "default": "04626-primary-800.webp",
           "candidates": [
             {
-              "src": "https://media.dotlineform.com/works/img/04626-primary-800.webp?v=1",
+              "identity": "04626-primary-800.webp",
               "width_px": 800
             },
             {
-              "src": "https://media.dotlineform.com/works/img/04626-primary-1200.webp?v=1",
+              "identity": "04626-primary-1200.webp",
               "width_px": 1200
             },
             {
-              "src": "https://media.dotlineform.com/works/img/04626-primary-1600.webp?v=1",
+              "identity": "04626-primary-1600.webp",
               "width_px": 1430
             }
-          ],
-          "alt": "13 moments in october",
-          "width_px": 1430,
-          "height_px": 1430
-        },
-        "new_tab_target": "https://media.dotlineform.com/works/img/04626-primary-1600.webp?v=1",
-        "galleries": [
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "308"
-            },
-            "label": "moments",
-            "relation": "direct"
-          }
-        ]
+          ]
+        }
       }
-    }
+    ]
   }
 }
