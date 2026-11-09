@@ -349,6 +349,7 @@ export function startDocsViewerRuntime(options) {
       }
     },
     mountDocumentExtras: settings.mountDocumentExtras,
+    replaceCatalogueSearch: function (query) { routeWorkflowCommands.replaceCatalogueSearch(query); },
     openDocument: async function (target, response) {
       var projectionErrors = response && response.record
         ? collectionProvider.commitDocumentChange({ target: target, record: response.record }) : [];
@@ -853,7 +854,7 @@ export function startDocsViewerRuntime(options) {
     });
   }
 
-  function renderPayload(doc, payload, hash) { return documentController.renderPayload(doc, payload, hash); }
+  function renderPayload(doc, payload, hash, options) { return documentController.renderPayload(doc, payload, hash, options); }
 
   function cancelSearchDebounce() {
     var searchRecent = appSession.domains.searchRecent;

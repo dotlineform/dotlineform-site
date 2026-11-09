@@ -1,5 +1,7 @@
 import { documentTarget } from "./docs-viewer-document-target.js";
 
+export const CATALOGUE_SEARCH_PARAM = "catalogue-search";
+
 /** Construct a destination in the active reader route; callers live only in history. */
 export function buildViewerUrl(options) {
   var settings = options || {};
@@ -15,6 +17,7 @@ export function buildViewerUrl(options) {
   if (target.collection) url.searchParams.set("collection", target.collection);
   url.searchParams.set("doc", target.doc_id);
   if (settings.query) url.searchParams.set("q", settings.query.trim());
+  if (settings.catalogueSearch) url.searchParams.set(CATALOGUE_SEARCH_PARAM, settings.catalogueSearch);
   url.hash = settings.hash || "";
   return url.pathname + url.search + url.hash;
 }
@@ -34,7 +37,7 @@ export function routeFromAnchorHref(href, options) {
       throw new Error("Document route contains repeated identity fields.");
     }
     var target = documentTarget({ doc_id: url.searchParams.get("doc"), collection: url.searchParams.get("collection") || "" }, { review: settings.viewerPathname === "/docs-review/" });
-    return { target: target, hash: url.hash.slice(1) };
+    return { target: target, hash: url.hash.slice(1), catalogueSearch: url.searchParams.get(CATALOGUE_SEARCH_PARAM) };
   } catch (error) {
     return { error: error.message };
   }

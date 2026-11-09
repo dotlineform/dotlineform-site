@@ -1,4 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { CATALOGUE_SEARCH_PARAM } from "../shared/docs-viewer-router.js";
 import { createDocsViewerEditMenuItem } from "./docs-viewer-management-edit-menu.js";
 import { mountDocsViewerPaginationControl } from "./docs-viewer-pagination-control.js";
 import {
@@ -600,6 +601,34 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       });
   }
 
+  function mountCatalogueSearchCopy({ host, before }) {
+    var documentRef = host.ownerDocument;
+    var button = documentRef.createElement("button");
+    button.type = "button";
+    button.className = "docsViewer__toolbarIconButton";
+    button.title = "Copy search link";
+    button.setAttribute("aria-label", button.title);
+    button.disabled = true;
+    button.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--search-check"));
+    host.insertBefore(button, before);
+    var query = "";
+    button.addEventListener("click", async function () {
+      if (!query) return;
+      var params = new URLSearchParams({ doc: options.catalogueSearchHostId, [CATALOGUE_SEARCH_PARAM]: query });
+      var label = query.replace(/\s+/g, " ").replace(/[\\[\]`*_~<>&!]/g, "\\$&");
+      try {
+        await writeClipboardText(documentRef, "[Catalogue search: " + label + "](?" + params.toString() + ")");
+        options.setStatus("Catalogue search link copied.", false);
+      } catch (error) {
+        options.setStatus(error.message || "Copy search link failed.", true);
+      }
+    });
+    return { update: function (value) {
+      query = value.trim();
+      button.disabled = !query;
+    } };
+  }
+
   return {
     ...(options.paginationToggle ? {
       paginationDefault: false,
@@ -609,6 +638,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       }
     } : {}),
     captureListState: selectionOwner.snapshot,
+    mountCatalogueSearchCopy: options.catalogueSearchHostId ? mountCatalogueSearchCopy : null,
     restoreListState: function (saved) { selectionOwner.restore(saved, inventoryDocIds); },
     id: "default",
     notify: notify,

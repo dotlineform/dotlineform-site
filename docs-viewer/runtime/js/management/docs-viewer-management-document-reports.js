@@ -92,6 +92,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
     var defaultContribution = modules[0].createDocsViewerManagementCollectionDefaultContribution({
       clientOptions: clientOptions,
       managementContext: Boolean(settings.managementContext),
+      catalogueSearchHostId: settings.managementContext && collection === "catalogue" ? collectionConfig.reportHostDocId : "",
       paginationToggle: collectionConfig.collectionType === "book-collection",
       markdownLinkForDocument: function (target, documentRecord) {
         return markdownLinkForCollectionDocument(
@@ -279,6 +280,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     setStatus: settings.setStatus,
     collectionReportContributionPromise: contribution,
     collectionConfig: collectionConfig,
+    catalogueSearchRoute: settings.catalogueSearchRoute,
     collectionProvider: settings.collectionProvider,
     openDocument: settings.openDocument,
     routeContext: routeContext,

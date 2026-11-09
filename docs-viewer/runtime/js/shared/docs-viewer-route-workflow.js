@@ -1,4 +1,4 @@
-import { buildViewerUrl, routeFromAnchorHref } from "./docs-viewer-router.js";
+import { buildViewerUrl, CATALOGUE_SEARCH_PARAM, routeFromAnchorHref } from "./docs-viewer-router.js";
 import { documentTarget, documentTargetKey } from "./docs-viewer-document-target.js";
 import { createDocsViewerNavigation } from "./docs-viewer-navigation.js";
 
@@ -11,6 +11,7 @@ export function initDocsViewerRouteWorkflow(context) {
   var selected = context.selectedDocument;
   var search = context.searchRecent;
   var displayedHash = "";
+  var displayedCatalogueSearch = "";
   var initialized = false;
   var pendingDocumentOpen = null;
   var navigation;
@@ -28,9 +29,9 @@ export function initDocsViewerRouteWorkflow(context) {
     });
     return result;
   }
-  function viewerUrl(docId, hash, query, targetOptions = {}) {
+  function viewerUrl(docId, hash, query, targetOptions = {}, catalogueSearch = "") {
     return buildViewerUrl({ docId: docId, collection: targetOptions.collection || "", hash: hash,
-      query: query, origin: window.location.origin, preservedQueryParams: preservedQueryParams(),
+      query: query, catalogueSearch: catalogueSearch, origin: window.location.origin, preservedQueryParams: preservedQueryParams(),
       viewerBaseUrl: currentValue(context.viewerBaseUrl) });
   }
   function viewerUrlForDocument(docId, options = {}) { return viewerUrl(docId, "", "", options); }
@@ -43,6 +44,20 @@ export function initDocsViewerRouteWorkflow(context) {
     if (route && route.error) throw new Error(route.error);
     return route ? route.target : documentTarget({ doc_id: currentValue(context.defaultRouteDocId) || context.defaultDocId() }, { review: currentValue(context.viewerPathname) === "/docs-review/" });
   }
+  function isCatalogueHost(target) {
+    return Boolean(target && !target.collection && currentValue(context.viewerPathname) !== "/docs-review/"
+      && target.doc_id === context.collectionConfig("catalogue")?.reportHostDocId);
+  }
+  function catalogueSearchFor(target, query) {
+    return typeof query === "string" && isCatalogueHost(target) ? query.trim() : undefined;
+  }
+  function replaceCatalogueSearch(query) {
+    var target = selected.documentTarget;
+    var next = catalogueSearchFor(target, query);
+    if (next === undefined || next === displayedCatalogueSearch) return;
+    displayedCatalogueSearch = next;
+    navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, search.searchQuery, target, next));
+  }
   function capturePositions() {
     var positions = [];
     for (var node = context.activeMount(); node; node = node.parentElement) {
@@ -51,18 +66,19 @@ export function initDocsViewerRouteWorkflow(context) {
     return positions;
   }
   async function capture() {
-    return { document: context.captureDocument(), hash: displayedHash,
+    return { document: context.captureDocument(), hash: displayedHash, catalogueSearch: displayedCatalogueSearch,
       positions: capturePositions(), x: window.scrollX, y: window.scrollY,
       focus: context.root.ownerDocument.activeElement,
       focusHref: context.root.ownerDocument.activeElement && context.root.ownerDocument.activeElement.href || "" };
   }
   async function restore(record) {
     if (!record) throw new Error("This navigation entry is unavailable.");
-    await context.restoreDocument(record.document);
     displayedHash = record.hash;
+    displayedCatalogueSearch = record.catalogueSearch;
+    await context.restoreDocument(record.document);
     // Index state belongs to the panel; align the restored route with its current query.
     var target = selected.documentTarget;
-    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, search.searchQuery, target));
+    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, search.searchQuery, target, displayedCatalogueSearch));
     record.positions.forEach(function (position) {
       if (position.node.isConnected) { position.node.scrollTop = position.top; position.node.scrollLeft = position.left; }
     });
@@ -74,11 +90,13 @@ export function initDocsViewerRouteWorkflow(context) {
   async function open(destination) {
     displayedHash = destination.hash || "";
     var target = destination.target;
+    var sameTarget = selected.documentTarget && documentTargetKey(selected.documentTarget) === documentTargetKey(target);
+    displayedCatalogueSearch = destination.catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : "");
     if (destination.indexDocId) {
       index.indexSelectedDocId = destination.indexDocId;
       context.trackSidebarSelection();
     }
-    if (!destination.force && await context.restoreRetainedDocument(target, displayedHash)) return target;
+    if (!destination.force && await context.restoreRetainedDocument(target, displayedHash, destination.catalogueSearch)) return target;
     selected.documentTarget = target;
     selected.displayedRecord = null;
     selected.displayedPayload = null;
@@ -92,7 +110,7 @@ export function initDocsViewerRouteWorkflow(context) {
       var policy = target.collection ? {} : index.docsById.get(target.doc_id) || {};
       var doc = Object.assign({}, policy, payload, target);
       selected.payloadCache.set(documentTargetKey(target), payload);
-      await context.renderPayload(doc, payload, displayedHash);
+      await context.renderPayload(doc, payload, displayedHash, { catalogueSearch: destination.catalogueSearch });
       return target;
     } catch (error) {
       context.handlePayloadError(error);
@@ -116,17 +134,20 @@ export function initDocsViewerRouteWorkflow(context) {
     var key = documentTargetKey(target);
     if (pendingDocumentOpen) return pendingDocumentOpen.key === key ? pendingDocumentOpen.promise : Promise.resolve(null);
     var hash = options.hash || "";
-    if (selected.documentTarget && documentTargetKey(target) === documentTargetKey(selected.documentTarget) && !options.force) {
+    var catalogueSearch = catalogueSearchFor(target, options.catalogueSearch);
+    var sameTarget = selected.documentTarget && documentTargetKey(target) === documentTargetKey(selected.documentTarget);
+    if (sameTarget && !options.force) {
       return (async function () {
         if (!await context.confirmDocumentNavigation()) return null;
         await context.prepareDocumentNavigation();
         if (options.indexDocId) { index.indexSelectedDocId = options.indexDocId; context.trackSidebarSelection(); }
         displayedHash = hash;
-        navigation.replaceUrl(viewerUrl(target.doc_id, hash, search.searchQuery, target));
-        if (!hash && selected.displayedPayload && selected.displayedPayload.report
+        displayedCatalogueSearch = catalogueSearch ?? displayedCatalogueSearch;
+        navigation.replaceUrl(viewerUrl(target.doc_id, hash, search.searchQuery, target, displayedCatalogueSearch));
+        if ((!hash || catalogueSearch !== undefined) && selected.displayedPayload && selected.displayedPayload.report
           && selected.displayedPayload.report.id === "docs_collection") {
           await navigation.update();
-          await context.restoreRetainedDocument(target, "");
+          await context.restoreRetainedDocument(target, hash, catalogueSearch);
         } else {
           context.scrollToHash(hash);
           await navigation.update();
@@ -134,8 +155,10 @@ export function initDocsViewerRouteWorkflow(context) {
         return target;
       })();
     }
-    var promise = navigation.open({ target: target, hash: hash, indexDocId: options.indexDocId, force: options.force === true,
-      url: viewerUrl(target.doc_id, hash, search.searchQuery, target) }, { replace: options.historyMode === "replace" });
+    var promise = navigation.open({ target: target, hash: hash, catalogueSearch: catalogueSearch,
+      indexDocId: options.indexDocId, force: options.force === true,
+      url: viewerUrl(target.doc_id, hash, search.searchQuery, target, catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : ""))
+    }, { replace: options.historyMode === "replace" });
     pendingDocumentOpen = { key: key, promise: promise };
     return promise.finally(function () {
       if (pendingDocumentOpen && pendingDocumentOpen.promise === promise) pendingDocumentOpen = null;
@@ -166,7 +189,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   function updateIndexHistory(query) {
     var target = selected.documentTarget;
-    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, query, target));
+    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, query, target, displayedCatalogueSearch));
     updateNavigation();
   }
   async function applyCurrentRoute() {
@@ -174,10 +197,11 @@ export function initDocsViewerRouteWorkflow(context) {
       var target = requestedTarget();
       if (!initialized) {
         initialized = true;
+        var catalogueSearch = catalogueSearchFor(target, new URLSearchParams(window.location.search).get(CATALOGUE_SEARCH_PARAM));
         context.syncIndexRoute(currentQuery());
-        return await navigation.initialize({ target: target, hash: currentHash(),
+        return await navigation.initialize({ target: target, hash: currentHash(), catalogueSearch: catalogueSearch,
           indexDocId: !target.collection && index.docsById.has(target.doc_id) ? target.doc_id : "",
-          url: viewerUrl(target.doc_id, currentHash(), currentQuery(), target) });
+          url: viewerUrl(target.doc_id, currentHash(), currentQuery(), target, catalogueSearch) });
       }
       return await loadDoc(target, { hash: currentHash(), historyMode: "replace", force: true });
     } catch (error) { context.handlePayloadError(error); return null; }
@@ -235,7 +259,8 @@ export function initDocsViewerRouteWorkflow(context) {
       event.preventDefault();
       if (route.error) { setStatus(route.error, true); return; }
       var row = anchor.closest("[data-doc-row-id]");
-      loadDoc(route.target, { hash: route.hash, indexDocId: row && row.dataset.docRowId }).catch(function (error) { setStatus(error.message, true); });
+      loadDoc(route.target, { hash: route.hash, catalogueSearch: route.catalogueSearch, indexDocId: row && row.dataset.docRowId })
+        .catch(function (error) { setStatus(error.message, true); });
     });
   }
   async function commitDeletedDocument(target) {
@@ -255,7 +280,7 @@ export function initDocsViewerRouteWorkflow(context) {
     context.hideDocPane();
   }
   var commands = { applyCurrentRoute: applyCurrentRoute, loadDoc: loadDoc, loadIndex: loadIndex,
-    resolveDocId: currentDocId, updateIndexHistory: updateIndexHistory,
+    resolveDocId: currentDocId, updateIndexHistory: updateIndexHistory, replaceCatalogueSearch: replaceCatalogueSearch,
     viewerUrl: viewerUrl, viewerUrlForDocument: viewerUrlForDocument,
     openPresentation: openPresentation, returnToDocument: returnToDocument,
     collectionIndexTarget: collectionIndexTarget, openCollectionIndex: openCollectionIndex,

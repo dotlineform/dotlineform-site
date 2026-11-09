@@ -180,6 +180,7 @@ export function createDocsViewerManagementCollectionContribution(options) {
       mountPaginationControl: defaultContribution.mountPaginationControl
     } : {}),
     captureListState: defaultContribution.captureListState,
+    mountCatalogueSearchCopy: defaultContribution.mountCatalogueSearchCopy,
     restoreListState: defaultContribution.restoreListState,
     notify: defaultContribution.notify,
     renderDetailToolbar: renderDetailToolbar,

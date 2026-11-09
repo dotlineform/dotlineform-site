@@ -223,6 +223,10 @@
   color: var(--docs-viewer-theme-text-placeholder);
 }
 
+.docsViewer__icon--search-check{
+  mask-image: url("../icons/search-check.svg");
+}
+
 .docsViewerReport__collectionFilterToolbar
   > .docsViewerReport__contributionToolbar--list{
   flex: 0 0 auto;

@@ -24,6 +24,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     viewerBaseUrl: settings.viewerBaseUrl,
     collectionProvider: settings.collectionProvider,
     openDocument: settings.openDocument,
+    catalogueSearchRoute: settings.catalogueSearchRoute,
     managementContext: false,
     managementService: null,
     payload: payload,

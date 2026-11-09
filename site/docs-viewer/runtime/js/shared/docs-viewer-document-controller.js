@@ -63,15 +63,15 @@ export function initDocsViewerDocumentController(context) {
       });
     } else handleMissingDoc();
   }
-  async function restoreRetained(target, hash) {
+  async function restoreRetained(target, hash, catalogueSearch) {
     var record = retained.get(documentTargetKey(target));
     if (!record) return false;
     if (!await activate(record)) return false;
     // A list owner may resume its last visible state independently of this entry.
     var resumed = false;
-    record.viewOwners.forEach(function (owner) { if (owner.resume) { owner.resume(); resumed = true; } });
+    record.viewOwners.forEach(function (owner) { if (owner.resume) { owner.resume(catalogueSearch); resumed = true; } });
     if (hash) scrollToHash(hash);
-    else if (!resumed) window.scrollTo(0, 0);
+    else if (!resumed || catalogueSearch !== undefined) window.scrollTo(0, 0);
     return true;
   }
 
@@ -138,7 +138,7 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
-  function mountDocumentExtras(doc, payload, mountGeneration) {
+  function mountDocumentExtras(doc, payload, mountGeneration, catalogueSearch) {
     var mountContent = content;
     var mountedRecord = activeRecord;
     var lifetime = mountedRecord.lifetime;
@@ -185,6 +185,12 @@ export function initDocsViewerDocumentController(context) {
         if (activeRecord === mountedRecord) context.publishCollectionReportState(state);
       },
       openDocument: context.openDocument,
+      catalogueSearchRoute: payload.report?.id === "docs_collection" && payload.report.collection === "catalogue" ? {
+        query: catalogueSearch,
+        replaceQuery: function (query) {
+          if (lifetime.active && activeRecord === mountedRecord) context.replaceCatalogueSearch(query);
+        }
+      } : null,
       commitDeletedDocument: context.commitDeletedDocument,
       collectionProvider: collectionProvider,
       managementDocumentActions: context.managementDocumentActions || null,
@@ -478,7 +484,7 @@ export function initDocsViewerDocumentController(context) {
     var mediaMount = mountMediaDetails(doc, payload, mountGeneration);
     if (waitForLayout && !await revealCatalogueLayout(record, mediaMount, mountGeneration)) return;
     mountImageDetails(doc, payload, mountGeneration);
-    mountDocumentExtras(doc, payload, mountGeneration);
+    mountDocumentExtras(doc, payload, mountGeneration, options.catalogueSearch);
     document.title = payload.title + " | dotlineform";
     setStatus("", false);
     context.renderManagementUi();

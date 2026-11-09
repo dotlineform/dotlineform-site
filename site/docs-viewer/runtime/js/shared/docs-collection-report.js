@@ -31,6 +31,7 @@ import {
  * @property {function(Object): Object} createListManagement Manage-owned data, updates and refresh.
  * @property {boolean} [paginationDefault] Caller-owned initial pagination choice.
  * @property {function(Object): Object} [mountPaginationControl] Local control over shared pagination state.
+ * @property {function(Object): Object} [mountCatalogueSearchCopy] Manage-only copy control for the Catalogue query.
  * @property {function(): void} [resetSelection] Clear selection when the pagination control changes mode.
  */
 
@@ -293,6 +294,7 @@ function updateFilterControls(state) {
       : "Clear " + collectionItemsLabel(state.collection) + (state.features.delayedSearch ? " search" : " title filter")
   );
   state.filterClearNode.title = state.filterClearNode.getAttribute("aria-label");
+  state.searchCopy?.update(state.query);
 }
 
 function visibleDocuments(state) {
@@ -331,6 +333,7 @@ function bindFilterControls(state) {
   state.filterInputNode.addEventListener("input", function () {
     if (!state.mounted) return;
     state.query = state.filterInputNode.value;
+    state.searchCopy?.update(state.query);
     if (state.features.delayedSearch) {
       cancelCollectionSearch(state);
       state.listNeedsRender = true;
@@ -529,6 +532,7 @@ function renderListProjection(state) {
   state.matches = query && gallerySearch?.project ? gallerySearch.project(query, documents) : documents;
   state.management?.prepareProjection(documents);
   renderListPage(state);
+  state.catalogueSearchRoute?.replaceQuery(state.query);
   state.listNeedsRender = false;
 }
 
@@ -677,6 +681,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     paginationControl: null,
     thumbnailSettingsRead: null,
     gallerySearch: null,
+    catalogueSearchRoute: context.catalogueSearchRoute,
     collectionSortNode: refs.collectionSortNode,
     matches: [],
     pageIndex: 0,
@@ -714,6 +719,9 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     resolveThumbnails: resolvePendingThumbnails
   }) : null;
   state.browsingData = state.management ? state.management.data : createCollectionBrowsingData(browsingOptions);
+  state.searchCopy = contributionCallback(contribution, "mountCatalogueSearchCopy")?.({
+    host: state.filterToolbarNode, before: state.collectionSortNode
+  });
   if (state.listActionHost) state.listActionHost.className = "docsViewer__collectionActions";
   if (features.pagination) {
     state.filterInputNode.disabled = true;
@@ -764,8 +772,17 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   function restoreRememberedList() {
     if (!state.manifestLoaded || !state.mounted || root.dataset.reportState === "error") return;
     remembered.restore();
+    var catalogueSearch = lifetime.catalogueSearch;
+    if (catalogueSearch !== undefined) {
+      lifetime.catalogueSearch = undefined;
+      cancelCollectionSearch(state);
+      state.query = catalogueSearch;
+      state.pageIndex = 0;
+      state.listNeedsRender = true;
+    }
     renderListView(state);
-    remembered.restorePosition();
+    state.catalogueSearchRoute?.replaceQuery(state.query);
+    if (catalogueSearch === undefined) remembered.restorePosition();
   }
   function dispose() {
     if (!state.mounted) return;
@@ -831,13 +848,16 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
 export function mountDocsCollectionReport(context) {
   var root = context && context.reportRoot;
   if (!root) return Promise.resolve(false);
-  var lifetime = { active: true, view: null };
+  var lifetime = { active: true, view: null, catalogueSearch: context.catalogueSearchRoute?.query };
   context.registerRetainedView?.({
     id: "collection:" + context.reportMeta.collection,
     dispose: function () { lifetime.active = false; lifetime.view?.dispose(); lifetime.view = null; },
     capture: function () { return lifetime.view?.capture() || null; },
     restore: function () { lifetime.view?.restore(); },
-    resume: function () { lifetime.view?.resume(); }
+    resume: function (catalogueSearch) {
+      if (catalogueSearch !== undefined) lifetime.catalogueSearch = catalogueSearch;
+      lifetime.view?.resume();
+    }
   });
   return Promise.resolve(context.collectionReportContributionPromise)
     .then(function (contribution) {
