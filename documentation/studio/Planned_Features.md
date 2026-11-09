@@ -144,7 +144,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- **Catalogue index Gallery matches** — Next. Show compact matching Galleries above matching Works using [Studio's existing Gallery ID/title index](Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections). Keep Work pagination separate and use Media View to load the selected Gallery's membership on activation.
+- [Catalogue Index Gallery Results](deliveries/Catalogue_Index_Gallery_Results.md) — Next. Put compact Gallery title and direct-member matches ahead of Works in one paginated result list. Studio Refresh supplies one search payload and Media View loads the selected Gallery on activation.
 
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Parked proposal. Reuse the Work Editor's Series panel to find a Gallery and inspect its saved members.
 

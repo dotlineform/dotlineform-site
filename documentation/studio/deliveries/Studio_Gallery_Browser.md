@@ -12,7 +12,7 @@ parent_id: d-20260428-000000-f5ff18
 
 ## Current And Next State
 
-Parked at proposal. The priority is Gallery discovery in the Docs Viewer Catalogue index using Studio's existing Gallery index. Resume this delivery when inspecting saved Gallery membership in Studio is the next priority. [Planned Features](../Planned_Features.md) parents both outcomes.
+Parked at proposal. The priority is [Catalogue Index Gallery Results](Catalogue_Index_Gallery_Results.md). Resume this delivery when inspecting saved Gallery membership in Studio is the next priority. [Planned Features](../Planned_Features.md) parents both outcomes.
 
 ## Outcome And Scope
 

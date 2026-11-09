@@ -14,7 +14,7 @@ parent_id: d-20260428-000000-f5ff18
 
 Gallery implementation remains proposed. [Catalogue Work By-ID Separation](Catalogue_Work_By_ID_Separation.md) delivered queue-driven Work adoption, portable document readers, downstream preparation and raw Work copy retirement separately. Studio still owns Gallery authoring and production. GO.2 starts from the adopted Catalogue document contract and moves ownership of its Gallery fields. The earlier live reader and public layout options below record the planning baseline.
 
-The ownership proposal is deferred. The next [Catalogue index improvement](../Planned_Features.md#proposed-features) can use Studio's existing Gallery index. The parked [Studio Gallery Browser](Studio_Gallery_Browser.md) addresses membership inspection in the Work Editor. If ownership migration resumes, first revisit the need for the GO.1 editing freeze and obtain implementation approval.
+The ownership proposal is deferred. [Catalogue Index Gallery Results](Catalogue_Index_Gallery_Results.md) uses Studio-generated Gallery data. The parked [Studio Gallery Browser](Studio_Gallery_Browser.md) addresses membership inspection in the Work Editor. If ownership migration resumes, first revisit the need for the GO.1 editing freeze and obtain implementation approval.
 
 Decisions to carry forward:
 
@@ -34,7 +34,7 @@ Status: proposed. The owner has agreed the ownership direction and a three-stage
 
 Outcome: Studio owns Work/Series authoring, generated inputs and media preparation. Catalogue Regenerate, run immediately after Studio Refresh, is the sole ordinary owner that adopts queued Studio Work records into baked Working Catalogue document data. That adopted snapshot defines the latest Work known to Docs Viewer. Downstream Work presentation/preparation and Gallery workflows use that document data rather than rereading Studio Work by-ID JSON. Docs independently owns Gallery source, editing, joins and generation; Studio Refresh performs no Gallery work, directly or through a callback.
 
-This proposal covers Gallery authoring and generation. The [Catalogue collection report](/docs/?doc=d-20260916-161504-f8c947) can improve Gallery discovery using the existing Studio-generated index. Studio retains Work and Series authoring and media processing.
+This proposal covers Gallery authoring and generation. The [Catalogue collection report](/docs/?doc=d-20260916-161504-f8c947) can improve Gallery discovery through a Studio Refresh projection. Studio retains Work and Series authoring and media processing.
 
 Parent: [Planned Features](../Planned_Features.md). Use [Development Checklist](../Development_Checklist.md) and [Development Workflow](../Development_Workflow.md) for implementation, review and closeout.
 
@@ -397,6 +397,6 @@ Catalogue report improvements are separate from the ownership stages. Gallery di
 
 - **Medium groups:** local Docs Viewer report assignment of distinct descriptive medium values to search/report groups such as Drawings, Paintings, Digital and Video. Groups support icon filters and remain separate from canonical Work metadata. Preserve exact authored medium descriptions; agree assignment cardinality and how unassigned media appear before implementation.
 - **Single date text:** retain the current `year_display` content as the single authoritative free-text Work date and retire separately maintained numeric `year` through its Studio authoring/import/generated consumers. Derive ordering and year/range search interpretation in the browser, preserving the display text. Agree start/end ordering, abbreviated ranges, separate dates and suggestion semantics; ascending start-year ordering is a proposal, not an implemented rule.
-- **Catalogue filtering and Gallery discovery:** prepare compact public-safe browsing data from the respective owners, with no per-Work loading merely to filter. Show a compact matching-Galleries section above matching Works, with clear type/count information and separate Work pagination. Gallery-title matches return Galleries rather than automatically expanding every member into Work results; specific Work queries retain useful direct matches. Medium/date filtering of Gallery results needs an explicit rule.
+- [Catalogue Index Gallery Results](Catalogue_Index_Gallery_Results.md) owns Gallery discovery and its paginated display. Medium and date filtering are separate proposals.
 
 The current Catalogue document manifest is already Docs-generated and can be enriched or accompanied by a narrow report projection when that follow-on is specified. Medium mapping can be resolved in loaded browser data instead of duplicated into every row. Lightweight title/ID/description matching, structured filtering and derived date ordering are the agreed direction; these requirements do not justify a new full-text index, runtime search service, automatic site Search rebuild or changes to site-search collection coverage.
