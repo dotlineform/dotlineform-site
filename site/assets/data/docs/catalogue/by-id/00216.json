@@ -3,7 +3,7 @@
   "title": "nature 1",
   "added_date": "2026-09-17 21:55:30",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>nature 1</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00216\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3451 / 2494;\" data-docs-media-open aria-label=\"Open nature 1\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00216-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00216-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00216-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00216-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"nature 1\" width=\"3451\" height=\"2494\" decoding=\"async\"><span data-docs-media-placeholder hidden>nature 1</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1996<br>pen on paper<br>29.7 × 21 cm<br><br>cat. 00216</p></div></article></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -17,47 +17,41 @@
         "options": {}
       }
     ],
-    "presentations": {
-      "catalogue-work:00216": {
-        "schema_version": "docs_media_view_v2",
-        "target": {
-          "kind": "catalogue-work",
-          "id": "00216"
-        },
-        "label": "nature 1",
-        "image": {
-          "src": "https://media.dotlineform.com/works/img/00216-primary-800.webp?v=1",
-          "candidates": [
-            {
-              "src": "https://media.dotlineform.com/works/img/00216-primary-800.webp?v=1",
-              "width_px": 800
-            },
-            {
-              "src": "https://media.dotlineform.com/works/img/00216-primary-1200.webp?v=1",
-              "width_px": 1200
-            },
-            {
-              "src": "https://media.dotlineform.com/works/img/00216-primary-1600.webp?v=1",
-              "width_px": 1600
-            }
-          ],
-          "alt": "nature 1",
-          "width_px": 3451,
-          "height_px": 2494
-        },
-        "new_tab_target": "https://media.dotlineform.com/works/img/00216-primary-1600.webp?v=1",
-        "galleries": [],
-        "entry": {
-          "metadata_lines": [
-            "1996",
-            "pen on paper",
-            "29.7 × 21 cm",
-            "",
-            "cat. 00216"
-          ],
-          "resources": []
-        }
-      }
+    "work": {
+      "series_id": "181",
+      "entry": {
+        "metadata_lines": [
+          "1996",
+          "pen on paper",
+          "29.7 × 21 cm",
+          "",
+          "cat. 00216"
+        ],
+        "resources": []
+      },
+      "image": {
+        "alt": "nature 1",
+        "width_px": 3451,
+        "height_px": 2494,
+        "version": 1,
+        "default": "00216-primary-800.webp",
+        "candidates": [
+          {
+            "identity": "00216-primary-800.webp",
+            "width_px": 800
+          },
+          {
+            "identity": "00216-primary-1200.webp",
+            "width_px": 1200
+          },
+          {
+            "identity": "00216-primary-1600.webp",
+            "width_px": 1600
+          }
+        ]
+      },
+      "full_image": "00216-primary-1600.webp",
+      "galleries": []
     }
   }
 }

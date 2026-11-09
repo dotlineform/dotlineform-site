@@ -3,7 +3,7 @@
   "title": "model face",
   "added_date": "2026-09-17 21:35:01",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>model face</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00042\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 7056 / 4984;\" data-docs-media-open aria-label=\"Open model face\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00042-primary-800.webp?v=2\" srcset=\"https://media.dotlineform.com/works/img/00042-primary-800.webp?v=2 800w, https://media.dotlineform.com/works/img/00042-primary-1200.webp?v=2 1200w, https://media.dotlineform.com/works/img/00042-primary-1600.webp?v=2 1600w\" sizes=\"100vw\" alt=\"model face\" width=\"7056\" height=\"4984\" decoding=\"async\"><span data-docs-media-placeholder hidden>model face</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1993<br>photocopy<br>21 × 29.7 cm<br><br>cat. 00042</p></div></article></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -17,56 +17,47 @@
         "options": {}
       }
     ],
-    "presentations": {
-      "catalogue-work:00042": {
-        "schema_version": "docs_media_view_v2",
-        "target": {
-          "kind": "catalogue-work",
-          "id": "00042"
-        },
-        "label": "model face",
-        "image": {
-          "src": "https://media.dotlineform.com/works/img/00042-primary-800.webp?v=2",
-          "candidates": [
-            {
-              "src": "https://media.dotlineform.com/works/img/00042-primary-800.webp?v=2",
-              "width_px": 800
-            },
-            {
-              "src": "https://media.dotlineform.com/works/img/00042-primary-1200.webp?v=2",
-              "width_px": 1200
-            },
-            {
-              "src": "https://media.dotlineform.com/works/img/00042-primary-1600.webp?v=2",
-              "width_px": 1600
-            }
-          ],
-          "alt": "model face",
-          "width_px": 7056,
-          "height_px": 4984
-        },
-        "new_tab_target": "https://media.dotlineform.com/works/img/00042-primary-1600.webp?v=2",
-        "galleries": [
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "358"
-            },
-            "label": "mesh",
-            "relation": "direct"
-          }
+    "work": {
+      "series_id": "180",
+      "entry": {
+        "metadata_lines": [
+          "1993",
+          "photocopy",
+          "21 × 29.7 cm",
+          "",
+          "cat. 00042"
         ],
-        "entry": {
-          "metadata_lines": [
-            "1993",
-            "photocopy",
-            "21 × 29.7 cm",
-            "",
-            "cat. 00042"
-          ],
-          "resources": []
+        "resources": []
+      },
+      "image": {
+        "alt": "model face",
+        "width_px": 7056,
+        "height_px": 4984,
+        "version": 2,
+        "default": "00042-primary-800.webp",
+        "candidates": [
+          {
+            "identity": "00042-primary-800.webp",
+            "width_px": 800
+          },
+          {
+            "identity": "00042-primary-1200.webp",
+            "width_px": 1200
+          },
+          {
+            "identity": "00042-primary-1600.webp",
+            "width_px": 1600
+          }
+        ]
+      },
+      "full_image": "00042-primary-1600.webp",
+      "galleries": [
+        {
+          "id": "358",
+          "label": "mesh",
+          "relation": "direct"
         }
-      }
+      ]
     }
   }
 }

@@ -3,7 +3,7 @@
   "title": "words",
   "added_date": "2026-09-23 10:11:42",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>words</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"03294\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 8753 / 8850;\" data-docs-media-open aria-label=\"Open words\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/03294-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/03294-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/03294-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/03294-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"words\" width=\"8753\" height=\"8850\" decoding=\"async\"><span data-docs-media-placeholder hidden>words</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2008<br>digital c-type print<br><br>cat. 03294</p></div></article></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -17,63 +17,51 @@
         "options": {}
       }
     ],
-    "presentations": {
-      "catalogue-work:03294": {
-        "schema_version": "docs_media_view_v2",
-        "target": {
-          "kind": "catalogue-work",
-          "id": "03294"
-        },
-        "label": "words",
-        "image": {
-          "src": "https://media.dotlineform.com/works/img/03294-primary-800.webp?v=1",
-          "candidates": [
-            {
-              "src": "https://media.dotlineform.com/works/img/03294-primary-800.webp?v=1",
-              "width_px": 800
-            },
-            {
-              "src": "https://media.dotlineform.com/works/img/03294-primary-1200.webp?v=1",
-              "width_px": 1200
-            },
-            {
-              "src": "https://media.dotlineform.com/works/img/03294-primary-1600.webp?v=1",
-              "width_px": 1600
-            }
-          ],
-          "alt": "words",
-          "width_px": 8753,
-          "height_px": 8850
-        },
-        "new_tab_target": "https://media.dotlineform.com/works/img/03294-primary-1600.webp?v=1",
-        "galleries": [
+    "work": {
+      "series_id": "010",
+      "entry": {
+        "metadata_lines": [
+          "2008",
+          "digital c-type print",
+          "",
+          "cat. 03294"
+        ],
+        "resources": []
+      },
+      "image": {
+        "alt": "words",
+        "width_px": 8753,
+        "height_px": 8850,
+        "version": 1,
+        "default": "03294-primary-800.webp",
+        "candidates": [
           {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "010"
-            },
-            "label": "a theory of happiness is a theory of everything",
-            "relation": "direct"
+            "identity": "03294-primary-800.webp",
+            "width_px": 800
           },
           {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "212"
-            },
-            "label": "a theory of happiness is a theory of everything (64°) (64 degrees)",
-            "relation": "series"
+            "identity": "03294-primary-1200.webp",
+            "width_px": 1200
+          },
+          {
+            "identity": "03294-primary-1600.webp",
+            "width_px": 1600
           }
-        ],
-        "entry": {
-          "metadata_lines": [
-            "2008",
-            "digital c-type print",
-            "",
-            "cat. 03294"
-          ],
-          "resources": []
+        ]
+      },
+      "full_image": "03294-primary-1600.webp",
+      "galleries": [
+        {
+          "id": "010",
+          "label": "a theory of happiness is a theory of everything",
+          "relation": "direct"
+        },
+        {
+          "id": "212",
+          "label": "a theory of happiness is a theory of everything (64°) (64 degrees)",
+          "relation": "series"
         }
-      }
+      ]
     }
   }
 }
