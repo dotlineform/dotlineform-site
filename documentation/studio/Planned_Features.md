@@ -152,7 +152,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
-- [Catalogue Index Gallery Results](deliveries/Catalogue_Index_Gallery_Results.md) — Locally accepted and published on 2026-11-09. The runtime and published Gallery search JSON are ready to commit together for Deploy Public.
+- [Catalogue Index Gallery Results](deliveries/Catalogue_Index_Gallery_Results.md) — Complete. The user accepted the local and public results on 2026-11-09. Retain the delivery pending manual archive. [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections) owns the shipped data contract.
 
 - [Catalogue Work By-ID Separation](deliveries/Catalogue_Work_By_ID_Separation.md) — Complete and deployed on 2026-11-09. Working conversion, Publish, raw-copy cleanup, site-preview navigation, text-only Export and selected Work removal verified. The live site serves the new reader and the re-added Work `04620`. Retain the delivery pending manual archive. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation), [Catalogue Media View](Catalogue_Media_View.md) and [Catalogue Deployment](Catalogue_Deployment.md) own the shipped behavior.
 

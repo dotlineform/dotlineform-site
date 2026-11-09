@@ -5,14 +5,14 @@ title: Catalogue Index Gallery Results
 added_date: "2026-11-09 17:50:18"
 last_updated: "2026-11-09"
 summary: Add compact Gallery matches to the paginated Catalogue report using a Studio Refresh projection.
-ui_status: active
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Index Gallery Results
 
 ## Current And Next State
 
-The user accepted the local result and ran Publish on 2026-11-09. The next gate is to commit the runtime changes and published search JSON together, then run Deploy Public from the committed site snapshot. Studio remains the Gallery authoring and generation owner. [Planned Features](../Planned_Features.md) parents this delivery.
+Complete. The user accepted the local result, ran Publish and confirmed the public Catalogue result after Deploy Public on 2026-11-09. Commit `1702ef2a37` carries the runtime and published search JSON together on `origin/main`. [Catalogue Indexes And Payloads](../Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections) owns the shipped data contract. Retain this delivery for acceptance evidence pending manual archive.
 
 ## Results And Pagination
 
@@ -55,4 +55,4 @@ The approved Working seed ran on 2026-11-09 using `python3 studio/services/catal
 - [x] **Code review and static checks.** The [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review) traced Gallery create, rename and delete, Work membership changes, unrelated saves and selected transfer. Gallery Delete carries its known former direct members. Gallery-record maintenance preserves those candidates while search output is pending. Refresh reads one saved file and skips unchanged writes. The browser retains the prepared data, counts over Work matches, and fetches an exact Gallery record on activation. Retained checks cover configured output confinement, the browser schema boundary and current document/media selection. Focused Python and JavaScript lint, CLI argument loading, whitespace, public projection and site validation passed.
 - [x] **Working seed.** Generated the report search file and verified the selected publication handoff.
 - [x] **Local acceptance and Publish.** The user reported the result looked good after Publish. Individual browser scenarios and request traces were not itemised. Verified the selected file and drained publication queues.
-- [ ] **Public release.** Commit the implementation and the published artifact together, then run Deploy Public explicitly. Confirm the deployed Catalogue report can load the Gallery search file and open a selected Gallery.
+- [x] **Public release.** Pushed `1702ef2a37` to `origin/main`. The user ran Deploy Public and confirmed the result on the public site.
