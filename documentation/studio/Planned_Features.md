@@ -144,7 +144,11 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Proposed. Freeze Studio Gallery editing, move Gallery sources and generation to Docs Viewer, then add the Gallery management report. Gallery workflows will maintain Gallery references in the existing adopted Catalogue document.
+- **Catalogue index Gallery matches** — Next. Show compact matching Galleries above matching Works using [Studio's existing Gallery ID/title index](Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections). Keep Work pagination separate and use Media View to load the selected Gallery's membership on activation.
+
+- [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Parked proposal. Reuse the Work Editor's Series panel to find a Gallery and inspect its saved members.
+
+- [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
 
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
