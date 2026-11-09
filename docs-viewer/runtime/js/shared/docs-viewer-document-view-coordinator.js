@@ -94,6 +94,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
 
   infoPanelController = createDocsViewerInfoPanelController({
     documentHref: function (target) { return settings.collectionProvider.documentHref(target); },
+    mountMediaLinks: function (list) { return settings.mediaDetailAdapter?.mountPanelLinks?.(list, settings.mount); },
     panelView: panelView,
     projectInfoPanel: function (projection) { panelLayout.projectInfoPanel(projection || {}); },
     projectViewState: function () { return panelLayout.projectViewState(); },

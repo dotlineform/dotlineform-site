@@ -30,7 +30,7 @@ export function createDocsViewerInfoPanelController(options) {
     if (capture && host.isOpen() && capture.target.collection === nextCapture.target.collection
         && capture.target.doc_id === nextCapture.target.doc_id) return;
     capture = nextCapture;
-    host.open("related-links", { capture: capture, panelTitle: capture.title });
+    host.open("related-links", { capture: capture, panelTitle: capture.title, mountMediaLinks: settings.mountMediaLinks });
   }
 
   function closeIfOpen() {

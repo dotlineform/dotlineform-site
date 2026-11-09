@@ -30,7 +30,9 @@ export function mountDocsViewerRelatedLinks(options) {
   }
   content.querySelectorAll("section[data-docs-related-links]").forEach(function (section) {
     var list = section.querySelector(":scope > ul");
-    if (!list || !list.querySelector("a[data-docs-related-link]") || section.querySelector("[data-docs-related-pin]")) return;
+    if (!list || !list.querySelector("[data-docs-related-link]") || section.querySelector("[data-docs-related-pin]")) return;
+    // Capture the generated controls before Media View adds per-mount feedback and busy state.
+    var galleryList = list.querySelector("[data-docs-media-open]") ? list.cloneNode(true) : null;
     var documentRef = content.ownerDocument;
     var heading = section.querySelector(":scope > h2, :scope > h3");
     var header = documentRef.createElement("div");
@@ -48,7 +50,7 @@ export function mountDocsViewerRelatedLinks(options) {
         target: Object.freeze({ collection: target.collection || "", doc_id: target.doc_id }),
         title: String(payload.title || ""),
         summaryHtml: payload.summary_html,
-        list: list.cloneNode(true)
+        list: galleryList || list.cloneNode(true)
       }));
     });
     if (heading) header.appendChild(heading);
@@ -57,26 +59,31 @@ export function mountDocsViewerRelatedLinks(options) {
   });
 }
 
-/**
- * Render only the captured optional summary and generated list, with no reads or
- * main-document subscription. The shell owns the title and Close control.
- * @returns {Object} Synchronous panel lifecycle; unmount releases its DOM.
- */
+/** Render the captured summary and list, binding gallery controls for this panel mount. */
 export function createDocsViewerRelatedLinksView() {
+  var releaseMediaLinks;
+  function unmount(context) {
+    if (releaseMediaLinks) releaseMediaLinks();
+    releaseMediaLinks = null;
+    context.mount.replaceChildren();
+  }
+
   function render(context) {
     var mount = context.mount;
     var capture = context.capture;
-    mount.replaceChildren();
+    unmount(context);
     if (!capture) return;
     var body = mount.ownerDocument.createElement("div");
     body.className = "docsViewer__relatedLinksBody";
     if (capture.summaryHtml) body.innerHTML = capture.summaryHtml;
-    if (capture.list) body.appendChild(capture.list.cloneNode(true));
+    var list = capture.list && capture.list.cloneNode(true);
+    if (list) body.appendChild(list);
     if (body.childNodes.length) mount.appendChild(body);
+    if (list?.querySelector("[data-docs-media-open]")) releaseMediaLinks = context.mountMediaLinks?.(list);
   }
   return {
     mount: render,
-    unmount: function (context) { context.mount.replaceChildren(); },
-    dispose: function (context) { context.mount.replaceChildren(); }
+    unmount: unmount,
+    dispose: unmount
   };
 }

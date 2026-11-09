@@ -56,7 +56,9 @@ class PayloadBuilderMixin:
                 document_id=doc.doc_id,
             )
             rendered = self.inline_icons.render_markdown(
-                resolved, related_links=lambda heading: render_related_links(self, doc, heading), summary_html=summary_html,
+                resolved,
+                related_links=lambda heading: render_related_links(self, doc, heading, self.catalogue_references),
+                summary_html=summary_html,
             )
         except ValueError as exc:
             collection = getattr(self, "collection_id", "")

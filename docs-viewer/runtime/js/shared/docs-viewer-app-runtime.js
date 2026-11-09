@@ -298,6 +298,7 @@ export function startDocsViewerRuntime(options) {
     documentIndex: appSession.domains.documentIndex,
     infoPanelRefs: infoPanelRefs,
     managedDocumentContext: documentActionContext,
+    mediaDetailAdapter: settings.mediaDetailAdapter,
     mount: function () { return documentController ? documentController.activeMount() : content; },
     panelLayout: panelLayout,
     panelView: appSession.domains.panelView,

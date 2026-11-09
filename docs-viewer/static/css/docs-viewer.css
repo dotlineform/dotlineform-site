@@ -189,6 +189,7 @@ body.docs-viewer-service{
   grid-column: 1;
   grid-row: 2;
   min-width: 0;
+  align-self: stretch;
   justify-self: start;
   width: min(100%, var(--docs-viewer-index-width));
 }
@@ -2079,6 +2080,52 @@ body.docs-viewer-service{
 
 .docsViewer__content > :first-child{
   margin-top: 0;
+}
+
+@media (width > 820px){
+  .docsViewer:is([data-docs-viewer-app-kind="public"], [data-docs-viewer-app-kind="manage"]){
+    --docs-viewer-sticky-controls-end: calc(var(--docs-viewer-controls-height, var(--docs-viewer-toolbar-control-height) + var(--docs-viewer-space-4)) + var(--docs-viewer-space-3));
+  }
+
+  .docsViewer:is([data-docs-viewer-app-kind="public"], [data-docs-viewer-app-kind="manage"]) .docsViewer__controls{
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 10;
+    margin-block-start: calc(-1 * var(--docs-viewer-space-4));
+    padding-block-start: var(--docs-viewer-space-4);
+    background: var(--docs-viewer-bg);
+    /* Cover the grid gap without adding to the measured controls height. */
+    box-shadow: 0 var(--docs-viewer-space-3) 0 var(--docs-viewer-bg);
+  }
+
+  .docsViewer:is([data-docs-viewer-app-kind="public"], [data-docs-viewer-app-kind="manage"]) :is(.docsViewer__sidebarInner, .docsViewer__infoPanel){
+    top: var(--docs-viewer-sticky-controls-end);
+  }
+
+  .docsViewer:is([data-docs-viewer-app-kind="public"], [data-docs-viewer-app-kind="manage"]) .docsViewer__infoPanel{
+    position: sticky;
+    display: flex;
+    flex-direction: column;
+    max-block-size: calc(100dvh - var(--docs-viewer-sticky-controls-end) - var(--docs-viewer-space-4));
+  }
+
+  .docsViewer:is([data-docs-viewer-app-kind="public"], [data-docs-viewer-app-kind="manage"]) .docsViewer__infoPanelHeader{
+    flex: none;
+  }
+
+  .docsViewer:is([data-docs-viewer-app-kind="public"], [data-docs-viewer-app-kind="manage"]) .docsViewer__infoPanelBody{
+    min-block-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .docsViewer:is([data-docs-viewer-app-kind="public"], [data-docs-viewer-app-kind="manage"]) :is(.docsViewer__nav, .docsViewer__indexResults){
+    max-height: calc(100dvh - 10rem + var(--docs-viewer-space-4) - var(--docs-viewer-sticky-controls-end));
+  }
+
+  .docsViewer:is([data-docs-viewer-app-kind="public"], [data-docs-viewer-app-kind="manage"]) .docsViewer__content [id]{
+    scroll-margin-top: var(--docs-viewer-sticky-controls-end);
+  }
 }
 
 @media (max-width: 820px){

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import html
 import json
-from typing import TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 from .links_model import DocumentLinks, DocumentTarget
 from .links_schema import read_relationship_payload
@@ -51,29 +51,52 @@ def prepare_related_links(
     return related_documents
 
 
-def render_related_links(builder: DocsDataBuilder, doc: DocRecord, heading: str) -> str:
-    """Emit a sorted list with portable targets, decorative icons and an optional heading."""
+def render_related_links(
+    builder: DocsDataBuilder, doc: DocRecord, heading: str, catalogue_references: list[dict[str, Any]],
+) -> str:
+    """Render document relationships and exact authored Gallery targets together."""
     target = DocumentTarget(getattr(builder, "collection_id", ""), doc.doc_id)
     record = builder.related_documents.get(target)
-    if record is None:
-        return ""
-    entries = {**record.incoming, **record.outgoing}
+    entries = {**record.incoming, **record.outgoing} if record is not None else {}
     entries.pop(target, None)
-    if not entries:
-        return ""
     owners = {owner.collection: owner for owner in builder.config.collections}
-    rows = []
-    for summary in sorted(entries.values(), key=lambda entry: (entry.title.casefold(), entry.target)):
+    catalogue = owners.get("catalogue")
+    rows: dict[tuple[str, str, str, str], str] = {}
+    for summary in entries.values():
         destination = summary.target
         if destination.collection:
             owner = owners[destination.collection]
             icon = owner.icon
             href = "?" + canonical_document_viewer_url(destination.doc_id, collection=destination.collection).split("?", 1)[1]
         else:
-            icon = "dlf-doc"
+            icon = catalogue.icon if catalogue and destination.doc_id == catalogue.report_host_doc_id else "dlf-doc"
             href = (builder.rendered_viewer_target_for(destination.doc_id) if builder.config.stage == "review"
                     else "?" + canonical_document_viewer_url(destination.doc_id).split("?", 1)[1])
-        rows.append(f'<li>{builder.inline_icons.render(icon, decorative=True)} <a data-docs-related-link="true" href="{html.escape(href, quote=True)}">{html.escape(summary.title)}</a></li>')
+        key = (summary.title.casefold(), "document", destination.collection, destination.doc_id)
+        rows[key] = (
+            f'<li>{builder.inline_icons.render(icon, decorative=True)} '
+            f'<a data-docs-related-link="true" href="{html.escape(href, quote=True)}">{html.escape(summary.title)}</a></li>'
+        )
+    galleries = {}
+    for reference in catalogue_references:
+        destination = reference["target"]
+        if destination["kind"] == "catalogue-gallery":
+            galleries.setdefault(destination["id"], reference["options"]["label"])
+    if galleries:
+        icon = builder.inline_icons.render("images", decorative=True)
+        for gallery_id, label in galleries.items():
+            key = (label.casefold(), "gallery", "catalogue", gallery_id)
+            item = html.escape(label)
+            if builder.config.stage != "review":
+                item = (
+                    '<span data-docs-content-detail="media" data-docs-media-kind="catalogue-gallery" '
+                    f'data-docs-media-id="{html.escape(gallery_id, quote=True)}">'
+                    '<button type="button" class="docsViewer__mediaTextLink" data-docs-media-open '
+                    f'data-docs-related-link="true">{item}</button></span>'
+                )
+            rows[key] = f"<li>{icon} {item}</li>"
+    if not rows:
+        return ""
     level = 2 if target.collection == "catalogue" else 3
     title = f'<h{level}>{html.escape(heading)}</h{level}>\n' if heading else ""
-    return f'<section data-docs-related-links="true">{title}<ul>\n' + "\n".join(rows) + "\n</ul></section>\n"
+    return f'<section data-docs-related-links="true">{title}<ul>\n' + "\n".join(rows[key] for key in sorted(rows)) + "\n</ul></section>\n"

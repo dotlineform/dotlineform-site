@@ -58,6 +58,8 @@ class _DocumentRefresh:
         self.config = builder.config
         self.collection = getattr(builder, "collection_id", "")
         self.owners = {"": self.config, **{owner.collection: owner for owner in self.config.collections}}
+        catalogue = self.owners.get("catalogue")
+        self.catalogue_host_id = catalogue.report_host_doc_id if catalogue else None
         self.sources = {name: resolve_workspace_path(builder.repo_root, document_source_path(owner)) for name, owner in self.owners.items()}
         self.outputs = {name: resolve_workspace_path(builder.repo_root, generated_documents_path(owner)) / "by-id" for name, owner in self.owners.items()}
         if builder.source_dir != self.sources[self.collection] or builder.items_dir != self.outputs[self.collection]:
@@ -78,6 +80,8 @@ class _DocumentRefresh:
         if resolved.get("kind") != "viewer":
             return None
         doc_id, collection = resolved["doc_id"], resolved.get("collection", "")
+        if not collection and doc_id == self.catalogue_host_id and "catalogue_search" in resolved:
+            return None
         if collection not in self.owners or not is_document_id(doc_id, collection=collection):
             return None
         return DocumentTarget(collection, doc_id)

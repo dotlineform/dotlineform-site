@@ -77,6 +77,13 @@ export function renderDocsViewerTopBar(options) {
   var appKind = routeContext && routeContext.appContext && routeContext.appContext.kind;
   if (appKind === "public" || appKind === "manage") {
     appendReaderTopRow(documentRef, mount, topBar, routeContext);
+    var controls = mount.closest(".docsViewer__controls");
+    if (controls && settings.root) {
+      var observer = new documentRef.defaultView.ResizeObserver(function ([entry]) {
+        settings.root.style.setProperty("--docs-viewer-controls-height", entry.borderBoxSize[0].blockSize + "px");
+      });
+      observer.observe(controls, { box: "border-box" });
+    }
   } else {
     mount.appendChild(topBar);
   }

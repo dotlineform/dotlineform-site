@@ -26,11 +26,11 @@ Without the directive, the document has no related-links section. If the directi
 
 ## Initial Presentation
 
-Use the document's normal content width and section heading, with a collection icon beside each link and no bullet markers or list indentation. Combine incoming and outgoing document relationships into one plain list, sorted A–Z by case-folded displayed title, with exact collection/document identity providing a stable tie-break. Repeated and reciprocal links to the same target appear once; distinct documents with the same title remain distinct. Omit the document itself.
+Use the document's normal content width and section heading, with a destination icon beside each link and no bullet markers or list indentation. Combine incoming and outgoing document relationships with authored Gallery Media View targets in one list, sorted A–Z by case-folded label and then by exact destination. Repeated and reciprocal document links appear once. Repeated Gallery references appear once per Gallery ID, using the first authored label. Distinct destinations with the same label stay separate. Omit the document itself.
 
 Catalogue's related-links heading, normally `context`, uses compact `font-small` semibold text without the document H2 divider or its bottom padding; its list also uses `font-small`. The heading and reader pin remain visible when the section has qualifying links. Shared viewer CSS selects the section following the Catalogue reference wrapper containing an Entry, matching both live Manage and prepared public markup. The user confirmed this restored presentation on 2026-10-19 after the wrapper-related regression was corrected.
 
-All participating collections use the same list. The presentation has no collection groups, direction labels, counts, cards or enclosing panel. Relationships come from supported authored document links; sharing a Subject or a Catalogue association does not add entries by itself. The original mock-up below remains a plain sorted list; the selected icon refinement is recorded separately.
+All participating collections use the same list. Its entries come from supported authored document links and exact Gallery Media View tokens. Catalogue report URLs carrying `catalogue-search` stay in the authored body with their query. A direct link to the Catalogue report is a document relationship.
 
 ## Rendered Mock-up
 
@@ -57,19 +57,18 @@ Document links connect this explanation with supporting material. Related docume
 
 ## Selected Icons And Collection Configuration
 
-The user selected the following artwork in [Insert Icon](/docs/?doc=d-20260930-204328-7e9969). Each related link uses the icon for its target's collection; the icon does not affect sorting or document identity.
+The user selected the following artwork in [Insert Icon](/docs/?doc=d-20260930-204328-7e9969). Build embeds the icon for each destination in the generated document HTML.
 
 | Target owner | SVG filename stem |
 | --- | --- |
-| Catalogue (`catalogue`) | `dlf-catalogue` |
+| Catalogue report host and Catalogue Works (`catalogue`) | `dlf-catalogue` |
+| Gallery Media View | `images` |
 | Concepts (`concepts`) | `dlf-concept` |
 | Works (`works`, displayed as Context) | `dlf-context` |
 | Moments (`moments`) | `dlf-moment` |
 | Ordinary document | `dlf-doc` |
 
-An extensionless `icon` value belongs to each collection record in the existing workspace configuration, such as `"icon": "dlf-context"` for Works. [Source Organisation](Source_Organisation.md#collection-icons) owns this contract. The related-links builder reads this same mapping and uses the [Icon Tokens](Icon_Tokens.md) renderer to embed decorative artwork. Ordinary targets use `dlf-doc`.
-
-The Index panel now marks collection report hosts with their configured collection icon, supplied through the existing browser configuration projection. Related links will share that artwork for documents within the collection. Collection icons identify collection ownership; Subject artwork remains separate. The [collection icon delivery](Collection_Icons_Delivery.md) records static verification, code review and the pending manual visual check.
+An extensionless `icon` value belongs to each collection record in the existing workspace configuration, such as `"icon": "dlf-context"` for Works. The Catalogue report host uses the Catalogue icon from that same configuration. [Source Organisation](Source_Organisation.md#collection-icons) owns this contract, and the [Icon Tokens](Icon_Tokens.md) renderer embeds the decorative artwork.
 
 ## Generated Data And Freshness
 
@@ -79,7 +78,7 @@ Saving a referring document updates its relationships and carries changed direct
 
 Each Working document build first runs the existing incremental Links maintenance for its selected documents. That refresh preserves the saved incoming summaries and updates outgoing summaries from current authored links. The related section then uses the same refreshed version-4 record written to `links-by-id`, so adding or removing an outgoing link is reflected in that document's current build. A dry run uses the same refreshed records in memory without writing them. Section expansion does not discover relationships or add a source graph; the existing per-collection build orchestration remains in place.
 
-Supported Catalogue Work image, Entry and Media View tokens contribute ordinary document relationships to their Work's Catalogue subdocument. Gallery Media View tokens contribute none. Catalogue sources use the Work's Entry, a blank line and `[[links|context]]`; the self-targeting Entry is omitted from the graph. `context` supplies only the Catalogue heading for the existing directive and does not change relationship ownership or the ordinary authoring default. A Catalogue page can therefore show the documents that reference its Work through incoming links without generating outgoing relationships from the displayed list. Downloads and external `work.links` stay in Entry's combined resource list and do not supply document relationships. A directive alone creates no Links record, and an empty list produces no section. Full Docs rebuilds render Catalogue after the contributing documents and use the final document-JSON comparison to detect changes in the embedded list; no separate Links-file change detector is needed.
+Supported Catalogue Work image, Entry and Media View tokens contribute ordinary document relationships to their Work's Catalogue subdocument. Build supplies Gallery rows to the directive from the document's already parsed Catalogue references, including documents with only Gallery references. The per-document Links record continues to describe document endpoints. Catalogue sources use the Work's Entry, a blank line and `[[links|context]]`. The self-targeting Entry is omitted from the graph. `context` supplies the heading for incoming Work relationships. Downloads and external `work.links` stay in Entry's combined resource list. Full Docs rebuilds render Catalogue after contributing documents and use the final document JSON comparison to detect changes in the embedded list.
 
 Targeted operations render their selected source and exact direct dependencies whose relationship records changed, with supplied records and shared rendering inputs. Working relationships remain independent of draft/unpublishable/host eligibility; public preparation applies body eligibility separately and retains authored target summaries.
 
@@ -93,4 +92,10 @@ Publish transfers completed public document bytes and reads no relationship reco
 
 ## Runtime And Refinement
 
-The per-document Links toolbar action, separate Content Detail presentation and `/docs/links` read endpoint are retired without aliases. The reader mounts the generated section as ordinary document content. Its pin opens the [Info Panel](Info_Panel.md) with the loaded title, optional summary and a copy of that same list; the panel fetches no relationship data. The local workspace Links diagnostic report retains its aggregate data and exact-target helpers. [Builder](Builder.md) owns relationship maintenance and persisted-record expansion. Interaction and layout acceptance remain manual; test work requires its own agreed specification under [Testing](Testing.md).
+The reader mounts the generated section as document content. Its pin opens the [Info Panel](Info_Panel.md) with the loaded title, optional summary and a detached copy of the same list. Gallery rows in either location use the shared Media View opener. The panel attaches its gallery controls to the document displayed at activation, so Back restores that document. Once opened, Media View remains usable when the panel closes. Docs Review and static Export show Gallery labels as text. The local Links diagnostic report uses the existing document relationship records. [Builder](Builder.md) owns relationship maintenance and section generation.
+
+## Verification
+
+The targeted Working build of `kylie` produced the `084` gallery row with the `images` icon, preserved the inline search query and removed the former relationship from both endpoints. Focused lint, public runtime projection and site validation passed. Manual Media View and pin interaction review remains open.
+
+The focused code review found that panel dismissal could otherwise invalidate a gallery after it opened. The panel mount and current document checks guard pending activation, then the opened gallery follows the document mount lifetime. Pinning reuses a clean copy of Gallery controls captured before transient busy and feedback state is added. The build reuses parsed references and the configured Catalogue host, with no extra Gallery, Work or relationship fetch to render the section. Exact target checks and HTML escaping stay at the existing activation and rendering boundaries.

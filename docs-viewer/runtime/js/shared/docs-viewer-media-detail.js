@@ -246,14 +246,15 @@ export function createDocsViewerMediaDetailAdapter() {
       return null;
     }
     var record = state.records.get(cleanString(target.adapterTargetId)) || null;
+    var invocationRoot = record && (record.invocationRoot || root);
     if (
       !record
       || !sameDocumentTarget(target.documentTarget, record.documentTarget)
       || (record.isCurrentDocument && !record.isCurrentDocument())
       || positiveInteger(target.occurrence) !== record.occurrence
       || !sameMediaTarget(target.mediaTarget, record.presentation.target)
-      || !root.contains(record.marker)
-      || !root.contains(record.openControl)
+      || !invocationRoot.contains(record.marker)
+      || !invocationRoot.contains(record.openControl)
     ) {
       return null;
     }
@@ -351,6 +352,27 @@ export function createDocsViewerMediaDetailAdapter() {
     };
   }
 
+  /** Bind pinned Catalogue links to the document displayed when clicked. */
+  function mountPanelLinks(list, activeDocumentMount) {
+    var cleanups = mountCatalogueReferences({
+      content: list,
+      isCurrentDocument: function () { return list.isConnected; },
+      openMediaTarget: function (request) {
+        var root = activeDocumentMount();
+        var state = root && stateByRoot.get(root);
+        if (!state) throw new Error("Catalogue media is unavailable in this view.");
+        return openTarget(Object.assign({}, request, {
+          content: root,
+          invocationRoot: list,
+          documentMountGeneration: state.documentMountGeneration,
+          documentTarget: state.documentTarget,
+          isCurrentDocument: function () { return activeDocumentMount() === root && request.isCurrentDocument(); }
+        }));
+      }
+    });
+    return function () { cleanups.forEach(function (cleanup) { cleanup(); }); };
+  }
+
   /** Open a supplied runtime presentation within the existing document-owned host. */
   function openPresentation(context) {
     var root = context.content;
@@ -358,7 +380,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var control = context.invocationControl;
     var target = context.documentTarget;
     if (!state || state.documentMountGeneration !== context.documentMountGeneration
-      || !control || !root.contains(control)
+      || !control || !(context.invocationRoot || root).contains(control)
       || !target || !cleanString(target.docId)
       || (context.isCurrentDocument && !context.isCurrentDocument())) return false;
 
@@ -372,6 +394,7 @@ export function createDocsViewerMediaDetailAdapter() {
       occurrence: index,
       marker: control,
       openControl: control,
+      invocationRoot: context.invocationRoot,
       documentTarget: Object.freeze({
         collection: cleanString(target.collection), docId: cleanString(target.docId)
       }),
@@ -389,7 +412,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var root = context.content;
     var state = root && stateByRoot.get(root);
     return state && state.documentMountGeneration === context.documentMountGeneration
-      && root.contains(context.invocationControl) && context.documentTarget
+      && (context.invocationRoot || root).contains(context.invocationControl) && context.documentTarget
       && Boolean(cleanString(context.documentTarget.docId))
       && (!context.isCurrentDocument || context.isCurrentDocument()) ? state : null;
   }
@@ -514,7 +537,9 @@ export function createDocsViewerMediaDetailAdapter() {
     }
 
     function isCurrent() {
-      return !released && Boolean(resolveRecord(root, context.targetContext));
+      // Once open, the presentation belongs to the document even if Info closes.
+      return !released && (record.invocationRoot ? stateByRoot.get(root) === state
+        : Boolean(resolveRecord(root, context.targetContext)));
     }
 
     function imageElement(data, className) {
@@ -800,6 +825,7 @@ export function createDocsViewerMediaDetailAdapter() {
 
   return {
     mountDocument: mountDocument,
+    mountPanelLinks: mountPanelLinks,
     openPresentation: openPresentation,
     openTarget: openTarget,
     loadTarget: loadTarget,

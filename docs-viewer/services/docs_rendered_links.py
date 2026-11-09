@@ -133,12 +133,15 @@ def parse_docs_target(
         doc_id = normalize_text(query.get("doc", [""])[0])
         if not doc_id:
             return None
-        return {
+        target = {
             "kind": "viewer",
             "doc_id": doc_id,
             "collection": normalize_text(query.get("collection", [""])[0]),
             "fragment": fragment,
         }
+        if "catalogue-search" in query:
+            target["catalogue_search"] = query["catalogue-search"][0]
+        return target
 
     if path.endswith(".md"):
         return {

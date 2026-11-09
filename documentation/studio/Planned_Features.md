@@ -144,6 +144,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
+- [Gallery Context Links](deliveries/Gallery_Context_Links.md) — Proposed delivery. Gallery Media View links to Context documents using exact authored Gallery references and direct Work membership. Consider the document-level Gallery picker after the automatic links work in Working and Public.
+
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Parked proposal. Reuse the Work Editor's Series panel to find a Gallery and inspect its saved members.
 
 - [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
