@@ -409,6 +409,8 @@ def perform_collection_source_write_and_rebuild(
     documents: list[DocRecord] | None = None,
     publication: Any = None,
     catalogue_pending: dict[str, Any] | None = None,
+    adopted_works: dict[str, dict[str, Any]] | None = None,
+    expand_dependencies: bool = True,
     prepared_documents: list[SourceDoc] | None = None,
     media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
 ) -> Dict[str, Any]:
@@ -459,6 +461,7 @@ def perform_collection_source_write_and_rebuild(
             builder.links_doc_ids = links_arguments.get("links_doc_ids")
             rebuild = generate_documents(builder, write=True, documents=documents, publication=publication,
                                          catalogue_pending=catalogue_pending,
+                                         adopted_works=adopted_works, expand_dependencies=expand_dependencies,
                                          media_changes={doc_id: change for doc_id, _owner, change in media_changes or []})
     except PublicationHandoffError:
         raise

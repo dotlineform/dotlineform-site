@@ -96,17 +96,11 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.CATALOGUE_MEDIA_TARGETS_PATH:
         return docs_catalogue_media.read_catalogue_media_targets(repo_root)
     if path == routes.CATALOGUE_MEDIA_CONFIG_PATH:
-        return docs_catalogue_media.local_catalogue_media_config(repo_root)
-    if path == routes.CATALOGUE_WORK_PATH:
-        return docs_catalogue_media.local_catalogue_work(
-            repo_root, docs_api_query_value(params, "work_id"),
-        )
+        return docs_catalogue_media.read_catalogue_media_config(repo_root)
     if path == routes.CATALOGUE_GALLERY_PATH:
         return docs_catalogue_media.read_catalogue_gallery(
             repo_root, docs_api_query_value(params, "gallery_id"),
         )
-    if path == routes.CATALOGUE_SERIES_GALLERIES_PATH:
-        return docs_catalogue_media.read_catalogue_series_galleries_index(repo_root)
     if path == routes.CATALOGUE_WORKS_REPORT_PATH:
         if params:
             raise ValueError("Catalogue Works report reads do not accept parameters")

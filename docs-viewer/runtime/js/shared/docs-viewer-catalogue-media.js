@@ -21,6 +21,44 @@ export function catalogueGalleryTarget(galleryId) {
   return normalizeDocsViewerCatalogueGroupTarget({ kind: "catalogue-gallery", id: galleryId });
 }
 
+export function catalogueAssetUrl(base, identity) {
+  if (!docsViewerSafeMediaTarget(base) || !base.endsWith("/") || /[?#\s,]/.test(base)
+    || typeof identity !== "string" || !identity || identity === "." || identity === ".." || /[/\\]/.test(identity)) {
+    throw new Error("Catalogue asset target is unavailable or unsafe.");
+  }
+  return base + encodeURIComponent(identity);
+}
+
+function primaryUrl(base, identity, version) {
+  return catalogueAssetUrl(base, identity) + "?v=" + encodeURIComponent(version);
+}
+
+export function catalogueDocumentImage(image, base) {
+  var candidates = image.candidates.map(function (candidate) {
+    return { src: primaryUrl(base, candidate.identity, image.version), width_px: candidate.width_px };
+  });
+  return {
+    src: primaryUrl(base, image.default, image.version),
+    candidates: candidates, srcset: candidates.map(function (candidate) {
+      return candidate.src + " " + candidate.width_px + "w";
+    }).join(", "),
+    alt: image.alt, width_px: image.width_px, height_px: image.height_px
+  };
+}
+
+export function catalogueDocumentWorkPresentation(payload, workId, primaryBase) {
+  var work = payload && payload.doc_id === workId && payload.catalogue && payload.catalogue.work;
+  if (!work) throw new Error("Catalogue Work " + workId + " is unavailable.");
+  return {
+    schema_version: "docs_media_view_v2", target: catalogueMediaTarget(workId),
+    label: work.image.alt, image: catalogueDocumentImage(work.image, primaryBase),
+    new_tab_target: primaryUrl(primaryBase, work.full_image, work.image.version),
+    galleries: work.galleries.map(function (gallery) {
+      return { target: catalogueGalleryTarget(gallery.id), label: gallery.label, relation: gallery.relation };
+    })
+  };
+}
+
 function galleryRecord(payload, galleryId) {
   catalogueGalleryTarget(galleryId);
   var gallery = payload && payload.gallery;

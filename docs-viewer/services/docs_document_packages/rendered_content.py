@@ -69,10 +69,12 @@ def render_doc_html(context: Any, doc_id: str) -> str:
             from docs_catalogue_static import CatalogueStaticInputs, prepare_catalogue_document
 
             if context.static_inputs is None:
-                context.static_inputs = CatalogueStaticInputs(context.repo_root, context.builder.workspace)
+                context.static_inputs = CatalogueStaticInputs(
+                    context.repo_root, context.builder.workspace, public_media=context.builder.site_config["media"],
+                )
             payload = {"content_html": content_html, "catalogue": context.builder.catalogue_reference_envelope()}
             content_html = prepare_catalogue_document(
-                {"collection": context.collection, "doc_id": doc.doc_id}, payload, context.static_inputs,
+                payload, context.static_inputs,
             ).payload["content_html"]
         context.render_cache[normalized_doc_id] = content_html.replace(
             REPORT_HOST_HTML,

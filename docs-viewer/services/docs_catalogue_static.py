@@ -4,15 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import html
-import json
 from pathlib import Path
 import re
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 
 from docs_image_tokens import FIGURE_NATURAL_WIDTH_CLASS, FIGURE_PLACEMENT_CLASSES
-from docs_publication_paths import confined
-from docs_publication_transfer import read_bytes
+from docs_catalogue_projection import catalogue_preparation_inputs
 from docs_workspace_config import DocsWorkspaceConfig
 
 
@@ -33,6 +31,7 @@ class CatalogueMedia:
 class PreparedCatalogueDocument:
     payload: dict[str, Any]
     media: tuple[CatalogueMedia, ...]
+    work_links: dict[str, str]
 
 
 def resource_url(value: str) -> str:
@@ -49,106 +48,28 @@ def resource_url(value: str) -> str:
     return value
 
 
-def entry_fields(work: dict[str, Any], work_id: str) -> dict[str, Any]:
-    lines = [work["year_display"]]
-    if work.get("medium") is not None:
-        lines.append(work["medium"])
-    if work.get("duration"):
-        lines.append(work["duration"])
-    dimensions = [work[key] for key in ("height_cm", "width_cm", "depth_cm") if work.get(key) is not None]
-    if dimensions:
-        lines.append(" × ".join(str(int(value)) if value == int(value) else str(value) for value in dimensions) + " cm")
-    lines.extend(["", f"cat. {work_id}"])
-    return {"metadata_lines": lines, "resources": [
-        {"kind": kind, "label": resource["label"], "url": resource_url(resource["url"])}
-        for key, kind in (("downloads", "download"), ("links", "link"))
-        for resource in work.get(key, [])
-    ]}
-
-
 class CatalogueStaticInputs:
-    """Reuse selected Working inputs within one caller-owned synchronous operation.
+    """Carry the selected adopted Works and stage asset roots through HTML preparation."""
 
-    Construction performs no reads. Policy, relationships and icons are lazy;
-    no source, inventory, eligibility or destination is opened here.
-    """
-
-    def __init__(self, repo_root: Path, workspace: DocsWorkspaceConfig) -> None:
+    def __init__(
+        self, repo_root: Path, workspace: DocsWorkspaceConfig, *, public_media: dict[str, Any] | None = None,
+    ) -> None:
         self.repo_root = repo_root
-        self.workspace = workspace
-        self.works: dict[str, dict[str, Any]] = {}
-        self.raw_inputs: dict[str, bytes] = {}
-        self.presentations: dict[str, tuple[dict[str, Any], tuple[CatalogueMedia, ...]]] = {}
-        self.entries: dict[str, dict[str, Any]] = {}
-        self.policy: dict[str, Any] | None = None
-        self.relationships: dict[str, Any] | None = None
+        self.projection = catalogue_preparation_inputs(repo_root, workspace)
+        if public_media is None:
+            self.primary_base = workspace.assets.url(workspace.assets.work_primary) + "/"
+            self.files_base = workspace.assets.url(workspace.assets.work_files) + "/"
+        else:
+            base = public_media["base"].rstrip("/")
+            self.primary_base = base + "/" + public_media["image_works"].strip("/") + "/"
+            self.files_base = base + "/" + public_media["files_works"].strip("/") + "/"
         self.icons: Any = None
 
-    def bytes(self, identity: str) -> bytes:
-        if identity not in self.raw_inputs:
-            self.raw_inputs[identity] = read_bytes(confined(self.workspace.catalogue.working.path, identity))
-        return self.raw_inputs[identity]
+    def image_asset(self, identity: str, version: int) -> CatalogueMedia:
+        return CatalogueMedia("primary", identity, self.primary_base + quote(identity, safe="") + f"?v={version}")
 
-    def read(self, identity: str) -> dict[str, Any]:
-        try:
-            return json.loads(self.bytes(identity))
-        except (OSError, ValueError) as error:
-            raise ValueError(f"Required Working Catalogue input is unavailable: {identity}") from error
-
-    def work(self, work_id: str) -> dict[str, Any]:
-        if work_id not in self.works:
-            self.works[work_id] = self.read(f"works/index/{work_id}.json")["work"]
-        return self.works[work_id]
-
-    def presentation(self, work_id: str, *, include_entry: bool) -> tuple[dict[str, Any], tuple[CatalogueMedia, ...]]:
-        if work_id in self.presentations:
-            presentation, media = self.presentations[work_id]
-            return self.with_entry(work_id, presentation, include_entry), media
-        work = self.work(work_id)
-        if self.policy is None:
-            self.policy = self.read("media-config.json")
-        policy = self.policy
-        primary = policy["primary"]
-        widths = sorted(set(primary["widths"]))
-        def rendition(width: int) -> CatalogueMedia:
-            identity = f"{work_id}-{primary['suffix']}-{width}.{policy['format']}"
-            return CatalogueMedia("primary", identity, primary["base_urls"]["works"] + identity
-                                  + f"?{primary['version_query_parameter']}={work['media_version']}")
-
-        candidates: dict[int, CatalogueMedia] = {}
-        for width in widths:
-            candidates.setdefault(min(width, work["width_px"]), rendition(width))
-        largest = rendition(widths[-1])
-        media = {item.identity: item for item in (*candidates.values(), largest)}
-        galleries = [{"target": {"kind": "catalogue-gallery", "id": gallery["gallery_id"]},
-                      "label": gallery["title"], "relation": "direct"} for gallery in work["galleries"]]
-        seen = {gallery["target"]["id"] for gallery in galleries}
-        if "series_id" in work:
-            if self.relationships is None:
-                self.relationships = self.read("series-galleries-index.json")
-            for gallery in self.relationships["series_galleries"][work["series_id"]]:
-                if gallery["gallery_id"] not in seen:
-                    seen.add(gallery["gallery_id"])
-                    galleries.append({"target": {"kind": "catalogue-gallery", "id": gallery["gallery_id"]},
-                                      "label": gallery["title"], "relation": "series"})
-        presentation = {
-            "schema_version": "docs_media_view_v2", "target": {"kind": "catalogue-work", "id": work_id},
-            "label": work["title"],
-            "image": {"src": next(iter(candidates.values())).url,
-                      "candidates": [{"src": item.url, "width_px": width} for width, item in candidates.items()],
-                      "alt": work["title"], "width_px": work["width_px"], "height_px": work["height_px"]},
-            "new_tab_target": largest.url, "galleries": galleries,
-        }
-        selected_media = tuple(media.values())
-        self.presentations[work_id] = presentation, selected_media
-        return self.with_entry(work_id, presentation, include_entry), selected_media
-
-    def with_entry(self, work_id: str, presentation: dict[str, Any], include_entry: bool) -> dict[str, Any]:
-        if not include_entry:
-            return presentation
-        if work_id not in self.entries:
-            self.entries[work_id] = entry_fields(self.work(work_id), work_id)
-        return {**presentation, "entry": self.entries[work_id]}
+    def download(self, identity: str) -> CatalogueMedia:
+        return CatalogueMedia("files", identity, self.files_base + quote(identity, safe=""))
 
     def icon(self, name: str) -> str:
         if self.icons is None:
@@ -165,11 +86,12 @@ def image_control(presentation: dict[str, Any], *, entry: bool) -> str:
     frame = ' docsViewerCatalogueEntry__frame' if entry else ""
     ratio = f' style="aspect-ratio: {width} / {height};"' if entry else ""
     srcset = ", ".join(f"{resource_url(item['src'])} {item['width_px']}w" for item in image["candidates"])
+    responsive = f'srcset="{html.escape(srcset, quote=True)}" sizes="100vw" ' if srcset else ""
     return (
         f'<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink{frame}"{ratio} '
         f'data-docs-media-open aria-label="Open {title}">'
         f'<img data-docs-media-image src="{html.escape(resource_url(image["src"]), quote=True)}" '
-        f'srcset="{html.escape(srcset, quote=True)}" sizes="100vw" alt="{title}" '
+        f'{responsive}alt="{title}" '
         f'width="{width}" height="{height}" decoding="async">'
         f'<span data-docs-media-placeholder hidden>{title}</span></button>'
     )
@@ -210,40 +132,51 @@ def reference_markup(reference: dict[str, Any], presentation: dict[str, Any] | N
             f'<p class="docsViewerCatalogueEntry__metadata">{metadata}</p></div>{resources_html}</article>')
 
 
-def prepare_catalogue_document(target: Any, payload: dict[str, Any], inputs: CatalogueStaticInputs) -> PreparedCatalogueDocument:
-    """Resolve only the supplied document, leaving it and all persistent state untouched."""
+def prepare_catalogue_document(
+    payload: dict[str, Any], inputs: CatalogueStaticInputs, *, export: bool = False,
+) -> PreparedCatalogueDocument:
+    """Materialize selected static HTML and the exact Work assets used by Export."""
     envelope = payload.get("catalogue")
-    own_work = target["collection"] == "catalogue"
-    if envelope is None and not own_work:
-        return PreparedCatalogueDocument(payload, ())
-    references = envelope["references"] if envelope else []
-    required = {ref["target"]["id"]: False for ref in references if ref["target"]["kind"] == "catalogue-work"}
-    for reference in references:
-        if reference["presentation"] == "entry":
-            required[reference["target"]["id"]] = True
-    if own_work:
-        required.setdefault(target["doc_id"], False)
-    presentations, media = {}, {}
-    for work_id, include_entry in required.items():
-        presentation, images = inputs.presentation(work_id, include_entry=include_entry)
-        presentations[f"catalogue-work:{work_id}"] = presentation
-        for item in images:
-            media[(item.media_type, item.identity)] = item
-        if include_entry:
-            work = inputs.work(work_id)
-            for download in work.get("downloads", []):
-                # The producer supplies the owned filename independently of its public URL.
-                identity = download["filename"]
-                item = CatalogueMedia("files", identity, resource_url(download["url"]))
-                media[(item.media_type, item.identity)] = item
+    if envelope is None:
+        return PreparedCatalogueDocument(payload, (), {})
     content = payload["content_html"]
-    for reference in references:
-        tag = "span" if reference["presentation"] == "media" else "div"
-        slot = f'<{tag} data-docs-catalogue-ref="{reference["reference_id"]}"></{tag}>'
-        key = f'{reference["target"]["kind"]}:{reference["target"]["id"]}'
-        markup = reference_markup(reference, presentations.get(key), inputs)
-        content = content.replace(slot, f'<{tag} data-docs-catalogue-ref="{reference["reference_id"]}">{markup}</{tag}>')
-    prepared_envelope = {**(envelope or {"schema": "docs_catalogue_presentation_v1", "references": []})}
-    if presentations:
-        prepared_envelope["presentations"] = presentations
-    return PreparedCatalogueDocument({**payload, "content_html": content, "catalogue": prepared_envelope}, tuple(media.values()))
+    work_links = {}
+    media = {}
+
+    def select(asset: CatalogueMedia) -> str:
+        if export:
+            media[(asset.binding, asset.identity)] = asset
+        return asset.url
+
+    for reference in envelope["references"]:
+        mode = reference["presentation"]
+        work_target = reference["target"]
+        presentation = None
+        if work_target["kind"] == "catalogue-work" and (mode != "media" or export):
+            work_id = work_target["id"]
+            work = inputs.projection.work(work_id)
+            image = work["image"]
+            src = select(inputs.image_asset(image["default"], image["version"]))
+            if export:
+                work_links[f"catalogue-work:{work_id}"] = src
+            if mode != "media":
+                candidates = [] if export else [
+                    {"src": inputs.image_asset(candidate["identity"], image["version"]).url,
+                     "width_px": candidate["width_px"]} for candidate in image["candidates"]
+                ]
+                presentation = {"label": image["alt"], "image": {**image, "src": src, "candidates": candidates}}
+            if mode == "entry":
+                entry = work["entry"]
+                presentation["entry"] = {
+                    "metadata_lines": entry["metadata_lines"],
+                    "resources": [
+                        {**resource, "url": select(inputs.download(resource["identity"]))}
+                        if resource["kind"] == "download" else resource
+                        for resource in entry["resources"]
+                    ],
+                }
+        tag = "span" if mode == "media" else "div"
+        slot = f'<{tag} data-docs-catalogue-ref="{reference["reference_id"]}">'
+        markup = reference_markup(reference, presentation, inputs)
+        content = content.replace(f"{slot}</{tag}>", f"{slot}{markup}</{tag}>")
+    return PreparedCatalogueDocument({**payload, "content_html": content}, tuple(media.values()), work_links)

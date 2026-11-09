@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
-from collections.abc import Collection
+from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any
 
 from .common import json, json_text, read_text, write_text
+from docs_publication_paths import confined
+
+
+ItemProjection = Callable[[dict[str, Any], str | None], None]
 
 
 class WritePlanMixin:
@@ -28,6 +32,21 @@ class WritePlanMixin:
         )
         return sorted(set(existing) - set(desired_doc_ids))
 
+    def plan_item_writes(
+        self, item_payloads: dict[str, dict[str, Any]], project_item: ItemProjection | None,
+    ) -> tuple[dict[str, str], list[str]]:
+        item_text_by_id = {}
+        changed_item_ids = []
+        for doc_id, payload in item_payloads.items():
+            previous = read_text(confined(self.items_dir, f"{doc_id}.json"))
+            if project_item is not None:
+                project_item(payload, previous)
+            text = json_text(payload)
+            item_text_by_id[doc_id] = text
+            if previous != text:
+                changed_item_ids.append(doc_id)
+        return item_text_by_id, sorted(changed_item_ids)
+
     def build_write_plan(
         self,
         index_tree_payload: dict[str, Any],
@@ -36,6 +55,7 @@ class WritePlanMixin:
         *,
         stale_item_ids: list[str],
         existing_tree_text: str | None = None,
+        project_item: ItemProjection | None = None,
     ) -> dict[str, Any]:
         """Return exact writes and removals without mutating generated output.
 
@@ -48,19 +68,13 @@ class WritePlanMixin:
         if existing_tree_text is None:
             existing_tree_text = read_text(self.output_dir / "index-tree.json")
         recent_text = json_text(recent_payload) if recent_payload is not None else ""
-        item_text_by_id: dict[str, str] = {}
-        changed_item_ids: list[str] = []
-        for doc_id, payload in item_payloads.items():
-            text = json_text(payload)
-            item_text_by_id[doc_id] = text
-            if read_text(self.items_dir / f"{doc_id}.json") != text:
-                changed_item_ids.append(doc_id)
+        item_text_by_id, changed_item_ids = self.plan_item_writes(item_payloads, project_item)
         return {
             "index_tree_write": existing_tree_text != index_tree_text,
             "index_tree_text": index_tree_text,
             "recent_write": recent_payload is not None and read_text(self.output_dir / "recent.json") != recent_text,
             "recent_text": recent_text,
-            "changed_item_ids": sorted(changed_item_ids),
+            "changed_item_ids": changed_item_ids,
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
         }

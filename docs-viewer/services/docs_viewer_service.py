@@ -116,9 +116,7 @@ REVALIDATED_READ_PATHS = GENERATED_READ_PATHS | {
     routes.SELECTED_PATH,
     routes.CATALOGUE_MEDIA_TARGETS_PATH,
     routes.CATALOGUE_MEDIA_CONFIG_PATH,
-    routes.CATALOGUE_WORK_PATH,
     routes.CATALOGUE_GALLERY_PATH,
-    routes.CATALOGUE_SERIES_GALLERIES_PATH,
     routes.UNPUBLISHABLE_REPORT_PATH,
     routes.BROKEN_LINKS_PATH,
     routes.PROJECT_STATE_PATH,
@@ -344,7 +342,11 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
         access["management_ui"] = bool(config.management_enabled) if route_id == "docs-manage" else False
         if route_id == "docs-manage":
             assets = load_docs_workspace_config(repo_root).assets
-            route["catalogue_paths"] = {"work_thumbnails_base_url": assets.url(assets.work_thumbnails) + "/"}
+            route["catalogue_paths"] = {
+                "work_thumbnails_base_url": assets.url(assets.work_thumbnails) + "/",
+                "work_primary_base_url": assets.url(assets.work_primary) + "/",
+                "work_files_base_url": assets.url(assets.work_files) + "/",
+            }
             route["sites"] = {
                 "public_preview": {
                     "base": config.public_preview_base,

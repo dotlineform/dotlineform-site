@@ -1,7 +1,6 @@
 {
   "schema_version": "docs_catalogue_artifacts_v1",
   "by_id_directories": [
-    "works/index",
     "galleries/index"
   ],
   "system_files": [

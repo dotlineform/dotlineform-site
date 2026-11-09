@@ -354,15 +354,20 @@ def plan_static_html_snapshot(
     except FileNotFoundError as exc:
         raise FileNotFoundError(f"selected document payload not found for {collection}") from exc
     inputs = CatalogueStaticInputs(repo_root, workspace)
+    if collection == "catalogue":
+        inputs.projection.documents.update(doc_payloads)
     work_media = {}
+    work_links = {}
     for doc_id, payload in doc_payloads.items():
-        prepared = prepare_catalogue_document({"collection": collection, "doc_id": doc_id}, payload, inputs)
+        prepared = prepare_catalogue_document(payload, inputs, export=True)
         doc_payloads[doc_id] = prepared.payload
         work_media[doc_id] = prepared.media
+        work_links[doc_id] = prepared.work_links
     included_doc_ids = set(doc_ids)
     document_paths = snapshot_document_paths(doc_payloads)
     media_plan = plan_snapshot_media(repo_root, owner.media.types if owner.media is not None else {}, doc_payloads,
-                                    document_paths=document_paths, work_media=work_media, work_assets=workspace.assets)
+                                    document_paths=document_paths, work_media=work_media, work_links=work_links,
+                                    work_assets=workspace.assets)
     documents = [{"doc_id": row["doc_id"], "title": row["title"]} for row in manifest["docs"] if row["doc_id"] in included_doc_ids]
     selection_kind = snapshot_selection_kind(doc_ids, available_doc_ids)
     selected_date = export_date or datetime.now().astimezone().date()

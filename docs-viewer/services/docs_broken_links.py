@@ -48,7 +48,8 @@ from docs_builder.semantic_tokens import (  # noqa: E402
     parse_semantic_tokens,
 )
 from docs_media_inventory import parsed_source_media_references  # noqa: E402
-from docs_catalogue_media import catalogue_media_record, read_catalogue_media_config, read_catalogue_gallery, read_catalogue_work  # noqa: E402
+from docs_catalogue_media import read_catalogue_media_config, read_catalogue_gallery  # noqa: E402
+from docs_catalogue_projection import catalogue_work_from_document  # noqa: E402
 from studio.services.catalogue.catalogue_gallery_records import validate_gallery_record  # noqa: E402
 
 
@@ -119,14 +120,16 @@ def catalogue_target_reason(
     target_id: str,
     *,
     workspace: ArtifactLocation,
+    catalogue_documents: Path,
 ) -> str:
     """Diagnose one selected generated record within the supplied Catalogue owner."""
     try:
         if target_type == "gallery":
             validate_gallery_record(read_catalogue_gallery(repo_root, target_id, workspace=workspace), gallery_id=target_id)
         else:
-            catalogue_media_record(read_catalogue_work(repo_root, target_id, workspace=workspace), target_id)
-    except ValueError:
+            path = document_payload_path(catalogue_documents, target_id)
+            catalogue_work_from_document(target_id, read_json(path, "Catalogue Work"))
+    except (FileNotFoundError, ValueError):
         return "missing_gallery" if target_type == "gallery" else "missing_media"
     return ""
 
@@ -188,7 +191,7 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
                     continue
                 reason = "unsupported_kind"
                 if token.supported:
-                    if media_policy_available is None:
+                    if token.target_type == "gallery" and media_policy_available is None:
                         try:
                             read_catalogue_media_config(repo_root, workspace=workspace.catalogue.working)
                             media_policy_available = True
@@ -197,10 +200,8 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
                     key = (token.target_type, token.target_id)
                     if key not in catalogue_reasons:
                         catalogue_reasons[key] = catalogue_target_reason(
-                            repo_root, *key, workspace=workspace.catalogue.working,
-                        ) if media_policy_available else (
-                            "missing_gallery" if token.target_type == "gallery" else "missing_media"
-                        )
+                            repo_root, *key, workspace=workspace.catalogue.working, catalogue_documents=local_roots["catalogue"],
+                        ) if token.target_type == "work" or media_policy_available else "missing_gallery"
                     reason = catalogue_reasons[key]
                 if reason:
                     entries.append({

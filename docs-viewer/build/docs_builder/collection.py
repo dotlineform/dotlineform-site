@@ -20,6 +20,7 @@ from .collection_metadata import read_collection_manifest
 from docs_selected_documents import read_selected
 from .rendering_inputs import RenderingInputs
 from .source import DocRecord, DocumentIdentity
+from .write_plan import ItemProjection
 from docs_document_identity import doc_updated_date
 from docs_workspace_config import DocsWorkspaceConfig
 
@@ -115,12 +116,15 @@ class CollectionDocsBuilder(DocsDataBuilder):
         document_identities: dict[str, Any], manifest_payload: dict[str, Any],
         stale_item_ids: list[str],
         related_documents: dict[Any, Any],
+        project_item: ItemProjection | None = None,
     ) -> dict[str, Any]:
         """Render and write the supplied collection artifacts; return completed facts."""
         started_at = monotonic_time()
         self.related_documents = related_documents
         item_payloads = {doc.doc_id: self.item_entry(doc, document_identities) for doc in documents}
-        write_plan = self.build_collection_write_plan(manifest_payload, item_payloads, stale_item_ids=stale_item_ids)
+        write_plan = self.build_collection_write_plan(
+            manifest_payload, item_payloads, stale_item_ids=stale_item_ids, project_item=project_item,
+        )
         diagnostics = self.collection_diagnostics_payload(
             docs_total=len(document_identities), docs_emitted=len(item_payloads), write_plan=write_plan,
             elapsed_seconds=round(monotonic_time() - started_at, 3),
@@ -142,23 +146,18 @@ class CollectionDocsBuilder(DocsDataBuilder):
         item_payloads: dict[str, dict[str, Any]],
         *,
         stale_item_ids: list[str],
+        project_item: ItemProjection | None = None,
     ) -> dict[str, Any]:
         """Compare the selected manifest and payloads; confine targeted removals."""
         manifest_text = json_text(manifest_payload)
-        item_text_by_id: dict[str, str] = {}
-        changed_item_ids: list[str] = []
-        for doc_id, payload in item_payloads.items():
-            text = json_text(payload)
-            item_text_by_id[doc_id] = text
-            if read_text(self.items_dir / f"{doc_id}.json") != text:
-                changed_item_ids.append(doc_id)
+        item_text_by_id, changed_item_ids = self.plan_item_writes(item_payloads, project_item)
         return {
             "manifest_write": (
                 read_text(self.output_dir / self.manifest_filename) != manifest_text
                 if self.collection_manifest is None else self.collection_manifest != manifest_payload
             ),
             "manifest_text": manifest_text,
-            "changed_item_ids": sorted(changed_item_ids),
+            "changed_item_ids": changed_item_ids,
             "stale_item_ids": sorted(stale_item_ids),
             "item_text_by_id": item_text_by_id,
         }

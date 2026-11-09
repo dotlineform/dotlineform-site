@@ -6,14 +6,18 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
-from docs_catalogue_media import read_catalogue_work, read_catalogue_work_index
+from docs_artifact_locations import ArtifactLocation
+from docs_catalogue_media import (
+    read_catalogue_media_config, read_catalogue_series_galleries_index, read_catalogue_work, read_catalogue_work_index,
+)
+from docs_catalogue_projection import adopt_catalogue_work
 from docs_catalogue_source_inventory import catalogue_source_documents
 from docs_catalogue_work_record import catalogue_work_record
 from docs_management_context import log_event
 from docs_management_document_target import resolve_managed_document_collection
 from docs_selected_documents import selected_path, selected_text
 from docs_publication_preparation import load_preparation
-from docs_generation import complete_catalogue_handoff
+from docs_generation import complete_catalogue_handoff, generate_documents
 import docs_source_model as source_model
 from docs_workspace_config import load_docs_workspace_config, require_document_authoring, select_workspace_stage
 from docs_write_rebuild import create_collection_builder, perform_collection_source_write_and_rebuild, validate_changed_source_paths
@@ -32,6 +36,29 @@ class CatalogueRegenerationError(RuntimeError):
     def __init__(self, payload: dict[str, Any]) -> None:
         super().__init__(payload["error"])
         self.payload = payload
+
+
+class _WorkAdoption:
+    """Carry shared Refresh outputs across the supplied Work selection."""
+
+    def __init__(self, repo_root: Path, catalogue_root: ArtifactLocation) -> None:
+        self.repo_root = repo_root
+        self.catalogue_root = catalogue_root
+        self.media_policy: dict[str, Any] | None = None
+        self.series_galleries: dict[str, Any] | None = None
+
+    def read(self, work_id: str) -> tuple[dict[str, Any], dict[str, Any]]:
+        work = read_catalogue_work(self.repo_root, work_id, workspace=self.catalogue_root)["work"]
+        if self.media_policy is None:
+            self.media_policy = read_catalogue_media_config(self.repo_root, workspace=self.catalogue_root)
+        series_links = []
+        if "series_id" in work:
+            if self.series_galleries is None:
+                self.series_galleries = read_catalogue_series_galleries_index(
+                    self.repo_root, workspace=self.catalogue_root,
+                )["series_galleries"]
+            series_links = self.series_galleries[work["series_id"]]
+        return work, adopt_catalogue_work(work, self.media_policy, series_links)
 
 
 def _remove_selection(builder: Any, work_id: str) -> bool:
@@ -68,6 +95,31 @@ def reconcile_catalogue_design(repo_root: Path) -> dict[str, Any]:
     Orphan source cleanup has no authority to reconstruct media deletions.
     """
     return _regenerate(repo_root, design_maintenance=True)
+
+
+def seed_catalogue_work_snapshots(repo_root: Path, work_ids: list[str], *, write: bool) -> dict[str, Any]:
+    """Adopt the explicit baseline through the normal writer, leaving sources alone."""
+    if not work_ids:
+        raise ValueError("Supply the selected Work IDs for the seed.")
+    workspace = load_docs_workspace_config(repo_root)
+    pending = load_pending_queue(pending_path(repo_root, UPDATES_FILENAME, workspace=workspace))
+    if any(pending[field] for field in ("current_works", "deleted_works", *REFRESH_FIELDS)):
+        raise ValueError("Complete Catalogue Refresh and Regenerate before seeding Work snapshots.")
+    config = select_workspace_stage(workspace, "working")
+    require_document_authoring(config)
+    collection = resolve_managed_document_collection(repo_root, **TARGET, config=config)
+    catalogue_root = workspace.catalogue.working
+    builder = create_collection_builder(repo_root, collection, workspace, doc_ids=work_ids)
+    documents = builder.load_docs(work_ids)
+    missing = set(work_ids) - {doc.doc_id for doc in documents}
+    if missing:
+        raise FileNotFoundError("Catalogue source is unavailable for the seed: " + ", ".join(sorted(missing)))
+    adoption = _WorkAdoption(repo_root, catalogue_root)
+    adopted_works = {work_id: adoption.read(work_id)[1] for work_id in work_ids}
+    return generate_documents(
+        builder, write=write, documents=documents, related_records={}, adopted_works=adopted_works,
+        expand_dependencies=False, update_selected=False,
+    )["diagnostics"]
 
 
 def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
@@ -108,7 +160,8 @@ def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
     selection_updated = False
     maintenance_paths: list[Path] = []
     maintenance_completed = []
-    work_records: dict[str, dict[str, Any]] = {}
+    maintenance_adoptions: dict[str, dict[str, Any]] = {}
+    adoption = _WorkAdoption(repo_root, workspace.catalogue.working)
     timestamp = source_model.current_doc_timestamp()
     work_id, phase = "", "source"
 
@@ -129,12 +182,13 @@ def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
                     documents.update(catalogue_source_documents(repo_root, [work_id], collection=collection))
                 document = documents.get(work_id)
                 replacement = None
+                adopted_works = {}
                 download_names: set[str] = set()
                 operation = "delete"
                 if family == "current_works":
-                    if work_id not in work_records:
-                        work_records[work_id] = read_catalogue_work(repo_root, work_id, workspace=workspace.catalogue.working)["work"]
-                    work = work_records[work_id]
+                    phase = "Work adoption"
+                    work, adopted_works[work_id] = adoption.read(work_id)
+                    phase = "source"
                     record = catalogue_work_record(work)
                     download_names = {item["filename"] for item in work.get("downloads", [])}
                     if document is None:
@@ -191,6 +245,7 @@ def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
                     write_operation()
                     maintenance_paths.extend(paths)
                     maintenance_completed.append(completed)
+                    maintenance_adoptions.update(adopted_works)
                     continue
                 current_document = replacement or document
                 build_documents = [] if family == "deleted_works" else [build_record(current_document)]
@@ -199,6 +254,7 @@ def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
                     links_doc_ids=[work_id], build_doc_ids=[work_id], builder=builder,
                     documents=build_documents,
                     publication=document_publication, catalogue_pending=publication,
+                    adopted_works=adopted_works, expand_dependencies=False,
                 )
                 phase = "publication queue"
                 merge_completed_work_selections(publication, [completed])
@@ -214,6 +270,7 @@ def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
                 repo_root, "catalogue", maintenance_paths, lambda: None, complete_build=True, builder=builder,
                 documents=[build_record(document) for document in documents.values()],
                 publication=document_publication, catalogue_pending=publication,
+                adopted_works=maintenance_adoptions, expand_dependencies=False,
             )
             phase = "publication queue"
             merge_completed_work_selections(publication, maintenance_completed)

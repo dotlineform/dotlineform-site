@@ -62,7 +62,7 @@ Supported returned Import applies the supplied Summary string. Returning the pre
 
 Configured collection packages are export-only unless both the collection and profile enable returned-package import. Application requests require the exact `collection`; the owning service resolves Working.
 
-Content-bearing preparation carries selected rendered HTML and its Catalogue reference envelope into the shared `docs_catalogue_static.py` preparer before HTML/Markdown/plain-text and heading transformations. One request reuses selected Work/policy/relationship inputs and its existing rendered-content cache. This preserves current Work titles/captions and Catalogue Entry content after Build became reference-only. It adds no media packaging, document generation, queue work or private source lookup; tree-only profiles construct no presentation owner. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) owns the shared reference/presentation fields.
+Content-bearing preparation carries selected rendered HTML and Catalogue references into `docs_catalogue_static.py` before content and heading transformations. The operation reuses adopted Work documents and its rendered-content cache. It renders the adopted Work title, captions and Entry, and retains the configured public media URLs in content output. Tree-only profiles skip presentation preparation. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) owns the payload fields.
 
 For engine commands, output fields, validation details, and workspace requirements, use [Documents Package Preparation Script](Package_Prepare_Script.md). Returned packages remain a separate whole-package workflow.
 

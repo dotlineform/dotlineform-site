@@ -303,6 +303,8 @@ export function resolveDocsViewerRouteConfig(options) {
     catalogueGalleryRecordsBaseUrl: cleanString(rawConfig.catalogue_paths && rawConfig.catalogue_paths.gallery_records_base_url),
     catalogueMediaConfigUrl: rawConfig.catalogue_paths && rawConfig.catalogue_paths.media_config_url || "",
     catalogueWorkThumbnailsBaseUrl: rawConfig.catalogue_paths && rawConfig.catalogue_paths.work_thumbnails_base_url || "",
+    catalogueWorkPrimaryBaseUrl: cleanString(rawConfig.catalogue_paths && rawConfig.catalogue_paths.work_primary_base_url),
+    catalogueWorkFilesBaseUrl: cleanString(rawConfig.catalogue_paths && rawConfig.catalogue_paths.work_files_base_url),
     indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
     recentUrl: normalizePath(recentEnabled
       ? requireRouteConfigField(docsPaths.recent_url, "docs_paths.recent_url")

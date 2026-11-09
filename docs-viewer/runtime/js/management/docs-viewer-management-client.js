@@ -92,12 +92,6 @@ export function readCatalogueMediaConfig( options) {
     Object.assign({}, options, { cache: "no-cache" }));
 }
 
-/** Read the current generated Work consumer record independently of Document Build. */
-export function readCatalogueWork(workId,  options) {
-  return fetchManagementJson("/docs/catalogue-work?work_id=" + encodeURIComponent(workId), "GET", undefined,
-    Object.assign({}, options, { cache: "no-cache" }));
-}
-
 /** Await one Working Catalogue reconciliation and its required document Build. */
 export function runCatalogueRegeneration(payload, options) {
   return fetchManagementJson("/docs/catalogue/regenerate", "POST", payload, options);
@@ -106,12 +100,6 @@ export function runCatalogueRegeneration(payload, options) {
 /** Read exact Gallery membership from current Studio-generated output. */
 export function readCatalogueGallery(galleryId,  options) {
   return fetchManagementJson("/docs/catalogue-gallery?gallery_id=" + encodeURIComponent(galleryId), "GET", undefined,
-    Object.assign({}, options, { cache: "no-cache" }));
-}
-
-/** Read the current generated Series relevance map independently of Work membership. */
-export function readCatalogueSeriesGalleries(options) {
-  return fetchManagementJson("/docs/catalogue-series-galleries", "GET", undefined,
     Object.assign({}, options, { cache: "no-cache" }));
 }
 

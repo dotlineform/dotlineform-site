@@ -110,9 +110,8 @@ function mountCatalogueReferences(context) {
       status.textContent = text;
       status.hidden = !text;
     }
-    function projectInlineImage(presentation) {
+    function projectInlineImage(data) {
       if (!inlineImage || !isCurrent()) return;
-      var data = presentation.image;
       releaseImage();
       inlineImage.alt = data.alt;
       inlineImage.hidden = false;
@@ -136,7 +135,7 @@ function mountCatalogueReferences(context) {
       try {
         if (typeof context.loadMediaTarget !== "function") throw new Error("Catalogue media is unavailable in this view.");
         var presentation = await context.loadMediaTarget(request());
-        if (presentation && isCurrent()) { projectInlineImage(normalizeDocsViewerMediaPresentation(presentation)); message(""); }
+        if (presentation && isCurrent()) { projectInlineImage(normalizeDocsViewerMediaPresentation(presentation).image); message(""); }
       } catch (error) {
         if (isCurrent()) message(" " + (error.message || "Image unavailable.") + " Select the image to retry.");
       } finally {
@@ -151,11 +150,14 @@ function mountCatalogueReferences(context) {
       message("");
       try {
         if (typeof context.openMediaTarget !== "function") throw new Error("Catalogue media is unavailable in this view.");
-        await context.openMediaTarget(Object.assign(request(), { onPresentation: projectInlineImage }));
+        await context.openMediaTarget(context.preparedImage ? request() : Object.assign(request(), {
+          onPresentation: function (presentation) { projectInlineImage(presentation.image); }
+        }));
+        if (context.preparedImage && inlineImage.hidden) projectInlineImage(context.preparedImage);
         if (isCurrent()) message("");
       } catch (error) {
         if (isCurrent()) {
-          if (inlineImage) imageFailed();
+          if (inlineImage && !context.preparedImage) imageFailed();
           message(" " + (error.message || "Catalogue media is unavailable.") + " Try again.");
         }
       } finally {
@@ -168,7 +170,8 @@ function mountCatalogueReferences(context) {
     control.addEventListener("click", handleClick);
     if (inlineImage) {
       inlineImage.addEventListener("error", imageFailed);
-      initialImage();
+      if (context.preparedImage) projectInlineImage(context.preparedImage);
+      else initialImage();
     }
     cleanups.push(function () {
       released = true;
@@ -315,12 +318,12 @@ export function createDocsViewerMediaDetailAdapter() {
       state.records.set(record.id, record);
     });
     stateByRoot.set(root, state);
-    function bindReferences(content, initialPresentation) {
+    function bindReferences(content, preparedImage) {
       state.referenceCleanups.push(...mountCatalogueReferences({
         content: content, documentTarget: Object.freeze(Object.assign({}, documentTarget)),
         isCurrentDocument: function () { return stateByRoot.get(root) === state; },
+        preparedImage: preparedImage,
         loadMediaTarget: function (request) {
-          if (initialPresentation) return Promise.resolve(initialPresentation);
           return loadTarget(Object.assign({}, request, { content: root, documentMountGeneration: documentMountGeneration }));
         },
         openMediaTarget: function (request) {
@@ -329,19 +332,16 @@ export function createDocsViewerMediaDetailAdapter() {
       }));
     }
     bindReferences(root, null);
-    var ready = Promise.resolve(true);
-    if (context.payload && context.payload.catalogue && context.collectionProvider.createCataloguePresentationOperation) {
-      var catalogueMount = mountCatalogueDocument({
+    if (context.payload && context.payload.catalogue && context.collectionProvider.catalogueImage) {
+      mountCatalogueDocument({
         content: root, payload: context.payload,
-        createOperation: function () { return context.collectionProvider.createCataloguePresentationOperation(context.payload); },
-        isCurrent: function () { return stateByRoot.get(root) === state; },
+        image: context.collectionProvider.catalogueImage,
+        downloadUrl: context.collectionProvider.catalogueDownloadUrl,
         bind: bindReferences
       });
-      state.referenceCleanups.push(catalogueMount.release);
-      ready = catalogueMount.ready.then(function () { return stateByRoot.get(root) === state; });
     }
     return {
-      ready: ready,
+      ready: Promise.resolve(true),
       found: markers.length,
       decorated: state.records.size + state.referenceCleanups.length,
       skipped: markers.length - state.records.size - state.referenceCleanups.length
@@ -391,16 +391,16 @@ export function createDocsViewerMediaDetailAdapter() {
       && (!context.isCurrentDocument || context.isCurrentDocument()) ? state : null;
   }
 
-  /** Retain only in-flight reads under the existing provider lifecycle. */
-  function readWork(state, workId, navigation) {
+  /** Reuse the mounted Catalogue page and Works selected during this mount. */
+  function readWork(state, workId) {
     if (!state.workReads.has(workId)) {
       var provider = state.collectionProvider;
-      if (!provider || typeof provider.createCataloguePresentationOperation !== "function") {
+      if (!provider || typeof provider.readCatalogueWorkPresentation !== "function") {
         throw new Error("Catalogue media is unavailable in this view.");
       }
-      var operation = provider.createCataloguePresentationOperation(state.payload);
-      var read = operation.readWork(workId, { navigation: Boolean(navigation) })
-        .finally(function () { state.workReads.delete(workId); });
+      var ownPage = state.documentTarget.collection === "catalogue" && state.documentTarget.docId === workId;
+      var read = provider.readCatalogueWorkPresentation(workId, ownPage ? state.payload : null)
+        .catch(function (error) { state.workReads.delete(workId); throw error; });
       state.workReads.set(workId, read);
     }
     return state.workReads.get(workId);
@@ -748,7 +748,7 @@ export function createDocsViewerMediaDetailAdapter() {
           galleryPage = 0;
           renderPresentation(group.gallery);
         } else {
-          var presentation = await readWork(state, member.target.id, true);
+          var presentation = await readWork(state, member.target.id);
           if (!isCurrent() || request !== selectionRequest) return;
           var work = normalizeDocsViewerMediaPresentation(presentation);
           renderPresentation(work);

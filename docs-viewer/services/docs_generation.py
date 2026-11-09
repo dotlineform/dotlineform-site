@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -19,6 +20,7 @@ def generate_documents(
     publication: Any = None, expand_dependencies: bool = True,
     catalogue_work_selection: bool = True,
     catalogue_pending: dict[str, Any] | None = None,
+    adopted_works: dict[str, dict[str, Any]] | None = None,
     media_changes: dict[str, Any] | None = None,
     media_writes: dict[str, dict[str, list[str]]] | None = None,
 ) -> dict[str, Any]:
@@ -33,6 +35,8 @@ def generate_documents(
     from docs_builder.media_builds import build_collection_media_snapshot
     from docs_builder.ordinary_metadata import navigation_rows, read_saved_navigation, targeted_document_metadata
     from docs_builder.related_links import prepare_related_links
+    from docs_catalogue_projection import CatalogueDocumentProjection
+    from docs_workspace_config import generated_documents_path
 
     collection = getattr(builder, "collection_id", "")
     builder.warnings = []
@@ -117,9 +121,18 @@ def generate_documents(
         candidates = builder.recent_candidates(docs, navigation["docs"], ignored_ids=publication.ignored)
         recent = builder.recent_payload(candidates, output_path=builder.output_dir / "recent.json")
 
+    project_item = None
+    if builder.config.stage == "working":
+        catalogue_owner = next((owner for owner in builder.config.collections if owner.collection == "catalogue"), None)
+        if catalogue_owner is not None:
+            projection = CatalogueDocumentProjection(
+                builder.repo_root, generated_documents_path(catalogue_owner) / "by-id",
+                builder.workspace.catalogue.working, adopted_works,
+            )
+            project_item = partial(projection.document, collection=collection)
     result = builder.run(
         write=write, documents=selected_docs, document_identities=identities, stale_item_ids=stale_item_ids,
-        related_documents=related_documents,
+        related_documents=related_documents, project_item=project_item,
         **({"manifest_payload": manifest} if collection else {
             "index_tree_payload": navigation, "recent_payload": recent, "previous_tree_text": previous_tree_text,
         }),

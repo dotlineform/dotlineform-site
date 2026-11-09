@@ -8,11 +8,11 @@ parent_id: d-20260725-153656-516b61
 ---
 # Target Lookup
 
-Catalogue authoring and the Works Subject picker obtain current target choices through `/docs/catalogue-media-targets`. The owning service reads configured Working Catalogue Work and Gallery indexes and returns exact identities, titles and compact metadata. It does not read canonical Catalogue records or a persisted discovery lookup.
+Catalogue authoring and the Works Subject picker obtain target choices through `/docs/catalogue-media-targets`. The owning service reads Work IDs and titles from the Working Catalogue management manifest and Gallery IDs and titles from the Studio-generated Gallery index.
 
 The response retains `docs_semantic_token_target_lookup_v2`, with a `targets` array. Shared browser normalization and matching consume this active response contract. The token registry declares supported identities and parser/UI policy; it contains no target-store URL or generator adapter declarations.
 
-Catalogue images and Media View resolve exact generated records through the configured Catalogue provider. Document Build reads `works/index/<work_id>.json` for Work image text and metadata. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns those boundaries.
+Document Build prepares inline image data from adopted Catalogue documents. Media View reads the selected Catalogue document by exact Work ID. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) owns the payload boundary.
 
 The former `docs-viewer/data/generated/semantic-tokens/target-lookup.json`, its standalone builder/CLI and browser file loader are retired. No refresh command, static serving prefix or compatibility read remains for that file. Save, Refresh Catalogue, Build and Publish keep their existing completion boundaries.
 

@@ -12,7 +12,7 @@ parent_id: d-20260428-000000-f5ff18
 
 ## Resume Here
 
-Implementation is deferred at the owner's request on 2026-10-26 during an approximately ten-day absence. Resume discussion when the owner returns, around 2026-11-05; no implementation stage has started, including the Studio UI editing freeze.
+Gallery implementation remains proposed. [Catalogue Work By-ID Separation](Catalogue_Work_By_ID_Separation.md) delivered queue-driven Work adoption, portable document readers, downstream preparation and raw Work copy retirement separately. Studio still owns Gallery authoring and production. GO.2 starts from the adopted Catalogue document contract and moves ownership of its Gallery fields. The earlier live reader and public layout options below record the planning baseline.
 
 Next action: review and agree the bounded GO.1 change set, then remove Gallery editing controls from Studio while retaining existing JSON, memberships, Refresh and readers. Stage 2's exact schemas/storage/migration decisions need not block that first UI freeze. Obtain the relevant implementation approval before production edits.
 
@@ -23,8 +23,8 @@ Decisions to carry forward:
 - Catalogue documents are generated Work representations. Working and public use the same ready document/presentation read model, without a separate live Work resolver.
 - Regenerate owns Studio-derived Work fields; Gallery Refresh/Save owns Gallery-derived fields in the same document. Both use the document projection/persistence owner and preserve the other section. No extra per-Work Gallery sidecar is needed.
 - Regenerate and Publish trust their supplied queues. They do not scan referring documents, recheck upstream history, repair authoring references or expand their queues. Broken Links diagnoses references left after deletion for the author to resolve.
-- Retire unused public raw Work JSON distribution while retaining the required upstream Working input. Keep public presentation performance as the layout criterion.
-- The three stages remain Studio UI freeze, Gallery ownership/Work-adoption migration, then the new Gallery management report. Medium grouping, the single free-text Work date and Catalogue search improvements follow separately.
+- Preserve the established portable document layout and the required upstream Working input.
+- The three stages remain Studio UI freeze, Gallery ownership migration, then the new Gallery management report. Medium grouping, the single free-text Work date and Catalogue search improvements follow separately.
 
 Planning handoff: changed repository documents are this delivery, `documentation/studio/Planned_Features.md` and `documentation/studio/Development_Checklist.md`. Targeted source/configuration inspection and selected read-only payload inspection informed the current/target tables; scoped `git diff --check` passed. This planning work performed no production edits, test changes/runs, migration, generation, Publish, commit, push or deployment. Current production still has the live Work reads and Studio Gallery ownership inventoried below. Before stage 2, agree the baked field/schema contract, shared document writer, Gallery source location, initial queue-selected snapshot conversion and selected public cleanup.
 
@@ -43,7 +43,7 @@ Parent: [Planned Features](../Planned_Features.md). Use [Development Checklist](
 | Stage | Change | Data and reading during the stage | Completion state |
 | --- | --- | --- | --- |
 | 1 — Freeze Studio Gallery editing | Remove Gallery membership and definition/association editing from the single/New/bulk Work editor, including Gallery edit/delete prompts | No Gallery JSON/schema, producer, Refresh or Docs consumer changes; preserve existing assignments in ordinary Work saves | Gallery authoring is unavailable; Studio Refresh continues to supply existing Gallery data to Docs Viewer |
-| 2 — Move Gallery ownership and enforce Work adoption | Move Gallery sources/generation to Docs, remove all Gallery work from Studio, bake queued Work facts during Regenerate and switch downstream consumers to those Catalogue documents | Studio Work by-ID JSON is read only by queue-driven Regenerate. Gallery/output workflows use adopted Work snapshots and their own Gallery data. | Docs owns Gallery generation and consumes Work data through the adopted document boundary; editing stays frozen |
+| 2 — Move Gallery ownership | Move Gallery sources and generation to Docs and remove Gallery work from Studio | Gallery workflows consume adopted Work snapshots and maintain the document's Gallery references | Docs owns Gallery generation and editing stays frozen |
 | 3 — Add Docs Viewer Gallery management | Create the local report UI for definitions, memberships and Series relevance links, with its own Refresh/Save operations | Refresh uses regenerated Work data and agreed Series definitions; Save changes only Gallery sources/derived output and downstream publication effects | Gallery authoring resumes without importing newer Work facts or involving Studio Refresh |
 
 Each stage is a reviewable stopping point within this delivery. Stage 1 can establish the editing freeze before stage 2's exact storage/handoff design is complete. Medium/date/search enhancements wait until the complete ownership delivery, including the replacement editor, is accepted.
@@ -227,9 +227,9 @@ Docs Viewer Publish applies selected Catalogue artifacts to `$DOTLINEFORM_DOCS_B
 
 Gallery links also enter prepared document media presentations through the shared static preparer used by Publish, Export and Prepare package. Read the Catalogue document's ready Work/Gallery sections and preserve the public presentation contract; no extra lookup or canonical join belongs in preparation. [Catalogue Indexes And Payloads](../Catalogue_Indexes_And_Payloads.md), [Catalogue Media View](../Catalogue_Media_View.md) and [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) describe current boundaries.
 
-### Current Working Work-Record Readers
+### Work-Record Readers Before Work By-ID Separation
 
-This table records the current implementation before the adoption correction. Working documents currently contain references rather than baked Work facts, and several consumers read Studio output directly. Those reads are the implementation gap against the agreed Regenerate boundary, not authority for retaining a live bypass.
+This table records the readers before [Catalogue Work By-ID Separation](Catalogue_Work_By_ID_Separation.md). Use the adopted Catalogue document contract for GO.2.
 
 | Identified current reader | Purpose and owning boundary |
 | --- | --- |
@@ -329,15 +329,14 @@ Gate: Gallery authoring is unavailable in the Studio UI, ordinary Work saves ret
 
 Record: not started.
 
-### GO.2 — Stage 2: Move Gallery Data, Production And Consumers
+### GO.2 — Stage 2: Move Gallery Data And Production
 
 - [ ] Move the three canonical JSON families into configured Docs-owned source storage, preserving Gallery IDs, titles, memberships and Series associations.
-- [ ] Implement Regenerate-only adoption of Studio's completed queue selection into baked Catalogue Work JSON; preserve adopted facts during ordinary Build and seed initial snapshots through the approved explicit selection before switching readers.
-- [ ] Migrate local Entry/images/Media View to the shared ready document/presentation contract used by public; migrate static preparation and Work-fact diagnostics to the same baked Catalogue data. Reuse loaded payloads and exact Work-ID resolution, then retire the separate live Work resolver/direct-read entry points without a Studio fallback.
+- [ ] Use the adopted Work snapshots and portable reader contract established by Work By-ID Separation. Route Gallery-only changes through the shared Catalogue document writer.
 - [ ] Implement independent Gallery Refresh/generation over adopted Work snapshots and agreed Series definitions, with an invocation while editing is frozen. No callback or raw Work read from Gallery workflows.
 - [ ] Remove Gallery source access, joins, generation, cleanup, dependency selection and Gallery queue processing from Studio Save/Refresh; retain only Work/Series facts/effects and media preparation there.
 - [ ] Remove `work.galleries` from Studio inputs. Implement Gallery-source projection into affected Catalogue document Gallery fields through the shared document writer, preserving adopted Work facts and Series-related semantics. Regenerate/ordinary Build preserve Gallery-owned fields; no sidecar or duplicate standalone Work dataset.
-- [ ] Prepare selected public documents from their ready adopted Work/Gallery data, retaining embedded presentation by default. Retire raw public Work copying and perform agreed selected Preview/repository cleanup; do not delete upstream inputs or adopt newer facts during preparation.
+- [ ] Preserve the portable document and exact queue-driven publication contracts when Docs takes over the Gallery-derived fields.
 - [ ] Assign the existing queued units to their correct processing/completion owner, including pending Gallery effects and required affected Work/document output. Retain queue formats and downstream Regenerate/Publish responsibilities; no producer may mark another owner's unfinished output ready.
 - [ ] Review exact source migration inputs and expected writes, preserving pending effects. Perform only the agreed source/output conversion; no automatic queue flush, extra ledger or speculative bulk document conversion.
 - [ ] Confirm Working and public use the shared ready Catalogue document/presentation model, with only required resource/capability differences. No raw Work or per-Work relationship reads remain in display/preparation. Follow required projection/site checks for actual public runtime changes.

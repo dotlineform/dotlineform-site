@@ -18,7 +18,7 @@ from .payloads import PayloadBuilderMixin
 from .rendering import ContentRenderingMixin
 from .semantic_tokens import SemanticTokensMixin
 from .source import DocRecord, SourceLoadingMixin
-from .write_plan import WritePlanMixin
+from .write_plan import ItemProjection, WritePlanMixin
 from docs_workspace_config import DocsWorkspaceConfig
 
 
@@ -74,6 +74,7 @@ class DocsDataBuilder(
         recent_payload: dict[str, Any] | None, stale_item_ids: list[str],
         previous_tree_text: str | None,
         related_documents: dict[Any, Any],
+        project_item: ItemProjection | None = None,
     ) -> dict[str, Any]:
         """Render and write the supplied ordinary artifacts; return completed facts."""
         started_at = monotonic_time()
@@ -81,7 +82,7 @@ class DocsDataBuilder(
         item_payloads = {doc.doc_id: self.item_entry(doc, document_identities) for doc in documents}
         write_plan = self.build_write_plan(
             index_tree_payload, recent_payload, item_payloads,
-            stale_item_ids=stale_item_ids, existing_tree_text=previous_tree_text,
+            stale_item_ids=stale_item_ids, existing_tree_text=previous_tree_text, project_item=project_item,
         )
         diagnostics = self.diagnostics_payload(
             docs_total=len(document_identities), docs_emitted=len(item_payloads), write_plan=write_plan,

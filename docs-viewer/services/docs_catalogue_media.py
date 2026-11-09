@@ -1,7 +1,7 @@
-"""Read current generated Catalogue data for authoring, runtime and availability audits.
+"""Read selected Studio Catalogue outputs and adopted authoring choices.
 
-Reads are confined to the configured Working output. No document, canonical
-Catalogue record, archive lookup or inferred media filename is a dependency.
+Regenerate owns raw Work reads. Gallery and policy consumers use Studio's
+completed outputs. The picker uses the adopted Catalogue document manifest.
 """
 
 from __future__ import annotations
@@ -10,8 +10,10 @@ import json
 from pathlib import Path
 import re
 from typing import Any
-from urllib.parse import quote, urlsplit
+from urllib.parse import urlsplit
 from docs_artifact_locations import ArtifactLocation
+from docs_publication_paths import confined, working_owner
+from docs_workspace_config import generated_documents_path
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config, catalogue_output_workspace, output_path
 
@@ -35,13 +37,6 @@ def _work_identity(value: Any) -> str:
 def _gallery_identity(value: Any) -> str:
     if not isinstance(value, str) or not re.fullmatch(r"(?:[0-9]{3}|[1-9][0-9]{3,})", value):
         raise ValueError("An exact Catalogue Gallery ID is required")
-    return value
-
-
-def _work_title(value: Any) -> str:
-    """Require the consumed string representation; title completion is UI-owned."""
-    if not isinstance(value, str):
-        raise ValueError("Generated Work title must be a string")
     return value
 
 
@@ -98,21 +93,26 @@ def read_catalogue_work_index(repo_root: Path, *, workspace: ArtifactLocation | 
     return _read_generated(repo_root, "works/works_index.json", workspace=workspace)["works"]
 
 
-def read_catalogue_series_galleries_index(repo_root: Path) -> dict[str, Any]:
+def read_catalogue_series_galleries_index(
+    repo_root: Path, *, workspace: ArtifactLocation | None = None,
+) -> dict[str, Any]:
     """Read the exact generated Series relevance map, including empty Series."""
-    return _read_generated(repo_root, "series-galleries-index.json")
+    return _read_generated(repo_root, "series-galleries-index.json", workspace=workspace)
 
 
 def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
-    """Expose Work and Gallery search identities from generated indexes."""
+    """Expose the adopted Work and Studio-owned Gallery search identities."""
+    workspace = catalogue_workspace_config(repo_root)
+    catalogue_documents = generated_documents_path(working_owner(workspace, "catalogue"))
+    manifest = json.loads(confined(catalogue_documents, "manage-manifest.json").read_bytes())
     targets = []
-    for work_id, work in read_catalogue_work_index(repo_root).items():
+    for work in manifest["docs"]:
         targets.append({
-            "family": "catalogue", "target_type": "work", "target_id": work_id,
+            "family": "catalogue", "target_type": "work", "target_id": work["doc_id"],
             "title": work["title"],
             "meta": [],
         })
-    galleries = _read_generated(repo_root, "galleries/galleries_index.json")["galleries"]
+    galleries = _read_generated(repo_root, "galleries/galleries_index.json", workspace=workspace.catalogue.working)["galleries"]
     for gallery_id, record in galleries.items():
         targets.append({
             "family": "catalogue", "target_type": "gallery", "target_id": gallery_id,
@@ -122,7 +122,7 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
 
 
 def read_catalogue_work(repo_root: Path, work_id: str, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:
-    """Return the generated consumer record; browser presentation belongs to the shared renderer."""
+    """Read one selected Studio Work for Regenerate."""
     return _read_generated(repo_root, f"works/index/{work_id}.json", workspace=workspace)
 
 
@@ -130,33 +130,3 @@ def read_catalogue_gallery(repo_root: Path, gallery_id: str, *, workspace: Artif
     """Read one exact Gallery and its ordered Work references without member reads."""
     gallery_id = _gallery_identity(gallery_id)
     return _read_generated(repo_root, f"galleries/index/{gallery_id}.json", workspace=workspace)
-
-
-def local_catalogue_media_config(repo_root: Path) -> dict[str, Any]:
-    """Project local URLs at the API boundary, preserving stored Catalogue JSON."""
-    payload = read_catalogue_media_config(repo_root)
-    assets = catalogue_workspace_config(repo_root).assets
-    payload["primary"]["base_urls"]["works"] = assets.url(assets.work_primary) + "/"
-    return payload
-
-
-def local_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
-    """Resolve owned downloads locally; user-authored external links stay external."""
-    work_id = _work_identity(work_id)
-    payload = read_catalogue_work(repo_root, work_id)
-    assets = catalogue_workspace_config(repo_root).assets
-    for download in payload["work"].get("downloads", []):
-        download["url"] = assets.url(assets.work_files) + "/" + quote(download["filename"], safe="")
-    return payload
-
-
-def catalogue_media_record(payload: dict[str, Any], work_id: str) -> dict[str, Any]:
-    """Read the exact requested Work image, trusting Save's measured pixel dimensions."""
-    work_id = _work_identity(work_id)
-    record = payload.get("work")
-    if not isinstance(record, dict) or record.get("work_id") != work_id:
-        raise ValueError(f"Generated data does not match Work {work_id}")
-    _work_title(record.get("title"))
-    if not _positive_integer(record.get("media_version")):
-        raise ValueError(f"Generated media version for Work {work_id} is unavailable")
-    return record

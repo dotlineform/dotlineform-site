@@ -35,7 +35,7 @@ This checklist and the durable Studio development documentation are maintained d
 - [ ] Choose ownership from the decision and location of required data. State the frontend responsibility, concrete server work and permitted data/processing scope before choosing a language or reusing a helper.
 - [ ] Read the smallest durable doc that maps those owners; inspect only the code/config/tests needed for the next safe change.
 - [ ] Confirm this is one finishable slice and note the credible blast radius or stop condition. Put broader discussion and internal sequence in the concept or feature parent.
-- [ ] For a [Planned](Planned_Features.md) feature delivery, keep the initial readiness step read-only and concise. Exact file inventories, line estimates, frozen code, fixtures, prototypes, generated deltas, and complete test architecture are implementation work, not approval prerequisites.
+- [ ] For a [Planned](Planned_Features.md) feature delivery, keep initial readiness concise and record findings, proposed decisions and open approval gates in the delivery document. Reserve exact file inventories, line estimates, frozen code, fixtures, prototypes, generated deltas and complete test architecture for implementation.
 - [ ] Confirm the feature is marked ready and its scheduling dependencies satisfied before implementing a proposed delivery.
 - [ ] State meaningful benefits, risks, and public/local or security impact.
 - [ ] Check the dirty worktree and preserve unrelated changes and generated output.

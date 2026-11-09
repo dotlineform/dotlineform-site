@@ -21,35 +21,8 @@ export function validateCatalogueMediaPolicy(policy) {
     || !/^(?:webp|avif|png|jpg)$/.test(policy.format)) {
     throw new Error("Catalogue media configuration is unavailable.");
   }
-  variant(policy.primary, "widths");
   variant(policy.thumbnails, "sizes");
-  if (policy.primary.version_query_parameter !== "v" || !policy.primary.base_urls) {
-    throw new Error("Catalogue image version policy is unavailable.");
-  }
-  mediaBase(policy.primary.base_urls.works);
   return policy;
-}
-
-/** Resolve unchanged filenames; descriptors use actual widths because the producer never upscales. */
-export function catalogueImageCandidates(target, record, policy) {
-  if (!target || target.kind !== "catalogue-work" || typeof target.id !== "string" || !/^\d{5}$/.test(target.id)) {
-    throw new Error("An exact Catalogue Work image target is required.");
-  }
-  if (!Number.isInteger(record.media_version) || record.media_version <= 0) {
-    throw new Error("Catalogue image media version is unavailable.");
-  }
-  var primary = policy.primary;
-  var widths = Array.from(new Set(primary.widths)).sort(function (a, b) { return a - b; });
-  function url(width) {
-    return primary.base_urls.works + target.id + "-" + primary.suffix + "-" + width + "." + policy.format
-      + "?" + primary.version_query_parameter + "=" + record.media_version;
-  }
-  var candidates = new Map();
-  widths.forEach(function (width) {
-    var actualWidth = Math.min(width, record.width_px);
-    if (!candidates.has(actualWidth)) candidates.set(actualWidth, { src: url(width), width_px: actualWidth });
-  });
-  return { candidates: Array.from(candidates.values()), largest: url(widths[widths.length - 1]) };
 }
 
 /** Combine producer-owned thumbnail naming with the explicit route-owned base. */

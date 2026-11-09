@@ -144,11 +144,13 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Proposed: freeze Studio editing, move Gallery ownership/enforce queue-only Work adoption, then add the report. Regenerate owns Studio-derived facts and Gallery Refresh/Save owns Gallery-derived fields in the generated Catalogue document. Working/public share the ready document/presentation read model, without a separate live Work resolver, raw Work reads, per-Work sidecars or related-document rebuild fanout. Studio has no Gallery responsibility. Retire unused public Work distribution; medium/date/search follow separately. Implementation remains unstarted.
+- [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Proposed. Freeze Studio Gallery editing, move Gallery sources and generation to Docs Viewer, then add the Gallery management report. Gallery workflows will maintain Gallery references in the existing adopted Catalogue document.
 
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
+
+- [Catalogue Work By-ID Separation](deliveries/Catalogue_Work_By_ID_Separation.md) — Working conversion, queued Publish, raw-copy cleanup, site-preview navigation, text-only Export and selected Work removal verified. The prepared site awaits deployment.
 
 - [Collection Export](deliveries/Collection_Export.md) — Implemented, consolidated and cleanup-reviewed on 2026-10-19; awaiting manual acceptance. Export is available only in Collection Actions, with one browser workflow and a collection-only snapshot service. The six approved follow-up cleanups remove prior-manifest audits, repeated media work/root resolution, downstream record checks, duplicate directory preparation and browser decision rechecks; exact-bytes confirmation and final verification remain. Focused lint/compilation/import diagnostics, whitespace and bounded code review passed. Tests and live Export remain unrun; restart Docs Viewer and reload Manage before review. [Export](Export.md) owns shipped behavior and the Catalogue external-media limit.
 

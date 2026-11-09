@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 from docs_catalogue_publication import publish_catalogue_shared, publish_catalogue_works
-from docs_catalogue_static import CatalogueStaticInputs
+from docs_catalogue_projection import catalogue_preparation_inputs
 from docs_catalogue_media_transfer import CatalogueMediaTransfers
 from docs_publication_queue import has_selections, read_queue
 from docs_publication_transfer import SelectedTransfers
@@ -30,7 +30,7 @@ def publish_docs(repo_root: Path, body: dict[str, Any], *, client: object | None
             result.update(ok=True, complete=True, phase="complete", summary_text="Nothing queued for publication.")
             return result
         transfers = SelectedTransfers(repo_root, client=client, env_files=env_files, environ=environ)
-        inputs = CatalogueStaticInputs(repo_root, workspace)
+        inputs = catalogue_preparation_inputs(repo_root, workspace)
         work_media = CatalogueMediaTransfers(repo_root, workspace, transfers, result)
         publish_catalogue_works(repo_root, workspace, catalogue, path, work_media, inputs, result)
         publish_selected_documents(repo_root, workspace, docs, transfers, work_media, inputs, result)

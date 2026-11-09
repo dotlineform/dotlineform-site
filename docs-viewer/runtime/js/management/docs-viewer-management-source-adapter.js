@@ -4,14 +4,11 @@ import {
   readManagedDocMetadata,
   readCatalogueMediaTargets,
   readCatalogueMediaConfig,
-  readCatalogueWork,
   readCatalogueGallery,
-  readCatalogueSeriesGalleries,
   readDocumentLinkTargets,
   saveManagedDocSource
 } from "./docs-viewer-management-client.js";
 import { documentTarget } from "../shared/docs-viewer-document-target.js";
-import { createLiveCataloguePresentations } from "./docs-viewer-catalogue-live.js";
 
 export function createDocsViewerManagementSourceAdapter(options) {
   var settings = options || {};
@@ -49,7 +46,6 @@ export function createDocsViewerManagementSourceAdapter(options) {
   }
 
   var adapter = {
-    createCataloguePresentationOperation: function (payload) { return createLiveCataloguePresentations(adapter, payload); },
     commitDocumentChange: commitDocumentChange,
     subscribeDocumentChanges: function (listener) { changeListeners.add(listener); return function () { changeListeners.delete(listener); }; },
     readDocumentLinkTargets: function () {
@@ -61,14 +57,8 @@ export function createDocsViewerManagementSourceAdapter(options) {
     readCatalogueMediaConfig: function () {
       return readCatalogueMediaConfig( clientOptions());
     },
-    readCatalogueWork: function (workId) {
-      return readCatalogueWork(workId,  clientOptions());
-    },
     readCatalogueGallery: function (galleryId) {
       return readCatalogueGallery(galleryId,  clientOptions());
-    },
-    readCatalogueSeriesGalleries: function () {
-      return readCatalogueSeriesGalleries(clientOptions());
     },
     readMetadata: function (target) { return readManagedDocMetadata(target, clientOptions()); },
     readSource: function (target, optionsForRead) {

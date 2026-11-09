@@ -21,7 +21,7 @@ One empty-body `POST /docs/publish` action processes queued Catalogue Works, Doc
 
 | Material | Working/Preview owner | Public destination |
 | --- | --- | --- |
-| Work metadata | `working/generated/catalogue/works/index/<id>.json`, then `preview/catalogue/works/index/<id>.json` | `site/assets/data/catalogue/works/index/<id>.json` |
+| Studio Work handoff | `working/generated/catalogue/works/index/<id>.json` for Catalogue Regenerate | Adopted fields in the Catalogue document |
 | Catalogue document | Existing `working/generated/collections/catalogue/documents/by-id/<id>.json`, then `preview/collections/catalogue/documents/by-id/<id>.json` | `site/assets/data/docs/catalogue/by-id/<id>.json` |
 | Primary images | `<stage>/assets/works/primary/` | Configured R2 `works/img/` |
 | Thumbnails | `<stage>/assets/works/thumbs/` | `site/assets/data/catalogue/works/thumbs/` |
@@ -59,11 +59,11 @@ The [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-
 
 The common generation handoff prepares public Catalogue documents upstream and merges completed Regenerate/design-maintenance or explicit Catalogue CLI IDs into one carried Catalogue queue, preserving existing media selections. Regenerate carries its preparation state and publication queue through the operation rather than reloading them for each Work. Full Working Build excludes Catalogue from bulk generation and does not add Work selections. Exact Catalogue dependency renders use the Docs queue for document-only publication, without selecting Work JSON or media.
 
-`docs_catalogue_publication.py` invokes the shared `docs_catalogue_static.py` preparer for the current Work document before applying refreshed metadata, prepared document and selected image/download bytes to Preview/distribution. Working Work metadata bytes are reused between preparation and physical JSON publication. Preparation alone adds no blanket image/download transfer to a Work unit; its queue selection remains authoritative. Deletion uses retained exact identities and requires no Working input. It never means deletion of canonical Work records or project originals. Removing a download reference cancels its pending transfer but does not automatically remove previously stored unreferenced bytes.
+`docs_catalogue_publication.py` prepares each selected Catalogue document from its adopted Working payload and transfers the selected image and download bytes. It carries the portable document JSON through Preview and the public repository. The Work queue remains authoritative for image and download changes. Deletion uses the retained exact identities. Removing a download reference cancels its pending transfer, and previously stored unreferenced bytes remain available for explicit cleanup.
 
-Queued Docs documents may independently require Work renditions/files returned by static preparation. These remain Work-owned transfer inputs within that document unit, without a second queue entry. `docs_catalogue_media_transfer.py` applies exact selected objects and reuses completed owner/object effects across both unit families. A missing input or failed transfer retains the current unit; successful earlier effects remain complete. Prepared Catalogue documents include their own embedded Media View presentation. Physical Work/Series–Gallery JSON distribution remains in place even though the public document renderer no longer reads it.
+Queued Docs documents select exact Work renditions used by inline images. Text openers rely on the target Catalogue document and its Work media. `docs_catalogue_media_transfer.py` applies exact selected objects and reuses completed owner/object effects across both unit families. A missing input or failed transfer retains the current unit and preserves successful earlier effects. Gallery records and selected shared output keep their own publication handoff.
 
-Selected remote media uses exact-object size/ETag comparison to skip matching uploads and verifies changed transfers/removals. No remote listing or ownership scan runs. Only successful document/metadata/media completion removes that Work entry, before the next Work begins.
+Selected remote media uses exact-object size/ETag comparison to skip matching uploads and verifies changed transfers and removals. The Work entry is removed after its document and selected media complete.
 
 `last_published_at_utc` retains its Work-queue meaning: the final successfully distributed Work records completion when the Work maps become empty. Initially empty or shared-only operations preserve it, and a later shared failure does not erase completed Work publication. The Docs queue has its own independent completion timestamp.
 

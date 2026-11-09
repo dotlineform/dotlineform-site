@@ -7,11 +7,11 @@ import json
 from typing import Any
 
 from docs_deploy_repo import utc_now
-from docs_catalogue_static import prepare_catalogue_document
-from docs_publication_paths import confined, document_path, shared_path
+from docs_catalogue_projection import rendered_catalogue_assets
+from docs_publication_paths import confined, shared_path
 from docs_publication_queue import FAMILIES, has_selections, complete_publication
 from docs_publication_transfer import SelectedTransfers, completed_effect, delete_path, read_bytes, write_bytes
-from docs_workspace_config import generated_search_path, preview_documents_path, preview_search_path, public_documents_path, public_search_path, select_workspace_stage
+from docs_workspace_config import generated_documents_path, generated_search_path, preview_documents_path, preview_search_path, public_documents_path, public_search_path, select_workspace_stage
 
 
 def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[str, Any], transfers: SelectedTransfers, work_media: Any, inputs: Any, result: dict[str, Any]) -> None:
@@ -37,10 +37,17 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
                 delete_path(target)
             else:
                 result["phase"] = "document preparation"
-                original_bytes = read_bytes(document_path(workspace, collection, doc_id))
-                payload = json.loads(original_bytes)
-                prepared = prepare_catalogue_document({"collection": collection, "doc_id": doc_id}, payload, inputs)
-                document_bytes = original_bytes if prepared.payload is payload else (json.dumps(prepared.payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                if collection == "catalogue":
+                    payload = inputs.read_document(doc_id)
+                    inputs.document(payload, collection=collection)
+                    document_bytes = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                else:
+                    original_bytes = read_bytes(confined(generated_documents_path(source_owner), identity))
+                    payload = json.loads(original_bytes)
+                    document_bytes = original_bytes
+                    if "catalogue" in payload:
+                        inputs.document(payload, collection=collection)
+                        document_bytes = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
                 result["phase"] = "document Preview"
                 for kind, names in selection.get("media", {}).items():
                     source = source_owner.media.types[kind].asset_location.path
@@ -70,7 +77,7 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
                 transfers.transfer(public.location, name, data=read_bytes(path))
                 completed_effect(result, "media files distributed", name)
             if not deleting:
-                work_media.apply((item.binding, item.identity) for item in prepared.media)
+                work_media.apply(rendered_catalogue_assets(payload))
             result.update(phase="document distribution", target=f"{collection or 'documents'}/{doc_id}")
             deployed = confined(repo_root / public_documents_path(preview_owner), identity)
             if deleting:

@@ -8,8 +8,8 @@ from typing import Any
 
 from docs_catalogue_artifacts import load_catalogue_artifact_inventory
 from docs_deploy_repo import utc_now
-from docs_catalogue_static import prepare_catalogue_document
-from docs_publication_paths import confined, document_path
+from docs_catalogue_projection import rendered_catalogue_assets
+from docs_publication_paths import confined
 from docs_publication_transfer import completed_effect, delete_path, read_bytes, write_bytes
 from docs_workspace_config import location_child, preview_documents_path, public_documents_path, select_workspace_stage
 from pipeline_config import load_pipeline_config
@@ -36,8 +36,6 @@ def publish_catalogue_works(repo_root: Path, workspace: Any, pending: dict[str, 
         deleting = family == "deleted_works"
         for work_id, selection in tuple(pending[family].items()):
             result.update(phase="Catalogue Work Preview", target=work_id)
-            metadata_identity = Path("works/index") / f"{work_id}.json"
-            metadata = location_child(workspace.catalogue.preview, metadata_identity).path
             document_identity = Path("by-id") / f"{work_id}.json"
             document = confined(preview_documents_path(owner), document_identity)
             media = []
@@ -50,28 +48,26 @@ def publish_catalogue_works(repo_root: Path, workspace: Any, pending: dict[str, 
             media.extend(("catalogue/works/files", location_child(assets.work_files, Path(safe_download_filename(name))).path) for name in selection["file_names"])
             if not deleting:
                 result.update(phase="Catalogue Work preparation", target=work_id)
-                payload = json.loads(read_bytes(document_path(workspace, "catalogue", work_id)))
-                prepared = prepare_catalogue_document({"collection": "catalogue", "doc_id": work_id}, payload, inputs)
-                document_bytes = (json.dumps(prepared.payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                payload = inputs.read_document(work_id)
+                inputs.document(payload, collection="catalogue")
+                document_bytes = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
                 result["phase"] = "Catalogue Work Preview"
             if deleting:
-                delete_path(metadata)
-                completed_effect(result, "Preview files removed", metadata)
                 delete_path(document)
             else:
-                metadata_bytes = write_bytes(metadata, inputs.bytes(metadata_identity.as_posix()))
-                completed_effect(result, "Preview files applied", metadata)
                 write_bytes(document, document_bytes)
             completed_effect(result, "Preview files removed" if deleting else "Preview files applied", document)
             work_media.apply(((key, target.name) for key, target in media), deleting=deleting)
+            if not deleting:
+                work_media.apply(rendered_catalogue_assets(payload))
             result["phase"] = "Catalogue Work distribution"
             result["target"] = work_id
-            for data, target in ((None if deleting else metadata_bytes, confined(repo_root / workspace.catalogue.public_projection.location.path, metadata_identity)), (None if deleting else document_bytes, confined(repo_root / public_documents_path(owner), document_identity))):
-                if deleting:
-                    delete_path(target)
-                else:
-                    write_bytes(target, data)
-                completed_effect(result, "destination files removed" if deleting else "destination files applied", target)
+            target = confined(repo_root / public_documents_path(owner), document_identity)
+            if deleting:
+                delete_path(target)
+            else:
+                write_bytes(target, document_bytes)
+            completed_effect(result, "destination files removed" if deleting else "destination files applied", target)
             del pending[family][work_id]
             _save(queue_path, pending, work_completed=True)
             result["completed"].append({"family": family, "work_id": work_id})

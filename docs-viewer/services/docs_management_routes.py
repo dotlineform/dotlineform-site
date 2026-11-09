@@ -13,9 +13,7 @@ GENERATED_SEARCH_PATH = "/docs/search"
 UNPUBLISHABLE_REPORT_PATH = "/docs/unpublishable-report"
 CATALOGUE_MEDIA_TARGETS_PATH = "/docs/catalogue-media-targets"
 CATALOGUE_MEDIA_CONFIG_PATH = "/docs/catalogue-media-config"
-CATALOGUE_WORK_PATH = "/docs/catalogue-work"
 CATALOGUE_GALLERY_PATH = "/docs/catalogue-gallery"
-CATALOGUE_SERIES_GALLERIES_PATH = "/docs/catalogue-series-galleries"
 CATALOGUE_WORKS_REPORT_PATH = "/docs/catalogue-works-report"
 SERIES_GALLERIES_REPORT_PATH = "/docs/series-galleries-report"
 CATALOGUE_REGENERATE_PATH = "/docs/catalogue/regenerate"
@@ -67,10 +65,8 @@ GET_PATHS = (
     GENERATED_SEARCH_PATH,
     UNPUBLISHABLE_REPORT_PATH,
     CATALOGUE_MEDIA_TARGETS_PATH,
-    CATALOGUE_WORK_PATH,
     CATALOGUE_MEDIA_CONFIG_PATH,
     CATALOGUE_GALLERY_PATH,
-    CATALOGUE_SERIES_GALLERIES_PATH,
     CATALOGUE_WORKS_REPORT_PATH,
     SERIES_GALLERIES_REPORT_PATH,
     SOURCE_PATH,

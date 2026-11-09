@@ -117,7 +117,7 @@ class _HtmlUrlAttributeRewriter(HTMLParser):
                 if target.startswith("catalogue-work:"):
                     tag = "a"
                     attrs = [(name, value) for name, value in attrs if name != "style"]
-                    attrs.append(("href", self.catalogue[target]["image"]["src"]))
+                    attrs.append(("href", self.catalogue[target]))
                 else:
                     tag = "span"
             if tag == "img" and target.startswith("catalogue-work:") and "data-docs-media-image" in fields:
@@ -351,6 +351,7 @@ def plan_snapshot_media(
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
     work_media: Mapping[str, Any] | None = None,
+    work_links: Mapping[str, Mapping[str, str]] | None = None,
     work_assets: Any = None,
 ) -> SnapshotMediaPlan:
     """Collect owned objects once and rewrite URLs relative to supplied page paths."""
@@ -393,7 +394,7 @@ def plan_snapshot_media(
         original_html = payload["content_html"]
         envelope = payload.get("catalogue")
         transformed_html = rewrite_html_url_attributes(original_html, collect_and_rewrite,
-                                                       catalogue=envelope.get("presentations", {}) if envelope else None)
+                                                       catalogue=(work_links or {}).get(doc_id, {}) if envelope else None)
         rewritten_html[doc_id] = transformed_html if owned_in_document or envelope else original_html
 
     adapters = _media_adapters(
