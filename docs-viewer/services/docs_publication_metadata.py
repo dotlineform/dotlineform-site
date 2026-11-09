@@ -112,7 +112,7 @@ class PublicMetadata:
             for row in manifest["docs"]:
                 if draft(row):
                     continue
-                public = {key: row[key] for key in ("doc_id", "title", "last_updated", "has_thumbnail") if key in row}
+                public = {key: row[key] for key in ("doc_id", "title", "last_updated", "has_thumbnail", "catalogue_targets") if key in row}
                 rows.append(public)
         self._complete(collection, {"docs": rows}, {row["doc_id"] for row in rows})
 

@@ -25,6 +25,13 @@ export function generatedRequestOptions() {
   };
 }
 
+export function fetchDocsCollectionManifest(url, fetchImpl = defaultFetch) {
+  return fetchImpl(requestUrl(url), generatedRequestOptions()).then(function (response) {
+    if (!response.ok) throw new Error("Failed to load docs collection manifest (" + response.status + ")");
+    return response.json();
+  });
+}
+
 export function waitForReloadRetry(options) {
   var settings = options || {};
   var delayMs = typeof settings.reloadRetryDelayMs === "number" ? settings.reloadRetryDelayMs : 250;

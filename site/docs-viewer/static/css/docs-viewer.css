@@ -1467,6 +1467,20 @@ body.docs-viewer-service{
   list-style: none;
 }
 
+.docsViewer__contentDetail--media[data-docs-media-kind="catalogue-gallery"] .docsViewer__mediaDetailGalleryLinks{
+  padding-block-start: 1lh;
+}
+
+.docsViewer__mediaDetailGalleryLinks > li{
+  display: flex;
+  align-items: baseline;
+  gap: var(--docs-viewer-space-1);
+}
+
+.docsViewer__mediaDetailGalleryLinks > li > .docsViewer__listIcon{
+  transform: translateY(0.125em);
+}
+
 .docsViewer__mediaDetailGalleryLinks > li + li{
   margin-top: var(--docs-viewer-space-2);
 }

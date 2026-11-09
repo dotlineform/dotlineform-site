@@ -112,28 +112,24 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return self.selected_payload
 
     def run(
-        self, *, write: bool, documents: list[DocRecord],
-        document_identities: dict[str, Any], manifest_payload: dict[str, Any],
-        stale_item_ids: list[str],
-        related_documents: dict[Any, Any],
+        self, *, write: bool, manifest_payload: dict[str, Any], item_payloads: dict[str, dict[str, Any]],
+        stale_item_ids: list[str], started_at: float,
         project_item: ItemProjection | None = None,
     ) -> dict[str, Any]:
-        """Render and write the supplied collection artifacts; return completed facts."""
-        started_at = monotonic_time()
-        self.related_documents = related_documents
-        item_payloads = {doc.doc_id: self.item_entry(doc, document_identities) for doc in documents}
+        """Plan and write the supplied collection artifacts; return completed facts."""
+        docs_total = len(manifest_payload["docs"])
         write_plan = self.build_collection_write_plan(
             manifest_payload, item_payloads, stale_item_ids=stale_item_ids, project_item=project_item,
         )
         diagnostics = self.collection_diagnostics_payload(
-            docs_total=len(document_identities), docs_emitted=len(item_payloads), write_plan=write_plan,
+            docs_total=docs_total, docs_emitted=len(item_payloads), write_plan=write_plan,
             elapsed_seconds=round(monotonic_time() - started_at, 3),
         )
         if write:
-            self.write_collection_outputs(write_plan, docs_total=len(document_identities))
+            self.write_collection_outputs(write_plan, docs_total=docs_total)
             self.collection_manifest = manifest_payload
         else:
-            self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(document_identities))
+            self.print_collection_summary(write_plan, mode="dry-run", docs_total=docs_total)
         diagnostics["warning_count"] = len(self.warnings)
         return {
             "manifest_payload": manifest_payload, "item_payloads": item_payloads,

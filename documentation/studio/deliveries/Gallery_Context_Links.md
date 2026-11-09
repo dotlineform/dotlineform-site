@@ -5,14 +5,16 @@ title: Gallery Context Links
 added_date: "2026-11-09 21:04:38"
 last_updated: "2026-11-09"
 summary: Link Gallery Media View to Context documents through authored Gallery references and direct Work membership.
-ui_status: proposed
+ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
 ---
 # Gallery Context Links
 
 ## Current And Next State
 
-Proposed under [Planned Features](../Planned_Features.md). The first delivery adds automatic **Context** links to Gallery Media View in Working and Public. The agreed match rules are below. Readiness needs to settle how Docs Build carries the reference facts through its selected document and publication paths. The document-level Gallery picker follows as a separate authoring decision.
+Implemented and seeded in Working. Manual review and the public release remain open. The [Catalogue Media View](../Catalogue_Media_View.md#gallery-presentations) document owns the reader contract. The document-level Gallery picker follows as a separate authoring decision.
+
+Context is expected to contain tens of thematic documents. The editorial path is Library ↔ Context ↔ Media View ↔ Catalogue. This guides authoring, while the automatic association producer explicitly selects the `works` collection.
 
 ## Requirements
 
@@ -29,22 +31,24 @@ Proposed under [Planned Features](../Planned_Features.md). The first delivery ad
 | Working publication preparation | Use the existing eligible Context membership to prepare public reference data and queue the completed artifact with its owning output. Publish transfers those bytes through the existing queue. |
 | Gallery Media View | Reuse the selected Gallery record's ID and full direct membership. The browser matches the compact Docs data, orders the rows and opens exact Context destinations through normal document navigation. The existing Back action returns to the Gallery's caller. |
 
-The preferred carrier to evaluate at readiness is the existing Context manifest. It already supplies titles, selected row replacement and public membership projection. Today it is prepared before body references are available, so confirm how to carry the completed references into that projection without another parse, per-document reads or a second manifest pass. If that requires broad changes to generation, evaluate one compact Docs-owned artifact on the existing publication queue. Choose one carrier. Reuse already loaded reader data where available and settle how Gallery reads pick up completed Context saves during the same viewer session.
+The existing Context manifest carries the references. Generation renders the selected collection items once, then enriches their new manifest rows before public preparation and writes. The selected row replacement also removes a deleted row or a removed last reference. Public preparation carries the new field through its existing eligibility and manifest queue. Working revalidates the saved manifest on Gallery entry so later saves are visible in the same session.
+
+For Public, reuse Context data already loaded by the viewer or fetch the compact data on the first Gallery open, in parallel with the Gallery record. Retain it for subsequent galleries and pages in that viewer session. Each thematic document contributes its identity, title and distinct target IDs. Keeping those facts in a Docs-owned output lets one document edit, rename or eligibility change update one projection even when many Galleries link to it.
 
 Gallery membership comes from the exact Gallery record that Media View already loads. Once an updated Gallery record reaches the viewer, the match follows its membership without rebuilding Context documents or loading the member Work documents. The [Catalogue Media View](../Catalogue_Media_View.md#gallery-presentations) and [Related Links](../Related_Links.md#generated-data-and-freshness) documents describe the existing inputs.
 
 ## Reader Flow
 
-Open a Gallery from the Catalogue report, a Work or a Context link. Its Media View shows a compact **Context** list alongside the Gallery information, independent of thumbnail paging. Following a title opens that exact Context document. A Context document can provide its own way into the Gallery through an inline Media View link or its Related Links section.
+Open a Gallery from the Catalogue report, a Work or a Context link. Its Media View shows the Context links below the Gallery title, independent of thumbnail paging. The Context icon marks document links, and the stacked-image icon marks Gallery links in Work Media View. Following a title opens that exact Context document. A Context document can provide its own way into the Gallery through an inline Media View link or its Related Links section.
 
 For Working review, draft [kylie](/docs/?collection=works&doc=d-20261109-191549-f0d87d) should appear on Gallery `084`, *kylie structures*, through its direct token. [3 symbols](/docs/?collection=works&doc=d-20260801-212422-df11f3) should appear on *3 symbols* and *3 symbols - cards* through Work image references. Public review uses eligible documents and confirms that the draft is absent.
 
 ## Delivery Steps
 
-- [ ] **GCL.0 Readiness.** Confirm the reference carrier, the existing selected Save/Rebuild/Import/Delete and eligibility paths that maintain it, and the reader's load and refresh boundary. Agree the initial Context-only generation and public release order. Stop for review if the change requires a wider generation or publication refactor.
-- [ ] **GCL.1 Generate and hand off the Docs data.** Carry completed references into targeted and full Context output. Cover title changes, last-reference removal, deletion and eligibility changes through existing operation owners. Inspect selected generated output and queue effects with a targeted dry run and an agreed initial Working generation.
-- [ ] **GCL.2 Display the links.** Render deduplicated exact Context destinations in Gallery Media View. Confirm direct and Work-derived matches, empty results, a document matched through both rules, page changes and normal navigation. Use focused lint, the public runtime projection and site validation, plus manual review in Working and public preview. Confirm that a Gallery membership change affects the next read of the updated Gallery record.
-- [ ] **GCL.3 Code review.** Apply the [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review) to the selected build, reader requests, eligibility handoff and missing-data behavior. Record the selected evidence and any implementation decisions. Test changes need their own agreed specification.
+- [x] **GCL.0 Readiness.** Selected the existing Context manifest and existing publication handoff. The collection render now supplies the completed rows before preparation. Public shares a session read and Working revalidates on entry.
+- [x] **GCL.1 Generate and hand off the Docs data.** The targeted *kylie* dry run scanned one source and selected one manifest update. Initial Context-only generation processed seven sources, changed the management manifest and queued the eligible public manifest. Document by-ID JSON and relationships were unchanged. The eligible manifest is 1,182 bytes and excludes the draft. A targeted Catalogue dry run for Work `00520` predicted no changes.
+- [ ] **GCL.2 Display the links.** Implemented the Context list. Saved-data inspection confirmed *kylie* for Gallery `084` and *3 symbols* for `005` and `319`. Focused lint, public runtime projection and site validation passed. Manual review in Working and public preview still needs to cover navigation, pagination, duplicates, empty results and membership changes.
+- [x] **GCL.3 Code review.** The [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review) traced new and replaced rows, empty associations, eligibility and reader failure. The producer uses rendered references once and touches only the selected rows. The browser uses the supplied member IDs and manifest order. It needs no Work document reads, additional index or second eligibility filter. A failed Context read leaves the Gallery available and clears the failed public read for the next open. Exact route identity checks stay with the existing document link owner.
 - [ ] **GCL.4 Closeout.** Record Working and public acceptance, move shipped behavior to Catalogue Media View and retain this proposal until its release and picker follow-on have been reconciled. Publish and public deployment have their usual separate gates.
 
 ## Follow-On

@@ -16,6 +16,7 @@ import {
 
 const MEDIA_DETAIL_SELECTOR = '[data-docs-content-detail="media"]';
 const MEDIA_OPEN_SELECTOR = "[data-docs-media-open]";
+const GALLERY_ICON_URL = new URL("../../../static/icons/images.svg", import.meta.url).href;
 const MEDIA_PRESENTATION_SELECTOR = [
   'script[type="application/json"]',
   "[data-docs-media-presentation]"
@@ -607,20 +608,28 @@ export function createDocsViewerMediaDetailAdapter() {
       return navigation;
     }
 
+    function appendLinkRow(list, link, iconUrl) {
+      var row = documentRef.createElement("li");
+      var icon = documentRef.createElement("span");
+      icon.className = "docsViewer__listIcon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.style.maskImage = 'url("' + iconUrl + '")';
+      row.append(icon, link);
+      list.appendChild(row);
+    }
+
     function appendGalleryLinks(parent, entries) {
       if (!entries.length) return;
       var list = documentRef.createElement("ul");
       list.className = "docsViewer__mediaDetailGalleryLinks";
       entries.forEach(function (entry) {
-        var item = documentRef.createElement("li");
         var link = targetButton(
           "Open " + groupLabel(entry.target) + ": " + entry.label,
           "docsViewer__mediaDetailGroupLink",
           entry.target
         );
         link.textContent = entry.label;
-        item.appendChild(link);
-        list.appendChild(item);
+        appendLinkRow(list, link, GALLERY_ICON_URL);
       });
       parent.appendChild(list);
     }
@@ -710,6 +719,7 @@ export function createDocsViewerMediaDetailAdapter() {
       var information = documentRef.createElement("div");
       information.className = "docsViewer__mediaDetailCaption docsViewer__mediaDetailCaption--simple";
       information.appendChild(titleElement(gallery.label));
+      appendContextLinks(information, gallery);
       if (page.pageCount > 1) {
         var pagination = navigationControls("page", page.pageIndex + 1, page.pageCount,
           function () { selectGalleryPage(page.pageIndex - 1); },
@@ -718,6 +728,27 @@ export function createDocsViewerMediaDetailAdapter() {
       }
       container.appendChild(information);
       return container;
+    }
+
+    function appendContextLinks(information, gallery) {
+      if (gallery.contextUnavailable) {
+        var status = documentRef.createElement("p");
+        status.setAttribute("role", "status");
+        status.textContent = "Context links are unavailable.";
+        information.appendChild(status);
+        return;
+      }
+      if (!gallery.contextDocuments.length) return;
+      var iconUrl = state.viewerConfig.collectionsById.get("works").iconUrl;
+      var links = documentRef.createElement("ul");
+      links.className = "docsViewer__mediaDetailGalleryLinks";
+      gallery.contextDocuments.forEach(function (doc) {
+        var link = documentRef.createElement("a");
+        link.href = state.collectionProvider.documentHref({ collection: "works", doc_id: doc.doc_id });
+        link.textContent = doc.title;
+        appendLinkRow(links, link, iconUrl);
+      });
+      information.appendChild(links);
     }
 
     function projectControls() {

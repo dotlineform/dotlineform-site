@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-6cd293d5e65077650668289f39766d5b",
-    "generated_at_utc": "2026-10-28T13:06:28Z",
+    "version": "blake2b-7a65e8b9625f65f42ffe084cb25ffff7",
+    "generated_at_utc": "2026-11-09T22:19:53Z",
     "count": 156
   },
   "fields": [
@@ -61,8 +61,8 @@
     {
       "id": "d-20260801-212422-df11f3",
       "title": "3 symbols",
-      "last_updated": "2026-10-24",
-      "display_meta": "2026-10-24 • Context",
+      "last_updated": "2026-11-09",
+      "display_meta": "2026-11-09 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -48621,6 +48621,7 @@
       ],
       "body": [
         5,
+        6,
         7,
         10,
         18,
@@ -72779,6 +72780,7 @@
         31
       ],
       "body": [
+        6,
         9,
         10,
         14,

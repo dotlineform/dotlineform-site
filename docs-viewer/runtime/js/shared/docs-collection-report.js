@@ -1,7 +1,7 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import { createDocsCollectionReportState } from "./docs-collection-report-state.js";
-import { appendAssetVersion } from "./docs-viewer-asset-url.js";
+import { fetchDocsCollectionManifest } from "./docs-viewer-data.js";
 import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-filter.js";
 import {
   COLLECTION_PAGE_SIZE,
@@ -43,16 +43,6 @@ function cleanString(value) {
 
 function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
-}
-
-function fetchJson(url, failureMessage) {
-  return fetch(appendAssetVersion(url), {
-    headers: { Accept: "application/json" },
-    cache: "no-cache"
-  }).then(function (response) {
-    if (!response.ok) throw new Error(failureMessage + " (" + response.status + ")");
-    return response.json();
-  });
 }
 
 function contributionCallback(contribution, name) {
@@ -659,6 +649,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   var refs = renderShell(context, collection, features);
   var readGallerySearch = collectionIdValue === "catalogue" && typeof context.openMediaTarget === "function"
     && context.collectionProvider.readCatalogueGalleryReportSearch;
+  var readContextManifest = collectionIdValue === "works" && context.collectionProvider.readContextManifest;
   var state = {
     root: root,
     openDocument: context.openDocument,
@@ -816,7 +807,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   publishState(state, "loading", null, "report-loading");
   state.loadManifest = function () {
     if (!state.mounted) return Promise.resolve(false);
-    return fetchJson(url, "Failed to load docs collection manifest").then(async function (payload) {
+    return (readContextManifest ? readContextManifest() : fetchDocsCollectionManifest(url)).then(async function (payload) {
       if (!state.mounted) return false;
       cancelCollectionSearch(state);
       state.browsingData.replace(payload.docs);

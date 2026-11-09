@@ -4,25 +4,54 @@
       "doc_id": "d-20260801-212422-43b47c",
       "title": "10,000",
       "last_updated": "2026-10-18",
-      "has_thumbnail": true
+      "has_thumbnail": true,
+      "catalogue_targets": {
+        "work_ids": [
+          "00635",
+          "03181"
+        ],
+        "gallery_ids": []
+      }
     },
     {
       "doc_id": "d-20260801-212422-df11f3",
       "title": "3 symbols",
-      "last_updated": "2026-10-24",
-      "has_thumbnail": true
+      "last_updated": "2026-11-09",
+      "has_thumbnail": true,
+      "catalogue_targets": {
+        "work_ids": [
+          "00638",
+          "03189",
+          "04913",
+          "04914"
+        ],
+        "gallery_ids": []
+      }
     },
     {
       "doc_id": "d-20260801-212422-3a2da4",
       "title": "a doll story",
       "last_updated": "2026-10-19",
-      "has_thumbnail": true
+      "has_thumbnail": true,
+      "catalogue_targets": {
+        "work_ids": [
+          "00641"
+        ],
+        "gallery_ids": []
+      }
     },
     {
       "doc_id": "d-20260801-212422-186a69",
       "title": "a theory of happiness",
       "last_updated": "2026-10-08",
-      "has_thumbnail": true
+      "has_thumbnail": true,
+      "catalogue_targets": {
+        "work_ids": [
+          "00734",
+          "00735"
+        ],
+        "gallery_ids": []
+      }
     }
   ]
 }

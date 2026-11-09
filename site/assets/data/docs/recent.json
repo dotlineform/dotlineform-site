@@ -1,8 +1,16 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-28T13:06:27Z",
+  "generated_at": "2026-11-09T22:19:52Z",
   "docs": [
+    {
+      "collection": "works",
+      "collection_title": "Context",
+      "doc_id": "d-20260801-212422-df11f3",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "title": "3 symbols",
+      "timestamp": "2026-11-09"
+    },
     {
       "collection": "library",
       "collection_title": "Library",
@@ -153,14 +161,6 @@
       "doc_id": "d-20261027-085402-88d78f",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Entanglement in quantum computing",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-142333-0630ff",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Entropy",
       "timestamp": "2026-10-27"
     }
   ]

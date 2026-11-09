@@ -30,7 +30,8 @@ def generate_documents(
     required sources here. Media-write selections distinguish Save's known
     effects (including an empty map) from deliberate Build/Import selection.
     """
-    from docs_builder.collection_metadata import CollectionDocumentSummary, merge_collection_manifest
+    from docs_builder.collection_metadata import CollectionDocumentSummary, merge_collection_manifest, project_context_catalogue_targets
+    from docs_builder.common import monotonic_time
     from docs_builder.links_builder import build_document_links, prepare_document_links
     from docs_builder.media_builds import build_collection_media_snapshot
     from docs_builder.ordinary_metadata import navigation_rows, read_saved_navigation, targeted_document_metadata
@@ -63,6 +64,7 @@ def generate_documents(
         ordered_docs = sorted(docs, key=builder.doc_sort_key)
         manifest = (builder.manage_manifest_payload(ordered_docs)
                     if builder.config.stage == "working" else builder.public_manifest_payload(ordered_docs))
+        selected_manifest_rows = manifest["docs"]
         if builder.targeted_build:
             manifest = merge_collection_manifest(builder.saved_collection_metadata(), manifest, builder.only_doc_ids)
         identities = {row["doc_id"]: CollectionDocumentSummary(row["doc_id"], row["title"]) for row in manifest["docs"]}
@@ -113,6 +115,13 @@ def generate_documents(
         links_build = build_document_links(builder, links_plan, write=write, related_records=related_records)
     related_documents = prepare_related_links(builder, selected_docs, related_records)
 
+    if collection:
+        started_at = monotonic_time()
+        builder.related_documents = related_documents
+        item_payloads = {doc.doc_id: builder.item_entry(doc, identities) for doc in selected_docs}
+        if collection == "works":
+            project_context_catalogue_targets(selected_manifest_rows, item_payloads)
+
     if publication is not None:
         publication.prepare(builder, selected_docs, navigation,
                             manifest=manifest, media_changes=media_changes, media_writes=media_writes)
@@ -130,13 +139,17 @@ def generate_documents(
                 builder.workspace.catalogue.working, adopted_works,
             )
             project_item = partial(projection.document, collection=collection)
-    result = builder.run(
-        write=write, documents=selected_docs, document_identities=identities, stale_item_ids=stale_item_ids,
-        related_documents=related_documents, project_item=project_item,
-        **({"manifest_payload": manifest} if collection else {
-            "index_tree_payload": navigation, "recent_payload": recent, "previous_tree_text": previous_tree_text,
-        }),
-    )
+    if collection:
+        result = builder.run(
+            write=write, manifest_payload=manifest, item_payloads=item_payloads, stale_item_ids=stale_item_ids,
+            started_at=started_at, project_item=project_item,
+        )
+    else:
+        result = builder.run(
+            write=write, documents=selected_docs, document_identities=identities, stale_item_ids=stale_item_ids,
+            related_documents=related_documents, project_item=project_item,
+            index_tree_payload=navigation, recent_payload=recent, previous_tree_text=previous_tree_text,
+        )
     result.update(media_snapshot=media_snapshot, links_build=links_build)
     if write and publication is not None and not collection:
         publication.metadata.navigation_text = result["write_plan"]["index_tree_text"]

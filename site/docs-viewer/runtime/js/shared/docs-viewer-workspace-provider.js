@@ -6,6 +6,7 @@ import {
   catalogueDocumentWorkPresentation
 } from "./docs-viewer-catalogue-media.js";
 import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
+import { fetchDocsCollectionManifest } from "./docs-viewer-data.js";
 import { documentTarget } from "./docs-viewer-document-target.js";
 import { docsViewerLinksDocumentHref } from "./docs-viewer-links-presentation.js";
 
@@ -71,6 +72,22 @@ export function createDocsViewerWorkspaceProvider(options) {
     readSearch: readSearch
   };
 
+  var publicContextManifestRead = null;
+  provider.readContextManifest = async function () {
+    if (publicContextManifestRead) return publicContextManifestRead;
+    var url = collectionConfig().collectionsById.get("works")?.manifestUrl;
+    if (!url) throw new Error("Context manifest is not configured.");
+    var manifestRead = fetchDocsCollectionManifest(url, function (target, optionsForFetch) {
+      return settings.window.fetch(target, optionsForFetch);
+    });
+    if (routeContext().routeConfig?.appKind !== "public") return manifestRead;
+    publicContextManifestRead = manifestRead.catch(function (error) {
+      publicContextManifestRead = null;
+      throw error;
+    });
+    return publicContextManifestRead;
+  };
+
   if (source) {
     provider.commitDocumentChange = source.commitDocumentChange;
     provider.subscribeDocumentChanges = source.subscribeDocumentChanges;
@@ -128,9 +145,15 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
   if (provider.readCatalogueGallery) {
     provider.readCatalogueGalleryPresentation = async function (galleryId) {
-      var [payload, policy] = await Promise.all([provider.readCatalogueGallery(galleryId), provider.readCatalogueMediaConfig()]);
+      var [payload, policy, manifest] = await Promise.all([
+        provider.readCatalogueGallery(galleryId),
+        provider.readCatalogueMediaConfig(),
+        provider.readContextManifest().catch(function () { return null; })
+      ]);
       var config = routeContext().routeConfig || {};
-      return catalogueGalleryMediaPresentation(payload, galleryId, policy, config.catalogueWorkThumbnailsBaseUrl);
+      var presentation = catalogueGalleryMediaPresentation(payload, galleryId, policy, config.catalogueWorkThumbnailsBaseUrl, manifest?.docs);
+      presentation.gallery.context_unavailable = manifest === null;
+      return presentation;
     };
   }
   if (source && typeof source.readCatalogueGalleryReportSearch === "function") {

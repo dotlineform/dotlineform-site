@@ -179,6 +179,8 @@ export function normalizeDocsViewerMediaPresentation(value) {
     label: suppliedTextField(source.label, "Gallery title"),
     metadata: normalizedMetadata(source.metadata === undefined ? [] : source.metadata),
     members: Object.freeze(members),
+    contextDocuments: Object.freeze(source.context_documents ?? []),
+    contextUnavailable: source.context_unavailable === true,
     newTabTarget: ""
   });
   var supplied = { gallery: gallery };

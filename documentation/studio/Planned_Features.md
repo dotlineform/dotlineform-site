@@ -144,8 +144,6 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Gallery Context Links](deliveries/Gallery_Context_Links.md) — Proposed delivery. Gallery Media View links to Context documents using exact authored Gallery references and direct Work membership. Consider the document-level Gallery picker after the automatic links work in Working and Public.
-
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Parked proposal. Reuse the Work Editor's Series panel to find a Gallery and inspect its saved members.
 
 - [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
@@ -153,6 +151,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
+
+- [Gallery Context Links](deliveries/Gallery_Context_Links.md) — Automatic links implemented and seeded in Working. Manual review and public release remain open. Consider the document-level Gallery picker as a follow-on.
 
 - [Catalogue Index Gallery Results](deliveries/Catalogue_Index_Gallery_Results.md) — Complete. The user accepted the local and public results on 2026-11-09. Retain the delivery pending manual archive. [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections) owns the shipped data contract.
 
