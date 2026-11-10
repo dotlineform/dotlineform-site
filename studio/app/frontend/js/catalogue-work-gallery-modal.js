@@ -16,50 +16,62 @@ function savedGalleryMemberCount(workSearchById, galleryId) {
   return count;
 }
 
-/** Edit saved Gallery relevance, or confirm UI-detected cleanup from the loaded definition. */
+/** Edit a Gallery in the current browse context or confirm removal of an empty Gallery. */
 export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus, onBusyChange, deleteEmpty = false } = {}) {
-  const seriesId = deleteEmpty ? null : state.draft.series_id || null;
+  const browsingGallery = state.browseKind === "gallery";
+  const seriesId = browsingGallery || deleteEmpty ? null : state.draft.series_id || null;
   const series = seriesId ? state.seriesById.get(seriesId) : null;
   if (seriesId && (!series || series.series_id !== seriesId || typeof series.title !== "string")) {
     throw new Error("The displayed Series context is unavailable. Reload the Work before editing a Gallery.");
   }
-  let lookup = null;
-  if (galleryId && !deleteEmpty) {
-    lookup = await loadStudioServerReadJson("catalogue_gallery_record", galleryId, { cache: "no-store" });
+  let title = "";
+  let relatedToSeries = false;
+  if (galleryId && seriesId) {
+    const lookup = await loadStudioServerReadJson("catalogue_gallery_record", galleryId, { cache: "no-store" });
     if (lookup.gallery_id !== galleryId || lookup.record?.gallery_id !== galleryId
       || typeof lookup.record.title !== "string"
       || !Array.isArray(lookup.related_series_ids)) {
       throw new Error("Gallery lookup is missing its exact record or Series associations.");
     }
+    title = lookup.record.title;
+    relatedToSeries = lookup.related_series_ids.includes(seriesId);
+  } else if (galleryId) {
+    title = state.galleriesById.get(galleryId).title;
   }
-  const gallery = deleteEmpty ? state.galleriesById.get(galleryId) : lookup?.record;
+  const canDelete = Boolean(galleryId) && (deleteEmpty || !browsingGallery);
+  let deleteMessage = "";
+  if (deleteEmpty) {
+    deleteMessage = `Your Work changes were saved. “${title}” (${galleryId}) now has no Works. Deleting it also removes any Series-wide relevance for this Gallery.`;
+  } else if (canDelete) {
+    deleteMessage = () => {
+      const count = savedGalleryMemberCount(state.workSearchById, galleryId);
+      return `Delete “${title}” (${galleryId})? This removes it from ${count} Works.`;
+    };
+  }
   let deleteError = null;
   const result = await openWorkDefinitionModal(state, {
-    kind: "Gallery", id: galleryId, title: gallery ? gallery.title : "", restoreFocus, onBusyChange,
+    kind: "Gallery", id: galleryId, title, restoreFocus, onBusyChange, deleteMessage,
     deleteOnly: deleteEmpty, cancelLabel: deleteEmpty ? "Keep Gallery" : "Cancel",
     checkbox: deleteEmpty ? null : {
       label: "Relates to all works in this series",
-      context: series ? `Series: ${series.title} (${seriesId})` : "Choose a Series for this Work to enable this option.",
-      checked: Boolean(galleryId && seriesId && lookup.related_series_ids.includes(seriesId)),
+      context: browsingGallery ? "Edit Series-wide relevance in Series view."
+        : series ? `Series: ${series.title} (${seriesId})` : "Choose a Series for this Work to enable this option.",
+      checked: relatedToSeries,
       disabled: !series
     },
-    deleteMessage: deleteEmpty
-      ? `Your Work changes were saved. “${gallery.title}” (${galleryId}) now has no Works. Delete this Gallery?`
-      : lookup
-      ? `Delete “${lookup.record.title}” (${galleryId})? This removes it from ${savedGalleryMemberCount(state.workSearchById, galleryId)} Works.`
-      : "",
-    save: (title, related) => galleryId
-      ? saveCatalogueGallery({ gallery_id: galleryId, title, series_id: seriesId, related_to_series: related })
-      : createCatalogueGallery({ gallery_id: nextGalleryId(state.galleriesById),
-        title, series_id: seriesId, related_to_series: related }),
-    async remove() {
+    save: (savedTitle, related) => {
+      const payload = { gallery_id: galleryId || nextGalleryId(state.galleriesById), title: savedTitle,
+        series_id: seriesId, related_to_series: Boolean(seriesId && related) };
+      return galleryId ? saveCatalogueGallery(payload) : createCatalogueGallery(payload);
+    },
+    remove: canDelete ? async () => {
       try {
         return await deleteCatalogueGallery({ gallery_id: galleryId });
       } catch (error) {
         deleteError = error;
         throw error;
       }
-    }
+    } : undefined
   });
   if (deleteEmpty && deleteError && !result.confirmed) throw deleteError;
   return result;

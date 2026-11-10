@@ -38,7 +38,7 @@ export async function openWorkDefinitionModal(state, {
     actions: [
       { role: "modal-primary", label: "OK", primary: true },
       { role: "modal-cancel", label: cancelLabel },
-      ...(id ? [{ role: "definition-delete", label: "Delete", disabled: Boolean(deleteBlocked) }] : [])
+      ...(id && remove ? [{ role: "definition-delete", label: "Delete", disabled: Boolean(deleteBlocked) }] : [])
     ]
   });
   const input = host.querySelector("#catalogueDefinitionTitle");
@@ -110,18 +110,18 @@ export async function openWorkDefinitionModal(state, {
     }
   });
   function showDeleteConfirmation() {
-    if (saving || deleteBlocked) return;
+    if (!deleteButton || saving || deleteBlocked) return;
     confirmingDelete = true;
     host.querySelector('[data-role="definition-field"]').hidden = true;
     const checkboxField = host.querySelector('[data-role="definition-checkbox-field"]');
     if (checkboxField) checkboxField.hidden = true;
     const confirmation = host.querySelector('[data-role="delete-confirmation"]');
-    confirmation.textContent = deleteMessage;
+    confirmation.textContent = typeof deleteMessage === "function" ? deleteMessage() : deleteMessage;
     confirmation.hidden = false;
     host.querySelector('[data-role="definition-heading"]').textContent = `Delete ${kind}?`;
     reason.hidden = true;
     deleteButton.hidden = true;
-    primary.textContent = "Delete";
+    primary.textContent = deleteOnly ? `Delete ${kind}` : "Delete";
     primary.classList.remove("studioUi__button--defaultAction");
     cancel.classList.add("studioUi__button--defaultAction");
     controller.api.setStatus("", "");

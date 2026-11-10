@@ -1,4 +1,5 @@
 import {
+  CATALOGUE_READ_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS,
   getJson,
   postJson,
@@ -15,6 +16,10 @@ import { buildWorkSaveForm } from "./catalogue-work-attachments.js";
 
 export function saveCatalogueBulkRecords(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.bulkSave, payload);
+}
+
+export function readSelectedCatalogueWorks(ids) {
+  return postJson(CATALOGUE_READ_ENDPOINTS.workLookup, { ids });
 }
 
 /** Delete exact Work IDs or a UI-confirmed empty Series, without revision comparisons. */

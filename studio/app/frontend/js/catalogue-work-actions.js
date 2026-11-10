@@ -7,7 +7,8 @@ import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js
 import {
   setEmptySearchMode,
   setLoadedBulkWorks,
-  setLoadedWorkRecord
+  setLoadedWorkRecord,
+  workSaveBlockReason
 } from "./catalogue-work-route-state.js";
 import {
   WORK_DOWNLOAD_FIELDS as DOWNLOAD_FIELDS,
@@ -34,7 +35,7 @@ function workMediaRequest(state) {
 }
 
 /** Bulk patches carry only explicit edits; control serialization remains UI-owned. */
-function buildPayload(state) {
+function prepareWorkSave(state) {
   if (state.mode !== "bulk") {
     const record = buildWorkRecordFromDraft(state.draft, { downloadFields: DOWNLOAD_FIELDS, linkFields: LINK_FIELDS });
     const payload = { work_id: state.currentWorkId, record, gallery_ids: state.draft.gallery_ids.slice() };
@@ -42,7 +43,7 @@ function buildPayload(state) {
       payload.source_folder = { ...state.pendingSourceFolder };
       for (const key of Object.keys(payload.source_folder)) delete record[key];
     }
-    return payload;
+    return { payload, removedGalleryIds: galleryIdsRemovedBySave(state, payload) };
   }
   const payload = {
     kind: "works", ids: state.bulkWorkIds.slice()
@@ -50,15 +51,42 @@ function buildPayload(state) {
   const setFields = {};
   for (const field of BULK_WORK_METADATA_FIELDS) {
     if (!state.bulkTouchedFields.has(field.key)) continue;
+    if (field.key === "series_id" && state.bulkBrowseKind === "gallery") continue;
     const value = normalizeText(state.draft[field.key]);
     setFields[field.key] = value ? (field.type === "number" ? Number(value) : value) : null;
   }
   if (Object.keys(setFields).length) payload.set_fields = setFields;
   if (state.pendingSourceFolder) payload.source_folder = { ...state.pendingSourceFolder };
   if (state.bulkTouchedFields.has("gallery_ids")) {
+    if (state.bulkBrowseKind === "gallery") {
+      const { memberships, removedGalleryIds } = prepareGalleryBulkMemberships(state);
+      payload.gallery_ids_by_work = memberships;
+      return { payload, removedGalleryIds };
+    }
     payload.gallery_ids = state.draft.gallery_ids.slice();
   }
-  return payload;
+  return { payload, removedGalleryIds: galleryIdsRemovedBySave(state, payload) };
+}
+
+/** Apply changes to the shared pills to each selected Work's own saved set. */
+function prepareGalleryBulkMemberships(state) {
+  const initial = new Set(state.baselineDraft.gallery_ids);
+  const final = new Set(state.draft.gallery_ids);
+  const added = [...final].filter(id => !initial.has(id));
+  const removedGalleryIds = new Set([...initial].filter(id => !final.has(id)));
+  const memberships = {};
+  for (const workId of state.bulkWorkIds) {
+    const ids = new Set(state.bulkRecords.get(workId).gallery_ids);
+    let changed = false;
+    for (const id of removedGalleryIds) if (ids.delete(id)) changed = true;
+    for (const id of added) {
+      if (ids.has(id)) continue;
+      ids.add(id);
+      changed = true;
+    }
+    if (changed) memberships[workId] = [...ids].sort();
+  }
+  return { memberships, removedGalleryIds };
 }
 
 /** Capture removed memberships from saved records before adopting the Save response. */
@@ -86,6 +114,7 @@ function newlyEmptyGalleryIds(state, removed) {
 
 
 export async function saveCurrentWork(state, context) {
+  if (workSaveBlockReason(state)) return;
   if (state.imagePreview?.status === "pending") return;
   if (!context.draftHasChanges()) return;
   if (state.mode === "new") {
@@ -118,8 +147,7 @@ export async function saveCurrentWork(state, context) {
   let savedResponse = null;
   let cleanupGalleryIds = [];
   try {
-    const payload = buildPayload(state);
-    const removedGalleryIds = galleryIdsRemovedBySave(state, payload);
+    const { payload, removedGalleryIds } = prepareWorkSave(state);
     if (state.mode === "bulk") {
       const response = await saveCatalogueBulkRecords(payload);
       savedResponse = response;
@@ -166,7 +194,7 @@ export async function saveCurrentWork(state, context) {
   if (cleanupGalleryIds.length) await context.offerEmptyGalleryCleanup(cleanupGalleryIds);
 }
 
-export async function saveNewWork(state, context) {
+async function saveNewWork(state, context) {
   if (state.mode !== "new") return;
   if (state.pendingWorkBatch) {
     await saveNewWorkBatch(state, context);

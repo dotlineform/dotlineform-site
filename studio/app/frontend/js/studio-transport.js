@@ -19,7 +19,8 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
 });
 
 const CATALOGUE_READ_ENDPOINTS = Object.freeze({
-  read: "/studio/api/catalogue/read"
+  read: "/studio/api/catalogue/read",
+  workLookup: "/studio/api/catalogue/work/lookup"
 });
 
 export {

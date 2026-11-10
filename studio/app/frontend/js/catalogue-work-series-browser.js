@@ -3,10 +3,9 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { buildWorkThumbPreview } from "./catalogue-media-preview.js";
-import { getSeriesSearchMatches } from "./catalogue-series-records.js";
-import { syncWorkSeriesUrl } from "./catalogue-work-route-state.js";
+import { syncWorkSeriesUrl, workBulkEditingPaused } from "./catalogue-work-route-state.js";
 
-const workTitleCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+const browseCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -17,16 +16,28 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-/** Browse saved Series membership and manage Series definitions.
+function getBrowseMatches(seriesById, galleriesById, rawQuery) {
+  const query = rawQuery.trim().toLowerCase();
+  if (!query) return [];
+  const matches = [];
+  for (const [kind, definitions] of [["series", seriesById], ["gallery", galleriesById]]) {
+    for (const [id, { title }] of definitions) {
+      if (id.includes(query) || title.toLowerCase().includes(query)) matches.push({ kind, id, title });
+    }
+  }
+  return matches.sort((a, b) => browseCollator.compare(a.id, b.id));
+}
+
+/** Browse saved Series and Gallery members using the route's loaded projections.
  * Browsing and Series creation preserve the current Work draft and assignment.
- * Uses the route's canonical search projections; only opening a Work reads its full record.
  */
 export function createWorkSeriesBrowser(state, elements, options) {
   const { seriesBrowseSearch: search, seriesBrowsePopup: popup, seriesBrowseMembers: members,
     seriesBrowseStatus: status, seriesBrowseCount: count, seriesBrowseEdit: edit,
     seriesBrowseNew: newButton, editorPane, summaryPanelNode } = elements;
-  let seriesId = "";
+  let browseTarget = null;
   let list = null;
+  let visibleIds = new Set();
   let renderedMembersKey = "";
   let opening = false;
   let editingSeries = false;
@@ -35,41 +46,56 @@ export function createWorkSeriesBrowser(state, elements, options) {
   let currentWorkId = "";
   let mode = "";
 
-  function setBrowsedSeriesId(id) {
-    if (seriesId === id) return;
-    seriesId = id;
-    syncWorkSeriesUrl(id);
+  function getSelectedSeriesId() {
+    return browseTarget?.kind === "series" ? browseTarget.id : "";
+  }
+
+  function setBrowseTarget(target) {
+    if (browseTarget?.kind === target?.kind && browseTarget?.id === target?.id) return;
+    browseTarget = target;
+    syncWorkSeriesUrl(getSelectedSeriesId());
+    const kind = browseTarget?.kind ?? "series";
+    if (state.browseKind !== kind) {
+      state.browseKind = kind;
+      options.onBrowseKindChange();
+    }
   }
 
   function busy() {
     return opening || editingSeries || state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   }
 
-  function seriesLabel(id) {
-    const record = state.seriesById.get(id);
-    return record ? record.title : "";
+  function browsedDefinition() {
+    if (!browseTarget) return null;
+    const definitions = browseTarget.kind === "gallery" ? state.galleriesById : state.seriesById;
+    return definitions.get(browseTarget.id);
   }
 
   function restoreSearch() {
-    search.value = seriesLabel(seriesId);
+    search.value = browsedDefinition()?.title ?? "";
     searchController.close();
   }
 
   function syncAvailability() {
-    search.disabled = busy();
-    edit.disabled = busy() || !seriesId;
-    newButton.disabled = busy();
-    members.inert = busy();
+    const unavailable = busy();
+    const browsingGallery = browseTarget?.kind === "gallery";
+    search.disabled = unavailable;
+    edit.disabled = unavailable || !getSelectedSeriesId();
+    newButton.disabled = unavailable || browsingGallery;
+    members.inert = unavailable;
     members.setAttribute("aria-busy", String(opening));
     editorPane.inert = opening || editingSeries || state.isEditingDefinition;
     summaryPanelNode.inert = editorPane.inert;
-    if (busy()) restoreSearch();
+    if (unavailable) restoreSearch();
   }
 
   function renderMembers() {
-    const records = Array.from(state.workSearchById.values())
-      .filter(record => seriesId && record.series_id === seriesId)
-      .sort((a, b) => workTitleCollator.compare(a.title, b.title))
+    const browsingGallery = browseTarget?.kind === "gallery";
+    const memberWorks = browseTarget ? Array.from(state.workSearchById.values()).filter(record => browsingGallery
+      ? record.gallery_ids.includes(browseTarget.id)
+      : record.series_id === browseTarget.id) : [];
+    const records = memberWorks
+      .sort((a, b) => browseCollator.compare(a.title, b.title))
       .map(record => {
         const preview = buildWorkThumbPreview(state.mediaConfig, record.work_id, {
           mediaVersion: record.media_version, imageStaged: record.image_staged
@@ -77,24 +103,24 @@ export function createWorkSeriesBrowser(state, elements, options) {
         return {
           workId: record.work_id, title: record.title,
           titleTooltip: `${record.title}\nYear: ${record.year}\nYear display: ${record.year_display}`,
-          galleries: record.gallery_ids.map(id => state.galleriesById.get(id).title).join(", "),
+          association: browsingGallery ? state.seriesById.get(record.series_id).title
+            : record.gallery_ids.map(id => state.galleriesById.get(id).title).join(", "),
           thumbSrc: preview.src, thumbSrcset: preview.srcset, thumbSizes: "48px",
           thumbWidth: 48, thumbHeight: 48, thumbAlt: "", thumbFallback: "No preview"
         };
       });
-    const visibleIds = new Set(records.map(record => record.workId));
-    const selectedIds = selectedWorkIds().filter(id => visibleIds.has(id));
-    const membersKey = JSON.stringify([seriesId, records.map(({ galleries: _galleries, ...record }) => record)]);
+    const membersKey = JSON.stringify([browseTarget, records.map(({ association: _association, ...record }) => record)]);
     if (list && membersKey === renderedMembersKey) {
-      const updates = records.filter((record, index) => record.galleries !== list.options.records[index].galleries)
-        .map(record => ({ id: record.workId, values: { galleries: record.galleries } }));
+      const updates = records.filter((record, index) => record.association !== list.options.records[index].association)
+        .map(record => ({ id: record.workId, values: { association: record.association } }));
       if (updates.length) list.updateCells(updates);
-      list.setSelection(selectedIds);
+      list.setSelection(visibleSelection());
       return;
     }
     const scrollTop = members.scrollTop;
     list?.destroy();
-    count.textContent = seriesId ? `${records.length} ${records.length === 1 ? "work" : "works"}` : "";
+    visibleIds = new Set(records.map(record => record.workId));
+    count.textContent = browseTarget ? `${records.length} ${records.length === 1 ? "work" : "works"}` : "";
     list = createRecordList(members, {
       id: "catalogueWorkSeriesMembers",
       records,
@@ -106,12 +132,12 @@ export function createWorkSeriesBrowser(state, elements, options) {
           fallbackTextKey: "thumbFallback", truncate: false
         },
         { key: "title", label: "title", formatText: value => value, tooltipKey: "titleTooltip", width: "minmax(0, 1fr)", truncate: true },
-        { key: "galleries", label: "galleries", formatText: value => value, width: "minmax(0, 1fr)", truncate: false }
+        { key: "association", label: browsingGallery ? "series" : "galleries", formatText: value => value, width: "minmax(0, 1fr)", truncate: false }
       ],
       showHeader: false,
-      emptyText: seriesId ? "No works currently belong to this series." : "Find a series to see its works.",
+      emptyText: browseTarget ? `No works currently belong to this ${browseTarget.kind}.` : "Find a series or gallery to see its works.",
       selectionMode: "multiple",
-      initialSelection: selectedIds,
+      initialSelection: visibleSelection(),
       getRecordId: record => record.workId,
       onSelectionChange: ({ selections }) => {
         void openMembers(selections.map(selection => selection.id));
@@ -125,8 +151,13 @@ export function createWorkSeriesBrowser(state, elements, options) {
     return state.mode === "bulk" ? state.bulkWorkIds : state.currentWorkId ? [state.currentWorkId] : [];
   }
 
+  function visibleSelection() {
+    return workBulkEditingPaused(state) ? [] : selectedWorkIds().filter(id => visibleIds.has(id));
+  }
+
   async function openMembers(workIds) {
-    if (busy() || workIds.slice().sort().join(",") === selectedWorkIds().slice().sort().join(",")) return;
+    if (busy() || (!workBulkEditingPaused(state)
+      && workIds.slice().sort().join(",") === selectedWorkIds().slice().sort().join(","))) return;
     const previousSearch = state.searchNode.value;
     opening = true;
     syncAvailability();
@@ -150,33 +181,34 @@ export function createWorkSeriesBrowser(state, elements, options) {
       status.dataset.state = "error";
     } finally {
       opening = false;
-      renderMembers();
+      list.setSelection(visibleSelection());
       syncAvailability();
       const selectedRow = members.querySelector('[data-record-list-row="true"][tabindex="0"]');
       (selectedRow || search).focus({ preventScroll: true });
     }
   }
 
-  function selectSeries(id) {
+  function selectTarget(kind, id) {
     if (busy()) return;
-    setBrowsedSeriesId(id);
+    setBrowseTarget({ kind, id });
     status.textContent = "";
     delete status.dataset.state;
     restoreSearch();
+    syncAvailability();
     renderMembers();
     members.scrollTop = 0;
-    syncAvailability();
   }
 
   async function editSeries(create = false) {
-    if (busy()) return;
+    const seriesId = getSelectedSeriesId();
+    if (busy() || browseTarget?.kind === "gallery" || (!create && !seriesId)) return;
     editingSeries = true;
     syncAvailability();
     try {
       const result = await options.onEditDefinition("Series", create ? "" : seriesId, create ? newButton : edit);
       if (!result?.confirmed) return;
-      if (result.response.created) setBrowsedSeriesId(result.response.series_id);
-      if (result.response.deleted) setBrowsedSeriesId("");
+      if (result.response.created) setBrowseTarget({ kind: "series", id: result.response.series_id });
+      if (result.response.deleted) setBrowseTarget(null);
       restoreSearch();
       renderMembers();
       if (result.response.created) members.scrollTop = 0;
@@ -195,15 +227,21 @@ export function createWorkSeriesBrowser(state, elements, options) {
     id: "catalogueWorkSeriesBrowseList",
     openOnFocus: false,
     shouldOpen: () => !busy(),
-    loadOptions: query => getSeriesSearchMatches(state.seriesById, query),
+    loadOptions: query => getBrowseMatches(state.seriesById, state.galleriesById, query),
     filterOptions: records => records,
-    getOptionValue: option => seriesLabel(option.seriesId),
-    renderOption: ({ record }) => `
-      <span class="catalogueSeriesSearch__title">${escapeHtml(record.title)}</span>
+    getOptionValue: option => option.title,
+    renderOption: ({ kind, title }) => `
+      <span class="catalogueWorkBrowseSearch__result">
+        ${kind === "gallery" ? `
+          <span class="studioUi__icon studioUi__icon--small studioUi__icon--images" aria-hidden="true"></span>
+          <span class="visually-hidden">Gallery</span>
+        ` : ""}
+        <span class="catalogueSeriesSearch__title">${escapeHtml(title)}</span>
+      </span>
     `,
-    onCommit: option => selectSeries(option.seriesId),
+    onCommit: ({ kind, id }) => selectTarget(kind, id),
     onCancel: restoreSearch,
-    noResultsText: "No matching series."
+    noResultsText: "No matching series or galleries."
   });
   search.addEventListener("blur", restoreSearch);
   popup.addEventListener("mousedown", event => {
@@ -212,9 +250,9 @@ export function createWorkSeriesBrowser(state, elements, options) {
   edit.addEventListener("click", () => { void editSeries(); });
   newButton.addEventListener("click", () => { void editSeries(true); });
 
-  function sync() {
+  function sync({ recordsChanged = false } = {}) {
     syncAvailability();
-    if (currentRecord === state.currentRecord && bulkRecords === state.bulkRecords
+    if (!recordsChanged && currentRecord === state.currentRecord && bulkRecords === state.bulkRecords
       && currentWorkId === state.currentWorkId && mode === state.mode) return;
     currentRecord = state.currentRecord;
     bulkRecords = state.bulkRecords;
@@ -222,8 +260,8 @@ export function createWorkSeriesBrowser(state, elements, options) {
     mode = state.mode;
     const initialSeriesId = currentRecord?.series_id || (mode === "new" ? state.draft.series_id
       : state.bulkRecords.values().next().value?.series_id);
-    if (!seriesId && initialSeriesId && state.seriesById.has(initialSeriesId)) {
-      setBrowsedSeriesId(initialSeriesId);
+    if (!browseTarget && initialSeriesId && state.seriesById.has(initialSeriesId)) {
+      setBrowseTarget({ kind: "series", id: initialSeriesId });
       restoreSearch();
     }
     if (!opening) renderMembers();
@@ -234,11 +272,15 @@ export function createWorkSeriesBrowser(state, elements, options) {
   return {
     sync,
     /** Select a known Series for browsing without opening a Work or changing its draft. */
-    selectSeries,
+    selectSeries: id => selectTarget("series", id),
     /** Return the displayed Series independently of the loaded Work or draft. */
-    getSelectedSeriesId: () => seriesId,
+    getSelectedSeriesId,
     refresh() {
-      if (seriesId && !state.seriesById.has(seriesId)) setBrowsedSeriesId("");
+      if (browseTarget && !browsedDefinition()) {
+        setBrowseTarget(null);
+        status.textContent = "";
+        delete status.dataset.state;
+      }
       restoreSearch();
       renderMembers();
       syncAvailability();

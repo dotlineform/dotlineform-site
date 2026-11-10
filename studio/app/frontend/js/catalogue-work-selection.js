@@ -94,7 +94,7 @@ export function renderWorkSearchMatches(state, matches, message = "") {
   setWorkSelectionPopupVisibility(state, true);
 }
 
-/** Open a nonempty exact selection from one displayed Series; search/URL entry opens one Work. */
+/** Open a nonempty exact selection from the displayed list; search/URL entry opens one Work. */
 export async function openSelectedWorks(state, workIds, context) {
   if (workIds.length === 1) {
     await openWorkById(state, workIds[0], context);
@@ -102,18 +102,20 @@ export async function openSelectedWorks(state, workIds, context) {
   }
 
   setWorkSelectionPopupVisibility(state, false);
-  const lookups = await Promise.all(workIds.map((workId) => context.loadWorkLookupRecord(workId)));
-  const recordsById = new Map();
-  for (let index = 0; index < workIds.length; index += 1) {
-    const workId = workIds[index];
-    const lookup = lookups[index];
-    const record = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
-    if (!record) {
-      throw new Error(`work source missing record for ${workId}`);
+  const saved = state.sourceWorkRecordsById;
+  const missing = workIds.filter(id => !saved.has(id));
+  const loaded = missing.length ? (await context.readSelectedCatalogueWorks(missing)).works : null;
+  const records = new Map();
+  for (const workId of workIds) {
+    if (saved.has(workId)) {
+      records.set(workId, saved.get(workId));
+      continue;
     }
-    recordsById.set(workId, record);
+    const record = loaded?.[workId];
+    if (!record || typeof record !== "object") throw new Error(`Work source missing record for ${workId}`);
+    records.set(workId, { ...record, gallery_ids: state.workSearchById.get(workId).gallery_ids.slice() });
   }
-  context.setLoadedBulkWorks(workIds, recordsById);
+  context.setLoadedBulkWorks(workIds, records);
 }
 
 export async function openWorkById(state, requestedWorkId, context) {

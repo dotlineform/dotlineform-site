@@ -39,6 +39,7 @@ import {
   readCatalogueRefreshStatus,
   readProjectMediaFiles,
   readProjectMediaFolders,
+  readSelectedCatalogueWorks,
   readWorkMediaSources,
   openWorkProjectMedia,
   previewWorkProjectMedia,
@@ -53,7 +54,9 @@ import {
   setLoadedBulkWorks,
   setLoadedWorkRecord,
   setNewWorkMode,
-  syncWorkRouteBusyState
+  syncWorkRouteBusyState,
+  workBulkEditingPaused,
+  workSaveBlockReason
 } from "./catalogue-work-route-state.js";
 import { deleteCurrentWork } from "./catalogue-work-actions.js";
 
@@ -234,6 +237,7 @@ function noteCatalogueSaved(state, response) {
 
 async function runCatalogueRefresh(state) {
   if (!state.serverAvailable || state.isSaving || state.isBuilding || state.isDeleting || state.isEditingDefinition || draftHasChanges(state)) return;
+  let recordsChanged = false;
   state.isBuilding = true;
   updateEditorState(state);
   try {
@@ -244,6 +248,7 @@ async function runCatalogueRefresh(state) {
       applyWorkRecordMutation(state, {
         workId: item.work_id, record, updateBulk: state.mode === "bulk"
       });
+      recordsChanged = true;
       if (state.mode === "single" && state.currentWorkId === item.work_id) {
         state.currentRecord = record;
       }
@@ -254,7 +259,7 @@ async function runCatalogueRefresh(state) {
     state.refreshStatus = { ok: true, needed: true, error: error.message || String(error) };
   } finally {
     state.isBuilding = false;
-    updateEditorState(state);
+    updateEditorState(state, { recordsChanged });
   }
 }
 
@@ -270,7 +275,7 @@ function renderEditorMessage(state, snapshot = {}) {
   const dirty = Object.prototype.hasOwnProperty.call(snapshot, "dirty") ? snapshot.dirty : hasRecord && draftHasChanges(state);
   state.messageController.render({
     busy: state.isSaving || state.isBuilding || state.isDeleting,
-    validationMessage: firstCatalogueValidationMessage(errors),
+    validationMessage: workSaveBlockReason(state) || firstCatalogueValidationMessage(errors),
     dirtyMessage: state.mode === "new" ? "" : catalogueDirtyWarningText({
       dirty,
       mode: state.mode,
@@ -280,7 +285,7 @@ function renderEditorMessage(state, snapshot = {}) {
 }
 
 
-function updateEditorState(state) {
+function updateEditorState(state, { recordsChanged = false } = {}) {
   syncPendingAttachmentNames(state);
   const busy = state.isSaving || state.isBuilding || state.isDeleting;
   state.root.dataset.workSaving = String(state.isSaving);
@@ -293,9 +298,9 @@ function updateEditorState(state) {
     state.workSearchClearButton.setAttribute("aria-label", label);
     state.workSearchClearButton.disabled = busy;
   }
-  state.newButton.disabled = busy;
+  state.newButton.disabled = busy || state.browseKind === "gallery";
   if (busy) state.workSearchController?.close();
-  state.seriesBrowser?.sync();
+  state.seriesBrowser?.sync({ recordsChanged });
   const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
@@ -314,7 +319,7 @@ function updateEditorState(state) {
   state.saveButton.disabled = catalogueSaveDisabled({
     hasRecord,
     isSaving: state.isSaving || state.isBuilding || state.isDeleting || state.imagePreview?.status === "pending",
-    hasErrors: errors.size > 0,
+    hasErrors: errors.size > 0 || Boolean(workSaveBlockReason(state)),
     dirty,
     serverAvailable: state.serverAvailable
   });
@@ -329,7 +334,7 @@ function updateEditorState(state) {
 }
 
 function onFieldInput(state, fieldKey) {
-  if (state.mode === "bulk" && !BULK_WORK_METADATA_FIELDS.some(field => field.key === fieldKey)) return;
+  if (workBulkEditingPaused(state) || (state.mode === "bulk" && !BULK_WORK_METADATA_FIELDS.some(field => field.key === fieldKey))) return;
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
   clearActionMessages(state);
@@ -408,9 +413,11 @@ function workRouteStateOptions(state, overrides = {}) {
 function workSelectionOptions(state) {
   return {
     loadWorkLookupRecord,
+    readSelectedCatalogueWorks,
     setLoadedBulkWorks: (workIds, recordsById) => {
       for (const workId of workIds) {
-        applyWorkRecordMutation(state, { workId, record: recordsById.get(workId) });
+        const record = recordsById.get(workId);
+        if (state.sourceWorkRecordsById.get(workId) !== record) applyWorkRecordMutation(state, { workId, record });
       }
       setLoadedBulkWorks(state, workIds, recordsById, workRouteStateOptions(state));
     },
@@ -568,6 +575,7 @@ async function init() {
     await loadInitialWorkEditorData(state);
     state.seriesBrowser = createWorkSeriesBrowser(state, elements, {
       draftHasChanges: () => draftHasChanges(state),
+      onBrowseKindChange: () => updateEditorState(state),
       onEditDefinition: workFormOptions(state).onEditDefinition,
       openWorks: workIds => openSelectedWorks(state, workIds, workSelectionOptions(state)),
       clearWork: () => setEmptySearchMode(state, workRouteStateOptions(state))

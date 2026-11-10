@@ -1,9 +1,10 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { createStudioIcon } from "./studio-icon.js";
+import { workBulkEditingPaused } from "./catalogue-work-route-state.js";
 
 function disabled(state) {
-  return state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  return state.isSaving || state.isBuilding || state.isDeleting || workBulkEditingPaused(state) || !state.serverAvailable;
 }
 
 function matches(state) {
@@ -85,7 +86,7 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   newButton.type = "button";
   newButton.setAttribute("aria-label", "New Gallery");
   newButton.addEventListener("click", () => {
-    if (!disabled(state)) void options.onEditDefinition("Gallery", "", searchInput);
+    if (!newButton.disabled) void options.onEditDefinition("Gallery", "", searchInput);
   });
   searchRow.append(searchWrap, newButton);
   control.append(chipsNode, searchRow);
@@ -96,7 +97,13 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   function changeSelection(ids) {
     if (disabled(state)) return;
     state.draft.gallery_ids = ids.slice().sort();
-    if (state.mode === "bulk") state.bulkTouchedFields.add("gallery_ids");
+    if (state.mode === "bulk") {
+      const initial = state.baselineDraft.gallery_ids;
+      const unchanged = state.bulkBrowseKind === "gallery" && initial.length === state.draft.gallery_ids.length
+        && initial.every((id, index) => id === state.draft.gallery_ids[index]);
+      if (unchanged) state.bulkTouchedFields.delete("gallery_ids");
+      else state.bulkTouchedFields.add("gallery_ids");
+    }
     renderWorkGalleryPicker(state);
     options.onStateChange?.();
   }
@@ -131,7 +138,7 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   });
   chipsNode.addEventListener("click", event => {
     const edit = event.target.closest("[data-edit-gallery-id]");
-    if (edit && !disabled(state)) {
+    if (edit && !edit.disabled) {
       void options.onEditDefinition("Gallery", edit.dataset.editGalleryId, searchInput);
       return;
     }

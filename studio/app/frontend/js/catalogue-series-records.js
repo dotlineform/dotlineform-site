@@ -2,20 +2,6 @@ function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
 
-/** Search canonical Series IDs and titles, keeping the browser's bounded ID order. */
-export function getSeriesSearchMatches(seriesById, rawQuery) {
-  const query = normalizeText(rawQuery).toLowerCase();
-  if (!query) return [];
-  const matches = [];
-  for (const [seriesId, record] of seriesById) {
-    if (seriesId.includes(query) || normalizeText(record.title).toLowerCase().includes(query)) {
-      matches.push({ seriesId, record });
-    }
-  }
-  matches.sort((a, b) => a.seriesId.localeCompare(b.seriesId, undefined, { numeric: true, sensitivity: "base" }));
-  return matches.slice(0, 20);
-}
-
 /** Suggest the next numeric ID from loaded definitions; creation still checks for collisions. */
 export function suggestNextSeriesId(seriesItems) {
   let maxNumericId = 0;

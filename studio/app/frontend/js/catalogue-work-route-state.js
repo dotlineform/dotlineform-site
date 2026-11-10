@@ -31,29 +31,26 @@ function buildDraftFromRecord(record) {
   });
 }
 
-/** Compare saved values exactly, with blank dimensions sharing their prepared control value. */
+/** Compare saved values exactly, treating both absent and null dimensions as blank. */
 function buildBulkDraftFromRecords(records) {
-  const drafts = records.map((record) => buildDraftFromRecord(record));
+  const first = records[0];
+  const firstDraft = buildWorkDraftFromRecord(first, { fields: EDITABLE_FIELDS });
   const draft = {};
   const mixedFields = new Set();
   EDITABLE_FIELDS.forEach((field) => {
-    if (field.key === "series_id") {
-      // Only the displayed Series member list supplies bulk selections.
-      draft.series_id = drafts[0].series_id;
-      return;
-    }
     if (field.key === "gallery_ids") {
-      draft.gallery_ids = (drafts[0]?.gallery_ids || []).filter(id => drafts.every(item => item.gallery_ids.includes(id)));
+      draft.gallery_ids = firstDraft.gallery_ids.filter(id => records.every(record => record.gallery_ids.includes(id)));
       return;
     }
-    const compared = field.key === "height_cm" || field.key === "width_cm" ? drafts : records;
-    const first = compared[0]?.[field.key];
-    const allSame = compared.every((record) => record[field.key] === first);
+    const key = field.key;
+    const dimension = key === "height_cm" || key === "width_cm";
+    const firstValue = dimension ? first[key] ?? null : first[key];
+    const allSame = records.every(record => (dimension ? record[key] ?? null : record[key]) === firstValue);
     if (allSame) {
-      draft[field.key] = drafts[0][field.key];
+      draft[key] = firstDraft[key];
     } else {
-      draft[field.key] = "";
-      mixedFields.add(field.key);
+      draft[key] = "";
+      mixedFields.add(key);
     }
   });
   return { draft, mixedFields };
@@ -84,9 +81,28 @@ export function syncWorkSeriesUrl(seriesId) {
 
 function resetBulkState(state) {
   state.bulkWorkIds = [];
+  state.bulkBrowseKind = "";
   state.bulkRecords = new Map();
   state.bulkTouchedFields = new Set();
   state.bulkMixedFields = new Set();
+}
+
+export function workBulkEditingPaused(state) {
+  return state.mode === "bulk" && state.bulkBrowseKind !== state.browseKind;
+}
+
+export function workSaveBlockReason(state) {
+  if (workBulkEditingPaused(state)) {
+    const origin = state.bulkBrowseKind === "gallery" ? "Gallery" : "Series";
+    return `Return to ${origin} view or select Works from the current list to continue bulk editing.`;
+  }
+  if (state.browseKind !== "gallery") return "";
+  if (state.mode === "new") return "Return to Series view to save the new Work.";
+  if (state.mode === "single" && state.currentRecord
+    && normalizeSeriesId(state.draft.series_id) !== state.currentRecord.series_id) {
+    return "Return to Series view to save the Series change.";
+  }
+  return "";
 }
 
 const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
@@ -141,8 +157,9 @@ export function setLoadedBulkWorks(state, workIds, recordsById, options = {}) {
   state.currentWorkId = "";
   state.currentRecord = null;
   state.bulkWorkIds = workIds.slice();
+  state.bulkBrowseKind = state.browseKind;
   state.bulkRecords = new Map(recordsById);
-  const records = workIds.map((workId) => recordsById.get(workId)).filter(Boolean);
+  const records = workIds.map((workId) => recordsById.get(workId));
   const { draft: bulkDraft, mixedFields } = buildBulkDraftFromRecords(records);
   state.baselineDraft = { ...bulkDraft };
   state.draft = { ...bulkDraft };
@@ -169,6 +186,7 @@ export function setLoadedBulkWorks(state, workIds, recordsById, options = {}) {
 
 /** Start a pristine draft whose suggested ID and optional Series are its initial baseline. */
 export function setNewWorkMode(state, options = {}) {
+  if (state.browseKind === "gallery") return;
   clearWorkMediaIntent(state);
   state.pendingSourceFolder = null;
   state.mode = "new";

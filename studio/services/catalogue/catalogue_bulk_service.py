@@ -7,8 +7,9 @@ from typing import Any, Mapping
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_galleries import (
     MEMBERSHIPS_FILE,
-    read_galleries,
-    with_work_memberships,
+    gallery_memberships_payload,
+    read_gallery_memberships,
+    replace_work_memberships,
 )
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
@@ -58,14 +59,12 @@ def bulk_save_payload(
     works_payload = load_works_payload(context.works_path)
     works_map = works_payload["works"]
     previous = CatalogueSourceRecords(works=works_map, series={})
-    galleries = read_galleries(context.source_dir)
-    updated_galleries = galleries
-    if "gallery_ids" in body:
-        updated_galleries = with_work_memberships(
-            galleries, dict.fromkeys(selected_ids, body["gallery_ids"]),
-        )
+    memberships = read_gallery_memberships(context.source_dir)
+    replacements = request["gallery_ids_by_work"]
+    updated_memberships = replace_work_memberships(memberships, replacements) if replacements else memberships
     updated_works = dict(works_map)
     metadata_changed = False
+    memberships_changed = False
     affected_gallery_ids: set[str] = set()
     for work_id in selected_ids:
         current_record = works_map.get(work_id)
@@ -85,15 +84,17 @@ def bulk_save_payload(
             or current_record.get(field) != updated_record.get(field)
         ]
         metadata_changed = metadata_changed or bool(fields_changed)
-        previous_ids = galleries.works.get(work_id, [])
-        gallery_ids = updated_galleries.works.get(work_id, [])
-        if sorted(previous_ids) != sorted(gallery_ids):
-            fields_changed.append("gallery_ids")
-            affected_gallery_ids.update(previous_ids)
-            affected_gallery_ids.update(gallery_ids)
+        gallery_ids = sorted(updated_memberships.get(work_id, []))
+        if work_id in replacements:
+            previous_ids = memberships.get(work_id, [])
+            if sorted(previous_ids) != gallery_ids:
+                memberships_changed = True
+                fields_changed.append("gallery_ids")
+                affected_gallery_ids.update(previous_ids)
+                affected_gallery_ids.update(gallery_ids)
         record_payloads.append({
             "work_id": work_id, "record": updated_record,
-            "gallery_ids": sorted(gallery_ids),
+            "gallery_ids": gallery_ids,
         })
         if not fields_changed:
             continue
@@ -110,8 +111,8 @@ def bulk_save_payload(
     writes = {}
     if metadata_changed:
         writes[context.works_path.resolve()] = payload_for_map("works", updated_works)
-    if galleries.works != updated_galleries.works:
-        writes[(context.source_dir / MEMBERSHIPS_FILE).resolve()] = updated_galleries.memberships_payload()
+    if memberships_changed:
+        writes[(context.source_dir / MEMBERSHIPS_FILE).resolve()] = gallery_memberships_payload(updated_memberships)
     if not set(writes).issubset(context.allowed_write_paths):
         raise ValueError("write target not allowlisted")
     if writes:
@@ -135,7 +136,7 @@ def bulk_save_payload(
         "affected_series_ids": sorted(affected_series_ids),
         "affected_gallery_ids": sorted(affected_gallery_ids),
         "_shared_changes": work_shared_changes(
-            works_map, updated_works, galleries.works, updated_galleries.works, changed_ids,
+            works_map, updated_works, memberships, updated_memberships, changed_ids,
         ),
     }
     _finish_bulk_payload(
@@ -182,7 +183,7 @@ def _finish_bulk_payload(
 
 def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
     """Validate the request envelope and allowed fields; the UI validates values."""
-    unknown_request_fields = sorted(set(body) - {"kind", "ids", "set_fields", "gallery_ids", "source_folder"})
+    unknown_request_fields = sorted(set(body) - {"kind", "ids", "set_fields", "gallery_ids", "gallery_ids_by_work", "source_folder"})
     if unknown_request_fields:
         raise ValueError(f"bulk save contains unsupported request fields: {', '.join(unknown_request_fields)}")
     kind = body.get("kind")
@@ -204,9 +205,23 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
     if unknown_fields:
         raise ValueError(f"bulk save contains unsupported fields: {', '.join(unknown_fields)}")
 
+    if "gallery_ids_by_work" in body:
+        if "gallery_ids" in body:
+            raise ValueError("bulk save accepts one Gallery membership form")
+        replacements = body["gallery_ids_by_work"]
+        if not isinstance(replacements, dict) or not replacements.keys() <= set(raw_ids):
+            raise ValueError("gallery_ids_by_work must map selected Work IDs to Gallery ID lists")
+        if any(not isinstance(ids, list) or any(not isinstance(gid, str) for gid in ids) for ids in replacements.values()):
+            raise ValueError("gallery_ids_by_work values must be lists of Gallery ID strings")
+    elif "gallery_ids" in body:
+        replacements = dict.fromkeys(raw_ids, body["gallery_ids"])
+    else:
+        replacements = {}
+
     return {
         "kind": kind,
         "ids": raw_ids,
         "set_fields": raw_set_fields,
+        "gallery_ids_by_work": replacements,
         "source_folder": extract_source_folder(body),
     }

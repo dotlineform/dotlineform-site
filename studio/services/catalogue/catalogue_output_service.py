@@ -130,13 +130,15 @@ def complete_saved_catalogue_edit(
                   "image": wid in image_changes, "file_names": sorted(file_changes.get(wid, set()))}
             for wid in targets
         }
-        refresh_needed = bool(selections or deleted_media or any(shared.values()) or failures)
-        accumulate_work_changes(
-            context.repo_root, selections, deleted_media or {},
-            downloads_by_work={wid: download_filenames(current.works[wid]) for wid in targets},
-            shared=shared,
-        )
-        clear_staged_works(context.repo_root, deleted_media or {})
+        refresh_needed = bool(selections or deleted_media or any(shared.values()))
+        if refresh_needed:
+            accumulate_work_changes(
+                context.repo_root, selections, deleted_media or {},
+                downloads_by_work={wid: download_filenames(current.works[wid]) for wid in targets},
+                shared=shared,
+            )
+            if deleted_media:
+                clear_staged_works(context.repo_root, deleted_media)
     except Exception as error:
         identities = sorted(set(deleted_media or {}) | set(response.get("affected_work_ids", [])))
         failures.append(f"Catalogue queue/staging completion ({', '.join(identities)}): {error}")

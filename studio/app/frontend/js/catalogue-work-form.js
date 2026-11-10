@@ -5,6 +5,7 @@ import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { renderWorkMediumField } from "./catalogue-work-medium.js";
 import { openWorkSourceFolder } from "./catalogue-work-source-folder.js";
 import { clearAutomaticWorkDimensions, clearWorkImagePreview } from "./catalogue-work-image-preview.js";
+import { workBulkEditingPaused } from "./catalogue-work-route-state.js";
 import { BULK_WORK_METADATA_FIELDS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
   openProjectMediaPickerForCurrentDraft,
@@ -133,7 +134,8 @@ export function renderSeriesPicker(state) {
   if (!state.seriesPicker) return;
   const seriesId = state.draft.series_id;
   state.seriesPicker.hiddenInput.value = seriesId;
-  state.seriesPicker.searchInput.value = seriesId ? seriesDisplayTitle(state, seriesId) : "";
+  state.seriesPicker.searchInput.value = seriesId ? seriesDisplayTitle(state, seriesId)
+    : state.bulkMixedFields.has("series_id") ? "Multiple Series" : "";
   state.seriesPicker.searchController.close();
 }
 
@@ -546,7 +548,7 @@ export function clearReadonlyFields(state) {
 export function setModeFieldAvailability(state) {
   setWorkGalleryPickerAvailability(state);
   const isBulk = state.mode === "bulk";
-  const busy = state.isSaving || state.isBuilding || state.isDeleting;
+  const busy = state.isSaving || state.isBuilding || state.isDeleting || workBulkEditingPaused(state);
   state.fieldsNode.querySelectorAll("[data-project-media-display]").forEach(link => {
     const value = state.draft[link.dataset.projectMediaDisplay];
     const disabled = !value || isBulk || busy || state.isOpeningSource || !state.serverAvailable;
@@ -582,7 +584,7 @@ export function setModeFieldAvailability(state) {
   if (state.seriesPicker) {
     state.seriesPicker.pickerNode.hidden = false;
     state.seriesPicker.searchWrap.hidden = false;
-    state.seriesPicker.searchInput.disabled = busy || !state.serverAvailable;
+    state.seriesPicker.searchInput.disabled = busy || state.browseKind === "gallery" || !state.serverAvailable;
     state.seriesPicker.browseButton.disabled = state.seriesPicker.searchInput.disabled || !state.draft.series_id;
     if (state.seriesPicker.searchInput.disabled) {
       renderSeriesPicker(state);
@@ -600,10 +602,7 @@ export function setModeFieldAvailability(state) {
   });
   if (state.mediaSourceButton) {
     updateMediaSourceButton(state);
-    state.mediaSourceButton.disabled = state.isSaving
-      || state.isBuilding
-      || state.isDeleting
-      || !state.serverAvailable;
+    state.mediaSourceButton.disabled = busy || !state.serverAvailable;
   }
 }
 

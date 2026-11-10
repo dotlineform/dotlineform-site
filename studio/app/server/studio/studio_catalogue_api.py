@@ -73,6 +73,7 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "read",
                 "bulk-save",
                 "delete-apply",
+                "work/lookup",
                 "work/create",
                 "work/create-batch",
                 "work/save",
@@ -107,6 +108,8 @@ def catalogue_post_response(
 ) -> tuple[HTTPStatus, dict[str, Any]]:
     if attachments and api_path not in {"/work/create", "/work/save"}:
         raise ValueError("Attachments belong to single Work create/Save")
+    if api_path == "/work/lookup":
+        return HTTPStatus.OK, selected_work_records_payload(repo_root, body)
     if api_path == "/project-media/open":
         return HTTPStatus.OK, open_work_source_target(repo_root, body, dry_run=dry_run)
     if api_path == "/refresh":
@@ -120,6 +123,21 @@ def catalogue_post_response(
             repo_root, api_path, body, dry_run=dry_run, attachments=attachments,
         )
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
+
+
+def selected_work_records_payload(repo_root: Path, body: Mapping[str, Any]) -> dict[str, Any]:
+    """Read Work metadata for an exact editor selection in one pass."""
+    ids = body.get("ids")
+    if set(body) != {"ids"} or not isinstance(ids, list) or not ids or any(not isinstance(wid, str) for wid in ids):
+        raise ValueError("Work lookup requires an array of exact Work IDs")
+    works = read_source_map(catalogue_paths(repo_root)["source_dir"], "works")
+    selected = {}
+    for work_id in ids:
+        record = works.get(work_id)
+        if record is None:
+            raise ValueError(f"Work not found: {work_id}")
+        selected[work_id] = record
+    return {"ok": True, "works": selected}
 
 
 def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> dict[str, Any]:

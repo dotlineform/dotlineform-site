@@ -102,15 +102,21 @@ def read_galleries(source_dir: Path) -> CatalogueGalleries:
 def with_work_memberships(
     data: CatalogueGalleries, replacements: Mapping[str, list[str]],
 ) -> CatalogueGalleries:
-    """Persist Gallery sets whose representation and membership the UI validates.
+    return CatalogueGalleries(data.galleries, replace_work_memberships(data.works, replacements))
+
+
+def replace_work_memberships(
+    saved: Mapping[str, list[str]], replacements: Mapping[str, list[str]],
+) -> dict[str, list[str]]:
+    """Apply supplied Gallery sets to a copy of the saved membership map.
 
     The UI supplies lists of distinct existing Gallery ID strings. Empty lists
     remove Work membership entries; explicit audits own canonical validation.
     """
-    memberships = dict(data.works)
+    memberships = dict(saved)
     for work_id, gallery_ids in replacements.items():
         if gallery_ids:
             memberships[work_id] = sorted(gallery_ids)
         else:
             memberships.pop(work_id, None)
-    return CatalogueGalleries(data.galleries, memberships)
+    return memberships

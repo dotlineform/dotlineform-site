@@ -1,7 +1,7 @@
 import { openWorkGalleryModal } from "./catalogue-work-gallery-modal.js";
 import { openWorkSeriesTitleModal } from "./catalogue-work-series-modal.js";
 import { catalogueSaveCompletionError, catalogueSavedActionError } from "./catalogue-save-result.js";
-import { syncWorkRouteBusyState } from "./catalogue-work-route-state.js";
+import { syncWorkRouteBusyState, workBulkEditingPaused } from "./catalogue-work-route-state.js";
 
 function removeGalleryMembership(record, galleryId) {
   if (Array.isArray(record?.gallery_ids)) {
@@ -9,10 +9,12 @@ function removeGalleryMembership(record, galleryId) {
   }
 }
 
-function applyGalleryResult(state, response) {
+function applyGalleryResult(state, response, deleteEmpty) {
   const id = response.gallery_id;
   if (response.deleted) {
     state.galleriesById.delete(id);
+    // The completed Work Save already removed the last direct membership.
+    if (deleteEmpty) return;
     // Remove only this Gallery identity from saved baselines and unsaved drafts.
     for (const record of [state.draft, state.baselineDraft, state.currentRecord, ...state.workSearchById.values(),
       ...state.sourceWorkRecordsById.values(), ...state.bulkRecords.values()]) {
@@ -43,9 +45,7 @@ function validateResponse(kind, requestedId, response) {
   if (!response?.ok || typeof id !== "string" || !id || (requestedId && id !== requestedId)
     || (!requestedId && !response.created)
     || (response.deleted && kind === "Series" && response.kind !== "series")
-    || (!response.deleted && (response.record?.[key] !== id
-      || typeof response.record.title !== "string"
-      || (kind === "Gallery" && !Array.isArray(response.related_series_ids))))) {
+    || (!response.deleted && (response.record?.[key] !== id || typeof response.record.title !== "string"))) {
     throw new Error(`${kind} response is missing its exact record.`);
   }
 }
@@ -53,6 +53,7 @@ function validateResponse(kind, requestedId, response) {
 /** Keep the Work draft while a shared definition saves; refresh saved labels and membership baselines. */
 export async function editWorkDefinition(state, { kind, id = "", restoreFocus, refresh, noteCatalogueSaved, deleteEmpty = false }) {
   if (state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable) return null;
+  if (kind === "Gallery" && !deleteEmpty && workBulkEditingPaused(state)) return null;
   if (!deleteEmpty) state.messageController.clearActionMessages();
   state.isEditingDefinition = true;
   const panels = [...state.root.children].filter(node => node !== state.modalHost);
@@ -62,6 +63,7 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
   let result;
   let response = null;
   let errorMessage = "";
+  let definitionChanged = false;
   try {
     const onBusyChange = busy => {
       state.isSaving = busy;
@@ -76,8 +78,9 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
       response = result.response;
       noteCatalogueSaved(response);
       validateResponse(kind, id, response);
-      if (kind === "Gallery") applyGalleryResult(state, response);
+      if (kind === "Gallery") applyGalleryResult(state, response, deleteEmpty);
       else applySeriesResult(state, response);
+      definitionChanged = response.changed || response.created || response.deleted;
       errorMessage = catalogueSaveCompletionError(response);
     }
   } catch (error) {
@@ -89,7 +92,7 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
     panels.forEach((node, index) => { node.inert = previousInert[index]; });
     try {
       refresh();
-      state.seriesBrowser?.refresh();
+      if (definitionChanged) state.seriesBrowser?.refresh();
     } catch (error) {
       errorMessage = catalogueSavedActionError(response, error) || error.message;
       result = null;

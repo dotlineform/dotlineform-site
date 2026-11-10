@@ -293,8 +293,8 @@ export function updateWorkSummary(state, options = {}) {
   if (state.mode === "bulk") {
     state.layout.setPreviewAvailable(true);
     const selectedCount = state.bulkWorkIds.length;
-    const savedSeriesId = state.bulkRecords.get(state.bulkWorkIds[0]).series_id;
-    const seriesTitle = state.seriesById.get(savedSeriesId).title;
+    const savedSeriesId = state.baselineDraft.series_id;
+    const seriesTitle = savedSeriesId ? state.seriesById.get(savedSeriesId).title : "Multiple Series";
     state.metaNode.hidden = false;
     state.metaNode.textContent = selectedCount
       ? `${selectedCount} works selected`
