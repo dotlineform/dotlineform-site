@@ -16,11 +16,14 @@ Catalogue tokens retain an exact Catalogue identity and authored occurrence fiel
 ```md
 [[catalogue:media:work:00638|3 symbols]]
 [[catalogue:media:gallery:179|kylie structure 4 (details)]]
+[[catalogue:media:gallery:179:visible=false|kylie structure 4 (details)]]
 [[catalogue:image:work:00638|use_work_title_caption=true&placement=left&fill_width=true]]
 [[catalogue:entry:work:00638]]
 ```
 
 Media View text links accept an exact five-digit Work ID or an exact Gallery ID. Gallery IDs use three digits or at least four digits without a leading zero. The serializer escapes backslash, pipe and closing bracket in the required single-line label; the parser decodes only those escapes. Work image identity also uses five digits. Detail and Series token forms remain literal and do not open Media View. The existing authored Series tokens in Working source were deliberately left unchanged when support was removed.
+
+Gallery Media View tokens accept `:visible=true` or `:visible=false` after the ID. An omitted flag means `true`, and the Source editor only writes the flag when it is `false`. Build collects the Gallery ID and label in either case and creates a presentation slot only for visible tokens. [Catalogue Media View](Catalogue_Media_View.md#authoring) owns the authoring workflow.
 
 Catalogue image fields use deterministic percent encoding and canonical field order. Work images require explicit boolean `use_work_title_caption`, placement (`full`, `left` or `right`) and boolean `fill_width`; `summary` is the only optional authored text. The token stores no literal Work title, alt text, caption or metadata. Catalogue image tokens support Works only. Gallery grids open through text links, with no inline group image.
 
@@ -63,7 +66,7 @@ The generic Source adapter owns the mounted target, current buffer revision, cap
 
 ## Catalogue Identity And Document Associations
 
-Catalogue owns canonical Work/Gallery identities and media. Tokens record exact authored occurrences; Build and Info use their stored identity. Work tokens contribute document relationships to Catalogue documents. Gallery tokens are mentions that open Media View and create no Related Link. Projects uses both target kinds from by-ID JSON to find related Series/folders. Subject declarations and the Use document subject shortcut are retired; tokens do not assign Subject metadata. The separate Thumb action copies bytes without creating either relationship.
+Catalogue owns canonical Work/Gallery identities and media. Tokens record exact authored occurrences; Build and Info use their stored identity. Work tokens contribute document relationships to Catalogue documents. Gallery tokens contribute to the [Related Links](Related_Links.md) directive and Context manifest through the authored Gallery ID, outside the document relationship graph. Projects uses both target kinds from by-ID JSON to find related Series/folders. Subject declarations and the Use document subject shortcut are retired; tokens do not assign Subject metadata. The separate Thumb action copies bytes without creating either relationship.
 
 ## Registry And Lookups
 

@@ -33,6 +33,7 @@ class SemanticTokenOccurrence:
     end: int
     supported: bool
     presentation: str
+    visible: bool = True
     use_work_title_caption: bool | None = None
     summary: str = ""
     placement: str = ""
@@ -200,7 +201,8 @@ def parse_semantic_token(
         and len(parts) == 4
         and parts[1] == "image"
     )
-    is_media = family == "catalogue" and len(parts) == 4 and parts[1] == "media"
+    gallery_visibility = len(parts) == 5 and parts[2] == "gallery" and parts[4] in {"visible=true", "visible=false"}
+    is_media = family == "catalogue" and (len(parts) == 4 or gallery_visibility) and parts[1] == "media"
     if not separator or (not is_image and not is_media):
         return None
     target_type = parts[2]
@@ -245,6 +247,7 @@ def parse_semantic_token(
         end=start + len(raw),
         supported=supported,
         presentation="image" if is_image else "media",
+        visible=not gallery_visibility or parts[4] == "visible=true",
         use_work_title_caption=image_fields["use_work_title_caption"] if image_fields else None,
         summary=image_fields["summary"] if image_fields else "",
         placement=image_fields["placement"] if image_fields else "",
@@ -406,6 +409,7 @@ class SemanticTokensMixin:
         """Render media without writes; Entry needs its exact Catalogue document ID."""
         self._semantic_media_html: dict[str, str] = {}
         self.catalogue_references: list[dict[str, Any]] = []
+        self.related_galleries: dict[str, str] = {}
         entry_seen = False
 
         def replace(token: SemanticTokenOccurrence) -> str:
@@ -417,6 +421,10 @@ class SemanticTokensMixin:
                     token, self.image_token_media_url(token.media_path),
                 )
             else:
+                if token.target_type == "gallery":
+                    self.related_galleries.setdefault(token.target_id, token.title)
+                    if not token.visible:
+                        return ""
                 if token.presentation == "entry":
                     if getattr(self, "collection_id", "") != "catalogue" or token.target_id != document_id or entry_seen:
                         raise ValueError("Catalogue Entry requires one token matching its Catalogue document identity")

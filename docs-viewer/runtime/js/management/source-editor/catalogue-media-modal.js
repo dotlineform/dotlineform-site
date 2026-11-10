@@ -31,6 +31,10 @@ function modalBody(searchQuery, linkText, imageMode) {
         '<label class="docsViewer__field" for="' + LINK_INPUT_ID + '">' +
           '<span class="docsViewer__fieldLabel">Link text</span>' +
           '<input class="docsViewer__fieldInput" id="' + LINK_INPUT_ID + '" type="text" autocomplete="off" value="' + escapeHtml(linkText) + '" required>' +
+        '</label>' +
+        '<label class="docsViewer__field docsViewer__field--checkbox" data-role="catalogue-link-visibility" hidden>' +
+          '<input class="docsViewer__checkboxInput" data-role="catalogue-link-visible" type="checkbox" checked>' +
+          '<span class="docsViewer__fieldLabel">Show inline link</span>' +
         "</label>") +
     "</div>"
   );
@@ -63,6 +67,7 @@ export function openCatalogueMediaModal(options = {}) {
       var search = api.host.querySelector("#" + SEARCH_INPUT_ID);
       mountSearchField(search);
       var linkInput = api.host.querySelector("#" + LINK_INPUT_ID);
+      var visibilityField = api.host.querySelector('[data-role="catalogue-link-visibility"]');
       var results = api.host.querySelector('[data-role="catalogue-results"]');
       var status = api.host.querySelector('[data-role="catalogue-search-status"]');
       var primary = api.host.querySelector('[data-role="modal-primary"]');
@@ -71,6 +76,8 @@ export function openCatalogueMediaModal(options = {}) {
         hydrateCatalogueImagePresentation(api.host, initialToken || {
           useWorkTitleCaption: true, placement: "full", fillWidth: true
         });
+      } else if (initialToken) {
+        visibilityField.querySelector("input").checked = initialToken.visible;
       }
 
       function showResults(visible) {
@@ -91,6 +98,7 @@ export function openCatalogueMediaModal(options = {}) {
       };
       function selectTarget(target) {
         state.target = target;
+        if (visibilityField) visibilityField.hidden = target.targetType !== "gallery";
         search.value = target.title;
         state.list.setTargets([]);
         showResults(false);
@@ -101,6 +109,7 @@ export function openCatalogueMediaModal(options = {}) {
       function updateMatches() {
         if (!state.support) return;
         state.target = null;
+        if (visibilityField) visibilityField.hidden = true;
         primary.disabled = true;
         var targets = imageMode ? state.support.targets.filter(function (target) { return target.targetType === "work"; }) : state.support.targets;
         var matches = collectSemanticTokenTargetMatches(targets, search.value, state.support.registry, 20);
@@ -151,6 +160,8 @@ export function openCatalogueMediaModal(options = {}) {
       } else {
         fields.title = String(api.host.querySelector("#" + LINK_INPUT_ID).value || "").trim();
         if (!fields.title) { api.setStatus("Enter link text."); return false; }
+        fields.visible = state.target.targetType !== "gallery"
+          || api.host.querySelector('[data-role="catalogue-link-visible"]').checked;
       }
       var token = imageMode ? serializeCatalogueImageToken(fields) : serializeCatalogueMediaToken(fields);
       if (!token) { api.setStatus("The selected image and presentation cannot be serialized."); return false; }

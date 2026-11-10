@@ -38,15 +38,13 @@ def merge_collection_manifest(
     }
 
 
-def project_context_catalogue_targets(rows: list[dict[str, Any]], item_payloads: dict[str, dict[str, Any]]) -> None:
-    """Attach completed Catalogue target IDs to the new Context rows in place."""
-    for row in rows:
-        references = item_payloads[row["doc_id"]].get("catalogue", {}).get("references", ())
-        work_ids: set[str] = set()
-        gallery_ids: set[str] = set()
-        for reference in references:
-            target = reference["target"]
-            ids = gallery_ids if target["kind"] == "catalogue-gallery" else work_ids
-            ids.add(target["id"])
-        if work_ids or gallery_ids:
-            row["catalogue_targets"] = {"work_ids": sorted(work_ids), "gallery_ids": sorted(gallery_ids)}
+def project_context_catalogue_targets(
+    row: dict[str, Any], catalogue_references: list[dict[str, Any]], galleries: dict[str, str],
+) -> None:
+    """Attach one rendered Context document's Catalogue target IDs to its new row."""
+    work_ids = {
+        reference["target"]["id"] for reference in catalogue_references
+        if reference["target"]["kind"] == "catalogue-work"
+    }
+    if work_ids or galleries:
+        row["catalogue_targets"] = {"work_ids": sorted(work_ids), "gallery_ids": sorted(galleries)}

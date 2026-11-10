@@ -118,9 +118,14 @@ def generate_documents(
     if collection:
         started_at = monotonic_time()
         builder.related_documents = related_documents
-        item_payloads = {doc.doc_id: builder.item_entry(doc, identities) for doc in selected_docs}
-        if collection == "works":
-            project_context_catalogue_targets(selected_manifest_rows, item_payloads)
+        context_rows = {row["doc_id"]: row for row in selected_manifest_rows} if collection == "works" else None
+        item_payloads = {}
+        for doc in selected_docs:
+            item_payloads[doc.doc_id] = builder.item_entry(doc, identities)
+            if context_rows is not None:
+                project_context_catalogue_targets(
+                    context_rows[doc.doc_id], builder.catalogue_references, builder.related_galleries,
+                )
 
     if publication is not None:
         publication.prepare(builder, selected_docs, navigation,

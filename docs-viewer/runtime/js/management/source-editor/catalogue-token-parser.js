@@ -79,7 +79,9 @@ export function serializeCatalogueMediaToken(options = {}) {
   var targetType = cleanString(options.targetType);
   var targetId = cleanString(options.targetId);
   var title = cleanString(options.title);
+  var hidden = options.visible === false;
   if (!title || /[\r\n]/.test(title)) return "";
+  if (hidden && targetType !== "gallery") return "";
   if (
     !LEXICAL_KEY_PATTERN.test(targetType)
     || !LEXICAL_ID_PATTERN.test(targetId)
@@ -91,7 +93,7 @@ export function serializeCatalogueMediaToken(options = {}) {
   }
   var targetPattern = Object.prototype.hasOwnProperty.call(MEDIA_TARGET_PATTERNS, targetType) ? MEDIA_TARGET_PATTERNS[targetType] : null;
   if (!targetPattern || !targetPattern.test(targetId)) return "";
-  return "[[catalogue:media:" + targetType + ":" + targetId + "|" + escapedTitle(title) + "]]";
+  return "[[catalogue:media:" + targetType + ":" + targetId + (hidden ? ":visible=false" : "") + "|" + escapedTitle(title) + "]]";
 }
 
 /** Serialize a Work image's caption choice, authored summary and layout. */
@@ -173,7 +175,9 @@ export function parseCatalogueToken(raw, options = {}) {
   if (separator < 0) return null;
   var identity = body.slice(0, separator).split(":");
   var imagePresentation = identity.length === 4 && identity[1] === "image";
-  var mediaPresentation = identity.length === 4 && identity[1] === "media";
+  var galleryVisibility = identity.length === 5 && identity[2] === "gallery"
+    && (identity[4] === "visible=true" || identity[4] === "visible=false");
+  var mediaPresentation = (identity.length === 4 || galleryVisibility) && identity[1] === "media";
   if (!imagePresentation && !mediaPresentation) return null;
   var family = identity[0];
   var targetType = identity[2];
@@ -217,6 +221,7 @@ export function parseCatalogueToken(raw, options = {}) {
     supported: supported,
     activatable: supported,
     presentation: imagePresentation ? "image" : "media",
+    visible: !galleryVisibility || identity[4] === "visible=true",
     useWorkTitleCaption: imageFields ? imageFields.useWorkTitleCaption : null,
     summary: imageFields ? imageFields.summary : "",
     placement: imageFields ? imageFields.placement : "",

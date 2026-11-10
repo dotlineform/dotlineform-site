@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import html
 import json
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from .links_model import DocumentLinks, DocumentTarget
 from .links_schema import read_relationship_payload
@@ -52,7 +52,7 @@ def prepare_related_links(
 
 
 def render_related_links(
-    builder: DocsDataBuilder, doc: DocRecord, heading: str, catalogue_references: list[dict[str, Any]],
+    builder: DocsDataBuilder, doc: DocRecord, heading: str, galleries: dict[str, str],
 ) -> str:
     """Render document relationships and exact authored Gallery targets together."""
     target = DocumentTarget(getattr(builder, "collection_id", ""), doc.doc_id)
@@ -77,11 +77,6 @@ def render_related_links(
             f'<li>{builder.inline_icons.render(icon, decorative=True)} '
             f'<a data-docs-related-link="true" href="{html.escape(href, quote=True)}">{html.escape(summary.title)}</a></li>'
         )
-    galleries = {}
-    for reference in catalogue_references:
-        destination = reference["target"]
-        if destination["kind"] == "catalogue-gallery":
-            galleries.setdefault(destination["id"], reference["options"]["label"])
     if galleries:
         icon = builder.inline_icons.render("images", decorative=True)
         for gallery_id, label in galleries.items():

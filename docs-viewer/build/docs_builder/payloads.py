@@ -57,7 +57,7 @@ class PayloadBuilderMixin:
             )
             rendered = self.inline_icons.render_markdown(
                 resolved,
-                related_links=lambda heading: render_related_links(self, doc, heading, self.catalogue_references),
+                related_links=lambda heading: render_related_links(self, doc, heading, self.related_galleries),
                 summary_html=summary_html,
             )
         except ValueError as exc:
