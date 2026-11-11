@@ -2,28 +2,47 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { collectDescendantDocIds } from "./docs-viewer-management-action-workflow.js";
 import { escapeHtml, openDocsViewerManagementModal } from "./docs-viewer-management-modal-shell.js";
 
-export function openDocsViewerPositionModal(options) {
+export function openDocsViewerIndexPositionModal(options) {
   var docs = options.docs;
   var excluded = collectDescendantDocIds(docs, options.doc.doc_id);
   excluded.add(options.doc.doc_id);
   var depths = new Map();
   var rootOnly = options.collectionHostDocIds.includes(options.doc.doc_id);
-  var destinations = [{ doc_id: "", title: "Root", depth: 0 }];
+  var rootDestination = { id: "", title: "Root", depth: 0 };
+  var destinations = [];
   docs.forEach(function (doc) {
     var depth = doc.parent_id ? (depths.get(doc.parent_id) || 0) + 1 : 0;
     depths.set(doc.doc_id, depth);
-    if (!excluded.has(doc.doc_id) && (!rootOnly || !doc.parent_id)) destinations.push({ ...doc, depth: depth });
+    if (!excluded.has(doc.doc_id) && (!rootOnly || !doc.parent_id)) {
+      destinations.push({ id: doc.doc_id, title: doc.title, depth: depth });
+    }
   });
+  var insideDestinations = rootOnly ? [rootDestination] : [rootDestination, ...destinations];
+  var besideDestinations = [{ ...rootDestination, disabled: true }, ...destinations];
 
-  return openDocsViewerManagementModal({
+  return openDocsViewerPositionModal({
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: "Position " + options.doc.title,
+    note: "Document: " + options.doc.title + " (" + options.doc.doc_id + "). Moves this document with all its descendants.",
+    insideLabel: rootOnly ? "Inside Root" : "Inside (last child)",
+    getDestinations: function (placement) {
+      return placement === "inside" ? insideDestinations : besideDestinations;
+    },
+    onSave: options.onSave
+  });
+}
+
+export function openDocsViewerPositionModal(options) {
+  return openDocsViewerManagementModal({
+    root: options.root,
+    restoreFocus: options.restoreFocus,
+    title: options.title,
     bodyHtml:
-      '<p class="docsViewer__modalNote muted small">Document: ' + escapeHtml(options.doc.title) + ' (' + escapeHtml(options.doc.doc_id) + '). Moves this document with all its descendants.</p>' +
+      (options.note ? '<p class="docsViewer__modalNote muted small">' + escapeHtml(options.note) + '</p>' : '') +
       '<label class="docsViewer__fieldLabel" for="docsViewerPositionPlacement">Position</label>' +
       '<select class="docsViewer__fieldInput" id="docsViewerPositionPlacement">' +
-        '<option value="before">Before</option><option value="after">After</option><option value="inside">' + (rootOnly ? "Inside Root" : "Inside (last child)") + '</option>' +
+        '<option value="before">Before</option><option value="after">After</option><option value="inside">' + escapeHtml(options.insideLabel) + '</option>' +
       '</select>' +
       '<label class="docsViewer__fieldLabel" for="docsViewerPositionSearch">Find destination</label>' +
       '<input class="docsViewer__fieldInput" id="docsViewerPositionSearch" type="search" autocomplete="off">' +
@@ -39,17 +58,15 @@ export function openDocsViewerPositionModal(options) {
       mountSearchField(search);
       var placement = api.host.querySelector("#docsViewerPositionPlacement");
       var target = api.host.querySelector("#docsViewerPositionTarget");
+      if (options.initialPlacement) placement.value = options.initialPlacement;
       function renderDestinations() {
         var selectedId = target.selectedIndex < 0 ? null : target.value;
         var query = search.value.trim().toLowerCase();
-        target.innerHTML = destinations.filter(function (doc) {
-          return (!doc.doc_id || !query || doc.title.toLowerCase().includes(query));
-        }).filter(function (doc) {
-          return !rootOnly || placement.value !== "inside" || !doc.doc_id;
-        }).map(function (doc) {
-          var disabled = !doc.doc_id && placement.value !== "inside";
-          var label = "\u00a0\u00a0".repeat(doc.depth) + doc.title;
-          return '<option value="' + escapeHtml(doc.doc_id) + '"' + (disabled ? " disabled" : "") + '>' + escapeHtml(label) + '</option>';
+        target.innerHTML = options.getDestinations(placement.value).filter(function (destination) {
+          return !destination.id || !query || destination.title.toLowerCase().includes(query);
+        }).map(function (destination) {
+          var label = "\u00a0\u00a0".repeat(destination.depth) + destination.title;
+          return '<option value="' + escapeHtml(destination.id) + '"' + (destination.disabled ? " disabled" : "") + '>' + escapeHtml(label) + '</option>';
         }).join("");
         target.selectedIndex = -1;
         if (selectedId !== null) {

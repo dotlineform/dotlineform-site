@@ -31,6 +31,8 @@ import docs_media_actions  # noqa: E402
 import docs_media_metadata  # noqa: E402
 import docs_management_position  # noqa: E402
 import docs_management_delete  # noqa: E402
+import docs_book_copy  # noqa: E402
+import docs_book_tree  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_publish  # noqa: E402
 import docs_project_state  # noqa: E402
@@ -223,6 +225,17 @@ def docs_management_post_response(
         return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.DELETE_PATH:
         payload = docs_management_delete.delete_documents(repo_root, body, dry_run=dry_run)
+        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
+    if path in {routes.BOOK_COPY_PATH, routes.BOOK_TREE_PATH, routes.BOOK_SOURCES_PATH, routes.BOOK_CLEAR_COPIED_PATH}:
+        if dry_run:
+            raise ValueError("Book actions do not support dry_run")
+        action = {
+            routes.BOOK_COPY_PATH: docs_book_copy.copy_to_book,
+            routes.BOOK_TREE_PATH: docs_book_tree.save_book_tree,
+            routes.BOOK_SOURCES_PATH: docs_book_copy.save_chapter_sources,
+            routes.BOOK_CLEAR_COPIED_PATH: docs_book_copy.clear_copied_flags,
+        }[path]
+        payload = action(repo_root, body)
         return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
         return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)

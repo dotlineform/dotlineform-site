@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import docs_generated_reads
+from docs_book_copy import read_copied_flags
 import docs_catalogue_media
 from docs_catalogue_works_report import read_catalogue_works_report
 from docs_series_galleries_report import read_series_galleries_report
@@ -69,6 +70,10 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
+    if path == routes.BOOK_COPIED_PATH:
+        if params:
+            raise ValueError("Library copy flags do not accept parameters")
+        return read_copied_flags(repo_root)
     if path == routes.SELECTED_PATH:
         if params:
             raise ValueError("Selected Documents reads do not accept parameters")

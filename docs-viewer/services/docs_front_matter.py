@@ -1,4 +1,4 @@
-"""Shared scalar front matter, with literal blocks for document Summary."""
+"""Shared front matter, including Summary and Book source records."""
 
 from __future__ import annotations
 
@@ -8,12 +8,53 @@ from collections.abc import Collection, Mapping
 from dataclasses import dataclass
 from typing import Any
 
+from docs_document_identity import is_immutable_doc_id
+
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 STRICT_FRONT_MATTER_PATTERN = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", re.DOTALL)
 INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SAFE_PLAIN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .,&()/_'-]*$")
 SUMMARY_LITERAL_PATTERN = re.compile(r"\|(-)?(?:[ \t]+#.*)?\Z")
+BOOK_SOURCE_FIELDS = frozenset({"copied_from_library", "library_sources"})
+
+
+def book_source_record(value: Any) -> dict[str, str]:
+    if (
+        not isinstance(value, dict) or set(value) != {"doc_id", "title"}
+        or not isinstance(value["doc_id"], str) or not is_immutable_doc_id(value["doc_id"])
+        or not isinstance(value["title"], str) or not value["title"].strip()
+    ):
+        raise ValueError("Book source requires a Library document ID and title")
+    return value
+
+
+def book_source_records(value: Any) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        raise ValueError("Library sources must be a list")
+    records = [book_source_record(record) for record in value]
+    if len({record["doc_id"] for record in records}) != len(records):
+        raise ValueError("Library sources must use distinct document IDs")
+    return records
+
+
+def parse_book_source_block(key: str, lines: list[str]) -> Any:
+    sequence = key == "library_sources"
+    id_prefix = "  - doc_id:" if sequence else "  doc_id:"
+    title_prefix = "    title:" if sequence else "  title:"
+    if len(lines) % 2 or (not sequence and len(lines) != 2):
+        raise ValueError(f"{key} requires complete doc_id and title pairs")
+    records = []
+    for offset in range(0, len(lines), 2):
+        id_line, title_line = lines[offset:offset + 2]
+        if not id_line.startswith(id_prefix) or not title_line.startswith(title_prefix):
+            raise ValueError(f"{key} requires doc_id followed by title")
+        raw_title = title_line[len(title_prefix):].strip()
+        records.append({
+            "doc_id": parse_front_matter_value(id_line[len(id_prefix):]),
+            "title": json.loads(raw_title) if raw_title.startswith('"') else parse_front_matter_value(raw_title),
+        })
+    return book_source_records(records) if sequence else book_source_record(records[0])
 
 
 @dataclass(frozen=True)
@@ -85,7 +126,20 @@ def read_front_matter_fields(
         if (strict and key in seen) or ((strict or require_pairs) and not key):
             fail(index - 1, "has a blank or duplicate key")
         seen.add(key)
-        if key == "summary" and value_text.startswith(("|", ">")):
+        if key in BOOK_SOURCE_FIELDS:
+            block_start = index - 1
+            block = []
+            while index < len(lines) and lines[index].startswith(" ") and lines[index].strip():
+                block.append(lines[index].rstrip("\r\n"))
+                offset += len(lines[index])
+                index += 1
+            try:
+                if value_text:
+                    raise ValueError(f"{key} requires an indented block")
+                value = parse_book_source_block(key, block)
+            except ValueError as error:
+                fail(block_start, str(error))
+        elif key == "summary" and value_text.startswith(("|", ">")):
             marker = SUMMARY_LITERAL_PATTERN.fullmatch(value_text)
             if marker is None:
                 fail(index - 1, "summary literal block must use | or |-")
@@ -145,6 +199,15 @@ def format_front_matter_value(value: Any) -> str:
 
 
 def format_front_matter_field(key: str, value: Any) -> str:
+    if key in BOOK_SOURCE_FIELDS:
+        sequence = key == "library_sources"
+        records = value if sequence else [value]
+        lines = [f"{key}:"]
+        for record in records:
+            lines.append(f"  {'- ' if sequence else ''}doc_id: {record['doc_id']}")
+            title = json.dumps(record["title"], ensure_ascii=False)
+            lines.append(f"{'    ' if sequence else '  '}title: {title}")
+        return "\n".join(lines)
     if key == "summary" and isinstance(value, str):
         value = normalize_summary(value)
         if "\n" in value:

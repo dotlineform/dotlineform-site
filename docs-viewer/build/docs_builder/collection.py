@@ -95,6 +95,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
             row = self.manifest_row(doc)
             if self.config.stage == "working" and self.collection_id != "catalogue":
                 row["draft"] = doc.front_matter["draft"]
+                if self.collection_id == "book":
+                    for field in ("copied_from_library", "library_sources"):
+                        if field in doc.front_matter:
+                            row[field] = doc.front_matter[field]
             rows.append(row)
         payload: dict[str, Any] = {"docs": rows}
         return payload

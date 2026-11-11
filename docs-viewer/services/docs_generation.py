@@ -126,6 +126,9 @@ def generate_documents(
                 project_context_catalogue_targets(
                     context_rows[doc.doc_id], builder.catalogue_references, builder.related_galleries,
                 )
+        if collection == "book" and builder.config.stage == "working" and not builder.targeted_build:
+            from docs_book_tree import rebuild_book_tree
+            rebuild_book_tree(builder.media_owner, set(identities), write=write)
 
     if publication is not None:
         publication.prepare(builder, selected_docs, navigation,

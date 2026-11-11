@@ -88,8 +88,19 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
   return Promise.all([
     import("./docs-viewer-management-collection-default-contribution.js"),
     import("./docs-viewer-management-collection-composition.js")
-  ]).then(function (modules) {
+  ]).then(async function (modules) {
+    var bookTools;
+    if (contributionOptions.bookList && settings.managementContext && clientOptions.baseUrl
+      && ["library", "book"].includes(collection)) {
+      var bookModule = await import("./docs-viewer-book-tools.js");
+      bookTools = await bookModule.createBookReportTools({
+        collection: collection, clientOptions: clientOptions, root: managementModalRoot(settings),
+        startBusyOperation: settings.managementDocumentActions.startBusyOperation,
+        commitDocumentChange: settings.collectionProvider.commitDocumentChange, setStatus: settings.setStatus
+      });
+    }
     var defaultContribution = modules[0].createDocsViewerManagementCollectionDefaultContribution({
+      bookTools: bookTools,
       clientOptions: clientOptions,
       managementContext: Boolean(settings.managementContext),
       catalogueSearchHostId: settings.managementContext && collection === "catalogue" ? collectionConfig.reportHostDocId : "",
@@ -111,10 +122,26 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         ? settings.managementDocumentActions?.regenerateCatalogue
         : null,
       onPreparePackage: contributionOptions.onPreparePackage,
+      onNewDoc: settings.managementContext && clientOptions.baseUrl
+        ? function (target, context) {
+            var refreshDocument = bookTools?.withNewDocumentPlacement(context.refreshDocument) || context.refreshDocument;
+            return settings.managementDocumentActions.newDoc(target, { ...context, refreshDocument: refreshDocument });
+          }
+        : null,
       onImportDoc: settings.managementContext && clientOptions.baseUrl
         ? settings.managementDocumentActions.importDoc : null,
       onImport: settings.managementContext && clientOptions.baseUrl
         ? settings.managementDocumentActions.importDocs : null,
+      onDeleteSelection: collection === "book" && bookTools
+        ? async function (target, context) {
+            var module = await import("./docs-viewer-management-collection-delete-workflow.js");
+            return module.openBookSelectionDeleteWorkflow({
+              target: target, root: managementModalRoot(settings), restoreFocus: context.restoreFocus,
+              clientOptions: clientOptions, startBusyOperation: settings.managementDocumentActions.startBusyOperation,
+              commitDocumentChange: settings.collectionProvider.commitDocumentChange, setStatus: settings.setStatus
+            });
+          }
+        : null,
       onExport: settings.managementContext && clientOptions.baseUrl
         ? function (target, context) {
             return openCollectionExportWorkflow({
@@ -174,6 +201,10 @@ function mountCollectionDocumentActions(settings) {
       });
     }
     project();
+    if (target.collection === "book") {
+      const bookModule = await import("./docs-viewer-book-tools.js");
+      bookModule.mountBookChapterNavigation(settings, target);
+    }
     settings.collectionProvider.subscribeDocumentChanges(function (change) {
       if (!change.deleted && change.target.collection === target.collection && change.target.doc_id === target.doc_id && settings.content.isConnected) {
         record = change.record;
@@ -239,6 +270,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var collectionConfig = configuredCollection(settings, collection);
   var contribution = Promise.all([
     loadDocsViewerCollectionContribution(settings, parent, collectionConfig, {
+      bookList: true,
       onPreparePackage: settings.managementContext && reportManagementBaseUrl
         ? function (request, context) {
             return openCollectionPreparePackage(settings, request, context);

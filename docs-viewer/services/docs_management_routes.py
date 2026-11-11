@@ -52,6 +52,11 @@ PUBLISH_PATH = "/docs/publish"
 MOVE_PATH = "/docs/move"
 ORDER_CHILDREN_PATH = "/docs/order-children"
 DELETE_PATH = "/docs/delete"
+BOOK_COPY_PATH = "/docs/book/copy"
+BOOK_TREE_PATH = "/docs/book/tree"
+BOOK_SOURCES_PATH = "/docs/book/sources"
+BOOK_COPIED_PATH = "/docs/book/copied"
+BOOK_CLEAR_COPIED_PATH = "/docs/book/copied/clear"
 STATIC_HTML_EXPORT_PREVIEW_PATH = "/docs/export/static-html/preview"
 STATIC_HTML_EXPORT_APPLY_PATH = "/docs/export/static-html/apply"
 
@@ -80,6 +85,7 @@ GET_PATHS = (
     BROKEN_LINKS_PATH,
     PROJECT_STATE_PATH,
     UNCATALOGED_FILES_PATH,
+    BOOK_COPIED_PATH,
 )
 
 POST_PATHS = (
@@ -112,6 +118,10 @@ POST_PATHS = (
     MOVE_PATH,
     ORDER_CHILDREN_PATH,
     DELETE_PATH,
+    BOOK_COPY_PATH,
+    BOOK_TREE_PATH,
+    BOOK_SOURCES_PATH,
+    BOOK_CLEAR_COPIED_PATH,
     STATIC_HTML_EXPORT_PREVIEW_PATH,
     STATIC_HTML_EXPORT_APPLY_PATH,
 )

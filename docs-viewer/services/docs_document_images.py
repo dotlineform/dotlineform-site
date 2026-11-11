@@ -9,7 +9,7 @@ from docs_document_identity import is_document_id
 from docs_workspace_config import location_child
 
 
-THUMBNAIL_COLLECTIONS = frozenset({"library", "works", "concepts", "moments"})
+THUMBNAIL_COLLECTIONS = frozenset({"library", "book", "works", "concepts", "moments"})
 
 
 def document_thumbnail_filename(doc_id: str, *, collection: str) -> str:

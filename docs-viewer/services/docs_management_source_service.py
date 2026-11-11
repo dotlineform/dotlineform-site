@@ -201,7 +201,7 @@ def save_source_document(
     except (ValueError, OSError, RuntimeError) as error:
         raise ValueError(f"Source {resolved.doc_id} candidate preparation failed: {error}") from error
     writes, notes = prepare_source_media(repo_root, resolved, body["media"], media_uploads)
-    adopted_body, adopted_writes = prepare_source_media_adoption(repo_root, resolved, candidate.body, writes)
+    adopted_body, adopted_writes = prepare_source_media_adoption(repo_root, resolved, candidate.body, writes, doc_id=resolved.doc_id)
     writes.extend(adopted_writes)
     prepared, source_changed = finish_source_candidate(resolved, candidate, adopted_body, dry_run=dry_run)
     target = resolved.document

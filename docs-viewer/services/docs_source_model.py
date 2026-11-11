@@ -209,10 +209,19 @@ def new_document_source(
 ) -> SourceDoc:
     """Construct source from resolved identity and fields, without planning a request."""
     metadata = {"doc_id": doc_id, "title": title, "added_date": timestamp}
+    collection = getattr(config, "collection", "")
     if collection_supports_draft(config):
-        metadata["draft"] = True
+        metadata["draft"] = collection != "book"
+    if collection == "book":
+        heading = f"# {title}"
+        body = body.lstrip("\r\n")
+        first_line, newline, remaining = body.partition("\n")
+        if first_line.rstrip() == heading:
+            body = heading + newline + remaining
+        else:
+            body = heading + ("\n\n" + body if body else "\n")
     metadata = advance_doc_front_matter(metadata, timestamp=timestamp)
-    metadata = document_collection_front_matter(metadata, getattr(config, "collection", ""))
+    metadata = document_collection_front_matter(metadata, collection)
     body = body if body.startswith("\n") else "\n" + body
     return SourceDoc(
         path=path, source_text=format_source(metadata, body), front_matter=metadata,

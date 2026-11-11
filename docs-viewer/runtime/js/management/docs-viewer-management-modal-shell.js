@@ -268,6 +268,7 @@ export function openDocsViewerTextInputModal(options = {}) {
 
   return openDocsViewerManagementModal({
     root: options.root,
+    restoreFocus: options.restoreFocus,
     title: options.title,
     closeLabel: options.closeLabel || options.cancelLabel,
     size: options.size || "compact",

@@ -75,6 +75,12 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       invoke: options.onPreparePackage, unavailableReason: "Collection package preparation is unavailable."
     },
     {
+      id: DOCS_VIEWER_ACTION_IDS.NEW_COLLECTION_DOC, label: "New doc…",
+      buttonId: "docsViewerCollectionNewDocButton", artwork: "docsViewer__icon--file",
+      invoke: options.onNewDoc, unavailableReason: "Collection document creation is unavailable.",
+      refreshEffect: "open-created-document"
+    },
+    {
       id: DOCS_VIEWER_ACTION_IDS.IMPORT_DOC, label: "Import doc…",
       buttonId: "docsViewerCollectionImportDocButton", artwork: "docsViewer__icon--import",
       invoke: options.onImportDoc, unavailableReason: "Collection document import is unavailable."
@@ -85,6 +91,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       invoke: options.onImport, unavailableReason: "Collection import is unavailable."
     }
   ];
+  if (options.onDeleteSelection) {
+    menuActions.push({
+      id: DOCS_VIEWER_ACTION_IDS.DELETE, label: "Delete selected…",
+      requiresSelection: true,
+      buttonId: "docsViewerBookDeleteSelectedButton", artwork: "docsViewer__icon--trash",
+      invoke: options.onDeleteSelection
+    });
+  }
   var onRegenerateCatalogue = typeof options.onRegenerateCatalogue === "function"
     ? options.onRegenerateCatalogue
     : null;
@@ -92,6 +106,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     ? options.markdownLinkForDocument
     : null;
   var managementContext = Boolean(options.managementContext);
+  var bookTools = options.bookTools;
   var selectionOwner = options.selectionOwner || createDocsViewerCollectionSelectionOwner();
   var currentDocIds = [];
   var inventoryDocIds = [];
@@ -159,6 +174,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
     listToolbar.clearButton.disabled = !active || selected.size === 0;
     listToolbar.doneButton.disabled = !active;
+    bookTools?.projectSelection(listToolbar.bookControls, active ? eligible.filter(id => selected.has(id)) : []);
 
     listToolbar.menuActions.forEach(function (action, index) {
       var resolution = resolutions[index];
@@ -193,7 +209,10 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     selectionOwner.notify(event, {
       managementContext: managementContext
     });
-    if (event && event.type === "refresh") inventoryDocIds = event.docIds;
+    if (event && event.type === "refresh") {
+      inventoryDocIds = event.docIds;
+      if (event.membershipChanged) bookTools?.updateInventory(event.docIds);
+    }
     if (event && event.type === "projection") {
       currentDocIds = event.docIds;
     }
@@ -255,6 +274,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       host.appendChild(draftIcon);
       accessibleLabels.push("Draft");
     }
+    if (bookTools?.renderIndicator(host, docId)) accessibleLabels.push("Copied to Book");
     return { accessibleLabels: accessibleLabels };
   }
 
@@ -381,6 +401,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var clearButton = selectionCommandButton(documentRef, "clear", "Clear");
     var doneButton = selectionCommandButton(documentRef, "done", "Done");
     selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
+    var bookControls = bookTools?.mountSelectionControls(selectionControl, settings.renderList);
     settings.actionHost.replaceChildren(...(regenerateButton ? [regenerateButton] : []));
     if (sortButton) root.appendChild(sortButton);
     root.appendChild(selectButton);
@@ -401,6 +422,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar = {
       actionsButton: actionsButton,
       actionsHost: actionsHost,
+      bookControls: bookControls,
       clearButton: clearButton,
       document: documentRef,
       doneButton: doneButton,
@@ -447,9 +469,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         targetKind: action.requiresSelection ? "selection" : "collection",
         capability: true,
         emptyState: action.requiresSelection ? "disabled" : "enabled",
-        refreshEffect: "none",
-        handler: function (target) {
-          return action.invoke(target, { restoreFocus: actionsButton });
+        refreshEffect: action.refreshEffect || "none",
+        handler: function (target, context) {
+          return action.invoke(target, { ...context, restoreFocus: actionsButton });
         }
       };
       var registration = action.requiresSelection ? settings.registerSelectionAction(definition, {
@@ -643,6 +665,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     } : {}),
     captureListState: selectionOwner.snapshot,
     mountCatalogueSearchCopy: options.catalogueSearchHostId ? mountCatalogueSearchCopy : null,
+    mountSectionNavigation: bookTools?.mountSectionNavigation,
     restoreListState: function (saved) { selectionOwner.restore(saved, inventoryDocIds); },
     id: "default",
     notify: notify,

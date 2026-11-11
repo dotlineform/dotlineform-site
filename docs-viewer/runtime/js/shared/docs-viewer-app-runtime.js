@@ -332,6 +332,7 @@ export function startDocsViewerRuntime(options) {
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {
+      newDoc: function (target, options) { return managementRuntime.controller().newDoc(target, options); },
       importDoc: function (target, options) { return managementRuntime.controller().importDoc(target, options); },
       importDocs: function (target, options) { return managementRuntime.controller().importDocs(target, options); },
       startBusyOperation: function () { return managementRuntime.controller().startBusyOperation(); },

@@ -1,7 +1,46 @@
-import { deleteManagedCollectionDoc } from "./docs-viewer-management-client.js";
+import { deleteManagedCollectionDoc, deleteManagedDoc } from "./docs-viewer-management-client.js";
 import { managedDocumentTargetsEqual, normalizeManagedDocumentTarget } from "./docs-viewer-management-document-target.js";
 import { DOCS_VIEWER_ACTION_IDS } from "./docs-viewer-action-definitions.js";
 import { openDocsViewerConfirmModal } from "./docs-viewer-management-modals.js";
+
+/** Confirm the checked Book documents and apply the effects of one Delete request. */
+export async function openBookSelectionDeleteWorkflow(options) {
+  var target = options.target;
+  var count = target.doc_ids.length;
+  var label = count + " Book " + (count === 1 ? "document" : "documents");
+  var confirmed = await openDocsViewerConfirmModal({
+    root: options.root, restoreFocus: options.restoreFocus, title: "Delete " + label + "?",
+    body: "This permanently deletes the checked Book documents and their owned media and removes them from their sections. The Library originals stay in Library.",
+    primaryLabel: "Delete", primaryTone: "danger", initialFocus: "cancel"
+  });
+  if (!confirmed) return;
+
+  var stopBusy = options.startBusyOperation();
+  options.setStatus("", false);
+  try {
+    var payload;
+    var deleteError;
+    try {
+      payload = await deleteManagedDoc(target.doc_ids, { ...options.clientOptions, collection: target.collection });
+    } catch (error) {
+      deleteError = error;
+      payload = error.payload;
+    }
+    var failures = [];
+    for (var docId of payload?.deleted_doc_ids || []) {
+      failures.push(...(options.commitDocumentChange({
+        target: { collection: target.collection, doc_id: docId }, deleted: true
+      }) || []));
+    }
+    if (failures.length) {
+      var prefix = deleteError ? deleteError.message + " " : "Documents deleted. ";
+      throw new Error(prefix + "Retained views could not be updated: " + failures.map(failure => failure.message).join("; "));
+    }
+    if (deleteError) throw deleteError;
+  } finally {
+    stopBusy();
+  }
+}
 
 /** Confirm one loaded flat target and await its deletion and display completion. */
 export function createDocsViewerManagementCollectionDeleteWorkflow(options) {

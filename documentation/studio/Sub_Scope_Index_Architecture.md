@@ -63,7 +63,7 @@ import path to its implementation.
 
 ## Standard Collection Behaviour
 
-A configured collection record selects the shared list's title search, standard title/date sorting, normal empty/error states and exact document links. Manage adds draft indicators, supported sort controls, selection and Prepare Package. New uses the main Actions menu. The common exact-document context mounts supported collection actions in Edit, including Copy Link and Delete. Subject assignment and Folder opening belong to Source. Action availability follows the current document/collection policy.
+A configured collection record selects the shared list's title search, standard title/date sorting, normal empty/error states and exact document links. Manage adds draft indicators, supported sort controls, selection and Collection Actions. Use **New doc…** in Collection Actions to create a document in the displayed collection. The common exact-document context mounts supported collection actions in Edit, including Copy Link and Delete. Subject assignment and Folder opening belong to Source. Action availability follows the current document/collection policy.
 
 Default title search, including Moments and Concepts, matches the query anywhere in the title, consistently with Context. Both title and query use Unicode NFKC normalization, collapsed whitespace and case-insensitive comparison; `test` therefore matches `1 test`. An empty query retains every document. This filters the loaded collection titles without using the overall Docs Viewer Search index.
 
@@ -73,11 +73,17 @@ Manage uses one standard adapter for selection, row status and supported actions
 
 ## Flat Book Collections
 
-Library is a named collection with `collection_type: book-collection`, host `d-20260809-130120-870cc2` and icon `library`. The optional type is projected into browser configuration and selects shared collection browsing capabilities. It has the standard collection inventory, authored thumbnails, title search, title/recent sorting, selection, Import, Prepare Package and common document reader. It has no book data or tree renderer yet. Its documents participate in site Search and Recent through the explicit `include_in_site_search` policy and retain ordinary non-Catalogue draft exclusion.
+Library is a named collection with `collection_type: book-collection`, host `d-20260809-130120-870cc2` and icon `library`. The optional type is projected into browser configuration and selects shared collection browsing capabilities. Library has a flat inventory, authored thumbnails, title search, title/recent sorting, selection, Import, Prepare Package and the common document reader. Its documents participate in site Search and Recent through the explicit `include_in_site_search` policy and retain ordinary non-Catalogue draft exclusion.
 
 The shared report separates search-delay and sort-control capabilities from current pagination state. Context and Catalogue retain paginated browsing and other collections retain their current behavior. Library is paginated publicly; its explicit Manage-only contribution defaults pagination off and supplies a toggle using `dlf-paginate-on.svg` or `dlf-paginate-off.svg` to show the current mode. The existing toolbar mask supplies theme tint and sizing, with both icon mappings owned by the management stylesheet. A toggle clears checked/range selection, exits selection mode and resets the page to the start, keeping query and sort. The tab-scoped report snapshot remembers the chosen pagination mode. Rendering reuses the loaded inventory; the toggle performs no request, source write or generation and adds no search-pending guard. Public composition imports none of the local control or selection implementation.
 
 The collection report supplies its current pagination mode with the match count and page position to the shared pager. The pager alone owns its navigation visibility: controls appear only when pagination is enabled and more than one page exists. Unpaged lists show every matching row and no page controls, including when they exceed the normal 20-document page size.
+
+### Book Curation In Manage
+
+Book's private report has one tree of Parts and Sections. Both are headings that can hold ordered documents, and Parts can contain Sections. Click a heading to show its directly assigned documents or choose **Unfiled** to see documents awaiting placement. **New doc…** appends to the current heading, or creates an unfiled document from **Unfiled**. Book uses the shared **Position** modal with its own destinations. **Before** and **After** target another Book document, **Inside** appends to a heading, and **Inside → Unfiled** clears the placement. Each selected batch moves in displayed order. [Book source ownership](Source_Organisation.md#book-source-and-provenance)
+
+Library's **Copy to Book** action creates unfiled working copies from the checked originals. It can also create a chapter or append source records to an existing chapter. **Clear Copied to Book** clears the selected Library indicators. In Book, **Library sources…** edits the saved source list for one chapter. Use **Prepare package** for an editorial handoff and **Import doc…** to bring back Markdown as a new document. **Delete selected…** removes the checked Book documents and their placements. [Copy and media ownership](Media_And_Asset_Handling.md#source-save-media-adoption) · [Book Manage controls](../../docs-viewer/runtime/js/management/docs-viewer-book-tools.js)
 
 ## Reachability Is Not Ownership
 
@@ -210,7 +216,7 @@ The shared list loads the configured manifest and accepts the standard managemen
 
 ## Selection Lifecycle
 
-Collection checkbox selection belongs to its list owner. Collection Actions owns Export and Prepare package for checked IDs and Import doc/Import docs for the exact collection, including an empty collection with no checks. The Index has explicit row targeting and no checkbox selection; it retains subtree Delete but has no import, Export or Prepare package entry point.
+Collection checkbox selection belongs to its list owner. Collection Actions owns Export and Prepare package for checked IDs, plus New doc, Import doc and Import docs for the exact collection, including an empty collection with no checks. The Index uses explicit row targeting for actions such as subtree Delete.
 
 Select (`list-check.svg`) sits before Actions and explicitly enters selection mode. While active, it is replaced by All/Clear/Done and the row checkboxes are visible. Done clears selection and restores Select. Opening Actions has no selection effect, so imports require no checkbox interaction.
 

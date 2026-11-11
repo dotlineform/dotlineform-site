@@ -312,6 +312,10 @@ def committed_document_record(
         record["has_thumbnail"] = has_document_thumbnail(document_config, doc_id) if thumbnail is None else thumbnail
     if source_model.collection_supports_draft(document_config):
         record["draft"] = front_matter["draft"]
+    if collection == "book":
+        for field in ("copied_from_library", "library_sources"):
+            if field in front_matter:
+                record[field] = front_matter[field]
     if not collection:
         record.update(ui_status=str(front_matter.get("ui_status") or ""), parent_id=parent_id)
     return record

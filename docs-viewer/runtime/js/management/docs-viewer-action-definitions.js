@@ -13,6 +13,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   SOURCE_INSERT_DOC_LINK: "source-insert-doc-link",
   NEW: "new",
   NEW_CHILD: "new-child",
+  NEW_COLLECTION_DOC: "new-collection-doc",
   NEW_SIBLING: "new-sibling",
   OPEN: "open",
   OPEN_VSCODE: "open-vscode",
@@ -58,7 +59,8 @@ var STRUCTURAL_DOCUMENT_ACTION_IDS = new Set([IDS.DELETE, IDS.SET_SELECTED, IDS.
 
 function documentActionRestriction(actionId, target, collectionHostDocIds) {
   if (!target) return "";
-  if (actionId === IDS.THUMB && !["library", "works", "concepts", "moments"].includes(target.collection)) {
+  if (actionId === IDS.NEW && target.collection) return "Use Collection Actions to create a collection document.";
+  if (actionId === IDS.THUMB && !["library", "book", "works", "concepts", "moments"].includes(target.collection)) {
     return "Thumb is available for authored collection documents.";
   }
   if (target.collection === "catalogue" && !CATALOGUE_ACTION_IDS.has(actionId)) {
@@ -90,6 +92,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.SOURCE_INSERT_DOC_LINK]: actionDefinition(IDS.SOURCE_INSERT_DOC_LINK, TARGETS.ACTIVE_DOCUMENT),
   [IDS.NEW]: actionDefinition(IDS.NEW, TARGETS.WORKSPACE),
   [IDS.NEW_CHILD]: actionDefinition(IDS.NEW_CHILD, TARGETS.DOCUMENT),
+  [IDS.NEW_COLLECTION_DOC]: actionDefinition(IDS.NEW_COLLECTION_DOC, TARGETS.COLLECTION),
   [IDS.NEW_SIBLING]: actionDefinition(IDS.NEW_SIBLING, TARGETS.DOCUMENT),
   [IDS.OPEN]: actionDefinition(IDS.OPEN, TARGETS.DOCUMENT),
   [IDS.OPEN_VSCODE]: actionDefinition(IDS.OPEN_VSCODE, TARGETS.DOCUMENT),
@@ -167,7 +170,7 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     if (!targetDocIds.length) disabledReason = "Select one or more collection documents.";
   }
 
-  var restriction = definition.target !== TARGETS.WORKSPACE || [IDS.NEW, IDS.IMPORT_DOC].includes(definition.id)
+  var restriction = definition.target !== TARGETS.WORKSPACE || definition.id === IDS.NEW
     ? documentActionRestriction(definition.id, documentTarget, normalizeIds(context.collectionHostDocIds)) : "";
   if (restriction) disabledReason = restriction;
   return {

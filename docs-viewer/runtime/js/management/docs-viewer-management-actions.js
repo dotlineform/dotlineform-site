@@ -1,5 +1,5 @@
 import { publishManagedDocs } from "./docs-viewer-management-client.js";
-import { openDocsViewerPositionModal } from "./docs-viewer-position-modal.js";
+import { openDocsViewerIndexPositionModal } from "./docs-viewer-position-modal.js";
 import {
   deleteManagedDoc,
   createManagedDoc,
@@ -292,6 +292,7 @@ export function createDocsViewerManagementActionController(options) {
     var modalSettings = optionsForModal || {};
     return openDocsViewerTextInputModal({
       root: root,
+      restoreFocus: modalSettings.restoreFocus,
       title: title,
       body: modalSettings.body,
       label: "title",
@@ -388,7 +389,7 @@ export function createDocsViewerManagementActionController(options) {
 
     var titleResult = await openCreateTitleModal(
       "New",
-      { compactLabel: true }
+      { compactLabel: true, restoreFocus: createSettings.restoreFocus }
     );
     if (!titleResult || !titleResult.confirmed) return null;
     var fields = { title: titleResult.value };
@@ -587,7 +588,7 @@ export function createDocsViewerManagementActionController(options) {
     var doc = targetDocId ? actionTargetDoc(DOCS_VIEWER_ACTION_IDS.POSITION, targetDocId) : null;
     if (!doc || management.managementBusy) return;
     hideContextMenu();
-    return openDocsViewerPositionModal({
+    return openDocsViewerIndexPositionModal({
       root: root,
       restoreFocus: restoreFocus,
       doc: doc,

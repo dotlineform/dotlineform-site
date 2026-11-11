@@ -4,11 +4,12 @@ import os
 from pathlib import Path
 from typing import Any
 
+from docs_book_tree import remove_book_placements
 from docs_document_identity import is_document_id
 from docs_document_images import THUMBNAIL_COLLECTIONS, document_thumbnail_filename
 from docs_index_order import exclude_nodes, index_order_path, index_order_text, read_index_order, tree_parent_ids
 from docs_management_context import log_event
-from docs_management_document_target import ManagedDocumentCollection, normalize_managed_document_target, resolve_managed_document_collection
+from docs_management_document_target import ManagedDocumentCollection, confined_document_path, normalize_managed_document_target, resolve_managed_document_collection
 from docs_publication_paths import confined
 from docs_publication_preparation import PublicationHandoffError, PublicationPreparation, load_preparation
 from docs_selected_documents import read_selected, selected_path, selected_text
@@ -61,17 +62,24 @@ def collect_deleted_media(owner: ManagedDocumentCollection, doc_ids: list[str], 
 
 def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
     collection = "collection" in body
-    expected = {"collection", "doc_id", "confirm"} if collection else {"doc_ids", "confirm"}
+    book_selection = body.get("collection") == "book" and "doc_ids" in body
+    if book_selection:
+        expected = {"collection", "doc_ids", "confirm"}
+    else:
+        expected = {"collection", "doc_id", "confirm"} if collection else {"doc_ids", "confirm"}
     if set(body) != expected or body["confirm"] is not True:
         raise ValueError("Delete requires exact targets and confirm=true")
-    if collection:
+    if collection and not book_selection:
         target = normalize_managed_document_target({key: body[key] for key in ("collection", "doc_id")})
         requested_ids = [target["doc_id"]]
     else:
         if not isinstance(body["doc_ids"], list) or not body["doc_ids"]:
             raise ValueError("Delete requires a nonempty document ID array")
-        requested_ids = [normalize_managed_document_target({"doc_id": value})["doc_id"] for value in body["doc_ids"]]
-        target = {"doc_id": requested_ids[0]}
+        identity = {"collection": "book"} if book_selection else {}
+        requested_ids = [normalize_managed_document_target({**identity, "doc_id": value})["doc_id"] for value in body["doc_ids"]]
+        if book_selection and len(set(requested_ids)) != len(requested_ids):
+            raise ValueError("Book Delete requires distinct document IDs")
+        target = identity if book_selection else {"doc_id": requested_ids[0]}
     owner = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
     require_document_authoring(owner.parent_config)
     if owner.collection == "catalogue":
@@ -86,6 +94,11 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
         tree = None
         parents = None
         delete_ids = requested_ids
+        source_paths = {}
+        if book_selection:
+            # Resolve every checked source before the batch makes its first removal.
+            for doc_id in delete_ids:
+                source_paths[doc_id] = confined_document_path(owner.source_root, doc_id)
         if not collection:
             order_path = index_order_path(owner.parent_config)
             tree = read_index_order(order_path)
@@ -116,9 +129,12 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
         media_directories = collect_deleted_media(owner, delete_ids, publication)
         for doc_id in delete_ids:
             payload.update(phase="source", failing_target={**owner.request_target(), "doc_id": doc_id})
-            path = owner.source_root / f"{doc_id}.md"
-            if not is_document_id(doc_id, collection=owner.collection) or path.is_symlink() or path.resolve().parent != owner.source_root:
-                raise ValueError("Delete source must be an exact confined document path")
+            if book_selection:
+                path = source_paths[doc_id]
+            else:
+                path = owner.source_root / f"{doc_id}.md"
+                if not is_document_id(doc_id, collection=owner.collection) or path.is_symlink() or path.resolve().parent != owner.source_root:
+                    raise ValueError("Delete source must be an exact confined document path")
             path.unlink()
             payload["deleted_doc_ids"].append(doc_id)
         payload["source_deleted"] = True
@@ -128,6 +144,9 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
             write_text_atomic(order_path, index_order_text(exclude_nodes(tree, removed)))
             parents = {doc_id: parent for doc_id, parent in parents.items() if doc_id not in removed}
             payload["index_updated"] = True
+        elif owner.collection == "book":
+            payload["phase"] = "Book tree"
+            remove_book_placements(owner, removed)
         payload["phase"] = "selected"
         if rows != selected["docs"]:
             write_text_atomic(selected_path(owner.parent_config), selected_text(updated_selected))

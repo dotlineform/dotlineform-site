@@ -5,10 +5,9 @@ import { managedDocumentTargetsEqual, normalizeManagedDocumentTarget } from "./d
 import { openDocumentThumbModal } from "./docs-viewer-management-thumb-modal.js";
 
 /**
- * Own context-aware New and Edit actions' exact targets and availability.
+ * Own workspace New and Edit actions' exact targets and availability.
  * Collection loading/error states never fall back to the ordinary report host.
- * Writes use management services; the mounted report projects committed draft
- * changes and owns refresh/open after collection creation. Selection reads are
+ * The mounted report projects committed draft changes. Selection reads are
  * retained for one exact target and stale completions cannot replace its state.
  */
 export function createDocsViewerManagementContextActions(options) {
@@ -23,10 +22,8 @@ export function createDocsViewerManagementContextActions(options) {
     var target = context.documentTarget;
     var record = context.documentRecord;
     var exact = Boolean(target && record && record.doc_id === target.doc_id);
-    var report = context.collectionTarget ? context : null;
-    var readyReport = report && ["list", "detail"].includes(report.state) && exact;
     var resolutions = {
-      create: options.resolveAction(ACTION_IDS.NEW, report ? context.collectionTarget : target || {}),
+      create: options.resolveAction(ACTION_IDS.NEW, context.collectionTarget || target),
       vscode: options.resolveAction(ACTION_IDS.OPEN_VSCODE, target),
       draft: options.resolveAction(ACTION_IDS.SET_DRAFT, target),
       selected: options.resolveAction(ACTION_IDS.SET_SELECTED, target),
@@ -36,13 +33,7 @@ export function createDocsViewerManagementContextActions(options) {
     var blocked = unavailable || management.managementBusy;
     var reason = unavailable ? "Docs management service unavailable." : "";
     var createReason = reason || resolutions.create.disabledReason;
-    var createPending = report
-      ? !readyReport || typeof report.refreshDocument !== "function"
-      : !exact && Boolean(options.selectedDocument.selectedDocId);
-    var collection = null;
-    if (!blocked && !createReason && report && !createPending) {
-      collection = report.collectionTarget;
-    }
+    var createPending = !exact && Boolean(options.selectedDocument.selectedDocId);
     var sourceTarget = rendered && exact ? target : null;
     var documentReason = reason || (!rendered ? "Return to the document to use this action." : "");
     var draftReason = documentReason || resolutions.draft.disabledReason;
@@ -50,8 +41,8 @@ export function createDocsViewerManagementContextActions(options) {
     var vscodeReason = reason || resolutions.vscode.disabledReason || (!sourceTarget ? "Open a valid document first." : "");
     var selectedReason = documentReason || resolutions.selected.disabledReason;
     return {
-      context: context, target: exact ? normalizeManagedDocumentTarget(target) : null,
-      record: record, collection: collection, resolutions: resolutions,
+      target: exact ? normalizeManagedDocumentTarget(target) : null,
+      record: record, resolutions: resolutions,
       newReason: createReason,
       newDisabled: blocked || createPending || Boolean(createReason),
       vscodeTarget: sourceTarget,
@@ -100,8 +91,7 @@ export function createDocsViewerManagementContextActions(options) {
     var selectionReason = state.selectedReason || (selection && selection.error) || "";
     options.project(ACTION_IDS.NEW, {
       hidden: state.resolutions.create.hidden,
-      label: "New", disabled: state.newDisabled, reason: state.newReason
-        || (state.collection ? "New document in " + state.context.collectionLabel : "New document")
+      label: "New", disabled: state.newDisabled, reason: state.newReason || "New document"
     });
     options.project(ACTION_IDS.OPEN_VSCODE, {
       hidden: state.resolutions.vscode.hidden,
@@ -178,9 +168,7 @@ export function createDocsViewerManagementContextActions(options) {
       });
     }
     if (actionId === ACTION_IDS.NEW && !state.newDisabled) {
-      return state.collection
-        ? options.actions.handleCreateCollectionDocument(state.collection, { refreshAndSelect: state.context.refreshDocument })
-        : options.actions.handleCreateDoc(state.target);
+      return options.actions.handleCreateDoc(state.target);
     }
     if (actionId === ACTION_IDS.OPEN_VSCODE && !state.vscodeDisabled) {
       return options.actions.handleOpenSource("vscode", state.vscodeTarget);

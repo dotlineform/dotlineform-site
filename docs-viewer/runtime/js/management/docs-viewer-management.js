@@ -196,6 +196,14 @@ export function initDocsViewerManagement(context) {
     });
   }
 
+  function openCollectionNewDoc(destination, options = {}) {
+    if (management.managementBusy || !management.managementAvailable || resolveAction(DOCS_VIEWER_ACTION_IDS.NEW_COLLECTION_DOC, destination).disabled) return;
+    return actionController.handleCreateCollectionDocument(destination, {
+      refreshAndSelect: options.refreshDocument,
+      restoreFocus: options.restoreFocus
+    });
+  }
+
   function managementClientOptions() {
     return {
       baseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
@@ -751,6 +759,7 @@ export function initDocsViewerManagement(context) {
     initialize: initializeManagement,
     importDocs: openCollectionImport,
     importDoc: openCollectionImportDoc,
+    newDoc: openCollectionNewDoc,
     publishCollectionReportState: publishCollectionReportState,
     render: renderManagementUi,
   };

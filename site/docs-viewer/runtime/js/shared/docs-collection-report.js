@@ -297,7 +297,8 @@ function updateFilterControls(state) {
 }
 
 function visibleDocuments(state) {
-  return state.browsingData.project(state.query, state.sortMode);
+  var rows = state.browsingData.project(state.query, state.sortMode);
+  return state.sectionNavigation ? state.sectionNavigation.project(rows) : rows;
 }
 
 function loadGallerySearch(state, search) {
@@ -469,6 +470,9 @@ function renderListToolbar(state, retainedRows) {
       return state.openDocument(target);
     },
     refreshCollection: state.management.refreshCollection,
+    renderList: function () {
+      if (state.mounted) renderListProjectionContained(state, "collection-controls-changed");
+    },
     sort: state.features.filterToolbarSort ? null : listSortContext(state)
   });
   if (!host.childNodes.length) return;
@@ -620,6 +624,7 @@ function captureListControls(state) {
   return { query: state.query, sort: state.sortMode,
     page: state.searchTimer !== null ? 0 : state.pageIndex,
     ...(typeof state.contribution?.paginationDefault === "boolean" ? { pagination: state.pagedBrowsing } : {}),
+    ...(state.sectionNavigation ? { section: state.sectionNavigation.selected() } : {}),
     contribution: captureContribution ? captureContribution.call(state.contribution) : null };
 }
 
@@ -633,6 +638,7 @@ function restoreListControls(state, saved) {
     state.pagedBrowsing = saved.pagination;
   }
   state.pageIndex = Number.isInteger(saved.page) && saved.page >= 0 ? saved.page : 0;
+  state.sectionNavigation?.restore(saved.section);
   var restoreContribution = contributionCallback(state.contribution, "restoreListState");
   if (restoreContribution) restoreContribution.call(state.contribution, saved.contribution);
   state.listNeedsRender = true;
@@ -816,6 +822,17 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     isReady: function () { return state.mounted && state.manifestLoaded && root.dataset.reportState === "list"; },
     captureControls: function () { return captureListControls(state); },
     restoreControls: function (saved) { restoreListControls(state, saved); }
+  });
+  state.sectionNavigation = contributionCallback(contribution, "mountSectionNavigation")?.({
+    root: root,
+    rows: function () { return state.browsingData.rows; },
+    change: function () {
+      state.pageIndex = 0;
+      if (state.manifestLoaded) {
+        renderListProjectionContained(state, "section-change");
+        remembered.save();
+      }
+    }
   });
   function restoreRememberedList() {
     if (!state.manifestLoaded || !state.mounted || root.dataset.reportState === "error") return;

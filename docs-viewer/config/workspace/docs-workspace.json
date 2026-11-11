@@ -110,6 +110,14 @@
           "report_host_doc_id": "d-20260809-130120-870cc2"
         },
         {
+          "collection": "book",
+          "document_media": true,
+          "icon": "dlf-doc",
+          "include_in_site_search": false,
+          "title": "Book",
+          "report_host_doc_id": "d-20261111-120000-5af14d"
+        },
+        {
           "collection": "works",
           "document_media": true,
           "icon": "dlf-context",

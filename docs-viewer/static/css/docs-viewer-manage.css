@@ -135,6 +135,10 @@
   mask-image: url("../icons/import.svg");
 }
 
+.docsViewer__icon--library{
+  mask-image: url("../icons/library.svg");
+}
+
 .docsViewer__icon--list-check{
   mask-image: url("../icons/list-check.svg");
 }
@@ -190,6 +194,44 @@
 .docsViewerReport__contributionToolbar{
   display: inline-flex;
   align-items: center;
+}
+
+.docsViewerReport[data-report-collection="library"] .docsViewerReport__row{
+  position: relative;
+}
+
+.docsViewerReport[data-report-collection="library"] .docsViewerReport__rowContribution--titlePrefix{
+  position: absolute;
+  inset-inline-end: calc(100% + 0.35rem);
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+}
+
+.docsViewerReport[data-report-collection="library"] .docsViewerReport__rowContribution--titlePrefix > span{
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.docsViewerReport[data-report-collection="library"] .docsViewerReport__rowContribution--titlePrefix .docsViewer__draftIndicator{
+  margin: 0;
+}
+
+.docsViewerBook__clearCopyFlag{
+  position: relative;
+}
+
+.docsViewerBook__clearCopyFlag::after{
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 1.35rem;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  box-shadow: 0 0 0 1px var(--docs-viewer-panel);
+  transform: translate(-50%, -50%) rotate(-45deg);
+  pointer-events: none;
 }
 
 .docsViewerReport__rowContribution--leading{
