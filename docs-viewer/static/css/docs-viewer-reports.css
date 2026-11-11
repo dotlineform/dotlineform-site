@@ -182,7 +182,8 @@
   color: var(--docs-viewer-selection-text);
 }
 
-.docsViewerReport__collectionButton--thumbnail{
+.docsViewerReport__collectionButton--thumbnail,
+.docsViewerReport[data-report-id="selected_documents"] .docsViewerReport__collectionButton{
   display: flex;
   align-items: center;
   gap: var(--docs-viewer-space-3);

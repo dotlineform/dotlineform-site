@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-7a65e8b9625f65f42ffe084cb25ffff7",
-    "generated_at_utc": "2026-11-09T22:19:53Z",
+    "version": "blake2b-fb97add3ff4a64ac51602aef1b497c99",
+    "generated_at_utc": "2026-11-11T11:57:03Z",
     "count": 156
   },
   "fields": [
@@ -16,8 +16,8 @@
     {
       "id": "d-20260426-164043-e14f49",
       "title": "dotlineform",
-      "last_updated": "2026-10-08",
-      "display_meta": "2026-10-08"
+      "last_updated": "2026-11-11",
+      "display_meta": "2026-11-11"
     },
     {
       "id": "d-20260624-213316-478639",
@@ -6657,6 +6657,7 @@
     },
     "artwork": {
       "body": [
+        0,
         71
       ]
     },
@@ -16818,6 +16819,7 @@
         86
       ],
       "body": [
+        0,
         24,
         25,
         63,
@@ -17732,6 +17734,11 @@
     "consistently": {
       "body": [
         119
+      ]
+    },
+    "consisting": {
+      "body": [
+        0
       ]
     },
     "consists": {
@@ -25402,6 +25409,9 @@
     },
     "dotlineform": {
       "title": [
+        0
+      ],
+      "body": [
         0
       ]
     },
@@ -48002,6 +48012,7 @@
         12
       ],
       "body": [
+        0,
         70,
         92
       ]
@@ -59797,6 +59808,7 @@
     },
     "ongoing": {
       "body": [
+        0,
         15,
         17,
         38,
@@ -65418,6 +65430,11 @@
         38
       ]
     },
+    "portfolio": {
+      "body": [
+        0
+      ]
+    },
     "porting": {
       "body": [
         40
@@ -67945,6 +67962,7 @@
         43
       ],
       "body": [
+        0,
         15,
         27,
         35,
@@ -74154,6 +74172,7 @@
         43
       ],
       "body": [
+        0,
         14,
         23,
         35,
@@ -94425,6 +94444,7 @@
         61
       ],
       "body": [
+        0,
         10,
         23,
         25,
@@ -97157,6 +97177,7 @@
     },
     "writing": {
       "body": [
+        0,
         7,
         28,
         35,

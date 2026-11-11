@@ -17,6 +17,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
 
   return mountDocsViewerPublicReport({
     appContext: settings.appContext,
+    workspaceConfig: settings.workspaceConfigState.activeConfig,
     content: settings.content,
     registerRetainedView: settings.registerRetainedView,
     doc: settings.doc,

@@ -53,6 +53,12 @@ export async function mountSelectedDocumentsReport(context) {
       const link = documentRef.createElement("a");
       link.className = "docsViewerReport__cellLink docsViewerReport__collectionButton";
       link.href = row.href;
+      const icon = documentRef.createElement("span");
+      icon.className = "docsViewer__listIcon";
+      icon.setAttribute("aria-hidden", "true");
+      if (row.collectionIconUrl) icon.style.maskImage = `url("${row.collectionIconUrl}")`;
+      else icon.classList.add("docsViewer__icon--dlf-doc");
+      link.appendChild(icon);
       if (reserveThumbnailSpace) appendCollectionThumbnail(link, row.thumbnailSrc || undefined);
       const title = documentRef.createElement("span");
       title.className = "docsViewerReport__title";
@@ -112,7 +118,7 @@ export async function mountSelectedDocumentsReport(context) {
     if (released) return false;
     const rows = await fetchSelectedDocumentRows(context.selectedUrl);
     if (released) return false;
-    data = prepareSelectedDocuments(rows, context.viewerUrlForDocument);
+    data = prepareSelectedDocuments(rows, context.viewerUrlForDocument, context.workspaceConfig.collectionsById);
     data.rows.forEach((row) => prepareThumbnail(row));
     await resolvePendingThumbnails();
     if (released) return false;

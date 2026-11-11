@@ -23,7 +23,7 @@ function sortSelectedDocumentRows(rows) {
 
 /**
  * @typedef {{doc_id: string, title: string, last_updated: string, collection?: string, has_thumbnail?: boolean}} SelectedDocumentRow
- * @typedef {SelectedDocumentRow & {key: string, href: string, thumbnailWorkId: string, thumbnailSrc: string}} PreparedSelectedDocumentRow
+ * @typedef {SelectedDocumentRow & {key: string, href: string, collectionIconUrl: string, thumbnailWorkId: string, thumbnailSrc: string}} PreparedSelectedDocumentRow
  * @typedef {{rows: PreparedSelectedDocumentRow[], byKey: Map<string, PreparedSelectedDocumentRow>}} SelectedDocumentsData
  */
 
@@ -39,12 +39,14 @@ function thumbnailWorkId(row) {
 /** Prepare completed rows once; exact route ownership remains with the reader.
  * @param {SelectedDocumentRow[]} rows Saved selection rows, without another schema audit.
  * @param {function(string, {collection: string}): string} viewerUrlForDocument Active reader's route owner.
+ * @param {Map<string, {iconUrl: string}>} collectionsById Configured collection artwork.
  * @returns {SelectedDocumentsData} Ordered view-owned rows with indexed identities.
  */
-export function prepareSelectedDocuments(rows, viewerUrlForDocument) {
+export function prepareSelectedDocuments(rows, viewerUrlForDocument, collectionsById) {
   const prepared = rows.map((row) => ({
     ...row, key: selectedKey(row.collection, row.doc_id),
     href: viewerUrlForDocument(row.doc_id, { collection: row.collection || "" }),
+    collectionIconUrl: row.collection ? collectionsById.get(row.collection).iconUrl : "",
     thumbnailWorkId: thumbnailWorkId(row), thumbnailSrc: ""
   }));
   return { rows: sortSelectedDocumentRows(prepared), byKey: new Map(prepared.map((row) => [row.key, row])) };
