@@ -116,6 +116,7 @@ class DocsCollectionConfig:
     preview: DocsPreviewConfig
     public_projection: DocsPublicProjectionConfig | None
     collection_type: str = ""
+    pin_starred_documents: bool = False
 
 
 @dataclass(frozen=True)
@@ -463,7 +464,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
     for index, raw_item in enumerate(raw):
         field = f"stages.{stage}.collections[{index}]"
         item = _object(raw_item, field=field, required={"collection", "document_media", "title", "icon", "report_host_doc_id", "include_in_site_search"}, optional={
-            "public_title", "supports_return_import", "collection_customisation", "collection_type",
+            "public_title", "supports_return_import", "collection_customisation", "collection_type", "pin_starred_documents",
         })
         if stage == "preview":
             item = {**item, "supports_return_import": False}
@@ -508,6 +509,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
             media=_media(media_settings, assets=assets, stage=stage, collection=child) if owns_media else None,
             public_projection=child_projection,
             collection_type=collection_type,
+            pin_starred_documents=_boolean(item.get("pin_starred_documents", False), field=f"{field}.pin_starred_documents"),
         ))
     return tuple(result)
 

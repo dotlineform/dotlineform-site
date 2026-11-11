@@ -53,6 +53,8 @@ def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, publ
         }
         if child.collection_type:
             record["collection_type"] = child.collection_type
+        if child.pin_starred_documents:
+            record["pin_starred_documents"] = True
         records.append(record)
     return records
 

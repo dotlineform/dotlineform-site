@@ -633,6 +633,7 @@ export function initDocsViewerManagement(context) {
     documentIndex: documentIndex,
     actions: actionController,
     commitDocumentChange: context.commitDocumentChange,
+    commitDocumentStar: context.commitDocumentStar,
     resolveAction: resolveAction,
     documentActionContext: context.documentActionContext,
     activeViewState: context.activeViewState,

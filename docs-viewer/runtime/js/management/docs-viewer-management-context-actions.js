@@ -158,6 +158,7 @@ export function createDocsViewerManagementContextActions(options) {
         throw new Error("Selected Documents response did not match the requested document.");
       }
       if (selectedState === selection) selection.selected = selected;
+      options.commitDocumentStar(response);
     } catch (error) {
       options.setMessage(error.message || "Document selection could not be saved.", true);
     } finally {

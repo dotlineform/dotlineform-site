@@ -91,6 +91,8 @@ export function createDocsViewerWorkspaceProvider(options) {
   if (source) {
     provider.commitDocumentChange = source.commitDocumentChange;
     provider.subscribeDocumentChanges = source.subscribeDocumentChanges;
+    provider.commitDocumentStar = source.commitDocumentStar;
+    provider.subscribeDocumentStars = source.subscribeDocumentStars;
   }
   if (source && typeof source.readMetadata === "function") provider.readMetadata = source.readMetadata;
   if (source && typeof source.readSource === "function") {

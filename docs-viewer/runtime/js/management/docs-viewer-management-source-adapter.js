@@ -18,6 +18,7 @@ export function createDocsViewerManagementSourceAdapter(options) {
   if (!baseUrl) return null;
 
   var changeListeners = new Set();
+  var starListeners = new Set();
   function commitDocumentChange(change) {
     var target = documentTarget(change.target);
     if (!change.deleted && (!change.record || change.record.doc_id !== target.doc_id)) throw new Error("Committed record did not match its target.");
@@ -49,6 +50,8 @@ export function createDocsViewerManagementSourceAdapter(options) {
   var adapter = {
     commitDocumentChange: commitDocumentChange,
     subscribeDocumentChanges: function (listener) { changeListeners.add(listener); return function () { changeListeners.delete(listener); }; },
+    commitDocumentStar: function (change) { starListeners.forEach(function (listener) { listener(change); }); },
+    subscribeDocumentStars: function (listener) { starListeners.add(listener); return function () { starListeners.delete(listener); }; },
     readDocumentLinkTargets: function () {
       return readDocumentLinkTargets(clientOptions());
     },

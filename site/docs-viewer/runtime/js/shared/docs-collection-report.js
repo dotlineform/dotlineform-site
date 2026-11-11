@@ -1,7 +1,7 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import { createDocsCollectionReportState } from "./docs-collection-report-state.js";
-import { fetchDocsCollectionManifest } from "./docs-viewer-data.js";
+import { fetchDocsCollectionManifest, fetchSelectedDocumentRows } from "./docs-viewer-data.js";
 import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-filter.js";
 import {
   COLLECTION_PAGE_SIZE,
@@ -95,7 +95,7 @@ function notifyContribution(state, detail) {
   }, detail || {}));
 }
 
-function appendDocRow(state, doc, reserveThumbnailSpace) {
+function appendDocRow(state, doc, reserveThumbnailSpace, rowsNode) {
   var docId = doc.docId;
   var row = document.createElement("li");
   row.className = "docsViewerReport__row";
@@ -109,7 +109,7 @@ function appendDocRow(state, doc, reserveThumbnailSpace) {
   title.className = "docsViewerReport__cellLink docsViewerReport__collectionButton";
   title.href = doc.href;
   if (reserveThumbnailSpace) appendCollectionThumbnail(title, doc.thumbnailSrc || undefined,
-    state.pagedBrowsing ? "eager" : "lazy");
+    state.pagedBrowsing && rowsNode === state.rowsNode ? "eager" : "lazy");
 
   var titlePrefixHost = document.createElement("span");
   titlePrefixHost.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--titlePrefix";
@@ -142,7 +142,7 @@ function appendDocRow(state, doc, reserveThumbnailSpace) {
   if (leadingHost.childNodes.length) row.appendChild(leadingHost);
   row.appendChild(title);
   if (trailingHost.childNodes.length) row.appendChild(trailingHost);
-  state.rowsNode.appendChild(row);
+  rowsNode.appendChild(row);
   return {
     hasLeadingContent: leadingHost.childNodes.length > 0,
     leadingHost: leadingHost,
@@ -245,6 +245,14 @@ function renderShell(context, collection, features) {
   var table = document.createElement("div");
   table.className = "docsViewerReport__table";
 
+  var pinnedRows = null;
+  if (collection.pinStarredDocuments) {
+    pinnedRows = document.createElement("ul");
+    pinnedRows.className = "docsViewerReport__rows docsViewerReport__pinnedRows";
+    pinnedRows.setAttribute("aria-label", "Starred documents");
+    table.appendChild(pinnedRows);
+  }
+
   var rows = document.createElement("ul");
   rows.className = "docsViewerReport__rows";
   rows.setAttribute("aria-label", collectionItemsLabel(collection));
@@ -268,6 +276,7 @@ function renderShell(context, collection, features) {
     filterClearNode: filters.clearNode,
     filterInputNode: filters.inputNode,
     filterToolbarNode: filters.toolbarNode,
+    pinnedRowsNode: pinnedRows,
     rowsNode: rows,
     statusNode: status,
     tableNode: table
@@ -362,12 +371,12 @@ function bindCollectionKeyboardNavigation(state) {
         cancelCollectionSearch(state);
         if (!renderListProjectionContained(state, "collection-keyboard-search")) return;
       }
-      state.rowsNode.querySelector(".docsViewerReport__collectionButton")?.focus();
+      state.tableNode.querySelector(".docsViewerReport__collectionButton")?.focus();
       return;
     }
 
     var link = event.target.closest(".docsViewerReport__collectionButton");
-    if (!link || !state.rowsNode.contains(link)) return;
+    if (!link || !state.tableNode.contains(link)) return;
     event.preventDefault();
     event.stopPropagation();
     if (event.key === "Escape") {
@@ -375,10 +384,13 @@ function bindCollectionKeyboardNavigation(state) {
       return;
     }
     var row = link.parentElement;
-    var adjacent = event.key === "ArrowUp" ? row.previousElementSibling : row.nextElementSibling;
+    var up = event.key === "ArrowUp";
+    var adjacent = up ? row.previousElementSibling : row.nextElementSibling;
+    if (!adjacent && up && row.parentElement === state.rowsNode) adjacent = state.pinnedRowsNode?.lastElementChild;
+    if (!adjacent && !up && row.parentElement === state.pinnedRowsNode) adjacent = state.rowsNode.firstElementChild;
     if (adjacent) {
       adjacent.querySelector(".docsViewerReport__collectionButton")?.focus();
-    } else if (event.key === "ArrowUp") {
+    } else if (up) {
       state.filterInputNode.focus();
     }
   }
@@ -429,13 +441,13 @@ function listSortContext(state) {
       }
       state.sortMode = nextMode;
       state.pageIndex = 0;
-      renderListProjectionContained(state, "sort-change");
+      renderListProjectionContained(state, "sort-change", { reusePinnedRows: true });
       return nextMode;
     }
   };
 }
 
-function renderListToolbar(state) {
+function renderListToolbar(state, retainedRows) {
   var renderToolbar = contributionCallback(state.contribution, "renderListToolbar");
   if (!renderToolbar) return;
   state.listActionHost.replaceChildren();
@@ -450,6 +462,7 @@ function renderListToolbar(state) {
     actionContext: state.actionContext,
     collection: state.actionContext.collectionTarget,
     docIds: state.management.docIds,
+    retainedRows: retainedRows,
     host: host,
     actionHost: state.listActionHost,
     refreshAndOpenDocument: function (target) {
@@ -463,14 +476,37 @@ function renderListToolbar(state) {
   state.listToolbarNode = host;
 }
 
-function renderRows(state, matches) {
+function renderPinnedRows(state, matches, retainedRows, reserveThumbnailSpace) {
+  var list = state.pinnedRowsNode;
+  if (!list) return [];
+  if (retainedRows) {
+    var next = list.firstElementChild;
+    for (const match of matches) {
+      var row = retainedRows.get(match.docId).row;
+      if (row === next) next = row.nextElementSibling;
+      else list.insertBefore(row, next);
+    }
+  } else {
+    clearNode(list);
+    state.renderedPinnedRows = matches?.length ? new Map() : null;
+    matches?.forEach(function (match) {
+      state.renderedPinnedRows.set(match.docId, appendDocRow(state, match, reserveThumbnailSpace, list));
+    });
+  }
+  return state.renderedPinnedRows ? Array.from(state.renderedPinnedRows.values()) : [];
+}
+
+function renderRows(state, matches, pinnedMatches, retainedPinnedRows) {
   clearNode(state.rowsNode);
+  var reserveThumbnailSpace = state.browsingData.hasThumbnails;
+  var rows = renderPinnedRows(state, pinnedMatches, retainedPinnedRows, reserveThumbnailSpace);
   state.root.removeAttribute("data-report-leading-column");
   var searchError = state.gallerySearch?.error && normalizeDocsCollectionFilterValue(state.query)
     ? state.gallerySearch.error : "";
-  state.statusNode.textContent = searchError;
-  state.statusNode.hidden = !searchError;
-  if (!matches.length) {
+  var message = searchError || state.pinLoadError;
+  state.statusNode.textContent = message;
+  state.statusNode.hidden = !message;
+  if (!matches.length && !rows.length) {
     var empty = document.createElement("li");
     empty.className = "docsViewerReport__empty";
     empty.textContent = state.browsingData.rows.length
@@ -480,11 +516,9 @@ function renderRows(state, matches) {
     state.rowsNode.appendChild(empty);
     return;
   }
-  var reserveThumbnailSpace = state.browsingData.hasThumbnails;
-  var rows = [];
   matches.forEach(function (match) {
     if (match.galleryId) appendGalleryRow(state, match);
-    else rows.push(appendDocRow(state, match, reserveThumbnailSpace));
+    else rows.push(appendDocRow(state, match, reserveThumbnailSpace, state.rowsNode));
   });
   if (!rows.some(function (record) { return record.hasLeadingContent; })) return;
   state.root.dataset.reportLeadingColumn = "true";
@@ -513,21 +547,38 @@ function publishState(state, reportState, target, reason) {
   notifyContribution(state, { type: "state", state: reportState, reason: reason });
 }
 
-function renderListProjection(state) {
+function renderListProjection(state, reusePinnedRows) {
+  var retainedPinnedRows = reusePinnedRows && !state.listNeedsRender ? state.renderedPinnedRows : null;
   state.listNeedsRender = true;
   var documents = visibleDocuments(state);
   var gallerySearch = state.gallerySearch;
   var query = gallerySearch ? normalizeDocsCollectionFilterValue(state.query) : "";
   if (query && gallerySearch) loadGallerySearch(state, gallerySearch);
-  state.matches = query && gallerySearch?.project ? gallerySearch.project(query, documents) : documents;
-  state.management?.prepareProjection(documents);
-  renderListPage(state);
+  var projected = query && gallerySearch?.project ? gallerySearch.project(query, documents) : documents;
+  var matches = projected;
+  state.pinnedMatches = null;
+  if (state.pinnedDocIds?.size) {
+    var pinned = [];
+    var regular = [];
+    for (const row of matches) {
+      (state.pinnedDocIds.has(row.docId) ? pinned : regular).push(row);
+    }
+    if (pinned.length) {
+      state.pinnedMatches = pinned;
+      matches = regular;
+    }
+  }
+  state.matches = matches;
+  state.management?.prepareProjection(state.pinnedMatches
+    ? state.pinnedMatches.concat(projected === documents ? matches : matches.filter(row => !row.galleryId))
+    : documents);
+  renderListPage(state, retainedPinnedRows);
   state.catalogueSearchRoute?.replaceQuery(state.query);
   state.listNeedsRender = false;
 }
 
 /** Page turns reuse the complete match list, including management selection eligibility. */
-function renderListPage(state) {
+function renderListPage(state, retainedPinnedRows) {
   var matches = state.matches;
   var pageIndex = state.pageIndex;
   if (state.pagedBrowsing) {
@@ -535,17 +586,18 @@ function renderListPage(state) {
     if (!gallerySearchPending(state)) state.pageIndex = pageIndex;
   }
   updateFilterControls(state);
-  renderListToolbar(state);
-  renderRows(state, state.pagedBrowsing
+  renderListToolbar(state, retainedPinnedRows);
+  var pageRows = state.pagedBrowsing
     ? matches.slice(pageIndex * COLLECTION_PAGE_SIZE, (pageIndex + 1) * COLLECTION_PAGE_SIZE)
-    : matches);
+    : matches;
+  renderRows(state, pageRows, pageIndex === 0 ? state.pinnedMatches : null, retainedPinnedRows);
   updateCollectionControls(state, pageIndex);
   state.management?.projected(state.sortMode);
 }
 
-function renderListProjectionContained(state, reason) {
+function renderListProjectionContained(state, reason, { reusePinnedRows = false } = {}) {
   try {
-    renderListProjection(state);
+    renderListProjection(state, reusePinnedRows);
     return true;
   } catch (error) {
     return reportFailure(state, error, reason);
@@ -675,6 +727,10 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     catalogueSearchRoute: context.catalogueSearchRoute,
     collectionSortNode: refs.collectionSortNode,
     matches: [],
+    pinnedMatches: null,
+    renderedPinnedRows: null,
+    pinnedDocIds: null,
+    pinLoadError: "",
     pageIndex: 0,
     searchTimer: null,
     pager: null,
@@ -687,6 +743,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     listNeedsRender: true,
     statusNode: refs.statusNode,
     tableNode: refs.tableNode,
+    pinnedRowsNode: refs.pinnedRowsNode,
     rowsNode: refs.rowsNode,
     mounted: true
   };
@@ -786,6 +843,9 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.management?.dispose();
     state.browsingData.clear();
     state.matches = [];
+    state.pinnedMatches = null;
+    state.renderedPinnedRows = null;
+    state.pinnedDocIds = null;
     state.thumbnailSettingsRead = null;
     state.gallerySearch = null;
   }
@@ -805,13 +865,14 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     root: root
   });
   publishState(state, "loading", null, "report-loading");
-  state.loadManifest = function () {
+  state.loadManifest = function (starsRead) {
     if (!state.mounted) return Promise.resolve(false);
     return (readContextManifest ? readContextManifest() : fetchDocsCollectionManifest(url)).then(async function (payload) {
       if (!state.mounted) return false;
       cancelCollectionSearch(state);
       state.browsingData.replace(payload.docs);
       await resolvePendingThumbnails();
+      if (starsRead) await starsRead;
       if (!state.mounted) return false;
       state.gallerySearch = readGallerySearch ? { read: readGallerySearch } : null;
       state.filterInputNode.disabled = false;
@@ -822,7 +883,25 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     });
   };
   state.management?.connect();
-  return state.loadManifest().then(function (loaded) {
+  var starsRead = collection.pinStarredDocuments ? fetchSelectedDocumentRows(context.selectedUrl).then(function (rows) {
+    if (!state.mounted) return;
+    var pinnedDocIds = new Set();
+    for (const row of rows) {
+      if (row.collection === collectionIdValue) pinnedDocIds.add(row.doc_id);
+    }
+    state.pinnedDocIds = pinnedDocIds;
+    context.collectionProvider.subscribeDocumentStars?.(function (change) {
+      if (change.target.collection !== collectionIdValue) return;
+      if (change.selected) pinnedDocIds.add(change.target.doc_id);
+      else pinnedDocIds.delete(change.target.doc_id);
+      state.listNeedsRender = true;
+    });
+  }).catch(function () {
+    if (!state.mounted) return;
+    state.pinLoadError = "Could not load starred documents.";
+    state.statusNode.classList.remove("visually-hidden");
+  }) : null;
+  return state.loadManifest(starsRead).then(function (loaded) {
       if (loaded) {
         // The document inventory must exist before restoring saved controls.
         root.dataset.reportState = "list";

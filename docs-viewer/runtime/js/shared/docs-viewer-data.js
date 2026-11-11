@@ -32,6 +32,13 @@ export function fetchDocsCollectionManifest(url, fetchImpl = defaultFetch) {
   });
 }
 
+export async function fetchSelectedDocumentRows(url) {
+  if (!url) throw new Error("Selected Documents data is not configured.");
+  const response = await defaultFetch(url, generatedRequestOptions());
+  if (!response.ok) throw new Error("Failed to load Selected Documents (" + response.status + ").");
+  return (await response.json()).docs;
+}
+
 export function waitForReloadRetry(options) {
   var settings = options || {};
   var delayMs = typeof settings.reloadRetryDelayMs === "number" ? settings.reloadRetryDelayMs : 250;

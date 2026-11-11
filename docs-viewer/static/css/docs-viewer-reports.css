@@ -146,6 +146,14 @@
   border-bottom: 0;
 }
 
+.docsViewerReport[data-report-collection] .docsViewerReport__pinnedRows > .docsViewerReport__row:last-child{
+  border-bottom: 1px solid var(--docs-viewer-border);
+}
+
+.docsViewerReport__pinnedRows:empty{
+  display: none;
+}
+
 .docsViewerReport__cellLink{
   min-width: 0;
   color: var(--docs-viewer-link);

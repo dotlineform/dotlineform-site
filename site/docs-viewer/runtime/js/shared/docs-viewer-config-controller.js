@@ -54,7 +54,8 @@ export function initDocsViewerConfigController(context) {
       iconUrl: new URL("../../../static/icons/" + icon + ".svg", import.meta.url).href,
       reportHostDocId: reportHostDocId,
       manifestUrl: manifestUrl,
-      byIdUrlBase: byIdUrlBase
+      byIdUrlBase: byIdUrlBase,
+      pinStarredDocuments: rawCollection.pin_starred_documents === true
     };
     return record;
   }

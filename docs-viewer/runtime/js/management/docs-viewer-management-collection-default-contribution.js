@@ -272,7 +272,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var host = settings.host;
     if (!host || !settings.actionHost) return;
     clearListToolbar();
-    rowSelections.clear();
+    if (settings.retainedRows) {
+      for (const docId of rowSelections.keys()) {
+        if (!settings.retainedRows.has(docId)) rowSelections.delete(docId);
+      }
+    } else rowSelections.clear();
     currentDocIds = settings.docIds;
     selectionOwner.syncContext({
       collection: settings.collection,

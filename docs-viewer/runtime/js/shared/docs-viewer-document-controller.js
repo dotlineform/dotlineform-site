@@ -144,10 +144,11 @@ export function initDocsViewerDocumentController(context) {
     var lifetime = mountedRecord.lifetime;
     // Preserve route capabilities while bounding report listeners to this mount.
     var collectionProvider = Object.assign({}, context.collectionProvider);
-    if (context.collectionProvider.subscribeDocumentChanges) {
-      collectionProvider.subscribeDocumentChanges = function (listener) {
+    for (const subscribe of ["subscribeDocumentChanges", "subscribeDocumentStars"]) {
+      if (!context.collectionProvider[subscribe]) continue;
+      collectionProvider[subscribe] = function (listener) {
         if (!lifetime.active) return function () {};
-        var unsubscribe = context.collectionProvider.subscribeDocumentChanges(function (change) {
+        var unsubscribe = context.collectionProvider[subscribe](function (change) {
           if (lifetime.active) listener(change);
         });
         lifetime.unsubscribers.push(unsubscribe);

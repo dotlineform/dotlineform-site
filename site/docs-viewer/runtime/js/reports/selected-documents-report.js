@@ -2,6 +2,7 @@ import { applySelectedDocumentChange, prepareSelectedDocuments } from "../shared
 import { appendCollectionThumbnail, loadCatalogueCollectionThumbnailSettings } from "../shared/docs-collection-browsing.js";
 import { catalogueWorkThumbnail } from "../shared/docs-viewer-catalogue-media.js";
 import { requestUrl } from "../shared/docs-viewer-asset-url.js";
+import { fetchSelectedDocumentRows } from "../shared/docs-viewer-data.js";
 
 /** Mount a saved selection list; disposal ends its local/public retained lifetime. */
 export async function mountSelectedDocumentsReport(context) {
@@ -109,13 +110,9 @@ export async function mountSelectedDocumentsReport(context) {
 
   try {
     if (released) return false;
-    if (!context.selectedUrl) throw new Error("Selected Documents data is not configured.");
-    const response = await fetch(context.selectedUrl, { headers: { Accept: "application/json" }, cache: "no-cache" });
+    const rows = await fetchSelectedDocumentRows(context.selectedUrl);
     if (released) return false;
-    if (!response.ok) throw new Error("Failed to load Selected Documents.");
-    const payload = await response.json();
-    if (released) return false;
-    data = prepareSelectedDocuments(payload.docs, context.viewerUrlForDocument);
+    data = prepareSelectedDocuments(rows, context.viewerUrlForDocument);
     data.rows.forEach((row) => prepareThumbnail(row));
     await resolvePendingThumbnails();
     if (released) return false;

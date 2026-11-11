@@ -555,6 +555,7 @@ export function startDocsViewerRuntime(options) {
       documentActionContext: documentActionContext,
       sourceEditorServices: sourceEditorServices,
       commitDocumentChange: collectionProvider.commitDocumentChange,
+      commitDocumentStar: collectionProvider.commitDocumentStar,
       commitDeletedDocument: function (target) { return routeWorkflowCommands.commitDeletedDocument(target); },
       viewRegistry: viewRegistry,
       activeViewState: documentViewCoordinator.activeViewState,
