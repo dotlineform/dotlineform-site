@@ -1,4 +1,4 @@
-/** Carry saved fields and media version into the live search and Series member list. */
+/** Carry saved fields and media version into the live search and member lists. */
 export function projectWorkSearchRecord(workId, record) {
   if (typeof workId !== "string" || !/^\d{5}$/.test(workId)) {
     throw new Error("Saved Work identity must use its exact five-digit spelling.");
@@ -6,6 +6,7 @@ export function projectWorkSearchRecord(workId, record) {
   return {
     work_id: workId,
     title: record.title,
+    medium: record.medium ?? null,
     year: record.year,
     year_display: record.year_display,
     series_id: record.series_id,
@@ -36,14 +37,24 @@ export function applyWorkRecordMutation(state, {
   };
 }
 
-export function applyBulkWorkRecordMutations(state, items = []) {
-  if (!Array.isArray(items) || items.some(item => !item || !item.record || !Array.isArray(item.gallery_ids))) {
+export function applyBulkWorkRecordMutations(state, items, expectedIds) {
+  if (!Array.isArray(items)) {
     throw new Error("Saved Work response is missing records or Gallery memberships.");
+  }
+  const remaining = new Set(expectedIds);
+  for (const item of items) {
+    if (!item?.record || typeof item.record !== "object" || Array.isArray(item.record) || !Array.isArray(item.gallery_ids)) {
+      throw new Error("Saved Work response is missing records or Gallery memberships.");
+    }
+    if (!remaining.delete(item.work_id)) throw new Error("Saved Work response does not match the selected Works.");
+  }
+  if (remaining.size) {
+    throw new Error("Saved Work response does not match the selected Works.");
   }
   return items
     .map((item) => applyWorkRecordMutation(state, {
       workId: item.work_id,
       record: { ...item.record, gallery_ids: item.gallery_ids },
-      updateBulk: true
+      updateBulk: state.bulkRecords.has(item.work_id)
     }));
 }

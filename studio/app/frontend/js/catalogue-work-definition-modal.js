@@ -5,20 +5,25 @@ function titleComparisonKey(value) {
   return String(value ?? "").trim().replace(/\s+/g, " ").toLowerCase();
 }
 
-/** Edit one shared definition; deletion replaces the form with an explicit confirmation. */
+/** Create or edit a shared definition; deletion has its own confirmation. */
 export async function openWorkDefinitionModal(state, {
   kind, id = "", title = "", deleteMessage = "", deleteBlocked = "",
   checkbox = null, save, remove, restoreFocus, onBusyChange,
-  deleteOnly = false, cancelLabel = "Cancel"
+  deleteOnly = false, cancelLabel = "Cancel", chooseKind = false
 }) {
   const host = state.modalHost;
   let saving = false;
   let confirmingDelete = false;
   host.innerHTML = renderStudioModalFrame({
-    hidden: false, title: `${id ? "Edit" : "New"} ${kind}`,
+    hidden: false, title: chooseKind ? "New Series or Gallery" : `${id ? "Edit" : "New"} ${kind}`,
     titleId: "catalogueDefinitionHeading", titleRole: "definition-heading",
     modalRole: "studio-modal", backdropRole: "modal-cancel", size: "compact",
     bodyHtml: `
+      ${chooseKind ? `<fieldset class="catalogueDefinition__kind">
+        <legend class="studioForm__label">Type</legend>
+        <label><input type="radio" name="catalogue-definition-kind" value="Series"${kind === "Series" ? " checked" : ""}> Series</label>
+        <label><input type="radio" name="catalogue-definition-kind" value="Gallery"${kind === "Gallery" ? " checked" : ""}> Gallery</label>
+      </fieldset>` : ""}
       <label class="studioForm__field" data-role="definition-field" for="catalogueDefinitionTitle">
         <span class="studioForm__label">title</span>
         <input class="studioUi__input" id="catalogueDefinitionTitle" type="text" autocomplete="off" aria-describedby="catalogueDefinitionTitleWarning">
@@ -43,7 +48,8 @@ export async function openWorkDefinitionModal(state, {
   });
   const input = host.querySelector("#catalogueDefinitionTitle");
   const titleWarning = host.querySelector('[data-role="definition-title-warning"]');
-  const definitions = kind === "Series" ? state.seriesById : state.galleriesById;
+  const kindInputs = Array.from(host.querySelectorAll('[name="catalogue-definition-kind"]'));
+  const selectedKind = () => kindInputs.find(option => option.checked)?.value ?? kind;
   const checkboxInput = host.querySelector("#catalogueDefinitionCheckbox");
   const primary = host.querySelector('[data-role="modal-primary"]');
   const cancel = host.querySelector('button[data-role="modal-cancel"]');
@@ -61,6 +67,8 @@ export async function openWorkDefinitionModal(state, {
 
   function syncTitleWarning() {
     const key = titleComparisonKey(input.value);
+    const activeKind = selectedKind();
+    const definitions = activeKind === "Series" ? state.seriesById : state.galleriesById;
     let duplicateId = "";
     if (key && !confirmingDelete) {
       for (const [otherId, record] of definitions) {
@@ -71,13 +79,14 @@ export async function openWorkDefinitionModal(state, {
       }
     }
     titleWarning.textContent = duplicateId
-      ? `Another ${kind} uses this title (${duplicateId}). You can still save.`
+      ? `Another ${activeKind} uses this title (${duplicateId}). You can still save.`
       : "";
     titleWarning.hidden = !duplicateId;
   }
 
   function syncControls() {
     input.disabled = saving;
+    kindInputs.forEach(option => { option.disabled = saving; });
     if (checkboxInput) checkboxInput.disabled = saving || checkbox.disabled;
     primary.disabled = saving || (!confirmingDelete && !input.value.trim());
     cancel.disabled = saving;
@@ -87,18 +96,23 @@ export async function openWorkDefinitionModal(state, {
   }
 
   const controller = activateStudioModalFrame(host, {
-    restoreFocus, focusSelector: "#catalogueDefinitionTitle", selectInitialFocus: true, submitOnEnter: false,
+    restoreFocus,
+    focusSelector: chooseKind ? '[name="catalogue-definition-kind"]:checked' : "#catalogueDefinitionTitle",
+    selectInitialFocus: !chooseKind, submitOnEnter: false,
     canCancel: () => !saving,
     async onSubmit(api) {
       if (saving || primary.disabled) return false;
+      const activeKind = selectedKind();
       saving = true;
       syncControls();
       api.setStatus("", "");
       let response = null;
       try {
         onBusyChange?.(true);
-        response = confirmingDelete ? await remove() : await save(input.value.trim(), checkboxInput?.checked);
-        return { response };
+        response = confirmingDelete ? await remove() : await save({
+          kind: activeKind, title: input.value.trim(), related: checkboxInput?.checked
+        });
+        return { kind: activeKind, response };
       } catch (error) {
         api.setStatus("error", catalogueSavedActionError(response, error) || error.message);
         return false;
@@ -135,6 +149,7 @@ export async function openWorkDefinitionModal(state, {
     void controller.submit();
   });
   input.addEventListener("input", syncControls);
+  kindInputs.forEach(option => option.addEventListener("change", syncTitleWarning));
   syncControls();
   state.activeModalController = controller;
   if (deleteOnly) showDeleteConfirmation();

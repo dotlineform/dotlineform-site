@@ -584,8 +584,9 @@ export function setModeFieldAvailability(state) {
   if (state.seriesPicker) {
     state.seriesPicker.pickerNode.hidden = false;
     state.seriesPicker.searchWrap.hidden = false;
-    state.seriesPicker.searchInput.disabled = busy || state.browseKind === "gallery" || !state.serverAvailable;
-    state.seriesPicker.browseButton.disabled = state.seriesPicker.searchInput.disabled || !state.draft.series_id;
+    const seriesUnavailable = busy || !state.serverAvailable;
+    state.seriesPicker.searchInput.disabled = seriesUnavailable || state.browseKind === "gallery";
+    state.seriesPicker.browseButton.disabled = seriesUnavailable || !state.draft.series_id;
     if (state.seriesPicker.searchInput.disabled) {
       renderSeriesPicker(state);
     }

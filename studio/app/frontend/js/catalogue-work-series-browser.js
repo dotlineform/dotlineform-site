@@ -1,6 +1,7 @@
 import { createRecordList } from "/shared/frontend/js/record-list.js";
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
+import { openAddGalleryWorksModal } from "./catalogue-add-gallery-works-modal.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { buildWorkThumbPreview } from "./catalogue-media-preview.js";
 import { syncWorkSeriesUrl, workBulkEditingPaused } from "./catalogue-work-route-state.js";
@@ -34,13 +35,14 @@ function getBrowseMatches(seriesById, galleriesById, rawQuery) {
 export function createWorkSeriesBrowser(state, elements, options) {
   const { seriesBrowseSearch: search, seriesBrowsePopup: popup, seriesBrowseMembers: members,
     seriesBrowseStatus: status, seriesBrowseCount: count, seriesBrowseEdit: edit,
-    seriesBrowseNew: newButton, editorPane, summaryPanelNode } = elements;
+    browseNew: newButton, galleryAddWorks: addWorksButton, editorPane, summaryPanelNode } = elements;
   let browseTarget = null;
   let list = null;
   let visibleIds = new Set();
   let renderedMembersKey = "";
   let opening = false;
-  let editingSeries = false;
+  let definitionOpen = false;
+  let addingWorks = false;
   let currentRecord = null;
   let bulkRecords = null;
   let currentWorkId = "";
@@ -62,7 +64,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
   }
 
   function busy() {
-    return opening || editingSeries || state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+    return opening || definitionOpen || addingWorks || state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   }
 
   function browsedDefinition() {
@@ -71,8 +73,16 @@ export function createWorkSeriesBrowser(state, elements, options) {
     return definitions.get(browseTarget.id);
   }
 
+  function showGallerySearchIcon(show) {
+    searchField.classList.toggle("catalogueWorkBrowseSearch--gallery", show);
+    if (show) search.setAttribute("aria-description", "Showing Gallery members");
+    else search.removeAttribute("aria-description");
+  }
+
   function restoreSearch() {
-    search.value = browsedDefinition()?.title ?? "";
+    const definition = browsedDefinition();
+    search.value = definition?.title ?? "";
+    showGallerySearchIcon(browseTarget?.kind === "gallery" && Boolean(definition));
     searchController.close();
   }
 
@@ -81,10 +91,12 @@ export function createWorkSeriesBrowser(state, elements, options) {
     const browsingGallery = browseTarget?.kind === "gallery";
     search.disabled = unavailable;
     edit.disabled = unavailable || !getSelectedSeriesId();
-    newButton.disabled = unavailable || browsingGallery;
+    newButton.disabled = unavailable;
+    addWorksButton.hidden = !browsingGallery;
+    addWorksButton.disabled = unavailable || !browsingGallery;
     members.inert = unavailable;
     members.setAttribute("aria-busy", String(opening));
-    editorPane.inert = opening || editingSeries || state.isEditingDefinition;
+    editorPane.inert = opening || definitionOpen || addingWorks || state.isEditingDefinition;
     summaryPanelNode.inert = editorPane.inert;
     if (unavailable) restoreSearch();
   }
@@ -199,16 +211,23 @@ export function createWorkSeriesBrowser(state, elements, options) {
     members.scrollTop = 0;
   }
 
-  async function editSeries(create = false) {
+  async function changeDefinition(create = false) {
     const seriesId = getSelectedSeriesId();
-    if (busy() || browseTarget?.kind === "gallery" || (!create && !seriesId)) return;
-    editingSeries = true;
+    if (busy() || (!create && !seriesId)) return;
+    definitionOpen = true;
     syncAvailability();
     try {
-      const result = await options.onEditDefinition("Series", create ? "" : seriesId, create ? newButton : edit);
+      const result = create
+        ? await options.onCreateDefinition(browseTarget?.kind === "gallery" ? "Gallery" : "Series", newButton)
+        : await options.onEditDefinition("Series", seriesId, edit);
       if (!result?.confirmed) return;
-      if (result.response.created) setBrowseTarget({ kind: "series", id: result.response.series_id });
-      if (result.response.deleted) setBrowseTarget(null);
+      if (result.response.created) {
+        setBrowseTarget(result.kind === "Gallery"
+          ? { kind: "gallery", id: result.response.gallery_id }
+          : { kind: "series", id: result.response.series_id });
+      } else if (result.response.deleted) setBrowseTarget(null);
+      status.textContent = "";
+      delete status.dataset.state;
       restoreSearch();
       renderMembers();
       if (result.response.created) members.scrollTop = 0;
@@ -216,13 +235,44 @@ export function createWorkSeriesBrowser(state, elements, options) {
       status.textContent = error.message;
       status.dataset.state = "error";
     } finally {
-      editingSeries = false;
+      definitionOpen = false;
       syncAvailability();
       (create ? newButton : edit.disabled ? search : edit).focus({ preventScroll: true });
     }
   }
 
-  mountSearchField(search);
+  async function addGalleryWorks() {
+    if (busy() || browseTarget?.kind !== "gallery") return;
+    if (options.draftHasChanges()) {
+      status.textContent = "Save or discard the unsaved Work changes before adding Works.";
+      status.dataset.state = "warn";
+      return;
+    }
+    const { id: galleryId } = browseTarget;
+    const { title: galleryTitle } = browsedDefinition();
+    status.textContent = "";
+    delete status.dataset.state;
+    addingWorks = true;
+    syncAvailability();
+    try {
+      const result = await openAddGalleryWorksModal(state, {
+        galleryId, galleryTitle, restoreFocus: addWorksButton, save: options.addWorksToGallery
+      });
+      if (result.confirmed) {
+        status.textContent = result.message;
+        status.dataset.state = result.tone;
+      }
+    } catch (error) {
+      status.textContent = `Could not open Add works. ${error.message}`;
+      status.dataset.state = "error";
+    } finally {
+      addingWorks = false;
+      syncAvailability();
+      addWorksButton.focus({ preventScroll: true });
+    }
+  }
+
+  const { root: searchField } = mountSearchField(search);
   const searchController = bindSearchList(search, popup, {
     id: "catalogueWorkSeriesBrowseList",
     openOnFocus: false,
@@ -241,14 +291,16 @@ export function createWorkSeriesBrowser(state, elements, options) {
     `,
     onCommit: ({ kind, id }) => selectTarget(kind, id),
     onCancel: restoreSearch,
+    onTransientInput: () => showGallerySearchIcon(false),
     noResultsText: "No matching series or galleries."
   });
   search.addEventListener("blur", restoreSearch);
   popup.addEventListener("mousedown", event => {
     if (event.button === 0 && event.target.closest("[data-search-list-index]")) event.preventDefault();
   });
-  edit.addEventListener("click", () => { void editSeries(); });
-  newButton.addEventListener("click", () => { void editSeries(true); });
+  edit.addEventListener("click", () => { void changeDefinition(); });
+  newButton.addEventListener("click", () => { void changeDefinition(true); });
+  addWorksButton.addEventListener("click", () => { void addGalleryWorks(); });
 
   function sync({ recordsChanged = false } = {}) {
     syncAvailability();

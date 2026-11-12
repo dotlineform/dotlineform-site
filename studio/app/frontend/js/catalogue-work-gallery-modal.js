@@ -8,6 +8,16 @@ function nextGalleryId(galleriesById) {
   return String(highestId + 1).padStart(3, "0");
 }
 
+export function saveWorkGalleryDefinition(galleriesById, { galleryId = "", title, seriesId = null, related = false }) {
+  const payload = {
+    gallery_id: galleryId || nextGalleryId(galleriesById),
+    title,
+    series_id: seriesId,
+    related_to_series: Boolean(seriesId && related)
+  };
+  return galleryId ? saveCatalogueGallery(payload) : createCatalogueGallery(payload);
+}
+
 function savedGalleryMemberCount(workSearchById, galleryId) {
   let count = 0;
   for (const work of workSearchById.values()) {
@@ -59,11 +69,9 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
       checked: relatedToSeries,
       disabled: !series
     },
-    save: (savedTitle, related) => {
-      const payload = { gallery_id: galleryId || nextGalleryId(state.galleriesById), title: savedTitle,
-        series_id: seriesId, related_to_series: Boolean(seriesId && related) };
-      return galleryId ? saveCatalogueGallery(payload) : createCatalogueGallery(payload);
-    },
+    save: ({ title: savedTitle, related }) => saveWorkGalleryDefinition(state.galleriesById, {
+      galleryId, title: savedTitle, seriesId, related
+    }),
     remove: canDelete ? async () => {
       try {
         return await deleteCatalogueGallery({ gallery_id: galleryId });

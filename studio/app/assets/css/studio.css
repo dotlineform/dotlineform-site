@@ -679,7 +679,12 @@ span.studioUi__input--readonlyDisplay {
 .studioUi__icon--paperclip { mask-image: url("/docs-viewer/static/icons/paperclip.svg"); }
 .studioUi__icon--link { mask-image: url("/docs-viewer/static/icons/link.svg"); }
 .studioUi__icon--list { mask-image: url("/docs-viewer/static/icons/list.svg"); }
-.studioUi__icon--images { mask-image: url("/docs-viewer/static/icons/images.svg"); }
+.studioUi__icon--images,
+.catalogueWorkBrowseSearch--gallery > .sharedSearchField__icon {
+  mask-image: url("/docs-viewer/static/icons/images.svg");
+}
+.studioUi__icon--image-plus { mask-image: url("/docs-viewer/static/icons/image-plus.svg"); }
+.studioUi__icon--circle-check { mask-image: url("/docs-viewer/static/icons/circle-check.svg"); }
 
 .studioUi__popup {
   position: relative;
@@ -1151,6 +1156,24 @@ button.studioList__cellLink {
   margin-top: 0.75rem;
 }
 
+.catalogueDefinition__kind {
+  display: flex;
+  gap: 1rem;
+  margin: 0.75rem 0;
+  padding: 0;
+  border: 0;
+}
+
+.catalogueDefinition__kind label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.catalogueDefinition__kind input {
+  margin: 0;
+}
+
 .catalogueDefinition__checkboxRow {
   display: flex;
   align-items: center;
@@ -1336,6 +1359,62 @@ button.studioList__cellLink {
 
 .catalogueWorkSeriesBrowser__heading .studioForm__meta {
   margin: 0;
+}
+
+.catalogueGalleryWorks {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.8rem;
+}
+
+.catalogueGalleryWorks .studioForm__meta {
+  margin: 0;
+}
+
+.catalogueGalleryWorks__results {
+  max-height: min(28rem, 50vh);
+  overflow: auto;
+}
+
+.catalogueGalleryWorks__row {
+  display: grid;
+  grid-template-columns: 1.25rem 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.35rem 0.5rem;
+  border-block-end: 1px solid var(--studio-line);
+  overflow-wrap: anywhere;
+}
+
+label.catalogueGalleryWorks__row {
+  cursor: pointer;
+}
+
+.catalogueGalleryWorks__row > :first-child {
+  justify-self: center;
+  margin: 0;
+}
+
+label.catalogueGalleryWorks__row:hover,
+label.catalogueGalleryWorks__row:focus-within {
+  background: var(--studio-surface-subtle);
+}
+
+.catalogueGalleryWorks__row .studioForm__meta {
+  display: block;
+}
+
+.catalogueGalleryWorks__thumb {
+  width: 48px;
+  height: 48px;
+  background: var(--studio-surface-subtle);
+}
+
+.catalogueGalleryWorks__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .catalogueWorkSeriesBrowser__members {

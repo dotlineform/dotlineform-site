@@ -27,7 +27,7 @@ The table is a human-edited selection record, not runtime configuration. An artw
 | 1 | Member list: expand | `>` | DOM `catalogueWorkListExpand`, normal layout | `chevron-right.svg` | Icon only; retain expansion state and tooltip | Adopted |
 | 2 | Member list: restore | `<` | DOM `catalogueWorkListExpand`, expanded layout | `chevron-left.svg` | Same button, alternate state | Adopted |
 | 3 | Series browser: Edit | ✏️ | DOM `catalogueWorkSeriesBrowseEdit` | `pen.svg` | Icon only; edits the browsed Series | Adopted |
-| 4 | Series browser: New | Text `New` | DOM `catalogueWorkSeriesBrowseNew` | `file.svg` | Icon only; matches Docs Viewer New | Adopted |
+| 4 | Series and Gallery browser: New | Text `New` | DOM `catalogueWorkBrowseNew` | `file.svg` | Opens New Series or Gallery | Adopted |
 | 5 | Work toolbar: New | ➕ | DOM `catalogueWorkNew` | `file.svg` | Icon only; starts a new Work draft | Adopted |
 | 6 | Work toolbar: Save | 💾 | DOM `catalogueWorkSave` | `download.svg` | Icon only; follows the existing Docs Viewer Save mapping | Adopted |
 | 7 | Work toolbar: Delete | 🗑️ | DOM `catalogueWorkDelete` | `trash.svg` | Icon only; retain danger action identity | Adopted |

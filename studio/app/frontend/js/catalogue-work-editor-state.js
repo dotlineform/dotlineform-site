@@ -46,11 +46,12 @@ export function collectWorkEditorElements() {
     listExpandButton: "catalogueWorkListExpand",
     seriesBrowseSearch: "catalogueWorkSeriesBrowseSearch",
     seriesBrowseEdit: "catalogueWorkSeriesBrowseEdit",
-    seriesBrowseNew: "catalogueWorkSeriesBrowseNew",
+    browseNew: "catalogueWorkBrowseNew",
     seriesBrowsePopup: "catalogueWorkSeriesBrowsePopup",
     seriesBrowseMembers: "catalogueWorkSeriesBrowseMembers",
     seriesBrowseStatus: "catalogueWorkSeriesBrowseStatus",
-    seriesBrowseCount: "catalogueWorkSeriesBrowseCount"
+    seriesBrowseCount: "catalogueWorkSeriesBrowseCount",
+    galleryAddWorks: "catalogueWorkGalleryAddWorks"
   });
 }
 

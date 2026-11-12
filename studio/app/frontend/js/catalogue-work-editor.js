@@ -1,4 +1,4 @@
-import { saveCurrentWork } from "./catalogue-work-actions.js";
+import { addWorksToGallery, deleteCurrentWork, saveCurrentWork } from "./catalogue-work-actions.js";
 import { createWorkSeriesBrowser } from "./catalogue-work-series-browser.js";
 import { createWorkEditorLayout } from "./catalogue-work-layout.js";
 import { editWorkDefinition, offerEmptyGalleryCleanup } from "./catalogue-work-definitions.js";
@@ -58,7 +58,6 @@ import {
   workBulkEditingPaused,
   workSaveBlockReason
 } from "./catalogue-work-route-state.js";
-import { deleteCurrentWork } from "./catalogue-work-actions.js";
 
 import {
   applyInitialWorkRouteSelection,
@@ -288,7 +287,6 @@ function renderEditorMessage(state, snapshot = {}) {
 function updateEditorState(state, { recordsChanged = false } = {}) {
   syncPendingAttachmentNames(state);
   const busy = state.isSaving || state.isBuilding || state.isDeleting;
-  state.root.dataset.workSaving = String(state.isSaving);
   state.searchNode.disabled = busy;
   if (state.workSearchClearButton) {
     const label = state.mode === "new"
@@ -440,7 +438,7 @@ function workActionOptions(state) {
     validateDraft: () => validateDraft(state),
     updateFieldMessages: (errors) => updateFieldMessages(state, errors, workFormOptions(state)),
     draftHasChanges: () => draftHasChanges(state),
-    updateEditorState: () => updateEditorState(state),
+    updateEditorState: options => updateEditorState(state, options),
     workRouteStateOptions: (overrides = {}) => workRouteStateOptions(state, overrides),
     noteCatalogueSaved: (response) => noteCatalogueSaved(state, response),
     offerEmptyGalleryCleanup: (galleryIds) => offerEmptyGalleryCleanup(state, {
@@ -577,6 +575,10 @@ async function init() {
       draftHasChanges: () => draftHasChanges(state),
       onBrowseKindChange: () => updateEditorState(state),
       onEditDefinition: workFormOptions(state).onEditDefinition,
+      onCreateDefinition: (kind, restoreFocus) => editWorkDefinition(state, {
+        ...workDefinitionOptions(state), kind, restoreFocus, createFromBrowser: true
+      }),
+      addWorksToGallery: (galleryId, ids) => addWorksToGallery(state, workActionOptions(state), galleryId, ids),
       openWorks: workIds => openSelectedWorks(state, workIds, workSelectionOptions(state)),
       clearWork: () => setEmptySearchMode(state, workRouteStateOptions(state))
     });

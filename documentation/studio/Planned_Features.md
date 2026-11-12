@@ -146,13 +146,13 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
 
-- [Add Works To A Gallery](deliveries/Add_Works_To_A_Gallery.md) — Proposed follow-on in the Catalogue Editor. Open a Gallery, find saved Works by title, ID or Medium, and add the selected Works to that Gallery.
-
 - [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
 
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
+
+- [Add Works To A Gallery](deliveries/Add_Works_To_A_Gallery.md) — Complete. The user accepted the Local Studio workflow and confirmed that Refresh carried the Gallery changes into Docs Viewer on 2026-11-12. Retain the delivery pending manual archive. [Catalogue Work Editor](Catalogue_Work_Editor.md#add-works-to-a-gallery) owns the workflow.
 
 - [Gallery Context Links](deliveries/Gallery_Context_Links.md) — The original delivery was accepted in Working on 2026-11-09. The published Context manifest and projected runtime are committed in `33c8925d6c`. Deploy Public and live review remain open. On 2026-11-10 the user confirmed that **Show inline link** hid the inline opener in *kylie* while preserving the Gallery link. Retain the delivery pending manual archive.
 

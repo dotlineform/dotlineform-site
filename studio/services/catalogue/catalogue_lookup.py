@@ -8,7 +8,9 @@ SCHEMAS = {
     "work_record": "studio_catalogue_work_record_v3",
 }
 
-WORK_SEARCH_FIELDS = frozenset({"work_id", "title", "year", "year_display", "series_id", "media_version", "image_staged"})
+WORK_SEARCH_FIELDS = frozenset({
+    "work_id", "title", "medium", "year", "year_display", "series_id", "media_version", "image_staged",
+})
 SERIES_SEARCH_FIELDS = frozenset({"series_id", "title"})
 
 
@@ -17,6 +19,7 @@ def build_work_search_item(work_id: str, record: Mapping[str, Any]) -> Dict[str,
     return {
         "work_id": work_id,
         "title": record["title"],
+        "medium": record.get("medium"),
         "year": record["year"],
         "year_display": record["year_display"],
         "series_id": record.get("series_id"),

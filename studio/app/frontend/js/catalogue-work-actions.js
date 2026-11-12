@@ -4,10 +4,13 @@ import { catalogueSaveCompletionError, catalogueSavedActionError } from "./catal
 import { applyCatalogueDelete, createCatalogueWork, saveCatalogueBulkRecords, saveCatalogueWork } from "./catalogue-editor-service-client.js";
 
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
+import { renderWorkGalleryPicker } from "./catalogue-work-gallery-picker.js";
 import {
   setEmptySearchMode,
   setLoadedBulkWorks,
   setLoadedWorkRecord,
+  sharedWorkGalleryIds,
+  syncWorkRouteBusyState,
   workSaveBlockReason
 } from "./catalogue-work-route-state.js";
 import {
@@ -112,6 +115,50 @@ function newlyEmptyGalleryIds(state, removed) {
   return Array.from(removed).sort();
 }
 
+/** Save selected additions independently of the open Work selection. */
+export async function addWorksToGallery(state, context, galleryId, ids) {
+  const galleryIdsByWork = Object.fromEntries(ids.map(id => [
+    id, [...state.workSearchById.get(id).gallery_ids, galleryId]
+  ]));
+  let response;
+  let recordsChanged = false;
+  try {
+    state.isSaving = true;
+    try {
+      syncWorkRouteBusyState(state);
+      response = await saveCatalogueBulkRecords({ kind: "works", ids, gallery_ids_by_work: galleryIdsByWork });
+      context.noteCatalogueSaved(response);
+      const saved = applyBulkWorkRecordMutations(state, response.records, ids);
+      recordsChanged = true;
+
+      const current = saved.find(item => item.workId === state.currentWorkId);
+      let draftGalleryIds;
+      if (current) {
+        state.currentRecord = current.record;
+        draftGalleryIds = current.record.gallery_ids.slice();
+      } else if (saved.some(item => state.bulkRecords.has(item.workId))) {
+        draftGalleryIds = sharedWorkGalleryIds(state.bulkWorkIds.map(id => state.bulkRecords.get(id)));
+      }
+      if (draftGalleryIds) {
+        state.baselineDraft.gallery_ids = draftGalleryIds;
+        state.draft.gallery_ids = draftGalleryIds.slice();
+        renderWorkGalleryPicker(state);
+      }
+    } finally {
+      state.isSaving = false;
+      if (recordsChanged) context.updateEditorState({ recordsChanged });
+      else syncWorkRouteBusyState(state);
+    }
+  } catch (error) {
+    const message = catalogueSavedActionError(response, error);
+    if (!message) throw error;
+    return { message, tone: "error" };
+  }
+  const completionError = catalogueSaveCompletionError(response);
+  if (completionError) return { message: completionError, tone: "error" };
+  const count = response.changed_count;
+  return { message: `Added ${count} ${count === 1 ? "Work" : "Works"}.`, tone: "success" };
+}
 
 export async function saveCurrentWork(state, context) {
   if (workSaveBlockReason(state)) return;
@@ -152,11 +199,7 @@ export async function saveCurrentWork(state, context) {
       const response = await saveCatalogueBulkRecords(payload);
       savedResponse = response;
       context.noteCatalogueSaved(response);
-      const changedRecords = Array.isArray(response && response.records) ? response.records : [];
-      if (changedRecords.map(item => item.work_id).sort().join(",") !== state.bulkWorkIds.slice().sort().join(",")) {
-        throw new Error("Saved Work response does not match the selected Works.");
-      }
-      applyBulkWorkRecordMutations(state, changedRecords);
+      applyBulkWorkRecordMutations(state, response.records, state.bulkWorkIds);
       setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, context.workRouteStateOptions({keepResult: true}));
       const completionError = catalogueSaveCompletionError(response);
       setTextWithState(context, state.resultNode, completionError || "Saved " + (response.changed_count || 0) + " work records.", completionError ? "error" : "success");

@@ -31,6 +31,10 @@ function buildDraftFromRecord(record) {
   });
 }
 
+export function sharedWorkGalleryIds(records) {
+  return records[0].gallery_ids.filter(id => records.every(record => record.gallery_ids.includes(id))).sort();
+}
+
 /** Compare saved values exactly, treating both absent and null dimensions as blank. */
 function buildBulkDraftFromRecords(records) {
   const first = records[0];
@@ -39,7 +43,7 @@ function buildBulkDraftFromRecords(records) {
   const mixedFields = new Set();
   EDITABLE_FIELDS.forEach((field) => {
     if (field.key === "gallery_ids") {
-      draft.gallery_ids = firstDraft.gallery_ids.filter(id => records.every(record => record.gallery_ids.includes(id)));
+      draft.gallery_ids = sharedWorkGalleryIds(records);
       return;
     }
     const key = field.key;
@@ -116,6 +120,7 @@ export function initializeWorkRouteState(root) {
 }
 
 export function syncWorkRouteBusyState(state) {
+  state.root.dataset.workSaving = String(state.isSaving);
   syncCatalogueEditorRouteBusyState(state, WORK_ROUTE_STATE);
 }
 

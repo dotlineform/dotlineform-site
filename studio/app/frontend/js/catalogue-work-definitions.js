@@ -1,4 +1,7 @@
-import { openWorkGalleryModal } from "./catalogue-work-gallery-modal.js";
+import { createCatalogueSeries } from "./catalogue-editor-service-client.js";
+import { suggestNextSeriesId } from "./catalogue-series-records.js";
+import { openWorkDefinitionModal } from "./catalogue-work-definition-modal.js";
+import { openWorkGalleryModal, saveWorkGalleryDefinition } from "./catalogue-work-gallery-modal.js";
 import { openWorkSeriesTitleModal } from "./catalogue-work-series-modal.js";
 import { catalogueSaveCompletionError, catalogueSavedActionError } from "./catalogue-save-result.js";
 import { syncWorkRouteBusyState, workBulkEditingPaused } from "./catalogue-work-route-state.js";
@@ -9,7 +12,7 @@ function removeGalleryMembership(record, galleryId) {
   }
 }
 
-function applyGalleryResult(state, response, deleteEmpty) {
+function applyGalleryResult(state, response, { deleteEmpty, attachToDraft }) {
   const id = response.gallery_id;
   if (response.deleted) {
     state.galleriesById.delete(id);
@@ -22,7 +25,7 @@ function applyGalleryResult(state, response, deleteEmpty) {
     }
   } else {
     state.galleriesById.set(id, response.record);
-    if (response.created) {
+    if (response.created && attachToDraft) {
       state.draft.gallery_ids = [...(state.draft.gallery_ids || []), id].sort();
       if (state.mode === "bulk") state.bulkTouchedFields.add("gallery_ids");
     }
@@ -51,9 +54,11 @@ function validateResponse(kind, requestedId, response) {
 }
 
 /** Keep the Work draft while a shared definition saves; refresh saved labels and membership baselines. */
-export async function editWorkDefinition(state, { kind, id = "", restoreFocus, refresh, noteCatalogueSaved, deleteEmpty = false }) {
+export async function editWorkDefinition(state, {
+  kind, id = "", restoreFocus, refresh, noteCatalogueSaved, deleteEmpty = false, createFromBrowser = false
+}) {
   if (state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable) return null;
-  if (kind === "Gallery" && !deleteEmpty && workBulkEditingPaused(state)) return null;
+  if (kind === "Gallery" && !deleteEmpty && !createFromBrowser && workBulkEditingPaused(state)) return null;
   if (!deleteEmpty) state.messageController.clearActionMessages();
   state.isEditingDefinition = true;
   const panels = [...state.root.children].filter(node => node !== state.modalHost);
@@ -67,18 +72,26 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
   try {
     const onBusyChange = busy => {
       state.isSaving = busy;
-      state.root.dataset.workSaving = String(busy);
       syncWorkRouteBusyState(state);
     };
     const modalOptions = { restoreFocus, onBusyChange };
-    result = kind === "Gallery"
-      ? await openWorkGalleryModal(state, { ...modalOptions, galleryId: id, deleteEmpty })
-      : await openWorkSeriesTitleModal(state, { ...modalOptions, seriesId: id });
+    if (createFromBrowser) {
+      result = await openWorkDefinitionModal(state, {
+        ...modalOptions, kind, chooseKind: true,
+        save: ({ kind: selectedKind, title }) => selectedKind === "Gallery"
+          ? saveWorkGalleryDefinition(state.galleriesById, { title })
+          : createCatalogueSeries({ series_id: suggestNextSeriesId(state.seriesById.values()), record: { title } })
+      });
+    } else {
+      result = kind === "Gallery"
+        ? await openWorkGalleryModal(state, { ...modalOptions, galleryId: id, deleteEmpty })
+        : await openWorkSeriesTitleModal(state, { ...modalOptions, seriesId: id });
+    }
     if (result.confirmed) {
       response = result.response;
       noteCatalogueSaved(response);
-      validateResponse(kind, id, response);
-      if (kind === "Gallery") applyGalleryResult(state, response, deleteEmpty);
+      validateResponse(result.kind, id, response);
+      if (result.kind === "Gallery") applyGalleryResult(state, response, { deleteEmpty, attachToDraft: !createFromBrowser });
       else applySeriesResult(state, response);
       definitionChanged = response.changed || response.created || response.deleted;
       errorMessage = catalogueSaveCompletionError(response);
@@ -91,8 +104,10 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
     state.isSaving = false;
     panels.forEach((node, index) => { node.inert = previousInert[index]; });
     try {
-      refresh();
-      if (definitionChanged) state.seriesBrowser?.refresh();
+      if (!createFromBrowser) {
+        refresh();
+        if (definitionChanged) state.seriesBrowser?.refresh();
+      }
     } catch (error) {
       errorMessage = catalogueSavedActionError(response, error) || error.message;
       result = null;
