@@ -144,6 +144,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
+- [Catalogue Discovery](deliveries/Catalogue_Discovery.md) — Proposed follow-on to Catalogue Shuffle. The dice advances through selections of up to 48 Works, each available as one Media View grid. Search keeps its paginated results.
+
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
 
 - [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
@@ -152,7 +154,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
-- [Catalogue Shuffle](deliveries/Catalogue_Shuffle.md) — Public and Working Catalogue use the repository's quantum random batches. Manual interaction review and public deployment remain open.
+- [Catalogue Shuffle](deliveries/Catalogue_Shuffle.md) — Complete. The user confirmed public deployment and accepted the result on 2026-11-12. Retain the delivery for stock replacement and the API decision. [Catalogue Shuffle Randomness](Catalogue_Shuffle_Randomness.md) explains the source and algorithm.
 
 - [Gallery Descriptions And Markers](deliveries/Gallery_Descriptions_And_Markers.md) — Complete and accepted on 2026-11-12. Retain the delivery pending manual archive. [Catalogue Work Editor](Catalogue_Work_Editor.md#gallery-and-series-definitions) owns the workflow.
 

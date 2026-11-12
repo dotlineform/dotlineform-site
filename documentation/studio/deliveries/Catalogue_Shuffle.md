@@ -5,7 +5,7 @@ title: Catalogue Shuffle
 added_date: "2026-11-12 20:42:03"
 last_updated: "2026-11-12"
 summary: Shuffle the Catalogue collection with a reusable stock of quantum random bytes.
-ui_status: in-progress
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Shuffle
@@ -34,4 +34,4 @@ Live service requests would make each click depend on a third-party response and
 - [x] Implementation. Added the Catalogue control, downloaded and split the initial stock, and wired the browser shuffle and retained ordering.
 - [x] Code review. Traced initial load, Shuffle, paging, search and clear, retained return, a fresh mount, a changed Working inventory, and failed batch reads. The browser fetches a single file per click, reuses loaded rows and retains the result for rendering and navigation. HTTP status and length checks protect the fetched binary boundary. Exhausted draws surface as an error and the current order remains usable. Disposed views ignore completion. The existing static file handler supplies the bytes without a new service or publication handoff. Focused JavaScript lint, whitespace, projection check and site validation passed. Verified 64 files of 32,768 bytes and matched the bytes for `01.bin` served by both Working and Site Preview to the repository file.
 - [x] Tab restore and dice icon follow-up. Reviewed remount, retained return, search, Working sort and failed file reads. The browser accepts only a saved integer in the published batch range, reuses a matching retained shuffle and otherwise loads one batch. It displays the list only after restoring the order and page. A failed read displays an error and uses the ordinary list. Focused JavaScript lint, whitespace, projection and site validation passed. The projected icon matches the supplied SVG.
-- [ ] Closeout. The user confirmed that the initial implementation retained the shuffled list on browser Back. Review the dice control and tab restore in Working and Site Preview by shuffling, moving past page one, opening a Work and returning via the collection icon, visiting another page and returning, and searching then clearing. Deploy through the normal public workflow after acceptance. Retain this delivery as the source and API decision record.
+- [x] Closeout. The user confirmed that browser Back retained the shuffled list and that refreshing the same tab restored it. On 2026-11-12, the user reported successful deployment and confirmed that Shuffle worked on the public site. Retain this delivery as the source and API decision record.
