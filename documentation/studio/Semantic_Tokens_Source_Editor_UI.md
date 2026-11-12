@@ -52,6 +52,8 @@ Enter selects the active Work result. Pressing Enter again from search confirms 
 
 Supported token forms and identity rules remain owned by [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md). Creation and editing use the same grammar and target families; Catalogue images support Works only.
 
+Choosing **Left** shows **Image width** with **50%**, **33%**, and **Thumbnail**. The first two set the available image column width and retain **Fill available width**. **33%** uses the default primary rendition as a single source. **Thumbnail** uses the actual Catalogue thumbnail at its native size and hides the fill control. All three choices work with **Wrap body text**. Selecting the image opens the Work in Media View.
+
 ## Wrap Body Text
 
 In **Add Catalogue image**, choose **Left** or **Right**. In **Add image**, choose **Image left** or **Image right**. Check **Wrap body text**, put the token on its own line and leave a blank line before the Markdown prose. The prose begins alongside the image and continues at full width after it. A new section heading starts at full width. The optional caption and image summary sit under the image. When the reading column is narrower than 36rem, the image and prose stack.

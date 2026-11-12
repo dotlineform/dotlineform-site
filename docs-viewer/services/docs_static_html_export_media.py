@@ -406,6 +406,7 @@ def plan_snapshot_media(
         environ=environ,
     )
     for media_type, location in (("catalogue/works/primary", work_assets.work_primary),
+                                 ("catalogue/works/thumbs", work_assets.work_thumbnails),
                                  ("catalogue/works/files", work_assets.work_files)) if work_assets else ():
         if any(kind == media_type for kind, _identity in references):
             adapters[media_type] = artifact_location_adapter(repo_root, location)

@@ -356,6 +356,11 @@
   flex: 0 0 auto;
 }
 
+.docsViewerCatalogueImageModal__leftSize{
+  grid-column: 2;
+  justify-self: start;
+}
+
 .docsViewerSourceEditorMedia__wrap{
   grid-column: 2;
   justify-self: start;

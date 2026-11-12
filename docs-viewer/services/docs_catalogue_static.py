@@ -11,7 +11,14 @@ from urllib.parse import quote, urlsplit
 
 from docs_image_tokens import FIGURE_NATURAL_WIDTH_CLASS, FIGURE_PLACEMENT_CLASSES
 from docs_catalogue_projection import catalogue_preparation_inputs
+from docs_publication_media import catalogue_public_thumbnail_location
 from docs_workspace_config import DocsWorkspaceConfig
+
+
+LEFT_IMAGE_SIZE_CLASSES = {
+    "third": "docsViewerFigure--left-third",
+    "thumbnail": "docsViewerFigure--left-thumbnail",
+}
 
 
 @dataclass(frozen=True)
@@ -58,15 +65,18 @@ class CatalogueStaticInputs:
         self.projection = catalogue_preparation_inputs(repo_root, workspace)
         if public_media is None:
             self.primary_base = workspace.assets.url(workspace.assets.work_primary) + "/"
+            self.thumbnail_base = workspace.assets.url(workspace.assets.work_thumbnails) + "/"
             self.files_base = workspace.assets.url(workspace.assets.work_files) + "/"
         else:
             base = public_media["base"].rstrip("/")
             self.primary_base = base + "/" + public_media["image_works"].strip("/") + "/"
+            self.thumbnail_base = "/" + catalogue_public_thumbnail_location(workspace).path.relative_to("site").as_posix() + "/"
             self.files_base = base + "/" + public_media["files_works"].strip("/") + "/"
         self.icons: Any = None
 
-    def image_asset(self, identity: str, version: int) -> CatalogueMedia:
-        return CatalogueMedia("primary", identity, self.primary_base + quote(identity, safe="") + f"?v={version}")
+    def image_asset(self, identity: str, version: int, *, media_type: str = "primary") -> CatalogueMedia:
+        base = self.thumbnail_base if media_type == "thumbs" else self.primary_base
+        return CatalogueMedia(media_type, identity, base + quote(identity, safe="") + f"?v={version}")
 
     def download(self, identity: str) -> CatalogueMedia:
         return CatalogueMedia("files", identity, self.files_base + quote(identity, safe=""))
@@ -110,6 +120,9 @@ def reference_markup(reference: dict[str, Any], presentation: dict[str, Any] | N
         modifiers = [FIGURE_PLACEMENT_CLASSES[options["placement"]]]
         if not options["fill_width"]:
             modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
+        left_size = options.get("left_size")
+        if left_size:
+            modifiers.append(LEFT_IMAGE_SIZE_CLASSES[left_size])
         blocks = []
         if options["use_work_title_caption"]:
             blocks.append(f'<span class="docsViewerFigure__caption">{html.escape(presentation["label"])}</span>')
@@ -152,14 +165,22 @@ def prepare_catalogue_document(
         mode = reference["presentation"]
         work_target = reference["target"]
         presentation = None
+        left_size = reference["options"].get("left_size", "")
         if work_target["kind"] == "catalogue-work" and (mode != "media" or export):
             work_id = work_target["id"]
             work = inputs.projection.work(work_id)
             image = work["image"]
-            src = select(inputs.image_asset(image["default"], image["version"]))
+            primary_url = ""
             if export:
-                work_links[f"catalogue-work:{work_id}"] = src
+                primary_url = select(inputs.image_asset(image["default"], image["version"]))
+                work_links[f"catalogue-work:{work_id}"] = primary_url
             if mode != "media":
+                if mode == "image":
+                    image = inputs.projection.reference_image(work_id, image, left_size)
+                media_type = image.get("media_type", "primary")
+                src = primary_url if export and media_type == "primary" else select(inputs.image_asset(
+                    image["default"], image["version"], media_type=media_type,
+                ))
                 candidates = [] if export else [
                     {"src": inputs.image_asset(candidate["identity"], image["version"]).url,
                      "width_px": candidate["width_px"]} for candidate in image["candidates"]
@@ -178,5 +199,9 @@ def prepare_catalogue_document(
         tag = "span" if mode == "media" else "div"
         slot = f'<{tag} data-docs-catalogue-ref="{reference["reference_id"]}">'
         markup = reference_markup(reference, presentation, inputs)
-        content = content.replace(f"{slot}</{tag}>", f"{slot}{markup}</{tag}>")
+        rendered_slot = slot
+        if left_size == "thumbnail":
+            width = presentation["image"]["width_px"]
+            rendered_slot = f'{slot[:-1]} style="--docs-viewer-thumbnail-width: {width}px">'
+        content = content.replace(f"{slot}</{tag}>", f"{rendered_slot}{markup}</{tag}>")
     return PreparedCatalogueDocument({**payload, "content_html": content}, tuple(media.values()), work_links)

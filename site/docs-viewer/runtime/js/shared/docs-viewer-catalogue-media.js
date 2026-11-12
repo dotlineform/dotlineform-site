@@ -29,16 +29,16 @@ export function catalogueAssetUrl(base, identity) {
   return base + encodeURIComponent(identity);
 }
 
-function primaryUrl(base, identity, version) {
+function versionedImageUrl(base, identity, version) {
   return catalogueAssetUrl(base, identity) + "?v=" + encodeURIComponent(version);
 }
 
 export function catalogueDocumentImage(image, base) {
   var candidates = image.candidates.map(function (candidate) {
-    return { src: primaryUrl(base, candidate.identity, image.version), width_px: candidate.width_px };
+    return { src: versionedImageUrl(base, candidate.identity, image.version), width_px: candidate.width_px };
   });
   return {
-    src: primaryUrl(base, image.default, image.version),
+    src: versionedImageUrl(base, image.default, image.version),
     candidates: candidates, srcset: candidates.map(function (candidate) {
       return candidate.src + " " + candidate.width_px + "w";
     }).join(", "),
@@ -52,7 +52,7 @@ export function catalogueDocumentWorkPresentation(payload, workId, primaryBase) 
   return {
     schema_version: "docs_media_view_v2", target: catalogueMediaTarget(workId),
     label: work.image.alt, image: catalogueDocumentImage(work.image, primaryBase),
-    new_tab_target: primaryUrl(primaryBase, work.full_image, work.image.version),
+    new_tab_target: versionedImageUrl(primaryBase, work.full_image, work.image.version),
     galleries: work.galleries.map(function (gallery) {
       return { target: catalogueGalleryTarget(gallery.id), label: gallery.label, relation: gallery.relation };
     })

@@ -41,6 +41,14 @@ export function catalogueImagePresentationHtml(options = {}) {
           '<span class="docsViewer__fieldLabel">Fill available width</span>' +
         "</label>" +
       "</div>" +
+      '<label class="docsViewer__field docsViewer__field--compactLabel docsViewerCatalogueImageModal__leftSize" hidden>' +
+        '<span class="docsViewer__fieldLabel">Image width</span>' +
+        '<select class="docsViewer__fieldInput" data-role="catalogue-image-left-size" tabindex="-1">' +
+          '<option value="">50%</option>' +
+          '<option value="third">33%</option>' +
+          '<option value="thumbnail">Thumbnail</option>' +
+        "</select>" +
+      "</label>" +
       imageWrapCheckboxHtml({ tabStop: false }) +
     "</div>";
 }
@@ -54,15 +62,31 @@ export function hydrateCatalogueImagePresentation(host, values = {}) {
   }
   host.querySelector('[data-role="catalogue-image-title-caption"]').checked = values.useWorkTitleCaption;
   host.querySelector('[data-role="catalogue-image-summary"]').value = String(values.summary == null ? "" : values.summary);
-  host.querySelector('[data-role="catalogue-image-fill-width"]').checked = values.fillWidth;
-  mountImagePlacement(host, placement);
+  var fillWidth = host.querySelector('[data-role="catalogue-image-fill-width"]');
+  var leftSize = host.querySelector('[data-role="catalogue-image-left-size"]');
+  var sizeField = leftSize.closest("label");
+  var fillField = fillWidth.closest("label");
+  fillWidth.checked = values.leftSize === "thumbnail" || values.fillWidth;
+  leftSize.value = values.leftSize || "";
+  function projectFillWidth() {
+    fillField.hidden = !sizeField.hidden && leftSize.value === "thumbnail";
+  }
+  mountImagePlacement(host, placement, function (side) {
+    sizeField.hidden = side !== "left";
+    projectFillWidth();
+  });
+  leftSize.addEventListener("change", projectFillWidth);
 }
 
 export function readCatalogueImagePresentation(host) {
+  var placement = readImagePlacement(host);
+  var leftSize = placement === "left" || placement === "wrap-left"
+    ? host.querySelector('[data-role="catalogue-image-left-size"]').value : "";
   return {
     useWorkTitleCaption: host.querySelector('[data-role="catalogue-image-title-caption"]').checked,
     summary: host.querySelector('[data-role="catalogue-image-summary"]').value,
-    placement: readImagePlacement(host),
-    fillWidth: host.querySelector('[data-role="catalogue-image-fill-width"]').checked
+    placement: placement,
+    fillWidth: leftSize !== "thumbnail" && host.querySelector('[data-role="catalogue-image-fill-width"]').checked,
+    leftSize: leftSize
   };
 }

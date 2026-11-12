@@ -5,9 +5,45 @@ import { requestUrl } from "./docs-viewer-asset-url.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 export const COLLECTION_PAGE_SIZE = 20;
 export const COLLECTION_SEARCH_DELAY_MS = 180;
+export const CATALOGUE_SHUFFLE_BATCH_COUNT = 64;
+const CATALOGUE_SHUFFLE_BATCH_BYTES = 32 * 1024;
+const UINT32_RANGE = 2 ** 32;
+
+/** Fetch one published quantum batch and shuffle a copy of the supplied Work order. */
+export async function shuffleCatalogueWorks(rows, batch) {
+  const filename = String(batch).padStart(2, "0") + ".bin";
+  const response = await fetch(requestUrl("/assets/data/catalogue-shuffle/" + filename));
+  if (!response.ok) throw new Error("Could not load the shuffle batch (HTTP " + response.status + ").");
+  const draws = new DataView(await response.arrayBuffer());
+  if (draws.byteLength !== CATALOGUE_SHUFFLE_BATCH_BYTES) {
+    throw new Error("The shuffle batch has an unexpected size.");
+  }
+
+  const shuffled = rows.slice();
+  let offset = 0;
+  for (let last = shuffled.length - 1; last > 0; last--) {
+    const choices = last + 1;
+    // Discard the partial interval so every remaining slot has the same number of possible draws.
+    const limit = UINT32_RANGE - UINT32_RANGE % choices;
+    let draw;
+    do {
+      if (offset === draws.byteLength) throw new Error("The shuffle batch ran out of draws for this Catalogue.");
+      draw = draws.getUint32(offset);
+      offset += 4;
+    } while (draw >= limit);
+    const index = draw % choices;
+    [shuffled[last], shuffled[index]] = [shuffled[index], shuffled[last]];
+  }
+  return shuffled;
+}
 
 function compareText(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
+}
+
+function catalogueTitlePattern(query) {
+  const literalQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?:^|[^\\p{L}\\p{M}\\p{N}])${literalQuery}`, "u");
 }
 
 /** Prepare Gallery title keys once and count direct memberships from the matched Work rows. */
@@ -28,10 +64,11 @@ export function createCatalogueGallerySearch(payload) {
         counts.set(galleryId, (counts.get(galleryId) || 0) + 1);
       }
     }
+    const titlePattern = catalogueTitlePattern(query);
     const titleMatches = [];
     const memberMatches = [];
     for (const gallery of galleries) {
-      if (gallery.searchTitle.includes(query)) titleMatches.push(gallery);
+      if (titlePattern.test(gallery.searchTitle)) titleMatches.push(gallery);
       else if (counts.has(gallery.galleryId)) memberMatches.push({ ...gallery, matchCount: counts.get(gallery.galleryId) });
     }
     memberMatches.sort((left, right) => right.matchCount - left.matchCount);
@@ -103,7 +140,15 @@ export function createCollectionPresentation(options) {
       }
       const normalized = normalizeDocsCollectionFilterValue(query);
       if (projection?.ordered === ordered && projection.query === normalized) return projection.rows;
-      const matches = normalized ? ordered.filter(row => row.searchTitle.includes(normalized) || row.workId.includes(normalized)) : ordered;
+      let matches = ordered;
+      if (normalized) {
+        if (catalogue) {
+          const titlePattern = catalogueTitlePattern(normalized);
+          matches = ordered.filter(row => titlePattern.test(row.searchTitle) || row.workId.includes(normalized));
+        } else {
+          matches = ordered.filter(row => row.searchTitle.includes(normalized));
+        }
+      }
       projection = { ordered, query: normalized, rows: matches };
       return matches;
     }

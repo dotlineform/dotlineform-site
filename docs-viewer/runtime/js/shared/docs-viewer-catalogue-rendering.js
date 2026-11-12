@@ -74,6 +74,8 @@ function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
       "wrap-right": "docsViewerFigure--wrap-right"
     }[options.placement];
     var classes = placement + (options.fill_width ? "" : " docsViewerFigure--natural-width");
+    if (options.left_size === "third") classes += " docsViewerFigure--left-third";
+    if (options.left_size === "thumbnail") classes += " docsViewerFigure--left-thumbnail";
     var blocks = options.use_work_title_caption ? '<span class="docsViewerFigure__caption">' + escape(presentation.label) + "</span>" : "";
     if (options.summary_html) blocks += '<span class="docsViewerFigure__summary">' + options.summary_html + "</span>";
     return '<figure class="docsViewerFigure ' + classes + '" ' + attrs + ">" + image + (blocks ? "<figcaption>" + blocks + "</figcaption>" : "") + "</figure>";
@@ -103,6 +105,9 @@ export function mountCatalogueDocument(context) {
         var work = reference.presentation === "entry" ? catalogue.work : null;
         var image = context.image(work ? work.image : reference.render);
         presentation = { label: image.alt, image: image, entry: work && work.entry, galleries: work && work.galleries };
+        if (reference.options.left_size === "thumbnail") {
+          slot.style.setProperty("--docs-viewer-thumbnail-width", image.width_px + "px");
+        }
       }
       slot.innerHTML = catalogueReferenceMarkup(reference, presentation, context.downloadUrl);
       context.bind(slot, presentation && {

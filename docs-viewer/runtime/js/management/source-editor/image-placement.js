@@ -11,18 +11,20 @@ export function imageWrapCheckboxHtml({ tabStop = true } = {}) {
 }
 
 /** Project the token placement into the two controls and track the selected side. */
-export function mountImagePlacement(host, placement) {
+export function mountImagePlacement(host, placement, onSideChange) {
   const wrap = placement.startsWith("wrap-");
   const side = wrap ? placement.slice(5) : placement;
   const wrapInput = host.querySelector(WRAP_INPUT);
   const wrapField = wrapInput.closest("label");
   wrapInput.checked = wrap;
-  wrapField.hidden = side === "full";
+  function projectSide(value) {
+    wrapField.hidden = value === "full";
+    onSideChange?.(value);
+  }
+  projectSide(side);
   host.querySelectorAll(PLACEMENT_INPUT).forEach((input) => {
     input.checked = input.value === side;
-    input.addEventListener("change", () => {
-      wrapField.hidden = input.value === "full";
-    });
+    input.addEventListener("change", () => projectSide(input.value));
   });
 }
 

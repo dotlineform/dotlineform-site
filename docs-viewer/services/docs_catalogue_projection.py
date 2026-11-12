@@ -110,11 +110,29 @@ class CatalogueDocumentProjection:
         self.documents: dict[str, dict[str, Any]] = {}
         self.policy: dict[str, Any] | None = None
 
-    def prepare(self, work_id: str, work: dict[str, Any]) -> dict[str, Any]:
+    def media_policy(self) -> dict[str, Any]:
         if self.policy is None:
             self.policy = read_catalogue_media_config(self.repo_root, workspace=self.catalogue_root)
-        image, full_image = prepare_work_image(work_id, work["image"], self.policy)
+        return self.policy
+
+    def prepare(self, work_id: str, work: dict[str, Any]) -> dict[str, Any]:
+        image, full_image = prepare_work_image(work_id, work["image"], self.media_policy())
         return {**work, "image": image, "full_image": full_image}
+
+    def reference_image(self, work_id: str, image: dict[str, Any], left_size: str) -> dict[str, Any]:
+        """Carry only the selected inline renditions, with the Work's title and version."""
+        if left_size == "third":
+            return {**image, "candidates": []}
+        if left_size == "thumbnail":
+            policy = self.media_policy()
+            thumbnail = policy["thumbnails"]
+            size = min(thumbnail["sizes"])
+            return {
+                "alt": image["alt"], "version": image["version"], "width_px": size, "height_px": size,
+                "media_type": "thumbs", "default": f"{work_id}-{thumbnail['suffix']}-{size}.{policy['format']}",
+                "candidates": [],
+            }
+        return image
 
     def work(self, work_id: str) -> dict[str, Any]:
         if work_id in self.adopted_works:
@@ -151,7 +169,9 @@ class CatalogueDocumentProjection:
         if envelope is not None:
             for reference in envelope["references"]:
                 if reference["presentation"] == "image":
-                    reference["render"] = self.work(reference["target"]["id"])["image"]
+                    work_id = reference["target"]["id"]
+                    image = self.work(work_id)["image"]
+                    reference["render"] = self.reference_image(work_id, image, reference["options"].get("left_size", ""))
 
 
 def catalogue_preparation_inputs(repo_root: Path, workspace: DocsWorkspaceConfig) -> CatalogueDocumentProjection:
@@ -164,8 +184,13 @@ def catalogue_preparation_inputs(repo_root: Path, workspace: DocsWorkspaceConfig
 def rendered_catalogue_assets(payload: dict[str, Any]) -> tuple[tuple[str, str], ...]:
     """Select only inline Work renditions used by this referring document."""
     references = payload.get("catalogue", {}).get("references", ())
-    return tuple(dict.fromkeys(
-        ("catalogue/works/primary", candidate["identity"])
-        for reference in references if reference["presentation"] == "image"
-        for candidate in reference["render"]["candidates"]
-    ))
+    selected = {}
+    for reference in references:
+        if reference["presentation"] != "image":
+            continue
+        image = reference["render"]
+        binding = "catalogue/works/" + image.get("media_type", "primary")
+        selected[(binding, image["default"])] = None
+        for candidate in image["candidates"]:
+            selected[(binding, candidate["identity"])] = None
+    return tuple(selected)

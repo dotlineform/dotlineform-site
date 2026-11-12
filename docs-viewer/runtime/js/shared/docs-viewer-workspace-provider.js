@@ -135,7 +135,9 @@ export function createDocsViewerWorkspaceProvider(options) {
     };
   }
   provider.catalogueImage = function (image) {
-    return catalogueDocumentImage(image, routeContext().routeConfig.catalogueWorkPrimaryBaseUrl);
+    var config = routeContext().routeConfig;
+    return catalogueDocumentImage(image, image.media_type === "thumbs"
+      ? config.catalogueWorkThumbnailsBaseUrl : config.catalogueWorkPrimaryBaseUrl);
   };
   provider.catalogueDownloadUrl = function (identity) {
     return catalogueAssetUrl(routeContext().routeConfig.catalogueWorkFilesBaseUrl, identity);

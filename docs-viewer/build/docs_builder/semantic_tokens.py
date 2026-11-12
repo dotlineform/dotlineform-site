@@ -38,6 +38,7 @@ class SemanticTokenOccurrence:
     summary: str = ""
     placement: str = ""
     fill_width: bool | None = None
+    left_size: str = ""
     media_path: str = ""
     alt: str = ""
     caption: str = ""
@@ -93,6 +94,7 @@ def serialize_catalogue_image_token(
     summary: Any = "",
     placement: Any,
     fill_width: Any = None,
+    left_size: str = "",
 ) -> str:
     """Serialize a Work image's caption choice, authored summary and layout."""
     if (
@@ -106,6 +108,12 @@ def serialize_catalogue_image_token(
     placement_value = normalize_plain_text(placement, required=True).lower()
     if placement_value not in FIGURE_PLACEMENT_CLASSES:
         return ""
+    if left_size != "" and (
+        left_size not in ("third", "thumbnail")
+        or placement_value not in ("left", "wrap-left")
+        or (left_size == "thumbnail" and fill_width)
+    ):
+        return ""
     fields: list[tuple[str, str]] = [
         ("use_work_title_caption", "true" if use_work_title_caption else "false"),
     ]
@@ -116,6 +124,8 @@ def serialize_catalogue_image_token(
         ("placement", placement_value),
         ("fill_width", "true" if fill_width else "false"),
     ))
+    if left_size:
+        fields.append(("left_size", left_size))
     query = "&".join(
         f"{key}={encode_image_value(value)}" for key, value in fields
     )
@@ -130,7 +140,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         key, separator, encoded_value = pair.partition("=")
         if (
             not separator
-            or key not in {"use_work_title_caption", "summary", "placement", "fill_width"}
+            or key not in {"use_work_title_caption", "summary", "placement", "fill_width", "left_size"}
             or key in fields
             or not encoded_value
         ):
@@ -151,6 +161,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         summary=fields.get("summary", ""),
         placement=fields["placement"],
         fill_width=fields["fill_width"] == "true",
+        left_size=fields.get("left_size", ""),
     )
     if not token:
         return None
@@ -162,6 +173,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         "summary": normalize_summary_text(fields.get("summary", "")),
         "placement": normalize_plain_text(fields["placement"], required=True),
         "fill_width": fields["fill_width"] == "true",
+        "left_size": fields.get("left_size", ""),
     }
 
 
@@ -252,6 +264,7 @@ def parse_semantic_token(
         summary=image_fields["summary"] if image_fields else "",
         placement=image_fields["placement"] if image_fields else "",
         fill_width=image_fields["fill_width"] if image_fields else None,
+        left_size=image_fields["left_size"] if image_fields else "",
     )
 
 
@@ -360,6 +373,8 @@ def catalogue_reference(token: SemanticTokenOccurrence, reference_id: str) -> di
             "placement": token.placement,
             "fill_width": token.fill_width,
         }
+        if token.left_size:
+            options["left_size"] = token.left_size
     elif token.presentation == "media":
         options["label"] = token.title
     return {

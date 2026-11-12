@@ -723,6 +723,10 @@ body.docs-viewer-service{
   mask-image: url("../icons/clock-3.svg");
 }
 
+.docsViewer__icon--dice-2{
+  mask-image: url("../icons/dice-2.svg");
+}
+
 .docsViewer__icon--external-link{
   mask-image: url("../icons/external-link.svg");
 }
@@ -1854,6 +1858,22 @@ body.docs-viewer-service{
   gap: var(--docs-viewer-space-5);
 }
 
+.docsViewer__content .docsViewerFigure--image-left.docsViewerFigure--left-third{
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+.docsViewer__content .docsViewerFigure--image-left.docsViewerFigure--left-thumbnail{
+  grid-template-columns: minmax(0, var(--docs-viewer-thumbnail-width)) minmax(0, 1fr);
+}
+
+.docsViewer__content .docsViewerFigure--left-thumbnail > .docsViewerFigure__imageLink{
+  width: min(100%, var(--docs-viewer-thumbnail-width));
+}
+
+.docsViewer__content .docsViewerFigure--wrap-left.docsViewerFigure--left-thumbnail > figcaption{
+  overflow-wrap: anywhere;
+}
+
 .docsViewer__content .docsViewerFigure--image-right > img,
 .docsViewer__content .docsViewerFigure--image-right > .docsViewerFigure__imageLink,
 .docsViewer__content .docsViewerFigure--image-right > .docsViewer__imageFrame{
@@ -1913,7 +1933,7 @@ body.docs-viewer-service{
   ){
     width: var(--docs-viewer-wrapped-image-width);
     max-width: var(--docs-viewer-wrapped-image-width);
-    margin: 0 0 var(--docs-viewer-space-3);
+    margin: 0.45em 0 var(--docs-viewer-space-3);
     clear: both;
   }
 
@@ -1936,6 +1956,14 @@ body.docs-viewer-service{
 
   .docsViewer__documentMount > [data-docs-catalogue-ref] > :is(.docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right){
     margin: 0;
+  }
+
+  .docsViewer__documentMount > [data-docs-catalogue-ref]:has(> .docsViewerFigure--wrap-left.docsViewerFigure--left-third){
+    --docs-viewer-wrapped-image-width: calc((100% - var(--docs-viewer-space-5)) / 3);
+  }
+
+  .docsViewer__documentMount > [data-docs-catalogue-ref]:has(> .docsViewerFigure--wrap-left.docsViewerFigure--left-thumbnail){
+    width: var(--docs-viewer-thumbnail-width);
   }
 
   .docsViewer__documentMount > :is(

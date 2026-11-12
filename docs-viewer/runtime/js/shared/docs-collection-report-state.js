@@ -11,7 +11,7 @@ const snapshots = new Map();
  * @param {string} options.hostDocId Immutable ordinary report host identity.
  * @param {function(): boolean} options.isReady Whether current list controls are ready.
  * @param {function(): Object} options.captureControls JSON-safe control snapshot.
- * @param {function(Object): void} options.restoreControls Reconcile saved controls with current inventory.
+ * @param {function(Object): *} options.restoreControls Reconcile saved controls and return any work the report still needs to do.
  * @returns {Object} Capture/restore owner; dispose releases listeners and pending position restoration.
  */
 export function createDocsCollectionReportState(options) {
@@ -62,7 +62,7 @@ export function createDocsCollectionReportState(options) {
 
   function restore() {
     const saved = read();
-    if (saved && options.isReady()) options.restoreControls(saved.controls);
+    if (saved && options.isReady()) return options.restoreControls(saved.controls);
   }
 
   function restorePosition() {

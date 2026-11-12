@@ -2,7 +2,7 @@
   "doc_id": "d-20260426-164043-e14f49",
   "title": "dotlineform",
   "added_date": "2026-04-26 16:40:43",
-  "last_updated": "2026-11-12 17:16:18",
+  "last_updated": "2026-11-12 18:53:30",
   "draft": false,
   "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n<p><em>dotlineform</em> is an ongoing project consisting of a portfolio of visual artwork and a <a href=\"?doc=d-20260809-130120-870cc2\">library</a> of research and conceptual writing.</p>\n<p>Much of the work derives from a precept/belief that there exists fundamental (Platonic) Forms that shape nature and that whilst these forms cannot be perceived directly, their efficacy can be felt when we observe the world around and inside us. Spontaneous and chance events reveal the underlying emptiness of our perceptions and the interdependences between all objects and events in our environment; the duality of meaning and meaning-less, truth and not-truth, is the basis for the ongoing photographic project <span data-docs-catalogue-ref=\"c2\"></span> which de-contextualises often random or mundane moments from a personal photographic archive to celebrate our world of incomprehensible complexity and mystery.</p>\n",
   "catalogue": {
@@ -19,7 +19,8 @@
           "use_work_title_caption": false,
           "summary_html": "",
           "placement": "wrap-left",
-          "fill_width": true
+          "fill_width": true,
+          "left_size": "third"
         },
         "render": {
           "alt": "a doll story - doll 12",
@@ -27,20 +28,7 @@
           "height_px": 2835,
           "version": 1,
           "default": "00652-primary-800.webp",
-          "candidates": [
-            {
-              "identity": "00652-primary-800.webp",
-              "width_px": 800
-            },
-            {
-              "identity": "00652-primary-1200.webp",
-              "width_px": 1200
-            },
-            {
-              "identity": "00652-primary-1600.webp",
-              "width_px": 1600
-            }
-          ]
+          "candidates": []
         }
       },
       {

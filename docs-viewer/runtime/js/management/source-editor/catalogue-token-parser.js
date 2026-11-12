@@ -2,7 +2,7 @@ import { IMAGE_PLACEMENTS } from "./image-placement.js";
 
 var LEXICAL_KEY_PATTERN = /^[a-z][a-z0-9-]*$/;
 var LEXICAL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
-var IMAGE_FIELDS = new Set(["use_work_title_caption", "summary", "placement", "fill_width"]);
+var IMAGE_FIELDS = new Set(["use_work_title_caption", "summary", "placement", "fill_width", "left_size"]);
 var MEDIA_TARGET_PATTERNS = { work: /^[0-9]{5}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
 
 function cleanString(value) {
@@ -117,11 +117,18 @@ export function serializeCatalogueImageToken(options = {}) {
   var summary = summaryText(options.summary);
   var placement = cleanString(options.placement).toLowerCase();
   if (!IMAGE_PLACEMENTS.has(placement)) return "";
+  var leftSize = options.leftSize === undefined ? "" : options.leftSize;
+  if (leftSize !== "" && (
+    (leftSize !== "third" && leftSize !== "thumbnail")
+    || (placement !== "left" && placement !== "wrap-left")
+    || (leftSize === "thumbnail" && options.fillWidth)
+  )) return "";
   var fields = [
     ["use_work_title_caption", options.useWorkTitleCaption ? "true" : "false"]
   ];
   if (summary) fields.push(["summary", summary]);
   fields.push(["placement", placement], ["fill_width", options.fillWidth ? "true" : "false"]);
+  if (leftSize) fields.push(["left_size", leftSize]);
   var query = fields.map(function (field) {
     return field[0] + "=" + encodeImageValue(field[1]);
   }).join("&");
@@ -157,14 +164,16 @@ function parseCatalogueImageFields(rawQuery, options) {
     useWorkTitleCaption: fields.use_work_title_caption === "true",
     summary: fields.summary || "",
     placement: fields.placement,
-    fillWidth: fields.fill_width === "true"
+    fillWidth: fields.fill_width === "true",
+    leftSize: fields.left_size
   });
   if (!serialized || serialized.slice(serialized.indexOf("|") + 1, -2) !== rawQuery) return null;
   return {
     useWorkTitleCaption: fields.use_work_title_caption === "true",
     summary: summaryText(fields.summary),
     placement: cleanString(fields.placement),
-    fillWidth: fields.fill_width === "true"
+    fillWidth: fields.fill_width === "true",
+    leftSize: fields.left_size || ""
   };
 }
 
@@ -226,7 +235,8 @@ export function parseCatalogueToken(raw, options = {}) {
     useWorkTitleCaption: imageFields ? imageFields.useWorkTitleCaption : null,
     summary: imageFields ? imageFields.summary : "",
     placement: imageFields ? imageFields.placement : "",
-    fillWidth: imageFields ? imageFields.fillWidth : null
+    fillWidth: imageFields ? imageFields.fillWidth : null,
+    leftSize: imageFields ? imageFields.leftSize : ""
   };
 }
 

@@ -5,13 +5,15 @@ import { createDocsCollectionReportState } from "./docs-collection-report-state.
 import { fetchDocsCollectionManifest, fetchSelectedDocumentRows } from "./docs-viewer-data.js";
 import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-filter.js";
 import {
+  CATALOGUE_SHUFFLE_BATCH_COUNT,
   COLLECTION_PAGE_SIZE,
   COLLECTION_SEARCH_DELAY_MS,
   appendCollectionThumbnail,
   createCatalogueGallerySearch,
   createCollectionBrowsingData,
   createCollectionPager,
-  loadCatalogueCollectionThumbnailSettings
+  loadCatalogueCollectionThumbnailSettings,
+  shuffleCatalogueWorks
 } from "./docs-collection-browsing.js";
 
 /**
@@ -287,7 +289,17 @@ function renderShell(context, collection, features) {
   root.appendChild(status);
   root.appendChild(table);
 
-  if (collectionId(collection) === "catalogue") status.classList.remove("visually-hidden");
+  var shuffle = null;
+  if (collectionId(collection) === "catalogue") {
+    status.classList.remove("visually-hidden");
+    shuffle = document.createElement("button");
+    shuffle.type = "button";
+    shuffle.className = "docsViewer__toolbarIconButton";
+    shuffle.title = "Shuffle";
+    shuffle.setAttribute("aria-label", shuffle.title);
+    shuffle.appendChild(createDocsViewerToolbarIcon(shuffle.ownerDocument, "docsViewer__icon--dice-2"));
+    filters.toolbarNode.appendChild(shuffle);
+  }
   var collectionSort = null;
   if (context.managementContext && features.filterToolbarSort) {
     collectionSort = document.createElement("button");
@@ -297,6 +309,7 @@ function renderShell(context, collection, features) {
   }
 
   return {
+    shuffleNode: shuffle,
     collectionSortNode: collectionSort,
     filterClearNode: filters.clearNode,
     filterInputNode: filters.inputNode,
@@ -321,9 +334,47 @@ function updateFilterControls(state) {
   state.searchCopy?.update(state.query);
 }
 
-function visibleDocuments(state) {
+function visibleDocuments(state, catalogueQuery) {
   var rows = state.browsingData.project(state.query, state.sortMode);
+  if (state.shuffledWorks && !catalogueQuery) {
+    if (state.shuffledWorks.source === rows) return state.shuffledWorks.rows;
+    state.shuffledWorks = null;
+  }
   return state.sectionNavigation ? state.sectionNavigation.project(rows) : rows;
+}
+
+async function loadCatalogueShuffle(state, batch) {
+  state.shufflePending = true;
+  updateCollectionControls(state);
+  try {
+    var source = state.browsingData.project("", state.sortMode);
+    var rows = await shuffleCatalogueWorks(source, batch);
+    if (!state.mounted) return false;
+    state.shuffledWorks = { batch, source, rows };
+    state.shuffleError = "";
+    return true;
+  } catch (error) {
+    if (state.mounted) state.shuffleError = error.message;
+    return false;
+  } finally {
+    state.shufflePending = false;
+  }
+}
+
+async function shuffleCatalogueList(state, remembered) {
+  var batch = 1 + Math.floor(Math.random() * CATALOGUE_SHUFFLE_BATCH_COUNT);
+  var shuffled = await loadCatalogueShuffle(state, batch);
+  if (!state.mounted) return;
+  if (!normalizeDocsCollectionFilterValue(state.query)) {
+    if (shuffled) state.pageIndex = 0;
+    state.listNeedsRender = true;
+    if (state.root.dataset.reportState === "list") {
+      renderListProjectionContained(state, "catalogue-shuffle");
+      remembered.save();
+      return;
+    }
+  }
+  updateCollectionControls(state);
 }
 
 function loadGallerySearch(state, search) {
@@ -436,6 +487,11 @@ function cancelCollectionSearch(state) {
 function updateCollectionControls(state, pageIndex = state.pageIndex) {
   var pending = state.searchTimer !== null || !state.manifestLoaded;
   state.paginationControl?.update(state.pagedBrowsing);
+  if (state.shuffleNode) {
+    state.shuffleNode.disabled = pending || state.shufflePending || state.browsingData.rows.length < 2
+      || Boolean(normalizeDocsCollectionFilterValue(state.query));
+    state.shuffleNode.setAttribute("aria-busy", String(state.shufflePending));
+  }
   var button = state.collectionSortNode;
   if (button) {
     var recentMode = state.sortMode === "last-updated-desc";
@@ -443,11 +499,12 @@ function updateCollectionControls(state, pageIndex = state.pageIndex) {
       "title-asc": "title A–Z",
       "last-updated-desc": "recently updated"
     }[state.sortMode];
-    button.disabled = pending;
+    button.disabled = pending || state.shufflePending;
     button.dataset.docsCollectionSort = state.sortMode;
     button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument,
       recentMode ? "docsViewer__icon--clock-3" : "docsViewer__icon--arrow-down-a-z"));
-    button.title = "Sorted by " + currentLabel + ". Switch to "
+    var shuffled = state.documentMatches === state.shuffledWorks?.rows;
+    button.title = (shuffled ? "Shuffled." : "Sorted by " + currentLabel + ".") + " Switch to "
       + (recentMode ? "title A–Z." : "recently updated.");
     button.setAttribute("aria-label", button.title);
   }
@@ -466,6 +523,8 @@ function listSortContext(state) {
         throw new Error("Docs collection sort mode is invalid: " + nextMode);
       }
       state.sortMode = nextMode;
+      state.shuffledWorks = null;
+      state.shuffleError = "";
       state.pageIndex = 0;
       renderListProjectionContained(state, "sort-change", { reusePinnedRows: true });
       return nextMode;
@@ -532,7 +591,8 @@ function renderRows(state, matches, pinnedMatches, retainedPinnedRows) {
   state.root.removeAttribute("data-report-leading-column");
   var searchError = state.gallerySearch?.error && normalizeDocsCollectionFilterValue(state.query)
     ? state.gallerySearch.error : "";
-  var message = searchError || state.pinLoadError;
+  var shuffleError = state.shuffleError && !normalizeDocsCollectionFilterValue(state.query) ? state.shuffleError : "";
+  var message = searchError || shuffleError || state.pinLoadError;
   state.statusNode.textContent = message;
   state.statusNode.hidden = !message;
   if (!matches.length && !rows.length) {
@@ -579,9 +639,9 @@ function publishState(state, reportState, target, reason) {
 function renderListProjection(state, reusePinnedRows) {
   var retainedPinnedRows = reusePinnedRows && !state.listNeedsRender ? state.renderedPinnedRows : null;
   state.listNeedsRender = true;
-  var documents = visibleDocuments(state);
   var gallerySearch = state.gallerySearch;
-  var query = gallerySearch ? normalizeDocsCollectionFilterValue(state.query) : "";
+  var query = state.shuffleNode ? normalizeDocsCollectionFilterValue(state.query) : "";
+  var documents = visibleDocuments(state, query);
   if (query && gallerySearch) loadGallerySearch(state, gallerySearch);
   var projected = query && gallerySearch?.project ? gallerySearch.project(query, documents) : documents;
   var matches = projected;
@@ -650,6 +710,7 @@ function captureListControls(state) {
   var captureContribution = contributionCallback(state.contribution, "captureListState");
   return { query: state.query, sort: state.sortMode,
     page: state.searchTimer !== null ? 0 : state.pageIndex,
+    ...(state.shuffledWorks ? { shuffleBatch: state.shuffledWorks.batch } : {}),
     ...(typeof state.contribution?.paginationDefault === "boolean" ? { pagination: state.pagedBrowsing } : {}),
     ...(state.sectionNavigation ? { section: state.sectionNavigation.selected() } : {}),
     contribution: captureContribution ? captureContribution.call(state.contribution) : null };
@@ -669,6 +730,12 @@ function restoreListControls(state, saved) {
   var restoreContribution = contributionCallback(state.contribution, "restoreListState");
   if (restoreContribution) restoreContribution.call(state.contribution, saved.contribution);
   state.listNeedsRender = true;
+  var batch = saved.shuffleBatch;
+  if (!state.shuffleNode || !Number.isInteger(batch) || batch < 1 || batch > CATALOGUE_SHUFFLE_BATCH_COUNT) batch = undefined;
+  if (batch !== state.shuffledWorks?.batch) {
+    state.shuffledWorks = null;
+    return batch;
+  }
 }
 
 /** Reveal the retained list, rebuilding only when its document data changed. */
@@ -758,6 +825,10 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     thumbnailSettingsRead: null,
     gallerySearch: null,
     catalogueSearchRoute: context.catalogueSearchRoute,
+    shuffleNode: refs.shuffleNode,
+    shufflePending: false,
+    shuffleError: "",
+    shuffledWorks: null,
     collectionSortNode: refs.collectionSortNode,
     matches: [],
     documentMatches: [],
@@ -846,12 +917,16 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   var unbindKeyboardNavigation = bindCollectionKeyboardNavigation(state);
   updateFilterControls(state);
 
+  var restoringShuffle = null;
   var remembered = createDocsCollectionReportState({
     root: root, collectionId: state.collectionId, hostDocId: state.parentDocId,
-    isReady: function () { return state.mounted && state.manifestLoaded && root.dataset.reportState === "list"; },
+    isReady: function () {
+      return state.mounted && state.manifestLoaded && !restoringShuffle && root.dataset.reportState === "list";
+    },
     captureControls: function () { return captureListControls(state); },
-    restoreControls: function (saved) { restoreListControls(state, saved); }
+    restoreControls: function (saved) { return restoreListControls(state, saved); }
   });
+  state.shuffleNode?.addEventListener("click", function () { shuffleCatalogueList(state, remembered); });
   state.sectionNavigation = contributionCallback(contribution, "mountSectionNavigation")?.({
     root: root,
     rows: function () { return state.browsingData.rows; },
@@ -866,7 +941,23 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   });
   function restoreRememberedList() {
     if (!state.manifestLoaded || !state.mounted || root.dataset.reportState === "error") return;
-    remembered.restore();
+    if (restoringShuffle) return restoringShuffle;
+    var batch = remembered.restore();
+    if (batch === undefined || state.shufflePending) {
+      revealRememberedList();
+      return;
+    }
+    state.filterInputNode.disabled = true;
+    restoringShuffle = loadCatalogueShuffle(state, batch).then(function (shuffled) {
+      restoringShuffle = null;
+      if (!state.mounted) return;
+      state.filterInputNode.disabled = false;
+      if (!shuffled && !normalizeDocsCollectionFilterValue(state.query)) state.pageIndex = 0;
+      revealRememberedList();
+    });
+    return restoringShuffle;
+  }
+  function revealRememberedList() {
     var catalogueSearch = lifetime.catalogueSearch;
     if (catalogueSearch !== undefined) {
       lifetime.catalogueSearch = undefined;
@@ -897,6 +988,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.pinnedDocIds = null;
     state.thumbnailSettingsRead = null;
     state.gallerySearch = null;
+    state.shuffledWorks = null;
   }
   lifetime.view = {
     dispose: dispose, capture: remembered.save, restore: restoreRememberedList, resume: restoreRememberedList
@@ -950,11 +1042,11 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.pinLoadError = "Could not load starred documents.";
     state.statusNode.classList.remove("visually-hidden");
   }) : null;
-  return state.loadManifest(starsRead).then(function (loaded) {
+  return state.loadManifest(starsRead).then(async function (loaded) {
       if (loaded) {
         // The document inventory must exist before restoring saved controls.
         root.dataset.reportState = "list";
-        restoreRememberedList();
+        await restoreRememberedList();
       }
       return true;
     })

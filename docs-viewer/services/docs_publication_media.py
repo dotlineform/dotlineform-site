@@ -36,6 +36,11 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
         return ""
 
 
+def catalogue_public_thumbnail_location(workspace: DocsWorkspaceConfig) -> ArtifactLocation:
+    destination = workspace.catalogue.public_projection.location
+    return ArtifactLocation(destination.provider, destination.path / "works/thumbs")
+
+
 def publication_media_bindings(
     repo_root: Path, config: DocsStageConfig, *, workspace: DocsWorkspaceConfig,
 ) -> dict[str, tuple[ArtifactLocation, DocsPublicMediaConfig]]:
@@ -58,11 +63,11 @@ def publication_media_bindings(
             key, prefix, ArtifactLocation(R2_PROVIDER, prefix),
             settings["base"].rstrip("/") + "/" + prefix.as_posix(),
         ))
-    destination = workspace.catalogue.public_projection.location
+    destination = catalogue_public_thumbnail_location(workspace)
     bindings["catalogue/works/thumbs"] = (assets.work_thumbnails, DocsPublicMediaConfig(
         "catalogue/works/thumbs", Path("works/thumbs"),
-        ArtifactLocation(destination.provider, destination.path / "works/thumbs"),
-        "/" + (destination.path / "works/thumbs").relative_to("site").as_posix(),
+        destination,
+        "/" + destination.path.relative_to("site").as_posix(),
     ))
     return bindings
 

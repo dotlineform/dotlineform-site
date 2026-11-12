@@ -38,7 +38,7 @@ Gallery IDs use the exact canonical spelling: three digits, or at least four dig
 [[catalogue:image:work:03072|use_work_title_caption=true&placement=full&fill_width=true]]
 ```
 
-Add/Edit Catalogue image and Media View link update only the captured Source range after local token serialization and buffer/editor checks. They make no selected-record or media-policy request. Registry and generated-target reads use HTTP revalidation with `no-cache`; the optional Use document subject context request retains its separate owner. Source Save persists the full buffer, awaits exact document/Links generation and displays the fresh result. Cancellation leaves the buffer unchanged.
+Add/Edit Catalogue image and Media View link update only the captured Source range after local token serialization and buffer/editor checks. The picker reads the thumbnail policy for result previews. Apply uses the already selected identity and local fields. Registry and generated-target reads use HTTP revalidation with `no-cache`. Source Save persists the full buffer, awaits exact document/Links generation and displays the fresh result. Cancellation leaves the buffer unchanged.
 
 ## Document Build And Presentation
 
@@ -67,6 +67,8 @@ Authored references persist when a Work is removed. The operation that needs a m
 Studio Refresh supplies the selected raw Work data, Gallery relationships and rendition policy. Catalogue Regenerate adopts them into the Work's Catalogue document. Working and public readers use the exact Catalogue by-ID document and route-configured primary image and owned-download roots. Gallery policy reads still supply thumbnail naming. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) owns the fields and [Broken Links](Broken_Links_Script.md) owns explicit availability diagnosis.
 
 Width descriptors reflect actual rendition widths, including sources below a configured target. Preparation removes duplicate widths. The browser builds `srcset` from the prepared candidates and `docs-viewer-responsive-image.js` measures the image slot to set `sizes`. In-document images retain their authored placement and width. Media View constrains width by its image column, source dimensions, viewport height and aspect ratio. Open in new tab uses the prepared full-image target, currently the 1600px rendition.
+
+Left-aligned Catalogue image tokens can use the existing half-width responsive image, a third-width single-source image from the default primary rendition, or the native square thumbnail. Build prepares the exact inline rendition. Working and public resolve it using the configured primary or thumbnail base. Selecting a thumbnail opens the Work's primary image through Media View. Export packages the exact inline thumbnail and the primary rendition it links to.
 
 ## Ownership
 
