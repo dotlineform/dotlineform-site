@@ -12,7 +12,6 @@ export function createDocsViewerDocumentIndexState(options) {
       })
     );
     state.childrenByParent = buildChildrenMap(state.docs);
-    if (!state.docsById.has(state.indexSelectedDocId)) state.indexSelectedDocId = "";
     state.expandedDocIds = new Set(Array.from(state.expandedDocIds).filter(function (docId) { return state.docsById.has(docId); }));
   }
 

@@ -118,7 +118,7 @@ export function startDocsViewerRuntime(options) {
       renderIndexViewControls();
     },
     onTreeVisible: function () {
-      if (sidebarRenderer) sidebarRenderer.scrollSelectionIntoView();
+      if (sidebarRenderer) sidebarRenderer.trackLocation();
     }
   });
   var viewRegistry = composition.viewRegistry;
@@ -368,6 +368,7 @@ export function startDocsViewerRuntime(options) {
     mountRelatedLinks: documentViewCoordinator.mountRelatedLinks,
     reportPresentationAdapter: settings.reportPresentationAdapter,
     projectDocumentShell: panelLayout.projectMainView,
+    projectIndexLocation: sidebarRenderer.trackLocation,
     renderManagementUi: renderManagementUi,
     renderMeta: renderMeta,
     publishCollectionReportState: publishCollectionReportState,
@@ -433,7 +434,6 @@ export function startDocsViewerRuntime(options) {
     renderManagementUi: renderManagementUi,
     renderPayload: renderPayload,
     renderSidebar: renderSidebar,
-    trackSidebarSelection: trackSidebarSelection,
     toggleSidebarBranch: sidebarRenderer.toggleBranch,
     root: root,
     routeSession: appSession.domains.routeSession,
@@ -808,11 +808,6 @@ export function startDocsViewerRuntime(options) {
 
   function renderSidebar() {
     sidebarRenderer.renderSidebar();
-  }
-
-  function trackSidebarSelection() {
-    sidebarRenderer.trackSelection();
-    if (searchController) searchController.syncSelection();
   }
 
   function currentDocumentTarget() { return appSession.domains.selectedDocument.documentTarget; }

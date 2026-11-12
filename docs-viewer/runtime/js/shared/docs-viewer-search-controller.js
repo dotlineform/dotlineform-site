@@ -257,7 +257,8 @@ export function initDocsViewerSearchController(context) {
           deletedResults.delete((target.collection || "") + ":" + target.doc_id);
           index.docs[position] = Object.assign({}, index.docs[position], change.record, { id: target.doc_id, collection: target.collection || "" });
           fields.forEach(function (field) {
-            var terms = field === "last_updated" ? [normalizeSearchText(change.record[field])] : tokenizeSearchValue(change.record[field]);
+            var terms = field === "last_updated" ? [normalizeSearchText(change.record[field])]
+              : tokenizeSearchValue(change.record[field], { includeNumbers: field === "title" });
             terms.filter(Boolean).forEach(function (term) {
               var posting = index.terms[term] || (index.terms[term] = {});
               var positions = posting[field] || (posting[field] = []);

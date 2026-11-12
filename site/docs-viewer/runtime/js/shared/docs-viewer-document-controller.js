@@ -69,6 +69,7 @@ export function initDocsViewerDocumentController(context) {
     context.renderManagementUi();
     var mediaMount = mountMediaDetails(record.doc, record.payload, record.generation);
     if (waitForLayout && !await revealCatalogueLayout(record, mediaMount, record.generation)) return false;
+    context.projectIndexLocation();
     return true;
   }
   async function restore(snapshot) {
@@ -388,8 +389,15 @@ export function initDocsViewerDocumentController(context) {
     target.scrollIntoView({ block: "start", behavior: "auto" });
   }
 
+  function clearDisplayedDocument() {
+    selectedDocument.displayedRecord = null;
+    selectedDocument.displayedPayload = null;
+    context.projectIndexLocation();
+  }
+
   function hideDocPane() {
     var mountGeneration = nextDocumentMountGeneration();
+    clearDisplayedDocument();
     clearCollectionReportState("document-pane-hidden", mountGeneration);
     releaseReportPresentation();
     releaseMediaDetails();
@@ -411,8 +419,7 @@ export function initDocsViewerDocumentController(context) {
     var settings = options || {};
     var mountGeneration = nextDocumentMountGeneration();
     activeRecord = { target: selectedDocument.documentTarget, error: message, root: null };
-    selectedDocument.displayedRecord = null;
-    selectedDocument.displayedPayload = null;
+    clearDisplayedDocument();
     retained.forEach(function (record) { record.root.hidden = true; });
     if (transientContent) transientContent.remove();
     content = document.createElement("div");
@@ -514,6 +521,7 @@ export function initDocsViewerDocumentController(context) {
     document.title = payload.title + " | dotlineform";
     setStatus("", false);
     context.renderManagementUi();
+    context.projectIndexLocation();
 
     if (options.preservePosition) {
       scrollPositions.forEach(function (position) {
@@ -534,6 +542,7 @@ export function initDocsViewerDocumentController(context) {
   function renderDocLoadingState() {
     retained.forEach(function (record) { record.root.hidden = true; });
     activeRecord = null;
+    clearDisplayedDocument();
     if (content === outerContent) outerContent.replaceChildren();
     content = document.createElement("div");
     content.className = "docsViewer__documentMount";

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-26T18:42:59Z"
+    "generated_at_utc": "2026-11-12T13:39:30Z"
   },
   "galleries": {
     "001": {
@@ -771,6 +771,10 @@
     "361": {
       "gallery_id": "361",
       "title": "ink"
+    },
+    "362": {
+      "gallery_id": "362",
+      "title": "painting"
     }
   }
 }

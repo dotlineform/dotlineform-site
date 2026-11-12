@@ -269,7 +269,7 @@ export function createDocsViewerManagementActionController(options) {
         if (context.commitDocumentChange) context.commitDocumentChange({ target: target, record: response.record });
         if (createSettings.refreshAndSelect) return createSettings.refreshAndSelect(target, response);
         if (target.collection) return context.routeCommands.loadDoc(target);
-        return context.routeCommands.loadIndex({ preserveDocument: true }).then(function () { return context.routeCommands.loadDoc(target, { indexDocId: target.doc_id }); });
+        return context.routeCommands.loadIndex({ preserveDocument: true }).then(function () { return context.routeCommands.loadDoc(target); });
       },
       openSource: createSettings.openSource || openCreatedDocumentSource
     })

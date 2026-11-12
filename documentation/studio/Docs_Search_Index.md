@@ -54,7 +54,7 @@ Title and summary are explicit authored front-matter inputs. Ordinary and collec
 
 ## Query And Ranking
 
-`docs-viewer/runtime/js/shared/docs-viewer-search.js` is the sole browser postings, ranking, and tie-breaking owner, projected to `site/` for public use. A multi-term query intersects its normalized term matches; prefix matching begins at two characters; each document appears at most once; ties sort by title and then identity.
+`docs-viewer/runtime/js/shared/docs-viewer-search.js` owns browser postings, ranking and tie-breaking and is projected to `site/` for public use. A multi-term query intersects its normalized term matches. Text terms support prefixes from two characters. Standalone integers use exact title postings, including their comma-grouped forms. Each document appears at most once, and ties sort by title and then identity.
 
 The generic score order is exact identity, exact title, title, heading, summary, parent title, body/code, then update metadata. Only fields enabled by the workspace participate. The active order is therefore exact title, title, heading, summary, then body/code; parent context is display-only.
 

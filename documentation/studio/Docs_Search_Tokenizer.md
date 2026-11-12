@@ -9,7 +9,7 @@ parent_id: d-20260602-160839-6d3cbb
 ---
 # Docs Viewer Search Tokenizer
 
-Docs Viewer index generation and browser queries use the same deterministic term contract. Python generation is implemented in `docs-viewer/build/build_search.py`; browser query normalization is implemented in `site/docs-viewer/runtime/js/shared/docs-viewer-search.js`. One shared fixture proves parity.
+Docs Viewer index generation and browser queries use the same term contract. Python generation is implemented in `docs-viewer/build/build_search.py` and browser query normalization in `docs-viewer/runtime/js/shared/docs-viewer-search.js`.
 
 ## Term Contract
 
@@ -19,7 +19,7 @@ For each value selected by a scope's field policy, the tokenizer:
 2. recognizes prose words and technical compounds before discarding punctuation;
 3. retains the normalized complete compound and useful components split on underscore, hyphen, dot, and camel-case boundaries;
 4. retains mixed alphabetic/numeric identifiers such as `r2`, `h1`, and `sm-1.0`;
-5. omits numeric-only values, one-character values, complete immutable document IDs, exact 64-character hexadecimal digests, URLs, paths, markup spans, and file-extension-only components;
+5. retains standalone integers in titles, including single digits, and removes the commas from well-formed thousands groups. Other text fields omit numeric-only terms. All fields omit one-character words, complete immutable document IDs, exact 64-character hexadecimal digests, URLs, paths, markup spans, and file-extension-only components;
 6. removes the fixed minimal stop-word list; and
 7. deduplicates terms before the index adds a document position to one field posting list.
 
@@ -33,7 +33,9 @@ Examples:
 | `handleEditMetadataSave` | `handleeditmetadatasave`, `handle`, `edit`, `metadata`, `save` |
 | `build_search.py` | `build_search.py`, `build`, `search` |
 | `SM-1.0` | `sm-1.0`, `sm` |
-| `2026` | omitted |
+| `3 symbols` in a title | `3`, `symbols` |
+| `10,000` in a title | `10000` |
+| `2026` in body text | omitted |
 | `d-20260715-084611-c2fa6f` | omitted |
 | a 64-character SHA-256 value | omitted |
 
@@ -41,7 +43,7 @@ The fixed stop words are `a`, `an`, `and`, `are`, `as`, `at`, `be`, `by`, `for`,
 
 ## Query Semantics
 
-Queries use the same term derivation as indexed content. A query reduced entirely to excluded or stop-word terms returns no result. At two or more characters, a query term also matches indexed terms beginning with that term; for example, `sy` matches `symbol` and `symmetry`. Multi-term queries require every normalized query term to match the same document.
+Queries admit standalone integers when titles are searchable. A numeric term uses the exact title posting, so `10,000` and `10000` find the same titles. A query reduced entirely to excluded or stop-word terms returns no result. Text terms of two or more characters also match prefixes. For example, `sy` matches `symbol` and `symmetry`. Multi-term queries require every normalized query term to match the same document.
 
 Exact structural fields are separate from ordinary term derivation. A metadata-only scope can explicitly enable exact `identity` or `last_updated`; Studio does not enable either field.
 

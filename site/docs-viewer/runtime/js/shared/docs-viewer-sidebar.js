@@ -1,4 +1,4 @@
-/** Own mounted tree rows; navigation changes markers/ancestors without replacing unrelated nodes. */
+/** Project the displayed document into the mounted Index tree. */
 export function initDocsViewerSidebarRenderer(context) {
   var documentIndex = context.documentIndex;
   var nav = context.nav;
@@ -21,12 +21,12 @@ export function initDocsViewerSidebarRenderer(context) {
   }
 
   function expandTrail(docId) {
-    buildTrail(docId).forEach(function (doc) {
-      if (docChildren(doc.doc_id).length > 0) {
-        if (!documentIndex.expandedDocIds.has(doc.doc_id)) {
-          documentIndex.expandedDocIds.add(doc.doc_id);
-          updateBranch(doc.doc_id);
-        }
+    var ancestors = buildTrail(docId);
+    ancestors.pop();
+    ancestors.forEach(function (doc) {
+      if (!documentIndex.expandedDocIds.has(doc.doc_id)) {
+        documentIndex.expandedDocIds.add(doc.doc_id);
+        updateBranch(doc.doc_id);
       }
     });
   }
@@ -40,7 +40,7 @@ export function initDocsViewerSidebarRenderer(context) {
     }
 
     nav.appendChild(renderNavList(""));
-    trackSelection();
+    trackLocation();
   }
 
   function updateBranch(docId) {
@@ -63,17 +63,17 @@ export function initDocsViewerSidebarRenderer(context) {
     updateBranch(docId);
   }
 
-  function markSelection(docId, active) {
+  function markLocation(docId, current) {
     var mounted = mountedRows.get(docId);
     if (!mounted) return;
-    mounted.link.classList.toggle("is-active", active);
-    if (active) mounted.link.setAttribute("aria-current", "page");
+    mounted.link.classList.toggle("is-active", Boolean(current));
+    if (current) mounted.link.setAttribute("aria-current", current);
     else mounted.link.removeAttribute("aria-current");
   }
 
-  function scrollSelectionIntoView() {
-    var mounted = mountedRows.get(documentIndex.indexSelectedDocId);
-    if (!mounted || nav.closest("[hidden]")) return;
+  function scrollLocationIntoView(docId) {
+    var mounted = mountedRows.get(docId);
+    if (!mounted) return;
     var row = mounted.row.getBoundingClientRect();
     if (!row.height) return;
     var bounds = nav.getBoundingClientRect();
@@ -83,14 +83,20 @@ export function initDocsViewerSidebarRenderer(context) {
     else if (row.bottom > bottom) nav.scrollTop += row.bottom - bottom;
   }
 
-  /** Track even while hidden; showing the tree only needs the separate scroll operation. */
-  function trackSelection() {
-    var docId = documentIndex.indexSelectedDocId;
-    expandTrail(docId);
-    if (markedDocId !== docId) markSelection(markedDocId, false);
-    markSelection(docId, true);
+  /** Mark the current row while hidden and reveal its path when the tree is visible. */
+  function trackLocation() {
+    var displayed = context.selectedDocument.displayedRecord;
+    var collection = displayed?.collection;
+    var rowId = collection
+      ? context.workspaceConfig.activeConfig?.collectionsById.get(collection)?.reportHostDocId
+      : displayed?.doc_id;
+    var docId = documentIndex.docsById.has(rowId) ? rowId : "";
+    var visible = !nav.closest("[hidden]");
+    if (visible && docId) expandTrail(docId);
+    if (markedDocId !== docId) markLocation(markedDocId, "");
+    markLocation(docId, collection ? "location" : "page");
     markedDocId = docId;
-    scrollSelectionIntoView();
+    if (visible) scrollLocationIntoView(docId);
   }
 
   function renderNavList(parentId) {
@@ -183,8 +189,7 @@ export function initDocsViewerSidebarRenderer(context) {
     buildTrail: buildTrail,
     renderMeta: renderMeta,
     renderSidebar: renderSidebar,
-    scrollSelectionIntoView: scrollSelectionIntoView,
     toggleBranch: toggleBranch,
-    trackSelection: trackSelection
+    trackLocation: trackLocation
   };
 }

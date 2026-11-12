@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_gallery_report_search_v1",
-    "generated_at_utc": "2026-11-09T18:23:32Z"
+    "generated_at_utc": "2026-11-12T15:19:55Z"
   },
   "galleries": {
     "001": "10,000",
@@ -195,7 +195,8 @@
     "358": "mesh",
     "359": "untitled drawings",
     "360": "mandala form",
-    "361": "ink"
+    "361": "ink",
+    "362": "painting"
   },
   "gallery_ids_by_work": {
     "00001": [
@@ -4487,7 +4488,8 @@
       "097"
     ],
     "01447": [
-      "103"
+      "103",
+      "362"
     ],
     "01448": [
       "107"
@@ -15778,7 +15780,14 @@
       "332"
     ],
     "05247": [
-      "103"
+      "103",
+      "362"
     ]
+  },
+  "presentation_by_gallery": {
+    "362": {
+      "description": "paintings from across the catalogue",
+      "marker": "brush"
+    }
   }
 }

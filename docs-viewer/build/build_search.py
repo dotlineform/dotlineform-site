@@ -82,6 +82,8 @@ SEARCH_V2_EXACT_FIELDS = frozenset({"identity", "last_updated"})
 SEARCH_V2_CONTENT_FIELDS = frozenset({"heading", "body", "code"})
 SEARCH_V2_EXCLUDED_SPANS = re.compile(r"(?:https?://|www\.)\S+|(?:[/\\][^\s]+)+|<[^>]+>", re.IGNORECASE)
 SEARCH_V2_TOKEN = re.compile(r"[^\W_]+(?:[._-][^\W_]+)*", re.UNICODE)
+SEARCH_V2_GROUPED_INTEGER = re.compile(r"(?<![\w.-])(?<![0-9],)[0-9]{1,3}(?:,[0-9]{3})+(?![^\W_]|[._-][^\W_]|,[0-9])")
+SEARCH_V2_INTEGER = re.compile(r"[0-9]+")
 SEARCH_V2_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
 SEARCH_V2_CONTENT_HASH = re.compile(r"^[0-9a-f]{64}$")
 
@@ -135,13 +137,17 @@ def normalize_search_value_v2(value: Any) -> str:
     return re.sub(r"\s+", " ", normalized).strip()
 
 
-def tokenize_search_value_v2(value: Any) -> list[str]:
-    terms: list[str] = []
-    seen: set[str] = set()
+def tokenize_search_value_v2(value: Any, *, include_numbers: bool = False) -> list[str]:
+    terms: dict[str, None] = {}
     text = SEARCH_V2_EXCLUDED_SPANS.sub(" ", unicodedata.normalize("NFKC", str(value or "")))
+    if include_numbers:
+        text = SEARCH_V2_GROUPED_INTEGER.sub(lambda match: match[0].replace(",", ""), text)
     for token in SEARCH_V2_TOKEN.findall(text):
         normalized_token = normalize_search_value_v2(token)
         if is_immutable_doc_id(normalized_token) or SEARCH_V2_CONTENT_HASH.fullmatch(normalized_token):
+            continue
+        if include_numbers and SEARCH_V2_INTEGER.fullmatch(normalized_token):
+            terms[normalized_token] = None
             continue
         derived = [normalized_token]
         segments = re.split(r"[._-]+", token)
@@ -159,10 +165,9 @@ def tokenize_search_value_v2(value: Any) -> list[str]:
                 and not is_immutable_doc_id(term)
                 and not SEARCH_V2_CONTENT_HASH.fullmatch(term)
             )
-            if useful and term not in seen:
-                seen.add(term)
-                terms.append(term)
-    return terms
+            if useful:
+                terms[term] = None
+    return list(terms)
 
 
 def search_field_values_v2(document: Mapping[str, Any], field: str) -> list[Any]:
@@ -208,9 +213,9 @@ def build_search_index(
                 terms = (
                     [normalize_search_value_v2(value)]
                     if field in SEARCH_V2_EXACT_FIELDS
-                    else tokenize_search_value_v2(value)
+                    else tokenize_search_value_v2(value, include_numbers=field == "title")
                 )
-                for term in set(filter(None, terms)):
+                for term in filter(None, terms):
                     postings.setdefault(term, {}).setdefault(field, set()).add(position)
 
     terms = {

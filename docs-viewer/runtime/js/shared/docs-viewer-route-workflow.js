@@ -77,7 +77,7 @@ export function initDocsViewerRouteWorkflow(context) {
     displayedHash = record.hash;
     displayedCatalogueSearch = record.catalogueSearch;
     await context.restoreDocument(record.document);
-    // Index state belongs to the panel; align the restored route with its current query.
+    // Keep the panel's current search query when restoring a document.
     var target = selected.documentTarget;
     if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, search.searchQuery, target, displayedCatalogueSearch));
     record.positions.forEach(function (position) {
@@ -93,15 +93,9 @@ export function initDocsViewerRouteWorkflow(context) {
     var target = destination.target;
     var sameTarget = selected.documentTarget && documentTargetKey(selected.documentTarget) === documentTargetKey(target);
     displayedCatalogueSearch = destination.catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : "");
-    if (destination.indexDocId) {
-      index.indexSelectedDocId = destination.indexDocId;
-      context.trackSidebarSelection();
-    }
     var viewOptions = { catalogueSearch: destination.catalogueSearch, collectionSequence: destination.collectionSequence };
     if (!destination.force && await context.restoreRetainedDocument(target, displayedHash, viewOptions)) return target;
     selected.documentTarget = target;
-    selected.displayedRecord = null;
-    selected.displayedPayload = null;
     var request = ++selected.requestId;
     context.renderDocLoadingState({ doc_id: target.doc_id, collection: target.collection || "" });
     var stop = context.statusCommands.startBusy();
@@ -142,7 +136,6 @@ export function initDocsViewerRouteWorkflow(context) {
       return (async function () {
         if (!await context.confirmDocumentNavigation()) return null;
         await context.prepareDocumentNavigation();
-        if (options.indexDocId) { index.indexSelectedDocId = options.indexDocId; context.trackSidebarSelection(); }
         displayedHash = hash;
         displayedCatalogueSearch = catalogueSearch ?? displayedCatalogueSearch;
         navigation.replaceUrl(viewerUrl(target.doc_id, hash, search.searchQuery, target, displayedCatalogueSearch));
@@ -159,7 +152,7 @@ export function initDocsViewerRouteWorkflow(context) {
     }
     var promise = navigation.open({ target: target, hash: hash, catalogueSearch: catalogueSearch,
       collectionSequence: options.collectionSequence,
-      indexDocId: options.indexDocId, force: options.force === true,
+      force: options.force === true,
       url: viewerUrl(target.doc_id, hash, search.searchQuery, target, catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : ""))
     }, { replace: options.historyMode === "replace" });
     pendingDocumentOpen = { key: key, promise: promise };
@@ -180,7 +173,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   function openCollectionIndex() {
     var target = collectionIndexTarget();
-    return target ? loadDoc(target, { indexDocId: target.doc_id }) : Promise.resolve(null);
+    return target ? loadDoc(target) : Promise.resolve(null);
   }
   async function returnToDocument() {
     await context.returnToDocument();
@@ -203,7 +196,6 @@ export function initDocsViewerRouteWorkflow(context) {
         var catalogueSearch = catalogueSearchFor(target, new URLSearchParams(window.location.search).get(CATALOGUE_SEARCH_PARAM));
         context.syncIndexRoute(currentQuery());
         return await navigation.initialize({ target: target, hash: currentHash(), catalogueSearch: catalogueSearch,
-          indexDocId: !target.collection && index.docsById.has(target.doc_id) ? target.doc_id : "",
           url: viewerUrl(target.doc_id, currentHash(), currentQuery(), target, catalogueSearch) });
       }
       return await loadDoc(target, { hash: currentHash(), historyMode: "replace", force: true });
@@ -261,9 +253,8 @@ export function initDocsViewerRouteWorkflow(context) {
       if (!route) return;
       event.preventDefault();
       if (route.error) { setStatus(route.error, true); return; }
-      var row = anchor.closest("[data-doc-row-id]");
       loadDoc(route.target, { hash: route.hash, catalogueSearch: route.catalogueSearch,
-        indexDocId: row && row.dataset.docRowId, collectionSequence: collectionSequenceForLink(anchor) })
+        collectionSequence: collectionSequenceForLink(anchor) })
         .catch(function (error) { setStatus(error.message, true); });
     });
   }

@@ -16,17 +16,23 @@ const SEARCH_V2_FILE_EXTENSIONS = new Set([
 ]);
 const SEARCH_V2_EXACT_FIELDS = new Set(["identity", "last_updated"]);
 const SEARCH_V2_CONTENT_HASH = /^[0-9a-f]{64}$/;
+const SEARCH_V2_GROUPED_INTEGER = /(?<![\p{L}\p{N}._-])(?<![0-9],)[0-9]{1,3}(?:,[0-9]{3})+(?![\p{L}\p{N}]|[._-][\p{L}\p{N}]|,[0-9])/gu;
+const SEARCH_V2_INTEGER = /^[0-9]+$/;
 
-export function tokenizeSearchValue(value) {
-  var terms = [];
-  var seen = new Set();
+export function tokenizeSearchValue(value, { includeNumbers = false } = {}) {
+  var terms = new Set();
   var text = String(value || "")
     .normalize("NFKC")
     .replace(/(?:https?:\/\/|www\.)\S+|(?:[\\/][^\s]+)+|<[^>]+>/giu, " ");
+  if (includeNumbers) text = text.replace(SEARCH_V2_GROUPED_INTEGER, (number) => number.replaceAll(",", ""));
   (text.match(/[\p{L}\p{N}]+(?:[._-][\p{L}\p{N}]+)*/gu) || []).forEach(function (token) {
     var normalizedToken = normalizeSearchText(token);
     if (/^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(normalizedToken)
       || SEARCH_V2_CONTENT_HASH.test(normalizedToken)) return;
+    if (includeNumbers && SEARCH_V2_INTEGER.test(normalizedToken)) {
+      terms.add(normalizedToken);
+      return;
+    }
     var derived = [normalizedToken];
     var segments = token.split(/[._-]+/);
     var hasFileExtension = token.includes(".")
@@ -44,12 +50,10 @@ export function tokenizeSearchValue(value) {
         && /[\p{L}]/u.test(term)
         && !/^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(term)
         && !SEARCH_V2_CONTENT_HASH.test(term);
-      if (!useful || seen.has(term)) return;
-      seen.add(term);
-      terms.push(term);
+      if (useful) terms.add(term);
     });
   });
-  return terms;
+  return Array.from(terms);
 }
 
 function searchConstraintMatchesV2(index, queryTerm, fields) {
@@ -88,11 +92,13 @@ export function collectSearchMatches(index, rawQuery) {
   var query = normalizeSearchText(rawQuery);
   if (!query) return [];
   var fields = Array.isArray(index.fields) ? index.fields : [];
-  var queryTerms = tokenizeSearchValue(rawQuery);
+  var queryTerms = tokenizeSearchValue(rawQuery, { includeNumbers: fields.includes("title") });
+  var textFields = fields.filter(function (field) { return !SEARCH_V2_EXACT_FIELDS.has(field); });
   var constraints = queryTerms.map(function (term) {
-    return searchConstraintMatchesV2(index, term, fields.filter(function (field) {
-      return !SEARCH_V2_EXACT_FIELDS.has(field);
-    }));
+    if (SEARCH_V2_INTEGER.test(term)) {
+      return new Map((index.terms[term]?.title || []).map((position) => [position, new Set(["title"])]));
+    }
+    return searchConstraintMatchesV2(index, term, textFields);
   });
   if (!queryTerms.length) {
     constraints = [searchConstraintMatchesV2(index, query, fields.filter(function (field) {

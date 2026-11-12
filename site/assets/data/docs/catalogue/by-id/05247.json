@@ -55,6 +55,11 @@
           "id": "103",
           "label": "mother and child",
           "relation": "direct"
+        },
+        {
+          "id": "362",
+          "label": "painting",
+          "relation": "direct"
         }
       ]
     }
