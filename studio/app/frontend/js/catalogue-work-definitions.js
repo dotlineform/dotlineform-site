@@ -78,8 +78,8 @@ export async function editWorkDefinition(state, {
     if (createFromBrowser) {
       result = await openWorkDefinitionModal(state, {
         ...modalOptions, kind, chooseKind: true,
-        save: ({ kind: selectedKind, title }) => selectedKind === "Gallery"
-          ? saveWorkGalleryDefinition(state.galleriesById, { title })
+        save: ({ kind: selectedKind, title, description, marker }) => selectedKind === "Gallery"
+          ? saveWorkGalleryDefinition(state.galleriesById, { title, description, marker })
           : createCatalogueSeries({ series_id: suggestNextSeriesId(state.seriesById.values()), record: { title } })
       });
     } else {

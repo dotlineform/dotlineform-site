@@ -152,6 +152,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
+- [Gallery Descriptions And Markers](deliveries/Gallery_Descriptions_And_Markers.md) — Complete and accepted on 2026-11-12. Retain the delivery pending manual archive. [Catalogue Work Editor](Catalogue_Work_Editor.md#gallery-and-series-definitions) owns the workflow.
+
 - [Add Works To A Gallery](deliveries/Add_Works_To_A_Gallery.md) — Complete. The user accepted the Local Studio workflow and confirmed that Refresh carried the Gallery changes into Docs Viewer on 2026-11-12. Retain the delivery pending manual archive. [Catalogue Work Editor](Catalogue_Work_Editor.md#add-works-to-a-gallery) owns the workflow.
 
 - [Gallery Context Links](deliveries/Gallery_Context_Links.md) — The original delivery was accepted in Working on 2026-11-09. The published Context manifest and projected runtime are committed in `33c8925d6c`. Deploy Public and live review remain open. On 2026-11-10 the user confirmed that **Show inline link** hid the inline opener in *kylie* while preserving the Gallery link. Retain the delivery pending manual archive.

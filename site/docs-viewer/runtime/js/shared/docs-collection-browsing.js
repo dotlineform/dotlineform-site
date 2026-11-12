@@ -15,9 +15,11 @@ export function createCatalogueGallerySearch(payload) {
   if (payload?.header?.schema !== "catalogue_gallery_report_search_v1") {
     throw new Error("Catalogue Gallery search has an unsupported schema.");
   }
-  const galleries = Object.entries(payload.galleries).map(([galleryId, title]) => ({
-    galleryId, title, searchTitle: normalizeDocsCollectionFilterValue(title)
-  })).sort((left, right) => compareText(left.searchTitle, right.searchTitle) || compareText(left.galleryId, right.galleryId));
+  const presentation = payload.presentation_by_gallery;
+  const galleries = Object.entries(payload.galleries).map(([galleryId, title]) => {
+    const { description, marker } = presentation?.[galleryId] ?? {};
+    return { galleryId, title, description, marker, searchTitle: normalizeDocsCollectionFilterValue(title) };
+  }).sort((left, right) => compareText(left.searchTitle, right.searchTitle) || compareText(left.galleryId, right.galleryId));
   const memberships = payload.gallery_ids_by_work;
   return function project(query, works) {
     const counts = new Map();

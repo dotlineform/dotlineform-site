@@ -10,7 +10,7 @@ from urllib.parse import quote
 from catalogue import catalogue_generation_indexes as indexes
 from catalogue import catalogue_generation_records as projection
 from catalogue.catalogue_compact_indexes import build_compact_index
-from catalogue.catalogue_galleries import CatalogueGalleries
+from catalogue.catalogue_galleries import CatalogueGalleries, gallery_identity
 from catalogue.catalogue_generation_common import compact_json_object
 from catalogue.catalogue_media_policy import catalogue_media_policy
 from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries
@@ -69,14 +69,14 @@ def catalogue_payloads(
                  "url": f"{media_config['base'].rstrip('/')}/{media_config['files_works'].strip('/')}/{quote(download['filename'], safe='')}"}
                 for download in downloads
             ]
-        work["galleries"] = [dict(galleries.galleries[gid]) for gid in sorted(galleries.works.get(wid, []))]
+        work["galleries"] = [gallery_identity(galleries.galleries[gid]) for gid in sorted(galleries.works.get(wid, []))]
         payloads[f"works/index/{wid}.json"] = projection.build_work_json_payload(
             work_record=work, generated_at_utc=timestamp,
         )
     for gid in sorted(selected_galleries):
         source = galleries.galleries[gid]
         payloads[f"galleries/index/{gid}.json"] = projection.build_gallery_json_payload(
-            gallery_id=gid, gallery_record=source,
+            gallery_id=gid, gallery_record=gallery_identity(source),
             member_works=indexes.build_member_work_records(work_records=records.works, work_ids=works_by_gallery[gid]), generated_at_utc=timestamp,
         )
     if WORK_INDEX in shared:

@@ -1,6 +1,12 @@
 import { catalogueSavedActionError } from "./catalogue-save-result.js";
 import { activateStudioModalFrame, renderStudioModalFrame } from "./studio-modal.js";
 
+const galleryMarkers = [
+  { icon: "brush", label: "Brush" },
+  { icon: "video", label: "Video" },
+  { icon: "square-library", label: "Book" }
+];
+
 function titleComparisonKey(value) {
   return String(value ?? "").trim().replace(/\s+/g, " ").toLowerCase();
 }
@@ -9,7 +15,7 @@ function titleComparisonKey(value) {
 export async function openWorkDefinitionModal(state, {
   kind, id = "", title = "", deleteMessage = "", deleteBlocked = "",
   checkbox = null, save, remove, restoreFocus, onBusyChange,
-  deleteOnly = false, cancelLabel = "Cancel", chooseKind = false
+  deleteOnly = false, cancelLabel = "Cancel", chooseKind = false, galleryPresentation = {}
 }) {
   const host = state.modalHost;
   let saving = false;
@@ -29,6 +35,18 @@ export async function openWorkDefinitionModal(state, {
         <input class="studioUi__input" id="catalogueDefinitionTitle" type="text" autocomplete="off" aria-describedby="catalogueDefinitionTitleWarning">
       </label>
       <p class="studioForm__status studioUi__status" id="catalogueDefinitionTitleWarning" data-role="definition-title-warning" data-state="warn" aria-live="polite" hidden></p>
+      ${(chooseKind || kind === "Gallery") && !deleteOnly ? `
+        <div class="catalogueDefinition__presentation" data-role="gallery-presentation" hidden>
+          <label class="studioForm__field" for="catalogueGalleryDescription">
+            <span class="studioForm__label">Description</span>
+            <input class="studioUi__input" id="catalogueGalleryDescription" type="text" autocomplete="off">
+          </label>
+          <div class="catalogueDefinition__markers" role="group" aria-label="Gallery marker">
+            ${galleryMarkers.map(({ icon, label }) => `
+              <button class="studioUi__iconButton" type="button" data-gallery-marker="${icon}" title="${label}" aria-label="${label}" aria-pressed="false"><span class="studioUi__icon studioUi__icon--${icon}" aria-hidden="true"></span></button>
+            `).join("")}
+          </div>
+        </div>` : ""}
       ${checkbox ? `<div class="catalogueDefinition__relation" data-role="definition-checkbox-field">
         <label class="catalogueDefinition__checkboxRow" for="catalogueDefinitionCheckbox">
           <input id="catalogueDefinitionCheckbox" type="checkbox" aria-describedby="catalogueDefinitionSeriesContext">
@@ -50,6 +68,10 @@ export async function openWorkDefinitionModal(state, {
   const titleWarning = host.querySelector('[data-role="definition-title-warning"]');
   const kindInputs = Array.from(host.querySelectorAll('[name="catalogue-definition-kind"]'));
   const selectedKind = () => kindInputs.find(option => option.checked)?.value ?? kind;
+  const presentationField = host.querySelector('[data-role="gallery-presentation"]');
+  const descriptionInput = host.querySelector("#catalogueGalleryDescription");
+  const markerButtons = host.querySelectorAll("[data-gallery-marker]");
+  let selectedMarker = galleryPresentation.marker ?? "";
   const checkboxInput = host.querySelector("#catalogueDefinitionCheckbox");
   const primary = host.querySelector('[data-role="modal-primary"]');
   const cancel = host.querySelector('button[data-role="modal-cancel"]');
@@ -57,6 +79,7 @@ export async function openWorkDefinitionModal(state, {
   const reason = host.querySelector('[data-role="delete-reason"]');
   const dialog = host.querySelector('[role="dialog"]');
   input.value = title;
+  if (descriptionInput) descriptionInput.value = galleryPresentation.description ?? "";
   if (checkboxInput) {
     checkboxInput.checked = Boolean(checkbox.checked);
     host.querySelector('[data-role="definition-checkbox-label"]').textContent = checkbox.label;
@@ -64,6 +87,12 @@ export async function openWorkDefinitionModal(state, {
   }
   reason.textContent = deleteBlocked;
   reason.hidden = !deleteBlocked;
+
+  function syncMarkers() {
+    for (const button of markerButtons) {
+      button.setAttribute("aria-pressed", String(button.dataset.galleryMarker === selectedMarker));
+    }
+  }
 
   function syncTitleWarning() {
     const key = titleComparisonKey(input.value);
@@ -87,6 +116,11 @@ export async function openWorkDefinitionModal(state, {
   function syncControls() {
     input.disabled = saving;
     kindInputs.forEach(option => { option.disabled = saving; });
+    if (presentationField) {
+      presentationField.hidden = confirmingDelete || selectedKind() !== "Gallery";
+      descriptionInput.disabled = saving;
+      markerButtons.forEach(button => { button.disabled = saving; });
+    }
     if (checkboxInput) checkboxInput.disabled = saving || checkbox.disabled;
     primary.disabled = saving || (!confirmingDelete && !input.value.trim());
     cancel.disabled = saving;
@@ -110,7 +144,8 @@ export async function openWorkDefinitionModal(state, {
       try {
         onBusyChange?.(true);
         response = confirmingDelete ? await remove() : await save({
-          kind: activeKind, title: input.value.trim(), related: checkboxInput?.checked
+          kind: activeKind, title: input.value.trim(), related: checkboxInput?.checked,
+          ...(activeKind === "Gallery" ? { description: descriptionInput.value.trim(), marker: selectedMarker } : {})
         });
         return { kind: activeKind, response };
       } catch (error) {
@@ -143,13 +178,23 @@ export async function openWorkDefinitionModal(state, {
     cancel.focus();
   }
   deleteButton?.addEventListener("click", showDeleteConfirmation);
-  input.addEventListener("keydown", event => {
+  function submitOnEnter(event) {
     if (event.key !== "Enter" || confirmingDelete) return;
     event.preventDefault();
     void controller.submit();
-  });
+  }
+  input.addEventListener("keydown", submitOnEnter);
+  descriptionInput?.addEventListener("keydown", submitOnEnter);
   input.addEventListener("input", syncControls);
-  kindInputs.forEach(option => option.addEventListener("change", syncTitleWarning));
+  kindInputs.forEach(option => option.addEventListener("change", syncControls));
+  for (const button of markerButtons) {
+    button.addEventListener("click", () => {
+      const marker = button.dataset.galleryMarker;
+      selectedMarker = selectedMarker === marker ? "" : marker;
+      syncMarkers();
+    });
+  }
+  syncMarkers();
   syncControls();
   state.activeModalController = controller;
   if (deleteOnly) showDeleteConfirmation();

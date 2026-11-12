@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from catalogue.catalogue_galleries import (
-    GALLERIES_FILE, MEMBERSHIPS_FILE, CatalogueGalleries, read_galleries,
-    validate_gallery_id,
+    GALLERIES_FILE, MEMBERSHIPS_FILE, GALLERY_PRESENTATION_FIELDS, CatalogueGalleries,
+    gallery_presentation, read_gallery_definitions, read_gallery_memberships, validate_gallery_id,
 )
 from catalogue.catalogue_series_galleries import (
     SERIES_GALLERIES_FILE, CatalogueSeriesGalleries, read_series_galleries,
@@ -51,31 +51,31 @@ def mutate_gallery_payload(
         raise ValueError("Unsupported Gallery operation")
     if operation == "delete" and set(body) != {"gallery_id"}:
         raise ValueError("Gallery Delete requires only gallery_id")
-    if operation != "delete" and set(body) != {"gallery_id", "title", "series_id", "related_to_series"}:
-        raise ValueError("Gallery Create/Save requires gallery_id, title, series_id and related_to_series")
+    if operation != "delete":
+        required = {"gallery_id", "title", "series_id", "related_to_series"}
+        if not required <= body.keys() or body.keys() - required - set(GALLERY_PRESENTATION_FIELDS):
+            raise ValueError("Gallery Create/Save requires identity/title/relevance and optional description/marker")
     gallery_id = body["gallery_id"]
     if operation == "delete":
         if not isinstance(gallery_id, str):
             raise ValueError("Gallery Delete requires an exact Gallery ID string")
     else:
         validate_gallery_id(gallery_id)
-    works = load_works_payload(context.works_path)["works"]
-    data = read_galleries(context.source_dir)
+    definitions = read_gallery_definitions(context.source_dir)
     pairs = read_series_galleries(context.source_dir)
+    previous_definition = definitions.get(gallery_id)
     if operation == "create":
-        if gallery_id in data.galleries:
+        if previous_definition is not None:
             raise ValueError(f"gallery_id already exists: {gallery_id}")
-        members = []
-    else:
-        if gallery_id not in data.galleries:
-            raise ValueError(f"gallery_id not found: {gallery_id}")
-        members = sorted(wid for wid, ids in data.works.items() if gallery_id in ids)
+    elif previous_definition is None:
+        raise ValueError(f"gallery_id not found: {gallery_id}")
 
-    definitions = dict(data.galleries)
-    memberships = data.works
+    memberships = {}
+    members = []
     updated_pairs = pairs
     if operation == "delete":
-        memberships = dict(data.works)
+        memberships = read_gallery_memberships(context.source_dir)
+        members = sorted(wid for wid, ids in memberships.items() if gallery_id in ids)
         del definitions[gallery_id]
         updated_pairs, previous_related_series = without_gallery(pairs, gallery_id)
         for wid in members:
@@ -85,21 +85,39 @@ def mutate_gallery_payload(
             else:
                 del memberships[wid]
         definitions_changed = True
+        title_changed = True
         memberships_changed = bool(members)
         relations_changed = bool(previous_related_series)
         saved_related_series = []
     else:
         series_id, related = body["series_id"], body["related_to_series"]
         title = body["title"]
-        definitions[gallery_id] = {"gallery_id": gallery_id, "title": title}
-        if series_id is not None:
-            updated_pairs = with_gallery_relation(pairs, series_id, gallery_id, related)
-        definitions_changed = definitions != data.galleries
-        memberships_changed = False
-        relations_changed = updated_pairs.pairs_by_series != pairs.pairs_by_series
+        definitions[gallery_id] = {"gallery_id": gallery_id, "title": title, **gallery_presentation(body)}
+        title_changed = operation == "create" or previous_definition["title"] != title
         previous_related_series = related_series_ids(pairs, gallery_id)
+        relations_changed = series_id is not None and related != (series_id in previous_related_series)
+        if relations_changed:
+            updated_pairs = with_gallery_relation(pairs, series_id, gallery_id, related)
+        definitions_changed = definitions[gallery_id] != previous_definition
+        memberships_changed = False
         saved_related_series = related_series_ids(updated_pairs, gallery_id) if relations_changed else previous_related_series
 
+    # Presentation fields contribute only their Gallery/report selection.
+    affected_series = set()
+    affected_works = set()
+    works = {}
+    if title_changed or relations_changed:
+        affected_series = set(previous_related_series) | set(saved_related_series)
+        if operation == "save":
+            memberships = read_gallery_memberships(context.source_dir)
+            members = sorted(wid for wid, ids in memberships.items() if gallery_id in ids)
+        if members or affected_series:
+            works = load_works_payload(context.works_path)["works"]
+            affected_works.update(members)
+            if affected_series:
+                affected_works.update(
+                    wid for wid, record in works.items() if record.get("series_id") in affected_series
+                )
     updated = CatalogueGalleries(definitions, memberships)
     writes = {}
     if definitions_changed:
@@ -112,8 +130,6 @@ def mutate_gallery_payload(
         raise ValueError("write target not allowlisted")
     if writes:
         execute_source_json_write(writes, dry_run=context.dry_run, repo_root=context.repo_root)
-    affected_series = set(previous_related_series) | set(saved_related_series)
-    affected_works = set(members) | {wid for wid, record in works.items() if record.get("series_id") in affected_series}
     shared = empty_shared_changes()
     if writes:
         shared["deleted_galleries" if operation == "delete" else "current_galleries"] = [gallery_id]
@@ -122,10 +138,14 @@ def mutate_gallery_payload(
         if operation == "delete":
             shared["gallery_member_works"] = members
         shared["current_series"] = sorted(affected_series)
-        outputs = {RELATIONSHIP_REPORT}
+        outputs = set()
+        if title_changed or relations_changed:
+            outputs.add(RELATIONSHIP_REPORT)
         if definitions_changed:
-            outputs.update((GALLERY_INDEX, GALLERY_REPORT_SEARCH))
-        if relations_changed or (definitions_changed and affected_series):
+            outputs.add(GALLERY_REPORT_SEARCH)
+        if title_changed:
+            outputs.add(GALLERY_INDEX)
+        if relations_changed or (title_changed and affected_series):
             outputs.add(RELATIONSHIP_INDEX)
         shared["shared_outputs"] = sorted(outputs)
     response = {

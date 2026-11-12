@@ -8,12 +8,16 @@ function nextGalleryId(galleriesById) {
   return String(highestId + 1).padStart(3, "0");
 }
 
-export function saveWorkGalleryDefinition(galleriesById, { galleryId = "", title, seriesId = null, related = false }) {
+export function saveWorkGalleryDefinition(galleriesById, {
+  galleryId = "", title, seriesId = null, related = false, description, marker
+}) {
   const payload = {
     gallery_id: galleryId || nextGalleryId(galleriesById),
     title,
     series_id: seriesId,
-    related_to_series: Boolean(seriesId && related)
+    related_to_series: Boolean(seriesId && related),
+    ...(description ? { description } : {}),
+    ...(marker ? { marker } : {})
   };
   return galleryId ? saveCatalogueGallery(payload) : createCatalogueGallery(payload);
 }
@@ -34,7 +38,7 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
   if (seriesId && (!series || series.series_id !== seriesId || typeof series.title !== "string")) {
     throw new Error("The displayed Series context is unavailable. Reload the Work before editing a Gallery.");
   }
-  let title = "";
+  let record = galleryId ? state.galleriesById.get(galleryId) : {};
   let relatedToSeries = false;
   if (galleryId && seriesId) {
     const lookup = await loadStudioServerReadJson("catalogue_gallery_record", galleryId, { cache: "no-store" });
@@ -43,11 +47,10 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
       || !Array.isArray(lookup.related_series_ids)) {
       throw new Error("Gallery lookup is missing its exact record or Series associations.");
     }
-    title = lookup.record.title;
+    record = lookup.record;
     relatedToSeries = lookup.related_series_ids.includes(seriesId);
-  } else if (galleryId) {
-    title = state.galleriesById.get(galleryId).title;
   }
+  const { title = "" } = record;
   const canDelete = Boolean(galleryId) && (deleteEmpty || !browsingGallery);
   let deleteMessage = "";
   if (deleteEmpty) {
@@ -61,6 +64,7 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
   let deleteError = null;
   const result = await openWorkDefinitionModal(state, {
     kind: "Gallery", id: galleryId, title, restoreFocus, onBusyChange, deleteMessage,
+    galleryPresentation: record,
     deleteOnly: deleteEmpty, cancelLabel: deleteEmpty ? "Keep Gallery" : "Cancel",
     checkbox: deleteEmpty ? null : {
       label: "Relates to all works in this series",
@@ -69,8 +73,8 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
       checked: relatedToSeries,
       disabled: !series
     },
-    save: ({ title: savedTitle, related }) => saveWorkGalleryDefinition(state.galleriesById, {
-      galleryId, title: savedTitle, seriesId, related
+    save: ({ title: savedTitle, related, description, marker }) => saveWorkGalleryDefinition(state.galleriesById, {
+      galleryId, title: savedTitle, seriesId, related, description, marker
     }),
     remove: canDelete ? async () => {
       try {

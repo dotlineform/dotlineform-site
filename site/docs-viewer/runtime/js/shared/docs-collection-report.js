@@ -173,6 +173,18 @@ function appendGalleryRow(state, gallery) {
   title.textContent = gallery.title;
   button.append(createDocsViewerToolbarIcon(document, "docsViewerReport__galleryIcon"), title);
   var label = "Open Gallery " + gallery.title;
+  if (gallery.marker) {
+    var marker = createDocsViewerToolbarIcon(document, "docsViewerReport__galleryMarker");
+    marker.dataset.marker = gallery.marker;
+    button.appendChild(marker);
+  }
+  if (gallery.description) {
+    var description = document.createElement("span");
+    description.className = "docsViewerReport__galleryDescription";
+    description.textContent = gallery.description;
+    button.appendChild(description);
+    label += ", " + gallery.description;
+  }
   if (gallery.matchCount) {
     var count = document.createElement("span");
     count.className = "docsViewerReport__galleryMatchCount";

@@ -51,6 +51,7 @@ export function collectWorkEditorElements() {
     seriesBrowseMembers: "catalogueWorkSeriesBrowseMembers",
     seriesBrowseStatus: "catalogueWorkSeriesBrowseStatus",
     seriesBrowseCount: "catalogueWorkSeriesBrowseCount",
+    galleryShortcuts: "catalogueWorkGalleryShortcuts",
     galleryAddWorks: "catalogueWorkGalleryAddWorks"
   });
 }

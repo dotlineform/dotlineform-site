@@ -685,6 +685,9 @@ span.studioUi__input--readonlyDisplay {
 }
 .studioUi__icon--image-plus { mask-image: url("/docs-viewer/static/icons/image-plus.svg"); }
 .studioUi__icon--circle-check { mask-image: url("/docs-viewer/static/icons/circle-check.svg"); }
+.studioUi__icon--brush { mask-image: url("/docs-viewer/static/icons/brush.svg"); }
+.studioUi__icon--video { mask-image: url("/docs-viewer/static/icons/video.svg"); }
+.studioUi__icon--square-library { mask-image: url("/docs-viewer/static/icons/square-library.svg"); }
 
 .studioUi__popup {
   position: relative;
@@ -1156,6 +1159,22 @@ button.studioList__cellLink {
   margin-top: 0.75rem;
 }
 
+.catalogueDefinition__presentation {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.catalogueDefinition__markers {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.studio-local-app .catalogueDefinition__markers .studioUi__iconButton[aria-pressed="true"] {
+  background: var(--border);
+  box-shadow: inset 0 0 0 1px var(--studio-focus);
+}
+
 .catalogueDefinition__kind {
   display: flex;
   gap: 1rem;
@@ -1358,7 +1377,21 @@ button.studioList__cellLink {
 }
 
 .catalogueWorkSeriesBrowser__heading .studioForm__meta {
+  flex: none;
   margin: 0;
+}
+
+.catalogueWorkSeriesBrowser__galleryShortcuts {
+  display: none;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  font-size: var(--font-small);
+}
+
+.catalogueWorkPage[data-work-layout="expanded-list"] .catalogueWorkSeriesBrowser__galleryShortcuts:not(:empty) {
+  display: flex;
 }
 
 .catalogueGalleryWorks {

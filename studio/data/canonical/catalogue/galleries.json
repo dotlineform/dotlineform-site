@@ -773,7 +773,9 @@
     },
     "362": {
       "gallery_id": "362",
-      "title": "painting"
+      "title": "painting",
+      "description": "paintings from across the catalogue",
+      "marker": "brush"
     }
   }
 }

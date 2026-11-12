@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 from typing import Any, Iterable, Mapping, Sequence
 
-from studio.services.catalogue.catalogue_galleries import validate_gallery_id
+from studio.services.catalogue.catalogue_galleries import gallery_identity, validate_gallery_id
 from studio.services.catalogue.catalogue_generation_indexes import build_member_work_records
 from studio.services.catalogue.catalogue_generation_records import GALLERY_RECORD_SCHEMA_VERSION, build_gallery_json_payload
 
@@ -60,6 +60,7 @@ def merge_gallery_record(
     identities are not revalidated. None preserves saved bytes/time; unselected
     rows never join canonical Work data.
     """
+    gallery_record = gallery_identity(gallery_record)
     current, deleted = set(current_work_ids), set(deleted_work_ids)
     try:
         previous = json.loads(path.read_text(encoding="utf-8"))

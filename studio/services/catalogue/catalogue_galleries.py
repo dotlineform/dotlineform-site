@@ -12,6 +12,18 @@ GALLERIES_FILE = "galleries.json"
 MEMBERSHIPS_FILE = "galleries-by-work.json"
 GALLERIES_SCHEMA = "catalogue_source_galleries_v1"
 MEMBERSHIPS_SCHEMA = "catalogue_source_galleries_by_work_v1"
+GALLERY_PRESENTATION_FIELDS = ("description", "marker")
+GALLERY_MARKERS = frozenset({"brush", "video", "square-library"})
+
+
+def gallery_identity(record: Mapping[str, str]) -> dict[str, str]:
+    """Project the ID/title consumed by Gallery links and by-ID records."""
+    return {"gallery_id": record["gallery_id"], "title": record["title"]}
+
+
+def gallery_presentation(record: Mapping[str, str]) -> dict[str, str]:
+    """Copy optional authored report presentation without validation or coercion."""
+    return {field: record[field] for field in GALLERY_PRESENTATION_FIELDS if field in record}
 
 
 @dataclass(frozen=True)
@@ -53,13 +65,21 @@ def validate_galleries(data: CatalogueGalleries, works: Mapping[str, Any]) -> No
     """Require exact identities/metadata and valid membership; titles may repeat."""
     for gid, gallery in data.galleries.items():
         validate_gallery_id(gid)
-        if not isinstance(gallery, dict) or set(gallery) != {"gallery_id", "title"}:
-            raise ValueError(f"Gallery {gid} must contain only gallery_id and title")
+        if (not isinstance(gallery, dict) or not {"gallery_id", "title"} <= gallery.keys()
+                or gallery.keys() - {"gallery_id", "title", *GALLERY_PRESENTATION_FIELDS}):
+            raise ValueError(f"Gallery {gid} requires gallery_id/title and optional description/marker")
         if gallery["gallery_id"] != gid:
             raise ValueError(f"Gallery {gid} has a different gallery_id")
         title = gallery["title"]
         if not isinstance(title, str) or not title.strip() or title != title.strip():
             raise ValueError(f"Gallery {gid} needs a non-empty trimmed title")
+        if "description" in gallery:
+            description = gallery["description"]
+            if (not isinstance(description, str) or not description or description != description.strip()
+                    or "\n" in description or "\r" in description):
+                raise ValueError(f"Gallery {gid} description must be a non-empty trimmed single line")
+        if "marker" in gallery and (not isinstance(gallery["marker"], str) or gallery["marker"] not in GALLERY_MARKERS):
+            raise ValueError(f"Gallery {gid} marker must name a supported icon")
     for wid, ids in data.works.items():
         if not isinstance(wid, str) or not re.fullmatch(r"[0-9]{5}", wid) or wid not in works:
             raise ValueError(f"Gallery membership references unknown exact Work ID: {wid!r}")

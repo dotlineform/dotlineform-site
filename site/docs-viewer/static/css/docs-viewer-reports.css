@@ -215,13 +215,30 @@
   overflow-wrap: anywhere;
 }
 
-.docsViewerReport__galleryIcon{
+.docsViewerReport__galleryIcon,
+.docsViewerReport__galleryMarker{
   width: 1em;
   height: 1em;
   align-self: center;
+}
+
+.docsViewerReport__galleryIcon{
   mask-image: url("../icons/images.svg");
 }
 
+.docsViewerReport__galleryMarker[data-marker="brush"]{
+  mask-image: url("../icons/brush.svg");
+}
+
+.docsViewerReport__galleryMarker[data-marker="video"]{
+  mask-image: url("../icons/video.svg");
+}
+
+.docsViewerReport__galleryMarker[data-marker="square-library"]{
+  mask-image: url("../icons/square-library.svg");
+}
+
+.docsViewerReport__galleryDescription,
 .docsViewerReport__galleryMatchCount{
   color: var(--docs-viewer-muted);
   font-size: var(--docs-viewer-font-small);

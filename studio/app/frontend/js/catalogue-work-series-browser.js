@@ -35,11 +35,12 @@ function getBrowseMatches(seriesById, galleriesById, rawQuery) {
 export function createWorkSeriesBrowser(state, elements, options) {
   const { seriesBrowseSearch: search, seriesBrowsePopup: popup, seriesBrowseMembers: members,
     seriesBrowseStatus: status, seriesBrowseCount: count, seriesBrowseEdit: edit,
-    browseNew: newButton, galleryAddWorks: addWorksButton, editorPane, summaryPanelNode } = elements;
+    browseNew: newButton, galleryShortcuts, galleryAddWorks: addWorksButton, editorPane, summaryPanelNode } = elements;
   let browseTarget = null;
   let list = null;
   let visibleIds = new Set();
   let renderedMembersKey = "";
+  let renderedGalleryShortcutsKey = "[]";
   let opening = false;
   let definitionOpen = false;
   let addingWorks = false;
@@ -94,6 +95,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
     newButton.disabled = unavailable;
     addWorksButton.hidden = !browsingGallery;
     addWorksButton.disabled = unavailable || !browsingGallery;
+    galleryShortcuts.inert = unavailable;
     members.inert = unavailable;
     members.setAttribute("aria-busy", String(opening));
     editorPane.inert = opening || definitionOpen || addingWorks || state.isEditingDefinition;
@@ -101,11 +103,33 @@ export function createWorkSeriesBrowser(state, elements, options) {
     if (unavailable) restoreSearch();
   }
 
+  function renderGalleryShortcuts(galleryTitles) {
+    const entries = [...galleryTitles].sort(([aId, aTitle], [bId, bTitle]) =>
+      browseCollator.compare(aTitle, bTitle) || browseCollator.compare(aId, bId));
+    const key = JSON.stringify(entries);
+    if (key === renderedGalleryShortcutsKey) return;
+    renderedGalleryShortcutsKey = key;
+    const titleCounts = new Map();
+    for (const [, title] of entries) titleCounts.set(title, (titleCounts.get(title) ?? 0) + 1);
+    galleryShortcuts.replaceChildren(...entries.map(([id, title]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "studioList__cellLink";
+      button.textContent = titleCounts.get(title) > 1 ? `${title} (${id})` : title;
+      button.addEventListener("click", () => {
+        selectTarget("gallery", id);
+        search.focus({ preventScroll: true });
+      });
+      return button;
+    }));
+  }
+
   function renderMembers() {
     const browsingGallery = browseTarget?.kind === "gallery";
     const memberWorks = browseTarget ? Array.from(state.workSearchById.values()).filter(record => browsingGallery
       ? record.gallery_ids.includes(browseTarget.id)
       : record.series_id === browseTarget.id) : [];
+    const galleryTitles = new Map();
     const records = memberWorks
       .sort((a, b) => browseCollator.compare(a.title, b.title))
       .map(record => {
@@ -116,11 +140,15 @@ export function createWorkSeriesBrowser(state, elements, options) {
           workId: record.work_id, title: record.title,
           titleTooltip: `${record.title}\nYear: ${record.year}\nYear display: ${record.year_display}`,
           association: browsingGallery ? state.seriesById.get(record.series_id).title
-            : record.gallery_ids.map(id => state.galleriesById.get(id).title).join(", "),
+            : record.gallery_ids.map(id => {
+              if (!galleryTitles.has(id)) galleryTitles.set(id, state.galleriesById.get(id).title);
+              return galleryTitles.get(id);
+            }).join(", "),
           thumbSrc: preview.src, thumbSrcset: preview.srcset, thumbSizes: "48px",
           thumbWidth: 48, thumbHeight: 48, thumbAlt: "", thumbFallback: "No preview"
         };
       });
+    renderGalleryShortcuts(galleryTitles);
     const membersKey = JSON.stringify([browseTarget, records.map(({ association: _association, ...record }) => record)]);
     if (list && membersKey === renderedMembersKey) {
       const updates = records.filter((record, index) => record.association !== list.options.records[index].association)
