@@ -144,7 +144,9 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Parked proposal. Reuse the Work Editor's Series panel to find a Gallery and inspect its saved members.
+- [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
+
+- [Add Works To A Gallery](deliveries/Add_Works_To_A_Gallery.md) — Proposed follow-on in the Catalogue Editor. Open a Gallery, find saved Works by title, ID or Medium, and add the selected Works to that Gallery.
 
 - [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
 
