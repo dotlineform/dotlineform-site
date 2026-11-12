@@ -33,6 +33,7 @@
         "docs-viewer-catalogue-media.js",
         "docs-viewer-catalogue-rendering.js",
         "docs-viewer-code-config.js",
+        "docs-viewer-collection-navigation.js",
         "docs-viewer-config-controller.js",
         "docs-viewer-config-service.js",
         "docs-viewer-content-detail-view.js",

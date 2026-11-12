@@ -4,7 +4,6 @@ import { openDocsViewerPositionModal } from "./docs-viewer-position-modal.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 
 const bookManifest = "/docs/generated/external/book/manage-manifest.json";
-let readingSection = null;
 
 function button(document, label, action) {
   const control = document.createElement("button");
@@ -31,33 +30,6 @@ function bookHeadings(tree) {
 function headingOptions(tree) {
   return tree.map(node => option(node.id, node.title)
     + (node.sections || []).map(section => option(section.id, "\u00a0\u00a0" + section.title)).join("")).join("");
-}
-
-export function mountBookChapterNavigation(settings, target) {
-  if (readingSection?.expected !== target.doc_id) {
-    readingSection = null;
-    return;
-  }
-  const position = readingSection.rows.findIndex(row => row.docId === target.doc_id);
-  if (position < 0) return;
-  const current = readingSection;
-  const document = settings.content.ownerDocument;
-  const nav = document.createElement("nav");
-  nav.className = "docsViewerBook__chapterNavigation";
-  nav.setAttribute("aria-label", current.title);
-  for (const [offset, label] of [[-1, "Previous"], [1, "Next"]]) {
-    const row = current.rows[position + offset];
-    if (!row) continue;
-    const link = document.createElement("a");
-    link.href = row.href;
-    link.textContent = label + " · " + row.title;
-    link.addEventListener("click", event => {
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      readingSection = { ...current, expected: row.docId };
-    });
-    nav.append(link);
-  }
-  if (nav.childNodes.length) settings.content.prepend(nav);
 }
 
 export async function createBookReportTools(options) {
@@ -341,7 +313,7 @@ export async function createBookReportTools(options) {
         heading.doc_ids = heading.doc_ids.filter(id => present.has(id));
       }
     },
-    ...(isBook ? { mountSectionNavigation({ root, rows, change }) {
+    ...(isBook ? { mountSectionNavigation({ root, rows, rowForId, change }) {
       const document = root.ownerDocument;
       const list = document.createElement("nav");
       list.className = "docsViewerBook__sectionList";
@@ -451,18 +423,6 @@ export async function createBookReportTools(options) {
         picker.innerHTML = option("", "Unfiled") + headingOptions(tree);
       }
       picker.addEventListener("change", () => choose(picker.value));
-      root.addEventListener("click", event => {
-        const link = event.target.closest("a.docsViewerReport__collectionButton");
-        if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        const current = headingControls.get(headingId)?.node;
-        const id = link.closest("[data-report-subdoc-id]")?.dataset.reportSubdocId;
-        if (!current || !id) {
-          readingSection = null;
-          return;
-        }
-        const byId = new Map(rows().map(row => [row.docId, row]));
-        readingSection = { expected: id, title: current.title, rows: current.doc_ids.map(docId => byId.get(docId)).filter(Boolean) };
-      }, { capture: true });
       navigation = { rows, choose, redraw(id) {
         renderHeadings();
         choose(id);
@@ -472,6 +432,9 @@ export async function createBookReportTools(options) {
       return {
         selected: () => headingId,
         restore: selected,
+        readingRows() {
+          return headingControls.get(headingId)?.node.doc_ids.map(rowForId).filter(Boolean);
+        },
         project(matches) {
           const current = headingControls.get(headingId)?.node;
           if (!current) {

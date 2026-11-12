@@ -30,6 +30,7 @@ export function createManagedCollectionBrowsingData(options) {
   return {
     get rows() { return rows; },
     get docIds() { return ids; },
+    rowForId(id) { return byId.get(id); },
     get hasThumbnails() { return thumbnailCount > 0; },
     get needsThumbnailSettings() { return pendingThumbnails.size > 0; },
     replace(records) {

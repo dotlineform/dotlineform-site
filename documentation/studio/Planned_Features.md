@@ -171,6 +171,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Ad-hoc Deliveries
 
+- [Collection Document Navigation](deliveries/Collection_Document_Navigation.md) — Complete and accepted on 2026-11-12 after spacing and link colour refinements. Previous and Next follow the collection list used to open the document. Book shows the row above its chapters and other collections show it below the body in Manage and public. [Docs Viewer Runtime](Docs_Viewer_Runtime.md#collection-previous-and-next)
+
 - [Bulk Source Folder Relinking](deliveries/Bulk_Source_Folder_Relinking.md) — Single/bulk implementation statically verified and reviewed on 2026-10-24; awaiting manual acceptance. The shared folder picker preserves filenames/prepared media for folder-only changes, validates destination names in the browser and carries explicit relink intent through Save. Actual image/attachment changes retain normal completion. Focused lint, Python compilation and whitespace checks passed. Live Save and UI behavior remain manual review after restarting Local Studio and reloading the editor.
 
 - [Bulk Series Editing](deliveries/Bulk_Series_Editing.md) — Implemented and statically reviewed on 2026-10-24; awaiting manual acceptance. Bulk selection comes only from one displayed Series, Work search/URL entry opens one ID, and bulk Save can reassign the selection while retaining the browsed Series. Focused source lint, Python compilation and whitespace checks passed; live Save and UI behavior remain manual review after restarting Local Studio and reloading the editor.

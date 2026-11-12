@@ -201,10 +201,6 @@ function mountCollectionDocumentActions(settings) {
       });
     }
     project();
-    if (target.collection === "book") {
-      const bookModule = await import("./docs-viewer-book-tools.js");
-      bookModule.mountBookChapterNavigation(settings, target);
-    }
     settings.collectionProvider.subscribeDocumentChanges(function (change) {
       if (!change.deleted && change.target.collection === target.collection && change.target.doc_id === target.doc_id && settings.content.isConnected) {
         record = change.record;

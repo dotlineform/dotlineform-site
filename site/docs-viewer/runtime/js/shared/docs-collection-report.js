@@ -1,5 +1,6 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+import { registerCollectionNavigationLink } from "./docs-viewer-collection-navigation.js";
 import { createDocsCollectionReportState } from "./docs-collection-report-state.js";
 import { fetchDocsCollectionManifest, fetchSelectedDocumentRows } from "./docs-viewer-data.js";
 import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-filter.js";
@@ -95,6 +96,17 @@ function notifyContribution(state, detail) {
   }, detail || {}));
 }
 
+function collectionSequenceForRow(state, docId) {
+  if (!state.readingRows) {
+    var rows = state.sectionNavigation ? state.sectionNavigation.readingRows()
+      : state.pinnedMatches ? state.pinnedMatches.concat(state.matches) : state.documentMatches;
+    state.readingRows = rows ? rows.map(({ docId, href, title }) => ({ docId, href, title })) : [];
+  }
+  if (state.readingRows.length < 2) return;
+  var position = state.readingRows.findIndex(row => row.docId === docId);
+  if (position >= 0) return { rows: state.readingRows, position: position };
+}
+
 function appendDocRow(state, doc, reserveThumbnailSpace, rowsNode) {
   var docId = doc.docId;
   var row = document.createElement("li");
@@ -108,6 +120,7 @@ function appendDocRow(state, doc, reserveThumbnailSpace, rowsNode) {
   var title = document.createElement("a");
   title.className = "docsViewerReport__cellLink docsViewerReport__collectionButton";
   title.href = doc.href;
+  registerCollectionNavigationLink(title, function () { return collectionSequenceForRow(state, docId); });
   if (reserveThumbnailSpace) appendCollectionThumbnail(title, doc.thumbnailSrc || undefined,
     state.pagedBrowsing && rowsNode === state.rowsNode ? "eager" : "lazy");
 
@@ -573,6 +586,8 @@ function renderListProjection(state, reusePinnedRows) {
     }
   }
   state.matches = matches;
+  state.documentMatches = documents;
+  state.readingRows = null;
   state.management?.prepareProjection(state.pinnedMatches
     ? state.pinnedMatches.concat(projected === documents ? matches : matches.filter(row => !row.galleryId))
     : documents);
@@ -733,6 +748,8 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     catalogueSearchRoute: context.catalogueSearchRoute,
     collectionSortNode: refs.collectionSortNode,
     matches: [],
+    documentMatches: [],
+    readingRows: null,
     pinnedMatches: null,
     renderedPinnedRows: null,
     pinnedDocIds: null,
@@ -826,6 +843,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   state.sectionNavigation = contributionCallback(contribution, "mountSectionNavigation")?.({
     root: root,
     rows: function () { return state.browsingData.rows; },
+    rowForId: function (id) { return state.browsingData.rowForId(id); },
     change: function () {
       state.pageIndex = 0;
       if (state.manifestLoaded) {
@@ -860,6 +878,8 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.management?.dispose();
     state.browsingData.clear();
     state.matches = [];
+    state.documentMatches = [];
+    state.readingRows = null;
     state.pinnedMatches = null;
     state.renderedPinnedRows = null;
     state.pinnedDocIds = null;

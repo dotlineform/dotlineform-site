@@ -1,5 +1,6 @@
 import { documentTarget, documentTargetKey } from "./docs-viewer-document-target.js";
 import { mountDocsContentHtml } from "./docs-viewer-asset-url.js";
+import { createCollectionNavigation } from "./docs-viewer-collection-navigation.js";
 
 export function initDocsViewerDocumentController(context) {
   var routeSession = context.routeSession;
@@ -15,7 +16,26 @@ export function initDocsViewerDocumentController(context) {
   var window = document.defaultView;
 
   function actionContext() { return activeRecord && activeRecord.actionContext || {}; }
-  function capture() { return { record: activeRecord, owners: (activeRecord && activeRecord.viewOwners || []).map(function (owner) { return { id: owner.id, state: owner.capture() }; }) }; }
+  function capture() {
+    return {
+      record: activeRecord,
+      collectionSequence: activeRecord?.collectionSequence,
+      owners: (activeRecord && activeRecord.viewOwners || []).map(function (owner) { return { id: owner.id, state: owner.capture() }; })
+    };
+  }
+
+  function projectCollectionNavigation(record, sequence) {
+    if (record.collectionSequence === sequence) return;
+    record.collectionSequence = sequence;
+    record.collectionNavigation?.remove();
+    var atTop = record.target.collection === "book";
+    record.collectionNavigation = sequence ? createCollectionNavigation(document, sequence, atTop) : null;
+    if (record.collectionNavigation) {
+      if (atTop) record.root.prepend(record.collectionNavigation);
+      else record.root.append(record.collectionNavigation);
+    }
+  }
+
   function waitsForCatalogueLayout(payload) {
     return context.appContext.kind === "manage" && (payload.catalogue && payload.catalogue.references || []).some(function (reference) {
       return reference.presentation === "image" || reference.presentation === "entry";
@@ -56,6 +76,7 @@ export function initDocsViewerDocumentController(context) {
     if (record) selectedDocument.documentTarget = record.target;
     if (record && record.error) renderDocumentStatus(record.error, true);
     else if (record && retained.get(documentTargetKey(record.target)) === record) {
+      projectCollectionNavigation(record, snapshot.collectionSequence);
       if (!await activate(record)) return;
       record.restorationStates = new Map((snapshot.owners || []).map(function (saved) { return [saved.id, saved.state]; }));
       record.viewOwners.forEach(function (owner) {
@@ -63,9 +84,10 @@ export function initDocsViewerDocumentController(context) {
       });
     } else handleMissingDoc();
   }
-  async function restoreRetained(target, hash, catalogueSearch) {
+  async function restoreRetained(target, hash, { catalogueSearch, collectionSequence } = {}) {
     var record = retained.get(documentTargetKey(target));
     if (!record) return false;
+    projectCollectionNavigation(record, collectionSequence);
     if (!await activate(record)) return false;
     // A list owner may resume its last visible state independently of this entry.
     var resumed = false;
@@ -429,6 +451,7 @@ export function initDocsViewerDocumentController(context) {
     var target = documentTarget(doc, { review: context.appContext.kind === "review" });
     var key = documentTargetKey(target);
     var previous = retained.get(key);
+    var collectionSequence = options.preservePosition ? previous?.collectionSequence : options.collectionSequence;
     var committedRecord = previous && previous.committedRecord && JSON.stringify(payload) === JSON.stringify(previous.payload) ? previous.committedRecord : null;
     if (committedRecord) doc = Object.assign({}, doc, committedRecord, target);
     var mountGeneration = nextDocumentMountGeneration();
@@ -445,6 +468,7 @@ export function initDocsViewerDocumentController(context) {
     }
     content.hidden = waitForLayout;
     var record = Object.assign(previous || {}, { target: target, doc: doc, payload: payload, root: content, generation: mountGeneration, viewOwners: [], restorationStates: null,
+      collectionSequence: undefined, collectionNavigation: null,
       lifetime: { active: true, unsubscribers: [] },
       committedRecord: committedRecord,
       actionContext: { state: target.collection ? "detail" : "document", documentTarget: target, documentRecord: doc,
@@ -473,6 +497,7 @@ export function initDocsViewerDocumentController(context) {
       mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
       viewerBaseUrl: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.viewerBaseUrl
     });
+    projectCollectionNavigation(record, collectionSequence);
     if (typeof context.mountRelatedLinks === "function") {
       context.mountRelatedLinks({
         content: content,

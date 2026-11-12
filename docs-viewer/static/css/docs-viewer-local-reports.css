@@ -398,16 +398,10 @@
   mask-image: url("../icons/file-question-mark.svg");
 }
 
-.docsViewerBook__chapterNavigation,
 .docsViewerBook__layout .docsViewerReport__collectionSelectionControl:not([hidden]) {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
-}
-
-.docsViewerBook__chapterNavigation {
-  justify-content: space-between;
-  margin-block-end: 1rem;
 }
 
 .docsViewerBook__sectionPicker,
