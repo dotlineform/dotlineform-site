@@ -66,7 +66,13 @@ function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
   var attrs = mediaTargetAttributes(reference.target);
   var image = imageControl(presentation, reference.presentation === "entry");
   if (reference.presentation === "image") {
-    var placement = { full: "docsViewerFigure--full-column", left: "docsViewerFigure--image-left", right: "docsViewerFigure--image-right" }[options.placement];
+    var placement = {
+      full: "docsViewerFigure--full-column",
+      left: "docsViewerFigure--image-left",
+      right: "docsViewerFigure--image-right",
+      "wrap-left": "docsViewerFigure--wrap-left",
+      "wrap-right": "docsViewerFigure--wrap-right"
+    }[options.placement];
     var classes = placement + (options.fill_width ? "" : " docsViewerFigure--natural-width");
     var blocks = options.use_work_title_caption ? '<span class="docsViewerFigure__caption">' + escape(presentation.label) + "</span>" : "";
     if (options.summary_html) blocks += '<span class="docsViewerFigure__summary">' + options.summary_html + "</span>";

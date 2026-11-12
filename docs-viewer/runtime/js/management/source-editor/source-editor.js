@@ -193,6 +193,9 @@ function createSourceEditorContextAdapter(context, state) {
     readCatalogueMediaTargets: function () {
       return state.collectionProvider.readCatalogueMediaTargets();
     },
+    readCatalogueThumbnailSettings: function () {
+      return state.collectionProvider.readCatalogueThumbnailSettings();
+    },
     readDocumentLinkTargets: function () {
       return state.collectionProvider.readDocumentLinkTargets();
     },

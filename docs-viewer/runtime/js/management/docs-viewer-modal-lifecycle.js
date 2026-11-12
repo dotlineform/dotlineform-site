@@ -6,9 +6,9 @@ function focusableControls(container) {
     "select:not([disabled])",
     "textarea:not([disabled])",
     "a[href]",
-    "[tabindex]:not([tabindex='-1'])"
+    "[tabindex]"
   ].join(","))).filter(function (node) {
-    return !node.hidden && node.getClientRects && node.getClientRects().length;
+    return node.tabIndex >= 0 && !node.hidden && node.getClientRects && node.getClientRects().length;
   });
   return controls.filter(function (node) {
     if (node.type !== "radio" || !node.name) return true;

@@ -1,7 +1,7 @@
 import { decodeImageValue, encodeImageValue, parseSourceTokens } from "./catalogue-token-parser.js";
+import { IMAGE_PLACEMENTS } from "./image-placement.js";
 
 var FIELDS = new Set(["alt", "caption", "summary", "placement", "fill_width"]);
-var PLACEMENTS = new Set(["full", "left", "right"]);
 var TEXT_SPACE = /[\t\n\v\f\r \u0085\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/g;
 
 function imageText(value, multiline) {
@@ -40,7 +40,7 @@ export function serializeImageToken(options = {}) {
   var placement = imageText(options.placement, false).toLowerCase();
   caption = imageText(caption, false);
   summary = imageText(summary, true);
-  if (!alt || !PLACEMENTS.has(placement)) return "";
+  if (!alt || !IMAGE_PLACEMENTS.has(placement)) return "";
   var fields = [["alt", alt]];
   if (caption) fields.push(["caption", caption]);
   if (summary) fields.push(["summary", summary]);

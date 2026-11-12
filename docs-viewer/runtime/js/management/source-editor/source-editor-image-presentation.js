@@ -1,3 +1,5 @@
+import { imageWrapCheckboxHtml, mountImagePlacement, readImagePlacement } from "./image-placement.js";
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -30,18 +32,19 @@ export function imagePresentationHtml(options = {}) {
         '<span class="docsViewer__fieldLabel" id="' + idPrefix + 'PlacementLabel">Placement</span>' +
         '<div class="docsViewerSourceEditorMedia__placementOptions">' +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="media-placement" type="radio" name="' + idPrefix + 'Placement" value="full" checked>' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="full" checked>' +
             '<span>Full column</span>' +
           "</label>" +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="media-placement" type="radio" name="' + idPrefix + 'Placement" value="left">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="left">' +
             '<span>Image left</span>' +
           "</label>" +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="media-placement" type="radio" name="' + idPrefix + 'Placement" value="right">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="right">' +
             '<span>Image right</span>' +
           "</label>" +
         "</div>" +
+        imageWrapCheckboxHtml() +
       "</div>" +
       '<label class="docsViewer__field docsViewer__field--checkbox">' +
         '<input class="docsViewer__checkboxInput" data-role="media-fill-width" type="checkbox" checked>' +
@@ -49,58 +52,35 @@ export function imagePresentationHtml(options = {}) {
       "</label>";
 }
 
-export function setImagePresentationEnabled(host, enabled) {
-  var presentation = host && host.querySelector
-    ? host.querySelector('[data-role="media-presentation"]')
-    : null;
-  if (!presentation) return;
-  presentation.hidden = !enabled;
-  presentation.querySelectorAll("input, textarea").forEach(function (control) {
-    control.disabled = !enabled;
-  });
-}
-
-export function bindImagePresentation(host) {
-  var captionToggle = host && host.querySelector
-    ? host.querySelector('[data-role="media-caption"]')
-    : null;
-  function project() {
-    setImagePresentationEnabled(host, Boolean(captionToggle && captionToggle.checked));
-  }
-  if (captionToggle) captionToggle.addEventListener("change", project);
-  project();
-  return function () {
-    if (captionToggle) captionToggle.removeEventListener("change", project);
-  };
-}
-
-export function hydrateImagePresentation(host, values = {}) {
+export function mountImagePresentation(host, values = {}) {
   var captionToggle = host.querySelector('[data-role="media-caption"]');
   var captionInput = host.querySelector('[data-role="media-caption-text"]');
+  var captionField = host.querySelector('[data-role="media-presentation"]');
   var summaryInput = host.querySelector('[data-role="media-summary"]');
   var fillWidthInput = host.querySelector('[data-role="media-fill-width"]');
-  var placement = cleanString(values.placement) || "full";
-  if (captionToggle) captionToggle.checked = booleanValue(values.addCaption, true);
-  if (captionInput) captionInput.value = cleanString(values.caption);
-  if (summaryInput) summaryInput.value = String(values.summary == null ? "" : values.summary).trim();
-  if (fillWidthInput) fillWidthInput.checked = booleanValue(values.fillWidth, true);
-  host.querySelectorAll('[data-role="media-placement"]').forEach(function (input) {
-    input.checked = input.value === placement;
-  });
-  setImagePresentationEnabled(host, Boolean(captionToggle && captionToggle.checked));
+  captionToggle.checked = booleanValue(values.addCaption, true);
+  captionInput.value = cleanString(values.caption);
+  summaryInput.value = String(values.summary == null ? "" : values.summary).trim();
+  fillWidthInput.checked = booleanValue(values.fillWidth, true);
+  mountImagePlacement(host, cleanString(values.placement) || "full");
+
+  function projectCaption() {
+    captionField.hidden = captionInput.disabled = !captionToggle.checked;
+  }
+  captionToggle.addEventListener("change", projectCaption);
+  projectCaption();
 }
 
 export function readImagePresentation(host) {
   var captionToggle = host.querySelector('[data-role="media-caption"]');
   var captionInput = host.querySelector('[data-role="media-caption-text"]');
   var summaryInput = host.querySelector('[data-role="media-summary"]');
-  var placementInput = host.querySelector('[data-role="media-placement"]:checked');
   var fillWidthInput = host.querySelector('[data-role="media-fill-width"]');
   return {
-    addCaption: Boolean(captionToggle && captionToggle.checked),
-    caption: cleanString(captionInput && captionInput.value),
-    summary: String(summaryInput && summaryInput.value || "").trim(),
-    placement: cleanString(placementInput && placementInput.value),
-    fillWidth: Boolean(fillWidthInput && fillWidthInput.checked)
+    addCaption: captionToggle.checked,
+    caption: captionInput.value.trim(),
+    summary: summaryInput.value.trim(),
+    placement: readImagePlacement(host),
+    fillWidth: fillWidthInput.checked
   };
 }

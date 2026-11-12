@@ -33,22 +33,30 @@ function targetKey(target, settings) {
   return presentation.kind + ":" + presentation.id;
 }
 
-function rowMarkup(target, index, activeIndex, selectedIndex, settings) {
+function rowMarkup(target, index, activeIndex, settings) {
   var id = "docsViewerCatalogueTargetOption-" + index;
   var active = index === activeIndex;
-  var selected = index === selectedIndex;
   var presentation = presentationFor(target, settings);
   var idTitleLayout = settings.layout === "id-title";
+  var thumbnailColumn = idTitleLayout && typeof settings.thumbnailSrc === "function";
+  var thumbnailSrc = thumbnailColumn ? settings.thumbnailSrc(target) : "";
+  var thumbnail = thumbnailSrc
+    ? '<img class="docsViewerCatalogueTargetPicker__rowThumb" src="' + escapeHtml(thumbnailSrc) +
+      '" width="48" height="48" alt="" loading="lazy" decoding="async">'
+    : '<span aria-hidden="true"></span>';
   var main = idTitleLayout
-    ? '<span class="docsViewerCatalogueTargetPicker__rowId">' + escapeHtml(presentation.id) + "</span>" +
+    ? (thumbnailColumn ? thumbnail : "") +
+      '<span class="docsViewerCatalogueTargetPicker__rowId">' + escapeHtml(presentation.id) + "</span>" +
       '<span class="docsViewerCatalogueTargetPicker__rowTitle">' + escapeHtml(presentation.title) + "</span>"
     : '<span class="docsViewerCatalogueTargetPicker__rowTitle">' + escapeHtml(presentation.title) + "</span>" +
       '<span class="docsViewerCatalogueTargetPicker__rowKind">' + escapeHtml(presentation.kind) + "</span>" +
       '<span class="docsViewerCatalogueTargetPicker__rowId">' + escapeHtml(presentation.id) + "</span>";
   return (
-    '<div class="docsViewerCatalogueTargetPicker__row' + (active ? " is-active" : "") + (selected ? " is-selected" : "") + '" ' +
-      'id="' + id + '" role="option" aria-selected="' + (selected ? "true" : "false") + '" data-target-index="' + index + '">' +
-      '<span class="docsViewerCatalogueTargetPicker__rowMain' + (idTitleLayout ? " docsViewerCatalogueTargetPicker__rowMain--idTitle" : "") + '">' +
+    '<div class="docsViewerCatalogueTargetPicker__row' + (active ? " is-active" : "") + '" ' +
+      'id="' + id + '" role="option" aria-selected="false" data-target-index="' + index + '">' +
+      '<span class="docsViewerCatalogueTargetPicker__rowMain' +
+        (idTitleLayout ? " docsViewerCatalogueTargetPicker__rowMain--idTitle" : "") +
+        (thumbnailColumn ? " docsViewerCatalogueTargetPicker__rowMain--thumbnail" : "") + '">' +
         main +
       "</span>" +
       (idTitleLayout ? "" : renderMeta(presentation)) +
@@ -65,13 +73,6 @@ export function createCatalogueTargetPickerList(root, options = {}) {
   var onActiveChange = typeof settings.onActiveChange === "function"
     ? settings.onActiveChange
     : function () {};
-
-  function render() {
-    if (!root) return;
-    root.innerHTML = records.map(function (target, index) {
-      return rowMarkup(target, index, activeIndex, selectedIndex, settings);
-    }).join("");
-  }
 
   function activeOptionId() {
     return activeIndex >= 0 ? "docsViewerCatalogueTargetOption-" + activeIndex : "";
@@ -90,12 +91,12 @@ export function createCatalogueTargetPickerList(root, options = {}) {
   }
 
   function setActiveIndex(index) {
-    if (!records.length) {
-      activeIndex = -1;
-    } else {
-      activeIndex = Math.max(0, Math.min(index, records.length - 1));
+    var nextIndex = records.length ? Math.max(0, Math.min(index, records.length - 1)) : -1;
+    if (nextIndex !== activeIndex) {
+      root?.children[activeIndex]?.classList.remove("is-active");
+      activeIndex = nextIndex;
+      root?.children[activeIndex]?.classList.add("is-active");
     }
-    render();
     notifyActiveChange();
     revealActive();
   }
@@ -104,19 +105,26 @@ export function createCatalogueTargetPickerList(root, options = {}) {
     records = Array.isArray(nextRecords) ? nextRecords.slice() : [];
     activeIndex = records.length ? 0 : -1;
     selectedIndex = -1;
-    render();
-    if (root) root.scrollTop = 0;
+    if (root) {
+      root.innerHTML = records.map(function (target, index) {
+        return rowMarkup(target, index, activeIndex, settings);
+      }).join("");
+      root.scrollTop = 0;
+    }
     notifyActiveChange();
   }
 
   function selectIndex(index) {
     var record = records[index];
     if (!record) return false;
-    activeIndex = index;
+    var previous = root?.children[selectedIndex];
+    previous?.classList.remove("is-selected");
+    previous?.setAttribute("aria-selected", "false");
     selectedIndex = index;
-    render();
-    notifyActiveChange();
-    revealActive();
+    var selected = root?.children[index];
+    selected?.classList.add("is-selected");
+    selected?.setAttribute("aria-selected", "true");
+    setActiveIndex(index);
     onSelect(record);
     return true;
   }
@@ -146,15 +154,27 @@ export function createCatalogueTargetPickerList(root, options = {}) {
     selectIndex(Number(button.getAttribute("data-target-index")));
   }
 
-  if (root) root.addEventListener("click", handleClick);
+  function hideFailedThumbnail(event) {
+    if (event.target.classList.contains("docsViewerCatalogueTargetPicker__rowThumb")) {
+      event.target.style.visibility = "hidden";
+    }
+  }
+
+  if (root) {
+    root.addEventListener("click", handleClick);
+    if (settings.thumbnailSrc) root.addEventListener("error", hideFailedThumbnail, true);
+  }
 
   return {
     destroy: function () {
-      if (root) root.removeEventListener("click", handleClick);
+      if (root) {
+        root.removeEventListener("click", handleClick);
+        if (settings.thumbnailSrc) root.removeEventListener("error", hideFailedThumbnail, true);
+        root.replaceChildren();
+      }
       records = [];
       activeIndex = -1;
       selectedIndex = -1;
-      if (root) root.replaceChildren();
       notifyActiveChange();
     },
     activeOptionId: activeOptionId,

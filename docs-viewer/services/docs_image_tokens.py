@@ -1,4 +1,4 @@
-"""Canonical, write-free source grammar for Docs-owned semantic images."""
+"""Source grammar for Docs-owned images and shared semantic figure classes."""
 
 from __future__ import annotations
 
@@ -12,6 +12,8 @@ FIGURE_PLACEMENT_CLASSES = {
     "full": "docsViewerFigure--full-column",
     "left": "docsViewerFigure--image-left",
     "right": "docsViewerFigure--image-right",
+    "wrap-left": "docsViewerFigure--wrap-left",
+    "wrap-right": "docsViewerFigure--wrap-right",
 }
 FIGURE_NATURAL_WIDTH_CLASS = "docsViewerFigure--natural-width"
 IMAGE_FIELDS = frozenset({"alt", "caption", "summary", "placement", "fill_width"})

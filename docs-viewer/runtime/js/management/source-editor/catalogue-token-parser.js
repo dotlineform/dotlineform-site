@@ -1,7 +1,8 @@
+import { IMAGE_PLACEMENTS } from "./image-placement.js";
+
 var LEXICAL_KEY_PATTERN = /^[a-z][a-z0-9-]*$/;
 var LEXICAL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 var IMAGE_FIELDS = new Set(["use_work_title_caption", "summary", "placement", "fill_width"]);
-var IMAGE_PLACEMENTS = new Set(["full", "left", "right"]);
 var MEDIA_TARGET_PATTERNS = { work: /^[0-9]{5}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
 
 function cleanString(value) {

@@ -3,9 +3,8 @@ import {
   openDocsViewerManagementModal
 } from "../docs-viewer-management-modal-shell.js";
 import {
-  bindImagePresentation,
-  hydrateImagePresentation,
   imagePresentationHtml,
+  mountImagePresentation,
   readImagePresentation
 } from "./source-editor-image-presentation.js";
 import { parseImageTokens, serializeImageToken } from "./image-token-parser.js";
@@ -28,7 +27,7 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
   if (editing) copy = Object.assign({}, copy, { title: "Edit " + kind, primary: "Apply" });
   var selectedFile = null;
   return openDocsViewerManagementModal({
-    root: root, title: copy.title, size: "compact",
+    root: root, title: copy.title, size: kind === "image" ? "standard" : "compact",
     focusSelector: editing ? '[data-role="media-label"]' : '[data-role="choose-media-file"]',
     bodyHtml:
       '<div class="docsViewer__field">' +
@@ -79,10 +78,7 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       var captionEdited = editing;
       filename.value = editing ? draft.mediaPath.split("/").pop() : "";
       label.value = cleanString(draft && draft.label);
-      if (kind === "image") {
-        if (draft) hydrateImagePresentation(api.host, draft);
-        bindImagePresentation(api.host);
-      }
+      if (kind === "image") mountImagePresentation(api.host, draft || {});
       api.host.querySelector('[data-role="choose-media-file"]').addEventListener("click", function () {
         input.value = "";
         input.click();
@@ -116,7 +112,7 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
     },
     onSubmit: function (api) {
       var label = cleanString(api.host.querySelector('[data-role="media-label"]').value);
-      var presentation = readImagePresentation(api.host);
+      var presentation = kind === "image" ? readImagePresentation(api.host) : {};
       var preserveToggle = api.host.querySelector('[data-role="preserve-resolution"]');
       var imageDetailToggle = api.host.querySelector('[data-role="image-detail"]');
       var preserveResolution = Boolean(preserveToggle && !preserveToggle.disabled && preserveToggle.checked);

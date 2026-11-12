@@ -5,7 +5,9 @@ import {
   catalogueDocumentImage,
   catalogueDocumentWorkPresentation
 } from "./docs-viewer-catalogue-media.js";
-import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
+import {
+  catalogueThumbnailSettings, readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy
+} from "./docs-viewer-catalogue-media-policy.js";
 import { fetchDocsCollectionManifest } from "./docs-viewer-data.js";
 import { documentTarget } from "./docs-viewer-document-target.js";
 import { docsViewerLinksDocumentHref } from "./docs-viewer-links-presentation.js";
@@ -124,6 +126,12 @@ export function createDocsViewerWorkspaceProvider(options) {
         }).then(validateCatalogueMediaPolicy).finally(function () { mediaPolicyRead = null; });
       }
       return mediaPolicyRead;
+    };
+  }
+  if (source && provider.readCatalogueMediaConfig) {
+    provider.readCatalogueThumbnailSettings = async function () {
+      var policy = await provider.readCatalogueMediaConfig();
+      return catalogueThumbnailSettings(policy, routeContext().routeConfig.catalogueWorkThumbnailsBaseUrl);
     };
   }
   provider.catalogueImage = function (image) {

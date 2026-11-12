@@ -270,6 +270,18 @@
   column-gap: 0.65rem;
 }
 
+.docsViewerCatalogueTargetPicker__rowMain--thumbnail{
+  grid-template-columns: 48px minmax(5ch, max-content) minmax(0, 1fr);
+  align-items: center;
+}
+
+.docsViewerCatalogueTargetPicker__rowThumb{
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
 .docsViewerCatalogueTargetPicker__rowMain--idTitle .docsViewerCatalogueTargetPicker__rowId{
   color: var(--docs-viewer-theme-text-placeholder);
   font-size: var(--docs-viewer-font-caption, 0.75rem);
@@ -316,8 +328,14 @@
 }
 
 .docsViewerCatalogueTokenModal__selection > .sharedSearchField{
+  grid-column: 2;
   position: relative;
   display: block;
+}
+
+.docsViewerCatalogueTokenModal__selection .sharedSearchField input.sharedSearchField__input:focus-visible{
+  outline: none;
+  border-bottom: 2px solid var(--docs-viewer-focus-ring);
 }
 
 .docsViewerCatalogueTokenModal__selection > .sharedSearchField > .sharedSearchField__icon{
@@ -336,6 +354,11 @@
 
 .docsViewerCatalogueImageModal__layoutControls > .docsViewer__field--checkbox{
   flex: 0 0 auto;
+}
+
+.docsViewerSourceEditorMedia__wrap{
+  grid-column: 2;
+  justify-self: start;
 }
 
 .docsViewerCatalogueTokenModal__searchStatus{

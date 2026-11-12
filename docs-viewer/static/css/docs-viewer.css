@@ -1896,6 +1896,56 @@ body.docs-viewer-service{
   }
 }
 
+/* Float a standalone image figure or its Catalogue slot in the Markdown text flow. */
+.docsViewer__documentMount:has(
+  > :is(.docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right),
+  > [data-docs-catalogue-ref] > :is(.docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right)
+){
+  display: flow-root;
+  container: docs-image-wrap / inline-size;
+  --docs-viewer-wrapped-image-width: calc((100% - var(--docs-viewer-space-5)) / 2);
+}
+
+@container docs-image-wrap (min-width: 36rem){
+  .docsViewer__documentMount > :is(
+    .docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right,
+    [data-docs-catalogue-ref]:has(> :is(.docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right))
+  ){
+    width: var(--docs-viewer-wrapped-image-width);
+    max-width: var(--docs-viewer-wrapped-image-width);
+    margin: 0 0 var(--docs-viewer-space-3);
+    clear: both;
+  }
+
+  .docsViewer__documentMount > :is(
+    :is(.docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right).docsViewerFigure--natural-width,
+    [data-docs-catalogue-ref]:has(> :is(.docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right).docsViewerFigure--natural-width)
+  ){
+    width: fit-content;
+  }
+
+  .docsViewer__documentMount > :is(.docsViewerFigure--wrap-left, [data-docs-catalogue-ref]:has(> .docsViewerFigure--wrap-left)){
+    float: left;
+    margin-right: var(--docs-viewer-space-5);
+  }
+
+  .docsViewer__documentMount > :is(.docsViewerFigure--wrap-right, [data-docs-catalogue-ref]:has(> .docsViewerFigure--wrap-right)){
+    float: right;
+    margin-left: var(--docs-viewer-space-5);
+  }
+
+  .docsViewer__documentMount > [data-docs-catalogue-ref] > :is(.docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right){
+    margin: 0;
+  }
+
+  .docsViewer__documentMount > :is(
+    .docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right,
+    [data-docs-catalogue-ref]:has(> :is(.docsViewerFigure--wrap-left, .docsViewerFigure--wrap-right))
+  ) ~ :is(h1, h2, h3, h4, h5, h6){
+    clear: both;
+  }
+}
+
 /* Regenerate-owned Work records keep headings outside the image figure. */
 .docsViewer__content .docsViewerCatalogueEntry{
   display: grid;

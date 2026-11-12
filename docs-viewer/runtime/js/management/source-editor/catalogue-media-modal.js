@@ -1,4 +1,5 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
+import { catalogueWorkThumbnail } from "../../shared/docs-viewer-catalogue-media.js";
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { selectedTextForCatalogueTitle } from "./catalogue-token-contract.js";
 import {
@@ -33,7 +34,7 @@ function modalBody(searchQuery, linkText, imageMode) {
           '<input class="docsViewer__fieldInput" id="' + LINK_INPUT_ID + '" type="text" autocomplete="off" value="' + escapeHtml(linkText) + '" required>' +
         '</label>' +
         '<label class="docsViewer__field docsViewer__field--checkbox" data-role="catalogue-link-visibility" hidden>' +
-          '<input class="docsViewer__checkboxInput" data-role="catalogue-link-visible" type="checkbox" checked>' +
+          '<input class="docsViewer__checkboxInput" data-role="catalogue-link-visible" type="checkbox" tabindex="-1" checked>' +
           '<span class="docsViewer__fieldLabel">Show inline link</span>' +
         "</label>") +
     "</div>"
@@ -65,12 +66,13 @@ export function openCatalogueMediaModal(options = {}) {
     onOpen: function (api) {
       var modalRoot = api.host.querySelector('[data-role="docs-viewer-management-modal"]');
       var search = api.host.querySelector("#" + SEARCH_INPUT_ID);
-      mountSearchField(search);
+      mountSearchField(search).clearButton.tabIndex = -1;
       var linkInput = api.host.querySelector("#" + LINK_INPUT_ID);
       var visibilityField = api.host.querySelector('[data-role="catalogue-link-visibility"]');
       var results = api.host.querySelector('[data-role="catalogue-results"]');
       var status = api.host.querySelector('[data-role="catalogue-search-status"]');
       var primary = api.host.querySelector('[data-role="modal-primary"]');
+      var thumbnailSettings = null;
       if (modalRoot) modalRoot.id = imageMode ? "catalogue-image-add-modal" : "catalogue-media-link-modal";
       if (imageMode) {
         hydrateCatalogueImagePresentation(api.host, initialToken || {
@@ -115,10 +117,20 @@ export function openCatalogueMediaModal(options = {}) {
         var matches = collectSemanticTokenTargetMatches(targets, search.value, state.support.registry, 20);
         state.list.setTargets(matches);
         showResults(matches.length > 0);
-        message(search.value.trim() && !matches.length ? (imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works or Galleries.") : "");
+        if (search.value.trim() && !matches.length) {
+          message(imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works or Galleries.");
+        } else if (!thumbnailSettings && matches.some(function (target) { return target.targetType === "work"; })) {
+          message("Work thumbnails are unavailable.", true);
+        } else {
+          message("");
+        }
       }
       state.list = createCatalogueTargetPickerList(results, {
         layout: "id-title",
+        thumbnailSrc: function (target) {
+          return thumbnailSettings && target.targetType === "work"
+            ? catalogueWorkThumbnail(target.targetId, target.title, thumbnailSettings).src : "";
+        },
         onActiveChange: function (_target, optionId) {
           [search, results].forEach(function (owner) {
             if (optionId) owner.setAttribute("aria-activedescendant", optionId);
@@ -128,15 +140,30 @@ export function openCatalogueMediaModal(options = {}) {
         kind: function (target) { return target.targetType; },
         id: function (target) { return target.targetId; },
         title: function (target) { return target.title; },
-        onSelect: function (target) { selectTarget(target); }
+        onSelect: function (target) {
+          selectTarget(target);
+          search.focus();
+        }
       });
       search.addEventListener("input", updateMatches);
       [search, results].forEach(function (owner) {
-        owner.addEventListener("keydown", function (event) { state.list.handleKeydown(event); });
+        owner.addEventListener("keydown", function (event) {
+          if (!event.isComposing) state.list.handleKeydown(event);
+        });
       });
-      loadCatalogueMediaSupport(adapter, { fetch: options.fetch }).then(function (support) {
+      modalRoot.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" || event.defaultPrevented || event.isComposing
+          || !state.target || event.target.tagName !== "INPUT") return;
+        event.preventDefault();
+        if (!event.repeat) primary.click();
+      });
+      Promise.all([
+        loadCatalogueMediaSupport(adapter, { fetch: options.fetch }),
+        adapter.readCatalogueThumbnailSettings().catch(function () { return null; })
+      ]).then(function ([support, thumbnails]) {
         if (state.disposed) return;
         state.support = support;
+        thumbnailSettings = thumbnails;
         search.disabled = false;
         updateMatches();
         if (initialToken) {

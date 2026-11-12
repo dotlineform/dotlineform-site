@@ -30,11 +30,15 @@ Selecting a Catalogue target, including through **Use document subject**, consum
 
 The modal starts with search status and results hidden. Results appear only when the query has matches; an empty result container contributes no padding or grid gap. Initial Catalogue loading and subject selection add no transient status row.
 
+Both Catalogue token pickers show a 48px preview beside each matching Work using the configured Working thumbnail rendition. The browser loads the shared rendition policy once per modal and requests thumbnail images for matching Works as needed. Gallery results show their ID and title. Work targets remain selectable when a thumbnail is unavailable.
+
 The modal changes the ordinary dirty buffer. Save owns complete source validation/persistence and awaits exact generation and fresh display. Cancel preserves source. The editor owns focus, selection and dirty state. **Use document subject** uses shared context for the captured buffer revision, seeded on Source load or Subject Apply. After a buffer change the first consumer requests a narrow Subject projection; other consumers share that result or in-flight read. Malformed front matter, mismatched identity or invalid Subject syntax disables the optional choice with a visible error. Unrelated Title, readiness or report errors do not block it. Context errors preserve token fields and independent Catalogue selection.
 
 ## Media View Link
 
 The modal searches generated Work/Gallery targets by title or identity, lets the author choose a target and supply link text, and serializes the local chosen target and label on insertion or Apply. The resulting token stores the exact canonical target ID and escaped occurrence text. Work IDs contain five digits; Gallery IDs retain the registry's canonical identity.
+
+Enter chooses the active search result. After selection, Enter in a modal field confirms **Add link** or **Apply**. The clear button and **Show inline link** checkbox are skipped by Tab.
 
 Activation opens that exact Work or Gallery in Media View. Series is not a token target.
 
@@ -44,7 +48,13 @@ The image modal uses the same generated Work target source and consumes the sele
 
 The stored `catalogue:image:work` token contains exact Work identity, explicit choices and presentation settings, plus any authored summary. It stores no literal Work title, alt text, caption, metadata or resolved media URL, and it does not acquire document identity. The modal validates the selected current media presentation before insertion; document Build derives the selected text from the generated Work record.
 
-Supported token forms and identity rules remain owned by [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md). Creation and editing use the same grammar and target families; images support Works only.
+Enter selects the active Work result. Pressing Enter again from search confirms the image. After selection, Tab moves from search to **Summary**, then to the modal buttons. The clear button, caption and width checkboxes, and layout choices remain available by click.
+
+Supported token forms and identity rules remain owned by [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md). Creation and editing use the same grammar and target families; Catalogue images support Works only.
+
+## Wrap Body Text
+
+In **Add Catalogue image**, choose **Left** or **Right**. In **Add image**, choose **Image left** or **Image right**. Check **Wrap body text**, put the token on its own line and leave a blank line before the Markdown prose. The prose begins alongside the image and continues at full width after it. A new section heading starts at full width. The optional caption and image summary sit under the image. When the reading column is narrower than 36rem, the image and prose stack.
 
 ## Existing Occurrences
 

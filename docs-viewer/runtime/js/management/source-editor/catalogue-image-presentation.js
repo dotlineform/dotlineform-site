@@ -1,3 +1,5 @@
+import { IMAGE_PLACEMENTS, imageWrapCheckboxHtml, mountImagePlacement, readImagePlacement } from "./image-placement.js";
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -10,7 +12,7 @@ export function catalogueImagePresentationHtml(options = {}) {
     : "docsViewerCatalogueImage";
   return "" +
     '<label class="docsViewer__field docsViewer__field--checkbox">' +
-      '<input class="docsViewer__checkboxInput" data-role="catalogue-image-title-caption" type="checkbox" checked>' +
+      '<input class="docsViewer__checkboxInput" data-role="catalogue-image-title-caption" type="checkbox" tabindex="-1" checked>' +
       '<span class="docsViewer__fieldLabel">Title caption</span>' +
     "</label>" +
     '<label class="docsViewer__field docsViewer__field--textarea" for="' + idPrefix + 'Summary">' +
@@ -22,23 +24,24 @@ export function catalogueImagePresentationHtml(options = {}) {
       '<div class="docsViewerCatalogueImageModal__layoutControls">' +
         '<div class="docsViewerSourceEditorMedia__placementOptions" role="radiogroup" aria-labelledby="' + idPrefix + 'PlacementLabel">' +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="catalogue-image-placement" type="radio" name="' + idPrefix + 'Placement" value="full" checked>' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="full" tabindex="-1" checked>' +
             '<span>Full</span>' +
           "</label>" +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="catalogue-image-placement" type="radio" name="' + idPrefix + 'Placement" value="left">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="left" tabindex="-1">' +
             '<span>Left</span>' +
           "</label>" +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="catalogue-image-placement" type="radio" name="' + idPrefix + 'Placement" value="right">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="right" tabindex="-1">' +
             '<span>Right</span>' +
           "</label>" +
         "</div>" +
         '<label class="docsViewer__field docsViewer__field--checkbox">' +
-          '<input class="docsViewer__checkboxInput" data-role="catalogue-image-fill-width" type="checkbox" checked>' +
+          '<input class="docsViewer__checkboxInput" data-role="catalogue-image-fill-width" type="checkbox" tabindex="-1" checked>' +
           '<span class="docsViewer__fieldLabel">Fill available width</span>' +
         "</label>" +
       "</div>" +
+      imageWrapCheckboxHtml({ tabStop: false }) +
     "</div>";
 }
 
@@ -46,23 +49,20 @@ export function hydrateCatalogueImagePresentation(host, values = {}) {
   var placement = cleanString(values.placement);
   if (typeof values.useWorkTitleCaption !== "boolean"
     || typeof values.fillWidth !== "boolean"
-    || !["full", "left", "right"].includes(placement)) {
+    || !IMAGE_PLACEMENTS.has(placement)) {
     throw new Error("Catalogue image presentation is invalid.");
   }
   host.querySelector('[data-role="catalogue-image-title-caption"]').checked = values.useWorkTitleCaption;
   host.querySelector('[data-role="catalogue-image-summary"]').value = String(values.summary == null ? "" : values.summary);
   host.querySelector('[data-role="catalogue-image-fill-width"]').checked = values.fillWidth;
-  host.querySelectorAll('[data-role="catalogue-image-placement"]').forEach(function (input) {
-    input.checked = input.value === placement;
-  });
+  mountImagePlacement(host, placement);
 }
 
 export function readCatalogueImagePresentation(host) {
-  var placement = host.querySelector('[data-role="catalogue-image-placement"]:checked');
   return {
     useWorkTitleCaption: host.querySelector('[data-role="catalogue-image-title-caption"]').checked,
     summary: host.querySelector('[data-role="catalogue-image-summary"]').value,
-    placement: placement ? placement.value : "",
+    placement: readImagePlacement(host),
     fillWidth: host.querySelector('[data-role="catalogue-image-fill-width"]').checked
   };
 }
