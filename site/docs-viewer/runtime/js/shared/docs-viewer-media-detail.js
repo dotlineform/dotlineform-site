@@ -29,8 +29,8 @@ function groupTarget(target) {
   return target && target.kind === "catalogue-gallery";
 }
 
-function groupLabel() {
-  return "Gallery";
+function groupLabel(target) {
+  return target?.kind === "catalogue-discovery" ? "selection" : "Gallery";
 }
 
 function positiveInteger(value) {
@@ -385,7 +385,7 @@ export function createDocsViewerMediaDetailAdapter() {
       || !target || !cleanString(target.docId)
       || (context.isCurrentDocument && !context.isCurrentDocument())) return false;
 
-    var presentation = normalizeDocsViewerMediaPresentation(context.presentation);
+    var presentation = normalizeDocsViewerMediaPresentation(context.presentation, { allowDiscovery: true });
     if (typeof context.onPresentation === "function") context.onPresentation(presentation);
     state.mediaRequestGeneration += 1;
 
@@ -419,18 +419,18 @@ export function createDocsViewerMediaDetailAdapter() {
   }
 
   /** Reuse the mounted Catalogue page and Works selected during this mount. */
-  function readWork(state, workId) {
-    if (!state.workReads.has(workId)) {
+  function readWork(state, workId, reads = state.workReads) {
+    if (!reads.has(workId)) {
       var provider = state.collectionProvider;
       if (!provider || typeof provider.readCatalogueWorkPresentation !== "function") {
         throw new Error("Catalogue media is unavailable in this view.");
       }
       var ownPage = state.documentTarget.collection === "catalogue" && state.documentTarget.docId === workId;
       var read = provider.readCatalogueWorkPresentation(workId, ownPage ? state.payload : null)
-        .catch(function (error) { state.workReads.delete(workId); throw error; });
-      state.workReads.set(workId, read);
+        .catch(function (error) { reads.delete(workId); throw error; });
+      reads.set(workId, read);
     }
-    return state.workReads.get(workId);
+    return reads.get(workId);
   }
 
   async function readGroup(state, target) {
@@ -497,6 +497,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var record = resolved.record;
     var state = resolved.state;
     var supplied = record.presentation;
+    var discoveryWorkReads = supplied.target.kind === "catalogue-discovery" ? new Map() : undefined;
     var documentRef = context.document || root.ownerDocument;
     var section = documentRef.createElement("section");
     section.className = "docsViewer__contentDetail docsViewer__contentDetail--media";
@@ -543,10 +544,11 @@ export function createDocsViewerMediaDetailAdapter() {
         : Boolean(resolveRecord(root, context.targetContext)));
     }
 
-    function imageElement(data, className) {
+    function imageElement(data, className, loading) {
       var image = documentRef.createElement("img");
       image.className = className;
       image.alt = data.alt;
+      if (loading) image.loading = loading;
       image.style.setProperty("--docs-media-image-width", data.widthPx + "px");
       image.style.setProperty("--docs-media-image-ratio", String(data.widthPx / data.heightPx));
       imageCleanups.push(mountDocsViewerResponsiveImage(image, data));
@@ -702,8 +704,7 @@ export function createDocsViewerMediaDetailAdapter() {
           "docsViewer__mediaDetailThumbnail",
           member.target
         );
-        var image = imageElement(member.thumbnail, "docsViewer__mediaDetailThumbnailImage");
-        image.loading = "lazy";
+        var image = imageElement(member.thumbnail, "docsViewer__mediaDetailThumbnailImage", "lazy");
         button.appendChild(image);
         button.title = member.label + " (" + member.target.id + ")";
         item.appendChild(button);
@@ -763,10 +764,11 @@ export function createDocsViewerMediaDetailAdapter() {
       current = next;
       imageCleanups.forEach(function (cleanup) { cleanup(); });
       imageCleanups = [];
-      viewport.replaceChildren(groupTarget(current.target)
+      var grid = current === supplied.gallery;
+      viewport.replaceChildren(grid
         ? renderGallery(current)
         : renderWork(current));
-      viewport.setAttribute("aria-label", current.label + (groupTarget(current.target) && current.members.length
+      viewport.setAttribute("aria-label", current.label + (grid && groupTarget(current.target) && current.members.length
         ? ", page " + (galleryPage + 1) : ""));
       section.setAttribute("data-docs-media-kind", current.target.kind);
       section.setAttribute("data-docs-media-id", current.target.id);
@@ -807,7 +809,7 @@ export function createDocsViewerMediaDetailAdapter() {
           galleryPage = 0;
           renderPresentation(group.gallery);
         } else {
-          var presentation = await readWork(state, member.target.id);
+          var presentation = await readWork(state, member.target.id, discoveryWorkReads);
           if (!isCurrent() || request !== selectionRequest) return;
           var work = normalizeDocsViewerMediaPresentation(presentation);
           renderPresentation(work);
@@ -840,6 +842,7 @@ export function createDocsViewerMediaDetailAdapter() {
         selectionRequest += 1;
         imageCleanups.forEach(function (cleanup) { cleanup(); });
         imageCleanups = [];
+        discoveryWorkReads?.clear();
         controls = null;
         viewport.replaceChildren();
         section.remove();

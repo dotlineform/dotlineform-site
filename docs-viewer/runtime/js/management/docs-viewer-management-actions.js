@@ -420,7 +420,7 @@ export function createDocsViewerManagementActionController(options) {
           setManagementBusy(busy);
           renderManagementUi();
         },
-        refreshCollection: optionsForRegenerate.refreshCollection,
+        completeCatalogueRegenerate: optionsForRegenerate.completeCatalogueRegenerate,
         restoreFocus: optionsForRegenerate.restoreFocus
       });
       if (result) setManagementMessage(result.error || "", result.ok === false);

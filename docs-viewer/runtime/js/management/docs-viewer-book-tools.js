@@ -353,6 +353,7 @@ export async function createBookReportTools(options) {
 
       const closedParts = new Set();
       const headingControls = new Map();
+      let browsingLocked = false;
       function selected(id) {
         const previous = headingControls.get(headingId)?.control;
         previous?.classList.remove("is-active");
@@ -366,7 +367,7 @@ export async function createBookReportTools(options) {
         }
         unfiled.classList.toggle("is-active", !current);
         unfiled.setAttribute("aria-pressed", String(!current));
-        edit.disabled = !current;
+        edit.disabled = browsingLocked || !current;
         edit.title = current?.node.sections ? "Edit part…" : "Edit section…";
         edit.setAttribute("aria-label", edit.title);
         root.dataset.bookHeadingActive = String(Boolean(current));
@@ -388,6 +389,7 @@ export async function createBookReportTools(options) {
         row.className = "docsViewer__navRow";
         const control = button(document, node.title, () => choose(node.id));
         control.className = "docsViewer__navLink";
+        control.disabled = browsingLocked;
         headingControls.set(node.id, { control, node, reveal });
         item.append(row);
         if (node.sections?.length) {
@@ -432,6 +434,14 @@ export async function createBookReportTools(options) {
       return {
         selected: () => headingId,
         restore: selected,
+        setBrowsingLocked(locked) {
+          if (browsingLocked === locked) return;
+          browsingLocked = locked;
+          picker.disabled = locked;
+          for (const control of actions.children) control.disabled = locked;
+          edit.disabled = locked || !headingId;
+          for (const { control } of headingControls.values()) control.disabled = locked;
+        },
         readingRows() {
           return headingControls.get(headingId)?.node.doc_ids.map(rowForId).filter(Boolean);
         },

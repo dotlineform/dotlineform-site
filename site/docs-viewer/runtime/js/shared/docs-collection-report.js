@@ -5,23 +5,30 @@ import { createDocsCollectionReportState } from "./docs-collection-report-state.
 import { fetchDocsCollectionManifest, fetchSelectedDocumentRows } from "./docs-viewer-data.js";
 import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-filter.js";
 import {
-  CATALOGUE_SHUFFLE_BATCH_COUNT,
+  CATALOGUE_DISCOVERY_SIZE,
   COLLECTION_PAGE_SIZE,
   COLLECTION_SEARCH_DELAY_MS,
   appendCollectionThumbnail,
+  catalogueDiscoveryRows,
+  catalogueRandomIndex,
+  catalogueShuffleFileOrder,
   createCatalogueGallerySearch,
   createCollectionBrowsingData,
   createCollectionPager,
   loadCatalogueCollectionThumbnailSettings,
+  savedCatalogueDiscovery,
   shuffleCatalogueWorks
 } from "./docs-collection-browsing.js";
+import { catalogueDiscoveryMediaPresentation } from "./docs-viewer-catalogue-media.js";
+
+const CATALOGUE_DEFAULT_SORT = "last-updated-desc";
 
 /**
  * Optional caller-owned composition for one shared collection report.
  *
  * Render callbacks receive detached hosts that enter the document only when
  * populated. `notify` receives explicit collection-scoped mount, state,
- * complete-inventory IDs, filtered-result IDs, and unmount events.
+ * complete-inventory IDs and unmount events.
  * Manage supplies its local list controller; public browsing has no edit or
  * selection bookkeeping. Document navigation belongs to the shared reader.
  *
@@ -35,7 +42,6 @@ import {
  * @property {boolean} [paginationDefault] Caller-owned initial pagination choice.
  * @property {function(Object): Object} [mountPaginationControl] Local control over shared pagination state.
  * @property {function(Object): Object} [mountCatalogueSearchCopy] Manage-only copy control for the Catalogue query.
- * @property {function(): void} [resetSelection] Clear selection when the pagination control changes mode.
  */
 
 var filterIdSequence = 0;
@@ -109,7 +115,7 @@ function collectionSequenceForRow(state, docId) {
   if (position >= 0) return { rows: state.readingRows, position: position };
 }
 
-function appendDocRow(state, doc, reserveThumbnailSpace, rowsNode) {
+function appendDocRow(state, doc, reserveThumbnailSpace, rowsNode, thumbnailLoading) {
   var docId = doc.docId;
   var row = document.createElement("li");
   row.className = "docsViewerReport__row";
@@ -123,8 +129,8 @@ function appendDocRow(state, doc, reserveThumbnailSpace, rowsNode) {
   title.className = "docsViewerReport__cellLink docsViewerReport__collectionButton";
   title.href = doc.href;
   registerCollectionNavigationLink(title, function () { return collectionSequenceForRow(state, docId); });
-  if (reserveThumbnailSpace) appendCollectionThumbnail(title, doc.thumbnailSrc || undefined,
-    state.pagedBrowsing && rowsNode === state.rowsNode ? "eager" : "lazy");
+  if (reserveThumbnailSpace) appendCollectionThumbnail(title, doc.workThumbnail?.src || doc.thumbnailSrc || undefined,
+    thumbnailLoading);
 
   var titlePrefixHost = document.createElement("span");
   titlePrefixHost.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--titlePrefix";
@@ -290,6 +296,7 @@ function renderShell(context, collection, features) {
   root.appendChild(table);
 
   var shuffle = null;
+  var discoveryMedia = null;
   if (collectionId(collection) === "catalogue") {
     status.classList.remove("visually-hidden");
     shuffle = document.createElement("button");
@@ -299,6 +306,15 @@ function renderShell(context, collection, features) {
     shuffle.setAttribute("aria-label", shuffle.title);
     shuffle.appendChild(createDocsViewerToolbarIcon(shuffle.ownerDocument, "docsViewer__icon--dice-2"));
     filters.toolbarNode.appendChild(shuffle);
+    if (typeof context.openMediaPresentation === "function") {
+      discoveryMedia = document.createElement("button");
+      discoveryMedia.type = "button";
+      discoveryMedia.className = "docsViewer__toolbarIconButton";
+      discoveryMedia.title = "Open selection in Media View";
+      discoveryMedia.setAttribute("aria-label", discoveryMedia.title);
+      discoveryMedia.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--images"));
+      filters.toolbarNode.appendChild(discoveryMedia);
+    }
   }
   var collectionSort = null;
   if (context.managementContext && features.filterToolbarSort) {
@@ -310,6 +326,7 @@ function renderShell(context, collection, features) {
 
   return {
     shuffleNode: shuffle,
+    discoveryMediaNode: discoveryMedia,
     collectionSortNode: collectionSort,
     filterClearNode: filters.clearNode,
     filterInputNode: filters.inputNode,
@@ -334,47 +351,66 @@ function updateFilterControls(state) {
   state.searchCopy?.update(state.query);
 }
 
-function visibleDocuments(state, catalogueQuery) {
-  var rows = state.browsingData.project(state.query, state.sortMode);
-  if (state.shuffledWorks && !catalogueQuery) {
-    if (state.shuffledWorks.source === rows) return state.shuffledWorks.rows;
-    state.shuffledWorks = null;
+function catalogueDiscoveryActive(state) {
+  return state.collectionId === "catalogue" && !normalizeDocsCollectionFilterValue(state.query);
+}
+
+function visibleDocuments(state, discoveryActive) {
+  if (discoveryActive) {
+    const pass = state.discovery;
+    return pass ? catalogueDiscoveryRows(pass.rows, pass.controls)
+      : catalogueDiscoveryRows(state.browsingData.project("", CATALOGUE_DEFAULT_SORT));
   }
+  var rows = state.browsingData.project(state.query, state.sortMode);
   return state.sectionNavigation ? state.sectionNavigation.project(rows) : rows;
 }
 
-async function loadCatalogueShuffle(state, batch) {
-  state.shufflePending = true;
+async function loadCataloguePass(state, controls) {
+  state.shufflePending = controls;
   updateCollectionControls(state);
   try {
-    var source = state.browsingData.project("", state.sortMode);
-    var rows = await shuffleCatalogueWorks(source, batch);
-    if (!state.mounted) return false;
-    state.shuffledWorks = { batch, source, rows };
+    var source = state.browsingData.project("", CATALOGUE_DEFAULT_SORT);
+    var rows = await shuffleCatalogueWorks(source, controls.files[controls.fileIndex]);
+    if (!state.mounted || state.shufflePending !== controls) return;
+    var start = controls.start ?? catalogueRandomIndex(rows.length);
+    state.discovery = { controls: { ...controls, start }, rows };
     state.shuffleError = "";
     return true;
   } catch (error) {
-    if (state.mounted) state.shuffleError = error.message;
+    if (!state.mounted || state.shufflePending !== controls) return;
+    state.shuffleError = error.message;
     return false;
   } finally {
-    state.shufflePending = false;
+    if (state.shufflePending === controls) state.shufflePending = null;
   }
 }
 
 async function shuffleCatalogueList(state, remembered) {
-  var batch = 1 + Math.floor(Math.random() * CATALOGUE_SHUFFLE_BATCH_COUNT);
-  var shuffled = await loadCatalogueShuffle(state, batch);
-  if (!state.mounted) return;
-  if (!normalizeDocsCollectionFilterValue(state.query)) {
-    if (shuffled) state.pageIndex = 0;
-    state.listNeedsRender = true;
-    if (state.root.dataset.reportState === "list") {
-      renderListProjectionContained(state, "catalogue-shuffle");
-      remembered.save();
-      return;
+  if (state.shuffleNode.disabled) return;
+  var pass = state.discovery;
+  var controls = pass?.controls;
+  var offset = controls ? controls.offset + CATALOGUE_DISCOVERY_SIZE : 0;
+  if (pass && offset < pass.rows.length) {
+    controls.offset = offset;
+  } else {
+    var next = state.pendingPass;
+    if (!next) {
+      next = controls && controls.fileIndex + 1 < controls.files.length
+        ? { files: controls.files, fileIndex: controls.fileIndex + 1, offset: 0 }
+        : { files: catalogueShuffleFileOrder(), fileIndex: 0, offset: 0 };
     }
+    var loaded = await loadCataloguePass(state, next);
+    if (loaded === undefined) return;
+    state.pendingPass = loaded ? null : next;
   }
-  updateCollectionControls(state);
+  if (!state.mounted) return;
+  state.listNeedsRender = true;
+  if (catalogueDiscoveryActive(state) && state.root.dataset.reportState === "list") {
+    renderListProjectionContained(state, "catalogue-shuffle");
+  } else {
+    updateCollectionControls(state);
+  }
+  remembered.save();
 }
 
 function loadGallerySearch(state, search) {
@@ -382,7 +418,7 @@ function loadGallerySearch(state, search) {
   search.pending = true;
   function finish() {
     search.pending = false;
-    if (state.mounted && state.gallerySearch === search && state.root.dataset.reportState === "list"
+    if (state.mounted && !state.selectionActive && state.gallerySearch === search && state.root.dataset.reportState === "list"
       && state.searchTimer === null && normalizeDocsCollectionFilterValue(state.query)) {
       var focused = state.rowsNode.contains(document.activeElement) && document.activeElement;
       var workId = focused && focused.closest("[data-report-subdoc-id]")?.dataset.reportSubdocId;
@@ -407,7 +443,7 @@ function gallerySearchPending(state) {
 
 function bindFilterControls(state) {
   state.filterInputNode.addEventListener("input", function () {
-    if (!state.mounted) return;
+    if (!state.mounted || state.selectionActive) return;
     state.query = state.filterInputNode.value;
     state.searchCopy?.update(state.query);
     if (state.features.delayedSearch) {
@@ -484,32 +520,46 @@ function cancelCollectionSearch(state) {
   }
 }
 
+function selectionReady(state) {
+  return state.manifestLoaded && state.searchTimer === null && !state.shufflePending && !gallerySearchPending(state);
+}
+
 function updateCollectionControls(state, pageIndex = state.pageIndex) {
   var pending = state.searchTimer !== null || !state.manifestLoaded;
+  var locked = state.selectionActive;
+  var discoveryActive = catalogueDiscoveryActive(state);
+  state.filterInputNode.disabled = !state.manifestLoaded || locked || state.restoringShuffle;
+  state.filterClearNode.disabled = state.filterInputNode.disabled;
+  state.selectionControls?.setReady(selectionReady(state));
   state.paginationControl?.update(state.pagedBrowsing);
+  if (state.paginationControl) state.paginationControl.button.disabled = locked;
+  state.sectionNavigation?.setBrowsingLocked(locked);
   if (state.shuffleNode) {
-    state.shuffleNode.disabled = pending || state.shufflePending || state.browsingData.rows.length < 2
+    state.shuffleNode.disabled = locked || pending || state.shufflePending || state.browsingData.rows.length < 2
       || Boolean(normalizeDocsCollectionFilterValue(state.query));
-    state.shuffleNode.setAttribute("aria-busy", String(state.shufflePending));
+    state.shuffleNode.setAttribute("aria-busy", String(Boolean(state.shufflePending)));
+  }
+  if (state.discoveryMediaNode) {
+    state.discoveryMediaNode.hidden = !discoveryActive;
+    state.discoveryMediaNode.disabled = pending || state.shufflePending || !state.documentMatches.length;
   }
   var button = state.collectionSortNode;
   if (button) {
-    var recentMode = state.sortMode === "last-updated-desc";
-    var currentLabel = {
-      "title-asc": "title A–Z",
-      "last-updated-desc": "recently updated"
-    }[state.sortMode];
-    button.disabled = pending || state.shufflePending;
-    button.dataset.docsCollectionSort = state.sortMode;
-    button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument,
-      recentMode ? "docsViewer__icon--clock-3" : "docsViewer__icon--arrow-down-a-z"));
-    var shuffled = state.documentMatches === state.shuffledWorks?.rows;
-    button.title = (shuffled ? "Shuffled." : "Sorted by " + currentLabel + ".") + " Switch to "
-      + (recentMode ? "title A–Z." : "recently updated.");
-    button.setAttribute("aria-label", button.title);
+    button.hidden = discoveryActive;
+    button.disabled = locked || pending || state.shufflePending;
+    if (button.dataset.docsCollectionSort !== state.sortMode) {
+      var recentMode = state.sortMode === "last-updated-desc";
+      button.dataset.docsCollectionSort = state.sortMode;
+      button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument,
+        recentMode ? "docsViewer__icon--clock-3" : "docsViewer__icon--arrow-down-a-z"));
+      button.title = recentMode ? "Sorted by recently updated. Switch to title A–Z."
+        : "Sorted by title A–Z. Switch to recently updated.";
+      button.setAttribute("aria-label", button.title);
+    }
   }
   if (state.pager) {
-    state.pager.update(state.matches.length, pageIndex, pending || gallerySearchPending(state), state.pagedBrowsing);
+    state.pager.update(state.matches.length, pageIndex, locked || pending || gallerySearchPending(state),
+      state.pagedBrowsing && !discoveryActive);
   }
 }
 
@@ -517,14 +567,12 @@ function listSortContext(state) {
   return {
     mode: state.sortMode,
     setMode: function (mode) {
-      if (!state.mounted || state.features.delayedSearch && (state.searchTimer !== null || !state.manifestLoaded)) return state.sortMode;
+      if (!state.mounted || state.selectionActive || state.searchTimer !== null || !state.manifestLoaded) return state.sortMode;
       var nextMode = cleanString(mode);
       if (!["title-asc", "last-updated-desc"].includes(nextMode)) {
         throw new Error("Docs collection sort mode is invalid: " + nextMode);
       }
       state.sortMode = nextMode;
-      state.shuffledWorks = null;
-      state.shuffleError = "";
       state.pageIndex = 0;
       renderListProjectionContained(state, "sort-change", { reusePinnedRows: true });
       return nextMode;
@@ -532,10 +580,11 @@ function listSortContext(state) {
   };
 }
 
-function renderListToolbar(state, retainedRows) {
+function renderListToolbar(state, docIds, retainedRows) {
   var renderToolbar = contributionCallback(state.contribution, "renderListToolbar");
   if (!renderToolbar) return;
   state.listActionHost.replaceChildren();
+  state.selectionControls = null;
   if (state.listToolbarNode) {
     state.listToolbarNode.remove();
     state.listToolbarNode = null;
@@ -543,10 +592,11 @@ function renderListToolbar(state, retainedRows) {
   var host = document.createElement("div");
   host.className = "docsViewerReport__contributionToolbar docsViewerReport__contributionToolbar--list";
   host.dataset.reportContributionHost = "list-toolbar";
-  renderToolbar({
+  state.selectionControls = renderToolbar({
     actionContext: state.actionContext,
     collection: state.actionContext.collectionTarget,
-    docIds: state.management.docIds,
+    docIds: docIds,
+    selectionReady: selectionReady(state),
     retainedRows: retainedRows,
     host: host,
     actionHost: state.listActionHost,
@@ -554,6 +604,12 @@ function renderListToolbar(state, retainedRows) {
       return state.openDocument(target);
     },
     refreshCollection: state.management.refreshCollection,
+    completeCatalogueRegenerate: state.collectionId === "catalogue" ? state.completeCatalogueRegenerate : undefined,
+    selectionChanged: function (active) {
+      if (state.selectionActive === active) return;
+      state.selectionActive = active;
+      updateCollectionControls(state);
+    },
     renderList: function () {
       if (state.mounted) renderListProjectionContained(state, "collection-controls-changed");
     },
@@ -584,7 +640,7 @@ function renderPinnedRows(state, matches, retainedRows, reserveThumbnailSpace) {
   return state.renderedPinnedRows ? Array.from(state.renderedPinnedRows.values()) : [];
 }
 
-function renderRows(state, matches, pinnedMatches, retainedPinnedRows) {
+function renderRows(state, matches, pinnedMatches, retainedPinnedRows, thumbnailLoading) {
   clearNode(state.rowsNode);
   var reserveThumbnailSpace = state.browsingData.hasThumbnails;
   var rows = renderPinnedRows(state, pinnedMatches, retainedPinnedRows, reserveThumbnailSpace);
@@ -607,7 +663,7 @@ function renderRows(state, matches, pinnedMatches, retainedPinnedRows) {
   }
   matches.forEach(function (match) {
     if (match.galleryId) appendGalleryRow(state, match);
-    else rows.push(appendDocRow(state, match, reserveThumbnailSpace, state.rowsNode));
+    else rows.push(appendDocRow(state, match, reserveThumbnailSpace, state.rowsNode, thumbnailLoading));
   });
   if (!rows.some(function (record) { return record.hasLeadingContent; })) return;
   state.root.dataset.reportLeadingColumn = "true";
@@ -641,10 +697,9 @@ function renderListProjection(state, reusePinnedRows) {
   state.listNeedsRender = true;
   var gallerySearch = state.gallerySearch;
   var query = state.shuffleNode ? normalizeDocsCollectionFilterValue(state.query) : "";
-  var documents = visibleDocuments(state, query);
+  var documents = visibleDocuments(state, catalogueDiscoveryActive(state));
   if (query && gallerySearch) loadGallerySearch(state, gallerySearch);
-  var projected = query && gallerySearch?.project ? gallerySearch.project(query, documents) : documents;
-  var matches = projected;
+  var matches = query && gallerySearch?.project ? gallerySearch.project(query, documents) : documents;
   state.pinnedMatches = null;
   if (state.pinnedDocIds?.size) {
     var pinned = [];
@@ -660,30 +715,35 @@ function renderListProjection(state, reusePinnedRows) {
   state.matches = matches;
   state.documentMatches = documents;
   state.readingRows = null;
-  state.management?.prepareProjection(state.pinnedMatches
-    ? state.pinnedMatches.concat(projected === documents ? matches : matches.filter(row => !row.galleryId))
-    : documents);
   renderListPage(state, retainedPinnedRows);
   state.catalogueSearchRoute?.replaceQuery(state.query);
   state.listNeedsRender = false;
 }
 
-/** Page turns reuse the complete match list, including management selection eligibility. */
+/** Page turns reuse the complete matches and pass the rendered IDs to Working selection. */
 function renderListPage(state, retainedPinnedRows) {
   var matches = state.matches;
-  var pageIndex = state.pageIndex;
-  if (state.pagedBrowsing) {
+  var paginate = state.pagedBrowsing && !catalogueDiscoveryActive(state);
+  var pageIndex = paginate ? state.pageIndex : 0;
+  if (paginate) {
     pageIndex = Math.min(pageIndex, Math.max(0, Math.ceil(matches.length / COLLECTION_PAGE_SIZE) - 1));
     if (!gallerySearchPending(state)) state.pageIndex = pageIndex;
   }
   updateFilterControls(state);
-  renderListToolbar(state, retainedPinnedRows);
-  var pageRows = state.pagedBrowsing
+  var pageRows = paginate
     ? matches.slice(pageIndex * COLLECTION_PAGE_SIZE, (pageIndex + 1) * COLLECTION_PAGE_SIZE)
     : matches;
-  renderRows(state, pageRows, pageIndex === 0 ? state.pinnedMatches : null, retainedPinnedRows);
+  var pinnedRows = pageIndex === 0 ? state.pinnedMatches : null;
+  if (state.contribution) {
+    var docIds = pinnedRows ? pinnedRows.map(row => row.docId) : [];
+    for (const row of pageRows) {
+      if (row.docId) docIds.push(row.docId);
+    }
+    renderListToolbar(state, docIds, retainedPinnedRows);
+  }
+  renderRows(state, pageRows, pinnedRows, retainedPinnedRows, paginate ? "eager" : "lazy");
+  state.selectionControls?.project();
   updateCollectionControls(state, pageIndex);
-  state.management?.projected(state.sortMode);
 }
 
 function renderListProjectionContained(state, reason, { reusePinnedRows = false } = {}) {
@@ -710,7 +770,7 @@ function captureListControls(state) {
   var captureContribution = contributionCallback(state.contribution, "captureListState");
   return { query: state.query, sort: state.sortMode,
     page: state.searchTimer !== null ? 0 : state.pageIndex,
-    ...(state.shuffledWorks ? { shuffleBatch: state.shuffledWorks.batch } : {}),
+    ...(state.discovery ? { discovery: state.discovery.controls } : {}),
     ...(typeof state.contribution?.paginationDefault === "boolean" ? { pagination: state.pagedBrowsing } : {}),
     ...(state.sectionNavigation ? { section: state.sectionNavigation.selected() } : {}),
     contribution: captureContribution ? captureContribution.call(state.contribution) : null };
@@ -730,12 +790,11 @@ function restoreListControls(state, saved) {
   var restoreContribution = contributionCallback(state.contribution, "restoreListState");
   if (restoreContribution) restoreContribution.call(state.contribution, saved.contribution);
   state.listNeedsRender = true;
-  var batch = saved.shuffleBatch;
-  if (!state.shuffleNode || !Number.isInteger(batch) || batch < 1 || batch > CATALOGUE_SHUFFLE_BATCH_COUNT) batch = undefined;
-  if (batch !== state.shuffledWorks?.batch) {
-    state.shuffledWorks = null;
-    return batch;
-  }
+  if (!state.shuffleNode) return;
+  if (JSON.stringify(saved.discovery) === JSON.stringify(state.discovery?.controls)) return;
+  var controls = savedCatalogueDiscovery(saved.discovery);
+  state.discovery = null;
+  if (controls && controls.start < state.browsingData.rows.length && controls.offset < state.browsingData.rows.length) return controls;
 }
 
 /** Reveal the retained list, rebuilding only when its document data changed. */
@@ -744,8 +803,9 @@ function renderListView(state) {
   state.filterToolbarNode.hidden = false;
   state.tableNode.hidden = false;
   publishState(state, "list", null, "list-view");
-  if (state.listNeedsRender && !renderListProjectionContained(state, "list-projection-failed")) return;
+  if (state.listNeedsRender && !renderListProjectionContained(state, "list-projection-failed")) return false;
   if (state.listToolbarNode) state.listToolbarNode.hidden = false;
+  return true;
 }
 
 function renderError(root, message) {
@@ -826,9 +886,11 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     gallerySearch: null,
     catalogueSearchRoute: context.catalogueSearchRoute,
     shuffleNode: refs.shuffleNode,
-    shufflePending: false,
+    discoveryMediaNode: refs.discoveryMediaNode,
+    shufflePending: null,
     shuffleError: "",
-    shuffledWorks: null,
+    discovery: null,
+    pendingPass: null,
     collectionSortNode: refs.collectionSortNode,
     matches: [],
     documentMatches: [],
@@ -839,6 +901,9 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     pinLoadError: "",
     pageIndex: 0,
     searchTimer: null,
+    selectionActive: false,
+    selectionControls: null,
+    restoringShuffle: false,
     pager: null,
     contribution: contribution,
     managementContext: Boolean(context && context.managementContext),
@@ -881,7 +946,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.filterInputNode.disabled = true;
     state.pager = createCollectionPager(root.ownerDocument,
       state.collectionId === "works" ? "document" : collectionItemsLabel(state.collection), function (pageIndex) {
-      if (!state.mounted || state.searchTimer !== null || gallerySearchPending(state) || pageIndex < 0
+      if (!state.mounted || state.selectionActive || state.searchTimer !== null || gallerySearchPending(state) || pageIndex < 0
         || pageIndex * COLLECTION_PAGE_SIZE >= state.matches.length) return;
       state.pageIndex = pageIndex;
       try {
@@ -903,10 +968,10 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.paginationControl = mountPaginationControl({
       host: state.filterToolbarNode,
       change: function (enabled) {
+        if (state.selectionActive) return;
         cancelCollectionSearch(state);
         state.pagedBrowsing = enabled;
         state.pageIndex = 0;
-        contribution.resetSelection();
         renderListProjectionContained(state, "pagination-change");
         remembered.save();
       }
@@ -927,6 +992,37 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     restoreControls: function (saved) { return restoreListControls(state, saved); }
   });
   state.shuffleNode?.addEventListener("click", function () { shuffleCatalogueList(state, remembered); });
+  state.discoveryMediaNode?.addEventListener("click", function () {
+    if (state.discoveryMediaNode.disabled || !catalogueDiscoveryActive(state)) return;
+    try {
+      var opened = context.openMediaPresentation({
+        presentation: catalogueDiscoveryMediaPresentation(state.documentMatches),
+        invocationControl: state.discoveryMediaNode,
+        documentTarget: { docId: state.parentDocId }
+      });
+      if (opened) return;
+      state.statusNode.textContent = "The current selection could not open in Media View.";
+    } catch (error) {
+      state.statusNode.textContent = error.message;
+    }
+    state.statusNode.hidden = false;
+  });
+  state.completeCatalogueRegenerate = async function (changed) {
+    if (changed && !await state.loadManifest()) return;
+    if (!state.mounted) return;
+    cancelCollectionSearch(state);
+    state.query = "";
+    state.sortMode = CATALOGUE_DEFAULT_SORT;
+    state.pageIndex = 0;
+    state.discovery = null;
+    state.pendingPass = null;
+    state.shufflePending = null;
+    state.shuffleError = "";
+    lifetime.catalogueSearch = undefined;
+    state.listNeedsRender = true;
+    if (!renderListView(state)) throw new Error(state.root.textContent);
+    remembered.resetPosition();
+  };
   state.sectionNavigation = contributionCallback(contribution, "mountSectionNavigation")?.({
     root: root,
     rows: function () { return state.browsingData.rows; },
@@ -942,17 +1038,17 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   function restoreRememberedList() {
     if (!state.manifestLoaded || !state.mounted || root.dataset.reportState === "error") return;
     if (restoringShuffle) return restoringShuffle;
-    var batch = remembered.restore();
-    if (batch === undefined || state.shufflePending) {
+    var controls = remembered.restore();
+    if (controls === undefined || state.shufflePending) {
       revealRememberedList();
       return;
     }
-    state.filterInputNode.disabled = true;
-    restoringShuffle = loadCatalogueShuffle(state, batch).then(function (shuffled) {
+    state.restoringShuffle = true;
+    restoringShuffle = loadCataloguePass(state, controls).then(function (shuffled) {
       restoringShuffle = null;
       if (!state.mounted) return;
-      state.filterInputNode.disabled = false;
-      if (!shuffled && !normalizeDocsCollectionFilterValue(state.query)) state.pageIndex = 0;
+      state.restoringShuffle = false;
+      if (shuffled === false) state.pendingPass = controls;
       revealRememberedList();
     });
     return restoringShuffle;
@@ -962,6 +1058,9 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     if (catalogueSearch !== undefined) {
       lifetime.catalogueSearch = undefined;
       cancelCollectionSearch(state);
+      if (catalogueSearch !== state.query && state.selectionActive) {
+        contributionCallback(state.contribution, "restoreListState")?.(null);
+      }
       state.query = catalogueSearch;
       state.pageIndex = 0;
       state.listNeedsRender = true;
@@ -988,7 +1087,8 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.pinnedDocIds = null;
     state.thumbnailSettingsRead = null;
     state.gallerySearch = null;
-    state.shuffledWorks = null;
+    state.discovery = null;
+    state.pendingPass = null;
   }
   lifetime.view = {
     dispose: dispose, capture: remembered.save, restore: restoreRememberedList, resume: restoreRememberedList
@@ -1016,7 +1116,6 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
       if (starsRead) await starsRead;
       if (!state.mounted) return false;
       state.gallerySearch = readGallerySearch ? { read: readGallerySearch } : null;
-      state.filterInputNode.disabled = false;
       state.manifestLoaded = true;
       state.listNeedsRender = true;
       state.management?.inventoryChanged("documents-loaded", true);

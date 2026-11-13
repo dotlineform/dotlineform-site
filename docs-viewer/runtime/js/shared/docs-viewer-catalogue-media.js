@@ -82,6 +82,19 @@ export function catalogueWorkThumbnail(workId, title, settings) {
     alt: title, width_px: settings.size, height_px: settings.size };
 }
 
+/** Carry the report's current selection into Media View in display order. */
+export function catalogueDiscoveryMediaPresentation(rows) {
+  const target = { kind: "catalogue-discovery", id: "current" };
+  return {
+    schema_version: "docs_media_gallery_v1", target,
+    gallery: {
+      target, label: "Catalogue Discovery",
+      members: rows.map(row => ({ target: { kind: "catalogue-work", id: row.workId },
+        label: row.title, thumbnail: row.workThumbnail }))
+    }
+  };
+}
+
 /** Project Gallery members in natural title order from one generated membership record. */
 export function catalogueGalleryMediaPresentation(payload, galleryId, mediaPolicy, thumbnailBaseUrl, contextDocs = []) {
   var gallery = galleryRecord(payload, galleryId);

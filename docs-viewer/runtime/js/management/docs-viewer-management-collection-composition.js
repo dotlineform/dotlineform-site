@@ -137,7 +137,7 @@ export function createDocsViewerManagementCollectionContribution(options) {
   function renderListToolbar(context) {
     var child = createHost(context.host, "div", "default", "list-toolbar");
     var actions = createHost(context.actionHost, "div", "default", "list-actions");
-    defaultContribution.renderListToolbar(Object.assign({}, context, {
+    var controls = defaultContribution.renderListToolbar(Object.assign({}, context, {
       access: "manage",
       host: child,
       actionHost: actions,
@@ -157,6 +157,7 @@ export function createDocsViewerManagementCollectionContribution(options) {
     }));
     appendWhenPopulated(context.host, child);
     appendWhenPopulated(context.actionHost, actions);
+    return controls;
   }
 
   function renderDetailToolbar(context) {
@@ -176,7 +177,6 @@ export function createDocsViewerManagementCollectionContribution(options) {
   return {
     ...(typeof defaultContribution.paginationDefault === "boolean" ? {
       paginationDefault: defaultContribution.paginationDefault,
-      resetSelection: defaultContribution.resetSelection,
       mountPaginationControl: defaultContribution.mountPaginationControl
     } : {}),
     captureListState: defaultContribution.captureListState,

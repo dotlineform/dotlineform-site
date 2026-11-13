@@ -154,7 +154,7 @@ export function docsViewerMediaPresentationForTarget(supplied, target) {
  * Work titles and title-derived labels/alt text retain their supplied strings; the UI owns completion.
  * Intrinsic image pixels and derived candidate widths are consumed without validating Save's measurements.
  */
-export function normalizeDocsViewerMediaPresentation(value) {
+export function normalizeDocsViewerMediaPresentation(value, { allowDiscovery = false } = {}) {
   if (!value || value.schema_version !== "docs_media_gallery_v1") {
     return normalizeWorkPresentation(value);
   }
@@ -174,8 +174,10 @@ export function normalizeDocsViewerMediaPresentation(value) {
       label: work ? work.label : suppliedTextField(entry.label, "Work title"),
       work: work, thumbnail: normalizeThumbnail(entry.thumbnail) });
   });
+  var discovery = allowDiscovery && source.target?.kind === "catalogue-discovery" && source.target.id === "current";
   var gallery = Object.freeze({
-    target: normalizeDocsViewerCatalogueGroupTarget(source.target),
+    target: discovery ? Object.freeze({ kind: "catalogue-discovery", id: "current" })
+      : normalizeDocsViewerCatalogueGroupTarget(source.target),
     label: suppliedTextField(source.label, "Gallery title"),
     metadata: normalizedMetadata(source.metadata === undefined ? [] : source.metadata),
     members: Object.freeze(members),

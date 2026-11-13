@@ -23,7 +23,7 @@ export function createManagedCollectionBrowsingData(options) {
   function prepareThumbnail(row) {
     pendingThumbnails.delete(row);
     if (!row.thumbnailWorkId) return;
-    if (thumbnailSettings) row.thumbnailSrc = presentation.workThumbnail(row, thumbnailSettings);
+    if (thumbnailSettings) row.workThumbnail = presentation.workThumbnail(row, thumbnailSettings);
     else pendingThumbnails.add(row);
   }
 
@@ -89,8 +89,6 @@ export function createManagedCollectionBrowsingData(options) {
 /** Wire local list effects explicitly; construction performs no reads or subscription. */
 export function createDocsViewerManagementCollectionList(options) {
   const data = createManagedCollectionBrowsingData(options.browsingOptions);
-  let projection = null;
-  let projectedIds = [];
   let thumbnailUpdate = null;
 
   function inventoryChanged(reason, membershipChanged) {
@@ -109,7 +107,6 @@ export function createDocsViewerManagementCollectionList(options) {
 
   return {
     data,
-    get docIds() { return projectedIds; },
     connect() {
       // The reader's retained lifetime owns this subscription's cleanup.
       options.collectionProvider.subscribeDocumentChanges(change => {
@@ -121,14 +118,6 @@ export function createDocsViewerManagementCollectionList(options) {
       });
     },
     inventoryChanged,
-    prepareProjection(rows) {
-      if (projection === rows) return;
-      projection = rows;
-      projectedIds = rows.map(row => row.docId);
-    },
-    projected(sort) {
-      options.notify({ type: "projection", docIds: projectedIds, sort, reason: "filters-projected" });
-    },
     refreshCollection(target) {
       const keys = Object.keys(target || {});
       if (keys.length !== 1 || keys[0] !== "collection" || target.collection !== options.collectionId) {
@@ -143,7 +132,7 @@ export function createDocsViewerManagementCollectionList(options) {
       });
     },
     dispose() {
-      projection = null; projectedIds = []; thumbnailUpdate = null;
+      thumbnailUpdate = null;
     }
   };
 }

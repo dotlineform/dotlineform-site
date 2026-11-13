@@ -151,7 +151,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var available = selectionOwner.available();
     var resolutions = menuActions.map(function (action) { return selectionResolution(action.id); });
     var hidden = resolutions.every(function (resolution) { return resolution.hidden; });
-    var active = available && snapshot.selectionModeActive && !hidden;
+    var active = available && snapshot.selectionModeActive && !hidden && listToolbar?.selectionReady;
     var eligible = eligibleDocIds();
     var selected = new Set(snapshot.selectedDocIds);
     var allSelected = eligible.length > 0 && eligible.every(function (docId) {
@@ -169,8 +169,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar.actionsHost.hidden = hidden;
     listToolbar.actionsButton.disabled = !available || hidden || selectionWorkflowActive;
     listToolbar.selectButton.hidden = hidden || active;
-    listToolbar.selectButton.disabled = !available || selectionWorkflowActive;
+    updateSelectButton();
     listToolbar.selectionControl.hidden = !active;
+    if (listToolbar.regenerateButton) {
+      listToolbar.regenerateButton.disabled = active || selectionWorkflowActive;
+    }
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
     listToolbar.clearButton.disabled = !active || selected.size === 0;
     listToolbar.doneButton.disabled = !active;
@@ -187,7 +190,13 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       if (disabledReason) action.button.dataset.docsViewerDisabledReason = disabledReason;
       else delete action.button.dataset.docsViewerDisabledReason;
     });
+    if (listToolbar.sortButton) listToolbar.sortButton.disabled = active;
+    listToolbar.selectionChanged(active);
     return snapshot;
+  }
+
+  function updateSelectButton() {
+    listToolbar.selectButton.disabled = !selectionOwner.available() || !listToolbar.selectionReady || selectionWorkflowActive;
   }
 
   function clearListToolbar() {
@@ -212,9 +221,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (event && event.type === "refresh") {
       inventoryDocIds = event.docIds;
       if (event.membershipChanged) bookTools?.updateInventory(event.docIds);
-    }
-    if (event && event.type === "projection") {
-      currentDocIds = event.docIds;
     }
     if (
       event
@@ -303,6 +309,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       managementContext: managementContext,
       mounted: true
     });
+    var savedSelection = selectionOwner.snapshot();
+    if (settings.selectionReady && savedSelection.selectionModeActive) selectionOwner.restore(savedSelection, currentDocIds);
 
     var documentRef = host.ownerDocument;
     var root = documentRef.createElement("div");
@@ -343,19 +351,22 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         capability: true, emptyState: "enabled", refreshEffect: "collection",
         handler: function (target) {
           return onRegenerateCatalogue(target, {
-            refreshCollection: settings.refreshCollection, restoreFocus: regenerateButton
+            completeCatalogueRegenerate: settings.completeCatalogueRegenerate,
+            restoreFocus: () => settings.actionHost.querySelector("[data-docs-collection-regenerate]")
           });
         }
       });
       regenerateButton.addEventListener("click", function () {
         if (regenerateButton.disabled) return;
-        regenerateButton.disabled = true;
+        selectionWorkflowActive = true;
         regenerateButton.setAttribute("aria-busy", "true");
+        projectSelection();
         regenerateAction.invoke().catch(function (error) {
           if (typeof options.setStatus === "function") options.setStatus(error.message, true);
         }).finally(function () {
-          regenerateButton.disabled = false;
+          selectionWorkflowActive = false;
           regenerateButton.removeAttribute("aria-busy");
+          projectSelection();
         });
       });
     }
@@ -430,10 +441,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       handleDocumentKeydown: handleDocumentKeydown,
       menu: menu,
       menuActions: renderedActions,
+      regenerateButton: regenerateButton,
       root: root,
       selectAllButton: selectAllButton,
       selectButton: selectButton,
-      selectionControl: selectionControl
+      selectionChanged: settings.selectionChanged,
+      selectionControl: selectionControl,
+      selectionReady: settings.selectionReady,
+      sortButton: sortButton
     };
     documentRef.addEventListener("click", handleDocumentClick);
     documentRef.addEventListener("keydown", handleDocumentKeydown);
@@ -511,7 +526,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       projectSelection();
       selectButton.focus();
     });
-    projectSelection();
+    return {
+      setReady: function (ready) {
+        if (listToolbar.selectionReady === ready) return;
+        listToolbar.selectionReady = ready;
+        updateSelectButton();
+      },
+      project: projectSelection
+    };
   }
 
   function renderDetailToolbar(context) {
@@ -658,7 +680,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   return {
     ...(options.paginationToggle ? {
       paginationDefault: false,
-      resetSelection: selectionOwner.done,
       mountPaginationControl: function ({ host, change }) {
         return mountDocsViewerPaginationControl({ host, enabled: false, itemsLabel: "documents", change });
       }

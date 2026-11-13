@@ -8,21 +8,19 @@ export async function openCatalogueRegenerate(options) {
   if (target.collection !== "catalogue") {
     throw new Error("Regenerate requires the Working Catalogue collection.");
   }
-  if (typeof options.refreshCollection !== "function") {
+  if (typeof options.completeCatalogueRegenerate !== "function") {
     throw new Error("Catalogue report refresh is unavailable.");
   }
   var payload;
   var failure = null;
   try {
     payload = await runCatalogueRegeneration(target, options.clientOptions);
-    if (payload.counts.built || payload.counts.delete || payload.counts.create) {
-      try {
-        await options.refreshCollection(target);
-      } catch (cause) {
-        var error = new Error("Catalogue documents were updated, but the report could not refresh. " + cause.message);
-        error.payload = payload;
-        throw error;
-      }
+    try {
+      await options.completeCatalogueRegenerate(Boolean(payload.counts.built || payload.counts.delete || payload.counts.create));
+    } catch (cause) {
+      var error = new Error("The Catalogue report could not refresh. " + cause.message);
+      error.payload = payload;
+      throw error;
     }
   } catch (error) {
     failure = error;

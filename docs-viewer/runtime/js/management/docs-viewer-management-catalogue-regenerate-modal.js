@@ -12,7 +12,7 @@ export function openCatalogueRegenerateModal(options) {
     result = { ...error.payload, ok: false, error: error.message };
     var message;
     if (error.payload?.ok) {
-      message = "Catalogue documents were updated, but the report could not refresh.";
+      message = "Regenerate completed, but Catalogue could not reset its view.";
     } else if (result.committed_source_operations) {
       message = "Source operations completed: " + result.committed_source_operations + ". Inspect the error before retrying.";
     } else {

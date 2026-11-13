@@ -144,8 +144,6 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Catalogue Discovery](deliveries/Catalogue_Discovery.md) — Proposed follow-on to Catalogue Shuffle. The dice advances through selections of up to 48 Works, each available as one Media View grid. Search keeps its paginated results.
-
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
 
 - [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
@@ -153,6 +151,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
+
+- [Catalogue Discovery](deliveries/Catalogue_Discovery.md) — Implemented and reviewed. The user confirmed initial operation on 2026-11-13 and will continue checking during normal use.
 
 - [Catalogue Shuffle](deliveries/Catalogue_Shuffle.md) — Complete. The user confirmed public deployment and accepted the result on 2026-11-12. Retain the delivery for stock replacement and the API decision. [Catalogue Shuffle Randomness](Catalogue_Shuffle_Randomness.md) explains the source and algorithm.
 

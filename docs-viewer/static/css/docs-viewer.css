@@ -726,6 +726,9 @@ body.docs-viewer-service{
 .docsViewer__icon--dice-2{
   mask-image: url("../icons/dice-2.svg");
 }
+.docsViewer__icon--images{
+  mask-image: url("../icons/images.svg");
+}
 
 .docsViewer__icon--external-link{
   mask-image: url("../icons/external-link.svg");

@@ -84,11 +84,22 @@ export function createDocsCollectionReportState(options) {
     });
   }
 
+  function resetPosition() {
+    if (frame !== null) window.cancelAnimationFrame(frame);
+    frame = null;
+    for (let node = root; node; node = node.parentElement) {
+      node.scrollTop = 0;
+      node.scrollLeft = 0;
+    }
+    window.scrollTo(0, 0);
+    save();
+  }
+
   // Capture before a toolbar action can hide the rendered report (for example Source).
   window.addEventListener("click", save, true);
   window.addEventListener("pagehide", save);
   return {
-    save, restore, restorePosition,
+    save, restore, restorePosition, resetPosition,
     dispose: function () {
       save();
       window.removeEventListener("click", save, true);

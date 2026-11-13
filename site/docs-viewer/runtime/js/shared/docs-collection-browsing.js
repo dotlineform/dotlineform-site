@@ -3,9 +3,11 @@ import { catalogueWorkThumbnail } from "./docs-viewer-catalogue-media.js";
 import { catalogueThumbnailSettings } from "./docs-viewer-catalogue-media-policy.js";
 import { requestUrl } from "./docs-viewer-asset-url.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+import { DOCS_VIEWER_MEDIA_GALLERY_LAYOUT } from "./docs-viewer-media-gallery.js";
 export const COLLECTION_PAGE_SIZE = 20;
 export const COLLECTION_SEARCH_DELAY_MS = 180;
-export const CATALOGUE_SHUFFLE_BATCH_COUNT = 64;
+export const CATALOGUE_DISCOVERY_SIZE = DOCS_VIEWER_MEDIA_GALLERY_LAYOUT.columns * DOCS_VIEWER_MEDIA_GALLERY_LAYOUT.rows;
+const CATALOGUE_SHUFFLE_BATCH_COUNT = 64;
 const CATALOGUE_SHUFFLE_BATCH_BYTES = 32 * 1024;
 const UINT32_RANGE = 2 ** 32;
 
@@ -35,6 +37,42 @@ export async function shuffleCatalogueWorks(rows, batch) {
     [shuffled[last], shuffled[index]] = [shuffled[index], shuffled[last]];
   }
   return shuffled;
+}
+
+/** Choose the file order independently of the draws in each file. */
+export function catalogueShuffleFileOrder() {
+  const files = Array.from({ length: CATALOGUE_SHUFFLE_BATCH_COUNT }, (_, index) => index + 1);
+  for (let last = files.length - 1; last > 0; last--) {
+    const index = catalogueRandomIndex(last + 1);
+    [files[last], files[index]] = [files[index], files[last]];
+  }
+  return files;
+}
+
+export function catalogueRandomIndex(count) {
+  const draw = new Uint32Array(1);
+  const limit = UINT32_RANGE - UINT32_RANGE % count;
+  do { crypto.getRandomValues(draw); } while (draw[0] >= limit);
+  return draw[0] % count;
+}
+
+/** Read tab controls at the browser-storage boundary. */
+export function savedCatalogueDiscovery(value) {
+  if (!value || !Array.isArray(value.files) || value.files.length !== CATALOGUE_SHUFFLE_BATCH_COUNT
+    || new Set(value.files).size !== CATALOGUE_SHUFFLE_BATCH_COUNT
+    || !value.files.every(file => Number.isInteger(file) && file >= 1 && file <= CATALOGUE_SHUFFLE_BATCH_COUNT)
+    || !Number.isInteger(value.fileIndex) || value.fileIndex < 0 || value.fileIndex >= value.files.length
+    || !Number.isInteger(value.start) || value.start < 0
+    || !Number.isInteger(value.offset) || value.offset < 0 || value.offset % CATALOGUE_DISCOVERY_SIZE !== 0) return null;
+  return value;
+}
+
+export function catalogueDiscoveryRows(rows, pass) {
+  if (!pass) return rows.slice(0, CATALOGUE_DISCOVERY_SIZE);
+  const count = Math.min(CATALOGUE_DISCOVERY_SIZE, rows.length - pass.offset);
+  const start = (pass.start + pass.offset) % rows.length;
+  const selection = rows.slice(start, start + count);
+  return selection.concat(rows.slice(0, count - selection.length));
 }
 
 function compareText(left, right) {
@@ -105,7 +143,7 @@ export function createCollectionPresentation(options) {
       sortTitle: catalogue ? searchTitle : record.title.trim().normalize("NFKC").toLowerCase(),
       rawTitle: catalogue ? record.title : record.title.trim(),
       authoredThumbnail, thumbnailWorkId,
-      hasThumbnail: authoredThumbnail || Boolean(thumbnailWorkId), thumbnailSrc: ""
+      hasThumbnail: authoredThumbnail || Boolean(thumbnailWorkId), thumbnailSrc: "", workThumbnail: null
     };
     if (row.authoredThumbnail) {
       if (!mediaRoot) throw new Error("Document thumbnail media is not configured.");
@@ -124,7 +162,7 @@ export function createCollectionPresentation(options) {
   return {
     prepareRecord,
     workThumbnail(row, settings) {
-      return catalogueWorkThumbnail(row.thumbnailWorkId, row.title, settings).src;
+      return catalogueWorkThumbnail(row.thumbnailWorkId, row.title, settings);
     },
     clearOrders(sortMode) {
       if (!sortMode || projection?.ordered === orders.get(sortMode)) projection = null;
@@ -177,7 +215,7 @@ export function createCollectionBrowsingData(options) {
     },
     setThumbnailSettings(settings) {
       const changed = pendingThumbnails.length > 0;
-      pendingThumbnails.forEach(row => { row.thumbnailSrc = presentation.workThumbnail(row, settings); });
+      pendingThumbnails.forEach(row => { row.workThumbnail = presentation.workThumbnail(row, settings); });
       pendingThumbnails = [];
       return changed;
     },
