@@ -3,10 +3,9 @@ import { catalogueWorkThumbnail } from "./docs-viewer-catalogue-media.js";
 import { catalogueThumbnailSettings } from "./docs-viewer-catalogue-media-policy.js";
 import { requestUrl } from "./docs-viewer-asset-url.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
-import { DOCS_VIEWER_MEDIA_GALLERY_LAYOUT } from "./docs-viewer-media-gallery.js";
 export const COLLECTION_PAGE_SIZE = 20;
 export const COLLECTION_SEARCH_DELAY_MS = 180;
-export const CATALOGUE_DISCOVERY_SIZE = DOCS_VIEWER_MEDIA_GALLERY_LAYOUT.columns * DOCS_VIEWER_MEDIA_GALLERY_LAYOUT.rows;
+export const CATALOGUE_DISCOVERY_SIZE = 8;
 const CATALOGUE_SHUFFLE_BATCH_COUNT = 64;
 const CATALOGUE_SHUFFLE_BATCH_BYTES = 32 * 1024;
 const UINT32_RANGE = 2 ** 32;
@@ -57,22 +56,21 @@ export function catalogueRandomIndex(count) {
 }
 
 /** Read tab controls at the browser-storage boundary. */
-export function savedCatalogueDiscovery(value) {
+export function savedCatalogueDiscovery(value, size) {
   if (!value || !Array.isArray(value.files) || value.files.length !== CATALOGUE_SHUFFLE_BATCH_COUNT
     || new Set(value.files).size !== CATALOGUE_SHUFFLE_BATCH_COUNT
     || !value.files.every(file => Number.isInteger(file) && file >= 1 && file <= CATALOGUE_SHUFFLE_BATCH_COUNT)
     || !Number.isInteger(value.fileIndex) || value.fileIndex < 0 || value.fileIndex >= value.files.length
     || !Number.isInteger(value.start) || value.start < 0
-    || !Number.isInteger(value.offset) || value.offset < 0 || value.offset % CATALOGUE_DISCOVERY_SIZE !== 0) return null;
+    || !Number.isInteger(value.offset) || value.offset < 0 || value.offset % size !== 0) return null;
   return value;
 }
 
-export function catalogueDiscoveryRows(rows, pass) {
-  if (!pass) return rows.slice(0, CATALOGUE_DISCOVERY_SIZE);
-  const count = Math.min(CATALOGUE_DISCOVERY_SIZE, rows.length - pass.offset);
+export function catalogueDiscoveryRows(rows, pass, size) {
+  if (!pass) return rows.slice(0, size);
   const start = (pass.start + pass.offset) % rows.length;
-  const selection = rows.slice(start, start + count);
-  return selection.concat(rows.slice(0, count - selection.length));
+  const selection = rows.slice(start, start + size);
+  return selection.concat(rows.slice(0, size - selection.length));
 }
 
 function compareText(left, right) {

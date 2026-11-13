@@ -1,7 +1,7 @@
 /** Gallery density has one owner for both page membership and rendered dimensions. */
 export const DOCS_VIEWER_MEDIA_GALLERY_LAYOUT = Object.freeze({
   columns: 8,
-  rows: 6,
+  rows: 8,
   thumbnailSize: 64,
   gap: 8
 });

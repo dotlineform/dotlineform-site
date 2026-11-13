@@ -41,15 +41,33 @@ export function createDocsCollectionReportState(options) {
     return null;
   }
 
-  function save() {
-    if (!visible() || frame !== null) return read()?.controls || null;
+  function capturePosition() {
     const positions = [];
     for (let node = root; node; node = node.parentElement) {
       positions.push({ top: node.scrollTop, left: node.scrollLeft });
     }
+    return { positions, x: window.scrollX, y: window.scrollY };
+  }
+
+  function applyPosition(saved) {
+    if (frame !== null) window.cancelAnimationFrame(frame);
+    frame = null;
+    let index = 0;
+    for (let node = root; node; node = node.parentElement) {
+      const position = saved ? saved.positions?.[index++] : { top: 0, left: 0 };
+      if (Number.isFinite(position?.top) && Number.isFinite(position?.left)) {
+        node.scrollTop = position.top;
+        node.scrollLeft = position.left;
+      }
+    }
+    if (!saved) window.scrollTo(0, 0);
+    else if (Number.isFinite(saved.x) && Number.isFinite(saved.y)) window.scrollTo(saved.x, saved.y);
+  }
+
+  function save() {
+    if (!visible() || frame !== null) return read()?.controls || null;
     try {
-      const serialized = JSON.stringify({ controls: options.captureControls(), positions,
-        x: window.scrollX, y: window.scrollY });
+      const serialized = JSON.stringify({ controls: options.captureControls(), ...capturePosition() });
       snapshots.set(key, JSON.parse(serialized));
       try { window.sessionStorage.setItem(key, serialized); } catch (_error) {
         // The small in-page snapshot remains usable without session storage.
@@ -65,33 +83,18 @@ export function createDocsCollectionReportState(options) {
     if (saved && options.isReady()) return options.restoreControls(saved.controls);
   }
 
-  function restorePosition() {
-    const saved = read();
+  function restorePosition(saved = read()) {
     if (!saved || !visible() || window.location.hash) return;
     if (frame !== null) window.cancelAnimationFrame(frame);
     frame = window.requestAnimationFrame(function () {
       frame = null;
       if (!visible() || window.location.hash) return;
-      let index = 0;
-      for (let node = root; node; node = node.parentElement) {
-        const position = saved.positions[index++];
-        if (position && Number.isFinite(position.top) && Number.isFinite(position.left)) {
-          node.scrollTop = position.top;
-          node.scrollLeft = position.left;
-        }
-      }
-      if (Number.isFinite(saved.x) && Number.isFinite(saved.y)) window.scrollTo(saved.x, saved.y);
+      applyPosition(saved);
     });
   }
 
   function resetPosition() {
-    if (frame !== null) window.cancelAnimationFrame(frame);
-    frame = null;
-    for (let node = root; node; node = node.parentElement) {
-      node.scrollTop = 0;
-      node.scrollLeft = 0;
-    }
-    window.scrollTo(0, 0);
+    applyPosition();
     save();
   }
 
@@ -99,7 +102,7 @@ export function createDocsCollectionReportState(options) {
   window.addEventListener("click", save, true);
   window.addEventListener("pagehide", save);
   return {
-    save, restore, restorePosition, resetPosition,
+    save, restore, restorePosition, resetPosition, capturePosition, applyPosition,
     dispose: function () {
       save();
       window.removeEventListener("click", save, true);

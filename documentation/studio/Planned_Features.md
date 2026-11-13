@@ -152,6 +152,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
+- [Rolling Dice Grid View](deliveries/Rolling_Dice_Grid_View.md) — Complete. The user requested closeout on 2026-11-13 after the List, Gallery and toolbar refinements. Keep the delivery linked for the site-wide small-screen and payload review. [Catalogue browsing](Sub_Scope_Index_Architecture.md#catalogue-collection-browsing) and [Media View](Catalogue_Media_View.md#gallery-presentations) own the current behavior.
+
 - [Catalogue Discovery](deliveries/Catalogue_Discovery.md) — Implemented and reviewed. The user confirmed initial operation on 2026-11-13 and will continue checking during normal use.
 
 - [Catalogue Shuffle](deliveries/Catalogue_Shuffle.md) — Complete. The user confirmed public deployment and accepted the result on 2026-11-12. Retain the delivery for stock replacement and the API decision. [Catalogue Shuffle Randomness](Catalogue_Shuffle_Randomness.md) explains the source and algorithm.

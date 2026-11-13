@@ -99,11 +99,11 @@ Work presentations use `images.svg` for Gallery links from the adopted document.
 
 The Gallery projector resolves thumbnail filenames from loaded member identities, the route-configured thumbnail base and the generated size, suffix and format. Opening and paging the Gallery use that member list. Selecting a member loads only its Catalogue document.
 
-Gallery pages display up to eight columns and six rows: 48 Work thumbnails at 64px with 8px gaps. The configured source is the existing 96px WebP Work thumbnail. Only the active page's thumbnail elements are created. Page and Work navigation cycle in both directions through the supplied Gallery order. Successful selection updates the Gallery return page to contain that Work; failed or superseded reads preserve the current selection and page. Direct Work entry does not infer a browsing sequence from Series or Gallery membership. Back to document remains owned by Content Detail.
+Gallery pages display up to 64 Work thumbnails at 64px with 8px gaps, in an eight-column, eight-row grid on desktop. Narrow public layouts can wrap into fewer columns. The configured source is the existing 96px WebP Work thumbnail. Only the active page's thumbnail elements are created. Page and Work navigation cycle in both directions through the supplied Gallery order. Successful selection updates the Gallery return page to contain that Work. Failed or superseded reads preserve the current selection and page. Direct Work entry uses the exact Work target. Back to document remains owned by Content Detail.
 
 ## Discovery Grid
 
-Working and public Catalogue can open the current discovery selection as a single grid of up to 48 Works. The collection report supplies the displayed IDs, titles and thumbnail descriptors in order. Media View uses its shared grid and reads an exact Catalogue document when a Work is opened. Previous and Next use the supplied sequence, and the Work's Catalogue Discovery link returns to the grid. Back to document returns to the Catalogue list and restores focus to the opener. Saved Gallery entry continues through its own record and Context link readers.
+Working and public Catalogue List can open its displayed Works as a single Media View grid of up to 64 Works. The collection report supplies the displayed IDs, titles and thumbnail descriptors in order. Media View reads an exact Catalogue document when a Work is opened. Previous and Next use the supplied sequence, and the Work's Catalogue Discovery link returns to the Media View grid. Back to document returns to Catalogue List and restores focus to the opener. The rolling Catalogue Gallery opens Work documents directly and hides the selection opener.
 
 ## Consumer Limits
 
