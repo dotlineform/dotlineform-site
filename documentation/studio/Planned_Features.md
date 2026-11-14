@@ -144,6 +144,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
+- [Book Publication](deliveries/Book_Publication.md) — Proposed release collection with an authored table of contents and independent chapter drafts copied from private Book. TOC authoring, reader navigation, release review, and later chapter revisions remain open.
+
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
 
 - [Docs Viewer Gallery Ownership](deliveries/Docs_Viewer_Gallery_Ownership.md) — Deferred proposal. Its scope is Gallery authoring and generation. The Catalogue index and Studio Gallery browser can use existing Studio-owned data.
