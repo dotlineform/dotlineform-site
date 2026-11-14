@@ -611,6 +611,41 @@
   padding: 0;
 }
 
+.docsViewerThumb__current{
+  object-fit: contain;
+}
+
+.docsViewerThumb__images{
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+}
+
+.docsViewerThumb__image{
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.docsViewerThumb__image:has(input:checked){
+  border-color: var(--docs-viewer-border-strong);
+  background: var(--shared-search-result-bg);
+}
+
+.docsViewerThumb__image img{
+  width: 100%;
+  height: 4.5rem;
+  object-fit: contain;
+}
+
+.docsViewerThumb__image span{
+  grid-column: 1 / -1;
+  overflow-wrap: anywhere;
+}
+
 .docsViewer__field:not(.docsViewer__field--checkbox){
   grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
   align-items: center;

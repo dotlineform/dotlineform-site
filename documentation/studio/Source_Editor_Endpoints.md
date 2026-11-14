@@ -123,9 +123,9 @@ This remains a single-editor snapshot Save without disk revision checks or exter
 
 ## `POST /docs/thumbnail`
 
-Thumb accepts exactly `{collection, doc_id, work_id}` for Library, Context (`works`), Concepts or Moments. A five-digit Work ID copies that Work's existing Catalogue thumbnail; `work_id: null` deletes the document copy. Catalogue and ordinary Index targets and dry-run requests are unsupported. The response contains `ok`, exact `target` and complete committed `record` for mounted list/document updates.
+Thumb accepts an exact `collection` and `doc_id` for Library, Book, Context (`works`), Concepts or Moments, plus one selection field. A five-digit `work_id` copies that Work's existing Catalogue thumbnail and `work_id: null` deletes the document copy. `image_png` supplies the selected document image as base64 PNG within 96 × 96 pixels. The response contains `ok`, exact `target` and complete committed `record` for mounted list and document updates.
 
-Python resolves configured owners once, reads the exact saved document/collection/Selected/queue metadata and applies the fixed `<doc_id>-thumb.webp` copy/removal. It persists no Work identity and changes no Markdown, dates, tokens, body rendering or Links. Exact publication selections preserve pending body-media writes; deletion saves the removal before unlink. [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) owns failure and publication effects. The former Subject context endpoint is retired without an alias.
+Python resolves configured owners once and reads the saved document, collection, Selected and queue metadata. It encodes document image pixels as WebP before writing the fixed `<doc_id>-thumb.webp` file. Work copies and deletion use the same file identity and metadata handoff. Exact publication selections preserve pending body-media writes. Deletion saves the removal before unlink. [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) owns failure and publication effects.
 
 ## `POST /docs/source/media`
 

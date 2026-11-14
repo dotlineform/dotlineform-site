@@ -69,9 +69,9 @@ export function setManagedDocSelected(target, selected, options) {
   return fetchManagementJson("/docs/set-selected", "POST", targetPayload(target, { selected: selected }), options);
 }
 
-/** Copy a Work thumbnail, or remove the document's independent copy with null. */
-export function setManagedDocThumbnail(target, workId, options) {
-  return fetchManagementJson("/docs/thumbnail", "POST", targetPayload(target, { work_id: workId }), options);
+/** Save submitted image pixels, copy a Work thumbnail, or remove the document thumbnail. */
+export function setManagedDocThumbnail(target, selection, options) {
+  return fetchManagementJson("/docs/thumbnail", "POST", targetPayload(target, selection), options);
 }
 
 /** Read authoring targets in the authoring workspace; the response supplies ordinary hrefs. */

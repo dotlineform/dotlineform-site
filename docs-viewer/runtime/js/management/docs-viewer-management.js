@@ -636,6 +636,7 @@ export function initDocsViewerManagement(context) {
   contextActions = createDocsViewerManagementContextActions({
     root: root,
     mediaRoot: function () { return domains.workspaceConfig.activeConfig.mediaRoot; },
+    activeDocumentMount: context.activeDocumentMount,
     management: management,
     selectedDocument: selectedDocument,
     documentIndex: documentIndex,

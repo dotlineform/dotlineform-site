@@ -554,6 +554,7 @@ export function startDocsViewerRuntime(options) {
       managementShellRefs: appShellRefs.managementShell || {},
       mainViewControlHandlerContributions: settings.mainViewControlHandlerContributions || {},
       documentActionContext: documentActionContext,
+      activeDocumentMount: documentController.activeMount,
       sourceEditorServices: sourceEditorServices,
       commitDocumentChange: collectionProvider.commitDocumentChange,
       commitDocumentStar: collectionProvider.commitDocumentStar,

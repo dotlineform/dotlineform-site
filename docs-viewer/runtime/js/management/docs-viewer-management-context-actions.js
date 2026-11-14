@@ -160,9 +160,11 @@ export function createDocsViewerManagementContextActions(options) {
   function invoke(actionId) {
     var state = actionState();
     if (state.blocked) return;
-    if (actionId === ACTION_IDS.THUMB && !state.resolutions.thumb.disabled) {
+    if (actionId === ACTION_IDS.THUMB && state.target && !state.resolutions.thumb.disabled
+        && options.activeViewState().activeModeId === "rendered-document") {
       return openDocumentThumbModal({
         root: options.root, target: state.target, record: state.record,
+        documentMount: options.activeDocumentMount(),
         mediaRoot: options.mediaRoot(), clientOptions: options.clientOptions(),
         commitDocumentChange: options.commitDocumentChange
       });

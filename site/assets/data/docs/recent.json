@@ -1,8 +1,16 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-11-09T22:19:52Z",
+  "generated_at": "2026-11-14T10:05:19Z",
   "docs": [
+    {
+      "collection": "works",
+      "collection_title": "Context",
+      "doc_id": "d-20261113-101744-c4dd8f",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "title": "catalogue randomness",
+      "timestamp": "2026-11-14"
+    },
     {
       "collection": "works",
       "collection_title": "Context",
@@ -153,14 +161,6 @@
       "doc_id": "d-20261027-085236-87b158",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Engrams",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-085402-88d78f",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Entanglement in quantum computing",
       "timestamp": "2026-10-27"
     }
   ]

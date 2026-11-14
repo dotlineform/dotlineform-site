@@ -1,5 +1,8 @@
-"""Copy/remove independent document artwork and hand off exact metadata effects."""
+"""Save or remove independent document artwork and hand off exact metadata effects."""
 
+import base64
+import binascii
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
@@ -15,20 +18,45 @@ from docs_selected_documents import read_selected, selected_path
 from docs_workspace_config import load_docs_workspace_config, location_child, require_document_authoring, select_workspace_stage
 
 
+THUMBNAIL_MAX_EDGE = 96
+
+
+def _document_image_thumbnail(png: str) -> bytes:
+    """Encode the browser-rendered thumbnail pixels before replacing the stored file."""
+    try:
+        from PIL import Image
+    except ImportError as error:
+        raise RuntimeError("Document image thumbnails require Pillow. Install requirements.txt.") from error
+    try:
+        data = base64.b64decode(png, validate=True)
+        with Image.open(BytesIO(data), formats=("PNG",)) as image:
+            if max(image.size) > THUMBNAIL_MAX_EDGE:
+                raise ValueError("Document image thumbnail must fit within 96 × 96 pixels")
+            output = BytesIO()
+            image.save(output, "WEBP", quality=85)
+            return output.getvalue()
+    except (binascii.Error, OSError, Image.DecompressionBombError) as error:
+        raise ValueError("Could not read or encode the selected document image") from error
+
+
 def set_document_thumbnail(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Apply a selected Work's existing thumbnail, or delete with work_id=null.
+    """Save submitted image pixels, copy a Work thumbnail, or delete with work_id=null.
 
     Source, dates, tokens and relationships are untouched. Saved generated
     metadata owns document/public membership; existing queued body-media writes
-    survive this thumbnail-only operation. No source Work identity is persisted.
+    survive this thumbnail-only operation. No source image identity is persisted.
     """
-    if set(body) != {"collection", "doc_id", "work_id"}:
-        raise ValueError("Thumb requires collection, doc_id and work_id (null to delete)")
+    target_fields = {"collection", "doc_id"}
+    if set(body) not in (target_fields | {"work_id"}, target_fields | {"image_png"}):
+        raise ValueError("Thumb requires collection and doc_id with either work_id (null to delete) or image_png")
     target = normalize_managed_document_target({key: body[key] for key in ("collection", "doc_id")})
     collection, doc_id = target["collection"], target["doc_id"]
     if collection not in THUMBNAIL_COLLECTIONS:
-        raise ValueError("Thumb is available only for Library, Context, Concepts and Moments")
-    work_id = body["work_id"]
+        raise ValueError("Thumb is available only for Library, Book, Context, Concepts and Moments")
+    if "image_png" in body and not isinstance(body["image_png"], str):
+        raise ValueError("Thumb image_png must contain the selected document image as base64 PNG")
+    image_png = body.get("image_png")
+    work_id = body.get("work_id")
     if work_id is not None and (not isinstance(work_id, str) or not is_document_id(work_id, collection="catalogue")):
         raise ValueError("Choose an exact Catalogue Work")
     workspace = load_docs_workspace_config(repo_root)
@@ -47,22 +75,25 @@ def set_document_thumbnail(repo_root: Path, body: dict[str, Any]) -> dict[str, A
     selected = read_selected(working)
     pending = read_queue(workspace)
     thumbnail = document_thumbnail_path(owner, doc_id)
-    present = work_id is not None
+    present = work_id is not None or image_png is not None
     phase = "thumbnail input"
     completed: list[str] = []
     try:
         if present:
-            policy = read_catalogue_media_config(repo_root, workspace=workspace.catalogue.working)
-            rendition = policy["thumbnails"]
-            filename = f"{work_id}-{rendition['suffix']}-{rendition['sizes'][0]}.{policy['format']}"
-            try:
-                data = location_child(workspace.assets.work_thumbnails, Path(filename)).path.read_bytes()
-            except FileNotFoundError as error:
-                raise ValueError(f"Work {work_id} has no available thumbnail") from error
-            phase = "thumbnail copy"
+            if image_png is not None:
+                data = _document_image_thumbnail(image_png)
+            else:
+                policy = read_catalogue_media_config(repo_root, workspace=workspace.catalogue.working)
+                rendition = policy["thumbnails"]
+                filename = f"{work_id}-{rendition['suffix']}-{rendition['sizes'][0]}.{policy['format']}"
+                try:
+                    data = location_child(workspace.assets.work_thumbnails, Path(filename)).path.read_bytes()
+                except FileNotFoundError as error:
+                    raise ValueError(f"Work {work_id} has no available thumbnail") from error
+            phase = "thumbnail write"
             thumbnail.parent.mkdir(parents=True, exist_ok=True)
             thumbnail.write_bytes(data)
-            completed.append("thumbnail copied")
+            completed.append("thumbnail saved")
 
         def project(record: dict[str, Any]) -> None:
             if present:

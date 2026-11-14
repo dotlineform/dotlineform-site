@@ -38,7 +38,7 @@ The current checked-in Python packages are:
 | `lxml` | Parser backend selected by `BeautifulSoup(source_html, "lxml")`. | Using Docs Import for staged HTML. |
 | `bleach` | Sanitization boundary for the Docs HTML import feature. | Using or extending HTML sanitization rules for Docs Import. |
 | `mammoth` | Converts staged Word `.docx` packages to semantic HTML and conversion messages. | Using Docs Import for Word documents. |
-| `Pillow` | Opens, resizes, and writes package images as 800px-max WebP outputs; validates native raster uploads and rejects animation before FFmpeg conversion. | Using Docs Import for Markdown packages with local images, or adding/replacing a raster image in Source. |
+| `Pillow` | Opens, resizes and writes package images as WebP, validates native raster uploads for FFmpeg, and encodes document image thumbnails. | Importing Markdown packages with local images, adding or replacing a raster image in Source, or choosing **From this document** in **Thumb**. |
 | `pytest` | Test runner used by the repo check profiles. | Running Python tests through the repo check workflow. |
 | `markdown-it-py` | CommonMark Markdown renderer selected for Docs Viewer payload generation. | Building or testing the Python Markdown renderer or Docs Viewer payloads. |
 

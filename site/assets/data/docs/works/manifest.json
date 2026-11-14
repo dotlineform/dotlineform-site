@@ -52,6 +52,18 @@
         ],
         "gallery_ids": []
       }
+    },
+    {
+      "doc_id": "d-20261113-101744-c4dd8f",
+      "title": "catalogue randomness",
+      "last_updated": "2026-11-14",
+      "has_thumbnail": true,
+      "catalogue_targets": {
+        "work_ids": [
+          "00383"
+        ],
+        "gallery_ids": []
+      }
     }
   ]
 }

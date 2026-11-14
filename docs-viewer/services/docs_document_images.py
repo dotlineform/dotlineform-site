@@ -1,4 +1,4 @@
-"""Fixed, independent thumbnails owned by the four authored collections."""
+"""Fixed, independent thumbnails owned by authored collections."""
 
 from __future__ import annotations
 
