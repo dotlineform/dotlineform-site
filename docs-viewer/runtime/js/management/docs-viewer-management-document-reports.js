@@ -95,6 +95,8 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
       var bookModule = await import("./docs-viewer-book-tools.js");
       bookTools = await bookModule.createBookReportTools({
         collection: collection, clientOptions: clientOptions, root: managementModalRoot(settings),
+        openDocument: settings.managementDocumentActions.openDocument,
+        openSourceFromLink: settings.managementDocumentActions.openSourceFromLink,
         startBusyOperation: settings.managementDocumentActions.startBusyOperation,
         commitDocumentChange: settings.collectionProvider.commitDocumentChange, setStatus: settings.setStatus
       });
@@ -190,15 +192,20 @@ function mountCollectionDocumentActions(settings) {
     var record = metadata && metadata.record ? metadata.record : settings.doc;
     var host = settings.content.ownerDocument.createElement("div");
     host.className = "docsViewer__collectionActions";
+    var toolbarActionHost = settings.managementContext ? host.cloneNode() : null;
     function project() {
-      var actionContext = Object.assign({}, settings.documentActionContext, { documentRecord: record, actionHost: host });
-      settings.onDocumentActionState(actionContext);
+      var actionContext = Object.assign({}, settings.documentActionContext, {
+        documentRecord: record, actionHost: host, toolbarActionHost: toolbarActionHost
+      });
       host.replaceChildren();
+      toolbarActionHost?.replaceChildren();
       if (contribution.renderDetailToolbar) contribution.renderDetailToolbar({
         actionContext: actionContext, collection: { collection: target.collection }, target: target,
-        document: record, data: {}, host: host, commitDeletedDocument: settings.commitDeletedDocument,
+        document: record, data: {}, host: host, toolbarActionHost: toolbarActionHost,
+        commitDeletedDocument: settings.commitDeletedDocument,
         refreshAndOpenDocument: settings.openDocument, refreshCollection: actionContext.refreshCollection
       });
+      settings.onDocumentActionState(actionContext);
     }
     project();
     settings.collectionProvider.subscribeDocumentChanges(function (change) {

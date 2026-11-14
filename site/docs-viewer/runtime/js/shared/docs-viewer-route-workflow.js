@@ -154,7 +154,12 @@ export function initDocsViewerRouteWorkflow(context) {
       collectionSequence: options.collectionSequence,
       force: options.force === true,
       url: viewerUrl(target.doc_id, hash, search.searchQuery, target, catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : ""))
-    }, { replace: options.historyMode === "replace" });
+    }, {
+      replace: options.historyMode === "replace",
+      returnToMatchingCaller: options.returnToMatchingCaller ? function (caller) {
+        return documentTargetKey(caller.document?.record?.target) === key;
+      } : null
+    });
     pendingDocumentOpen = { key: key, promise: promise };
     return promise.finally(function () {
       if (pendingDocumentOpen && pendingDocumentOpen.promise === promise) pendingDocumentOpen = null;
@@ -171,9 +176,9 @@ export function initDocsViewerRouteWorkflow(context) {
     var collection = target && target.collection && context.collectionConfig(target.collection);
     return collection ? { doc_id: collection.reportHostDocId } : null;
   }
-  function openCollectionIndex() {
+  function openCollectionIndex(options) {
     var target = collectionIndexTarget();
-    return target ? loadDoc(target) : Promise.resolve(null);
+    return target ? loadDoc(target, options) : Promise.resolve(null);
   }
   async function returnToDocument() {
     await context.returnToDocument();
@@ -237,7 +242,7 @@ export function initDocsViewerRouteWorkflow(context) {
     } finally { stop(); }
   }
   function shouldUseNativeNavigation(event, anchor) {
-    return event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
+    return event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey
       || anchor.hasAttribute("download") || Boolean(anchor.target && anchor.target !== "_self");
   }
   function bindRouteLinks() {
@@ -249,8 +254,15 @@ export function initDocsViewerRouteWorkflow(context) {
       if (toggle) { context.toggleSidebarBranch(toggle.dataset.toggleDocId); updateNavigation(); return; }
       var anchor = event.target.closest("a[href]");
       if (!anchor || shouldUseNativeNavigation(event, anchor)) return;
+      if (event.altKey && !context.openSourceFromLink) return;
       var route = routeFromAnchor(anchor);
       if (!route) return;
+      if (event.altKey) {
+        if (!route.error && context.openSourceFromLink(route.target, {
+          collectionSequence: collectionSequenceForLink(anchor)
+        })) event.preventDefault();
+        return;
+      }
       event.preventDefault();
       if (route.error) { setStatus(route.error, true); return; }
       loadDoc(route.target, { hash: route.hash, catalogueSearch: route.catalogueSearch,

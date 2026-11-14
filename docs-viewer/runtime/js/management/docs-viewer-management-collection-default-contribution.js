@@ -107,6 +107,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     : null;
   var managementContext = Boolean(options.managementContext);
   var bookTools = options.bookTools;
+  var bookRowSelection = bookTools?.rowSelection;
   var selectionOwner = options.selectionOwner || createDocsViewerCollectionSelectionOwner();
   var currentDocIds = [];
   var inventoryDocIds = [];
@@ -166,6 +167,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (root) root.dataset.reportCollectionSelection = active ? "active" : "inactive";
     if (!listToolbar) return snapshot;
 
+    bookRowSelection?.project(available && listToolbar.selectionReady && !selectionWorkflowActive, active);
     listToolbar.actionsHost.hidden = hidden;
     listToolbar.actionsButton.disabled = !available || hidden || selectionWorkflowActive;
     listToolbar.selectButton.hidden = hidden || active;
@@ -199,6 +201,20 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar.selectButton.disabled = !selectionOwner.available() || !listToolbar.selectionReady || selectionWorkflowActive;
   }
 
+  async function openBookRow(action) {
+    if (!listToolbar?.selectionReady || selectionWorkflowActive) return;
+    selectionWorkflowActive = true;
+    projectSelection();
+    try {
+      await action();
+    } catch (error) {
+      options.setStatus?.(error.message, true);
+    } finally {
+      selectionWorkflowActive = false;
+      projectSelection();
+    }
+  }
+
   function clearListToolbar() {
     if (!listToolbar) return;
     listToolbar.document.removeEventListener("click", listToolbar.handleDocumentClick);
@@ -220,6 +236,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     });
     if (event && event.type === "refresh") {
       inventoryDocIds = event.docIds;
+      if (event.change?.bookSectionId) {
+        bookTools?.applyPlacement(event.change.bookSectionId, event.change.target.doc_id);
+      }
       if (event.membershipChanged) bookTools?.updateInventory(event.docIds);
     }
     if (
@@ -249,6 +268,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var leadingHost = settings.leadingHost;
     var accessibleLabels = [];
     var docId = documentId(doc);
+    bookRowSelection?.bindRow(settings.link, doc, function () {
+      rowSelections.get(docId).checkbox.click();
+    });
     if (leadingHost && docId) {
       var checkbox = leadingHost.ownerDocument.createElement("input");
       checkbox.className = "docsViewerReport__collectionSelectionCheckbox";
@@ -280,7 +302,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       host.appendChild(draftIcon);
       accessibleLabels.push("Draft");
     }
-    if (bookTools?.renderIndicator(host, docId)) accessibleLabels.push("Copied to Book");
+    var bookIndicatorLabel = bookTools?.renderIndicator(host, doc);
+    if (bookIndicatorLabel) accessibleLabels.push(bookIndicatorLabel);
     return { accessibleLabels: accessibleLabels };
   }
 
@@ -414,7 +437,13 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
     var bookControls = bookTools?.mountSelectionControls(selectionControl, settings.renderList);
     settings.actionHost.replaceChildren(...(regenerateButton ? [regenerateButton] : []));
-    if (sortButton) root.appendChild(sortButton);
+    if (bookRowSelection) {
+      host.classList.add("docsViewerBook__listToolbar");
+      bookRowSelection.prepare(currentDocIds, openBookRow);
+      if (sortButton) host.appendChild(sortButton);
+    } else if (sortButton) {
+      root.appendChild(sortButton);
+    }
     root.appendChild(selectButton);
     root.appendChild(selectionControl);
     root.appendChild(actionsHost);
@@ -530,7 +559,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       setReady: function (ready) {
         if (listToolbar.selectionReady === ready) return;
         listToolbar.selectionReady = ready;
-        updateSelectButton();
+        if (bookRowSelection) projectSelection();
+        else updateSelectButton();
       },
       project: projectSelection
     };
@@ -585,10 +615,40 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       host.appendChild(copyButton);
     }
 
+    var chapter = settings.document;
+    if (settings.toolbarActionHost && target.collection === "book" && chapter && !chapter.copied_from_library) {
+      var sourcesButton = host.ownerDocument.createElement("button");
+      var label = "Library sources…";
+      sourcesButton.type = "button";
+      sourcesButton.className = "docsViewer__toolbarIconButton";
+      sourcesButton.dataset.bookLibrarySources = "";
+      sourcesButton.setAttribute("aria-label", label);
+      sourcesButton.title = label;
+      sourcesButton.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--library"));
+      sourcesButton.addEventListener("click", async function () {
+        if (sourcesButton.getAttribute("aria-busy") === "true" || options.root.dataset.managementBusy === "true") return;
+        sourcesButton.setAttribute("aria-busy", "true");
+        try {
+          var module = await import("./docs-viewer-book-tools.js");
+          await module.openBookLibrarySources({
+            chapter: chapter, button: sourcesButton, root: options.root,
+            clientOptions: options.clientOptions, startBusyOperation: options.startBusyOperation,
+            commitDocumentChange: options.commitDocumentChange
+          });
+        } catch (error) {
+          options.setStatus?.(error.message, true);
+        } finally {
+          sourcesButton.removeAttribute("aria-busy");
+        }
+      });
+      settings.toolbarActionHost.appendChild(sourcesButton);
+    }
+
     var deleteResolution = options.resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE, target);
     if (
       !managementContext
       || deleteResolution.hidden
+      || !settings.toolbarActionHost
       || typeof settings.commitDeletedDocument !== "function"
       || typeof settings.registerAction !== "function"
     ) return;
@@ -607,15 +667,15 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     clearDeleteWorkflow();
     var request = deleteWorkflowRequest;
-    var button = createDocsViewerEditMenuItem(host.ownerDocument, {
-      actionId: DOCS_VIEWER_ACTION_IDS.DELETE, label: "Delete",
-      artwork: "docsViewer__icon--trash", contribution: true
-    });
+    var button = host.ownerDocument.createElement("button");
+    button.type = "button";
+    button.className = "docsViewer__toolbarIconButton";
+    button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--trash"));
     button.disabled = true;
     button.dataset.docsCollectionDelete = "true";
     button.setAttribute("aria-label", "Delete");
     button.title = "Delete";
-    host.appendChild(button);
+    settings.toolbarActionHost.appendChild(button);
 
     import("./docs-viewer-management-collection-delete-workflow.js")
       .then(function (module) {
@@ -628,7 +688,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
           clientOptions: options.clientOptions || {},
           commitDeletedDocument: settings.commitDeletedDocument,
           root: options.root,
-          restoreFocus: function () { return options.root?.querySelector("#docsViewerManageEditButton"); },
           setStatus: options.setStatus,
           target: deleteRegistration.target,
           title: cleanString(settings.document && settings.document.title)
@@ -684,10 +743,16 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         return mountDocsViewerPaginationControl({ host, enabled: false, itemsLabel: "documents", change });
       }
     } : {}),
-    captureListState: selectionOwner.snapshot,
+    captureListState: function () {
+      var snapshot = selectionOwner.snapshot();
+      return bookRowSelection ? { ...snapshot, bookDocId: bookRowSelection.capture() } : snapshot;
+    },
     mountCatalogueSearchCopy: options.catalogueSearchHostId ? mountCatalogueSearchCopy : null,
     mountSectionNavigation: bookTools?.mountSectionNavigation,
-    restoreListState: function (saved) { selectionOwner.restore(saved, inventoryDocIds); },
+    restoreListState: function (saved) {
+      selectionOwner.restore(saved, inventoryDocIds);
+      bookRowSelection?.restore(saved?.bookDocId);
+    },
     id: "default",
     notify: notify,
     renderDetailToolbar: renderDetailToolbar,

@@ -177,6 +177,7 @@ function contributeDocRow(state, item, doc) {
   var rowResult = renderRow ? renderRow({
     collection: collectionTarget(state.collectionId),
     document: doc.record,
+    link: link,
     leadingHost: leadingHost,
     titlePrefixHost: titlePrefixHost,
     trailingHost: trailingHost

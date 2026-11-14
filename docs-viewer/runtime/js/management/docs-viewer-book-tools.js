@@ -1,9 +1,11 @@
 import { fetchManagementJson } from "./docs-viewer-management-client.js";
 import { escapeHtml, openDocsViewerManagementModal } from "./docs-viewer-management-modal-shell.js";
 import { openDocsViewerPositionModal } from "./docs-viewer-position-modal.js";
+import { collectionSequenceForLink } from "../shared/docs-viewer-collection-navigation.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 
 const bookManifest = "/docs/generated/external/book/manage-manifest.json";
+const bookTree = "/docs/generated/external/book/index-tree.json";
 
 function button(document, label, action) {
   const control = document.createElement("button");
@@ -32,6 +34,144 @@ function headingOptions(tree) {
     + (node.sections || []).map(section => option(section.id, "\u00a0\u00a0" + section.title)).join("")).join("");
 }
 
+function sectionOptions(tree) {
+  return tree.map(node => {
+    if (!node.sections) return option(node.id, node.title);
+    if (!node.sections.length) return "";
+    return '<optgroup label="' + escapeHtml(node.title) + '">'
+      + node.sections.map(section => option(section.id, section.title)).join("") + "</optgroup>";
+  }).join("");
+}
+
+function chapterCopyCheckbox(attribute, label) {
+  return '<label class="docsViewer__field docsViewer__field--checkbox">'
+    + '<input class="docsViewer__checkboxInput" type="checkbox" ' + attribute + '>'
+    + '<span class="docsViewer__fieldLabel">' + escapeHtml(label) + "</span></label>";
+}
+
+function createBookRowSelection(options) {
+  let selectedId = "";
+  let selectedRow = null;
+  let run;
+  let enabled = false;
+  let checkboxMode = false;
+
+  function project() {
+    if (selectedRow) {
+      if (checkboxMode) selectedRow.link.removeAttribute("aria-current");
+      else selectedRow.link.setAttribute("aria-current", "true");
+    }
+  }
+
+  function select(row) {
+    selectedRow?.link.removeAttribute("aria-current");
+    selectedRow = row;
+    selectedId = row.record.doc_id;
+    project();
+  }
+
+  function open(row, action) {
+    row.link.focus({ preventScroll: true });
+    return action({ collection: "book", doc_id: row.record.doc_id }, {
+      collectionSequence: collectionSequenceForLink(row.link)
+    });
+  }
+
+  return {
+    prepare(docIds, runAction) {
+      if (!docIds.includes(selectedId)) selectedId = "";
+      selectedRow = null;
+      run = runAction;
+    },
+    bindRow(link, record, toggleChecked) {
+      const row = { link, record };
+      if (record.doc_id === selectedId) selectedRow = row;
+      const element = link.parentElement;
+      element.classList.add("docsViewerBook__selectableRow");
+      element.addEventListener("click", event => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey
+          || event.target.closest("input, button")) return;
+        if (!enabled) {
+          event.preventDefault();
+          return;
+        }
+        if (event.altKey) {
+          if (!checkboxMode) select(row);
+          // Let the shared reader handle the title link after projecting Book selection.
+          if (link.contains(event.target)) return;
+          open(row, options.openSourceFromLink);
+          return;
+        }
+        event.preventDefault();
+        if (checkboxMode && event.detail !== 0) {
+          link.focus({ preventScroll: true });
+          toggleChecked();
+          return;
+        }
+        if (!checkboxMode) select(row);
+        run(() => open(row, options.openDocument));
+      });
+      link.addEventListener("keydown", event => {
+        if (event.key !== " " || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        event.preventDefault();
+        if (!enabled) return;
+        if (checkboxMode) toggleChecked();
+        else select(row);
+      });
+    },
+    capture: () => selectedId,
+    restore(id) { selectedId = typeof id === "string" ? id : ""; },
+    project(canInteract, bulk) {
+      enabled = canInteract;
+      checkboxMode = bulk;
+      project();
+    }
+  };
+}
+
+export async function openBookLibrarySources({ chapter, clientOptions, root, button, startBusyOperation, commitDocumentChange }) {
+  const client = { ...clientOptions, cache: "no-store" };
+  const manifest = await fetchManagementJson(bookManifest, "GET", undefined, client);
+  if (!button.isConnected || button.closest("[hidden]")) return;
+  const saved = chapter.library_sources || [];
+  const records = new Map(saved.map(record => [record.doc_id, record]));
+  for (const { copied_from_library: origin } of manifest.docs) {
+    if (origin && !records.has(origin.doc_id)) records.set(origin.doc_id, origin);
+  }
+  const checked = new Set(saved.map(record => record.doc_id));
+  const body = Array.from(records.values()).map(record =>
+    '<label class="docsViewer__field docsViewer__field--checkbox"><input type="checkbox" data-book-source value="'
+    + escapeHtml(record.doc_id) + '"' + (checked.has(record.doc_id) ? " checked" : "") + ">"
+    + '<span class="docsViewer__fieldLabel" title="' + escapeHtml(record.doc_id) + '">'
+    + escapeHtml(record.title) + "</span></label>").join("");
+  const result = await openDocsViewerManagementModal({
+    root, title: "Library sources",
+    bodyHtml: body || "<p>No Library sources are available.</p>",
+    restoreFocus: () => root.querySelector("[data-book-library-sources]"),
+    focusSelector: "input",
+    actions: [{ role: "modal-primary", label: "Save" }, { role: "modal-cancel", label: "Cancel" }],
+    async onSubmit({ host }) {
+      const librarySources = Array.from(host.querySelectorAll("[data-book-source]:checked"), input => records.get(input.value));
+      const stop = startBusyOperation();
+      try {
+        return await fetchManagementJson("/docs/book/sources", "POST", {
+          doc_id: chapter.doc_id, library_sources: librarySources
+        }, client);
+      } finally {
+        stop();
+      }
+    }
+  });
+  if (!result.ok) return;
+  const failures = commitDocumentChange({
+    target: { collection: "book", doc_id: chapter.doc_id },
+    record: { ...chapter, library_sources: result.library_sources }
+  });
+  if (failures?.length) {
+    throw new Error("Library sources saved. Could not update retained views. " + failures.map(error => error.message).join(" "));
+  }
+}
+
 export async function createBookReportTools(options) {
   const isBook = options.collection === "book";
   const client = { ...options.clientOptions, cache: "no-store" };
@@ -44,7 +184,7 @@ export async function createBookReportTools(options) {
       stop?.();
     }
   };
-  let tree = isBook ? (await get("/docs/generated/external/book/index-tree.json")).tree : null;
+  let tree = isBook ? (await get(bookTree)).tree : null;
   const copied = new Set(isBook ? [] : (await get("/docs/book/copied")).doc_ids);
   let navigation;
   let headingId = "";
@@ -57,63 +197,75 @@ export async function createBookReportTools(options) {
     });
   }
 
-  function commit(record) {
-    options.commitDocumentChange?.({ target: { collection: "book", doc_id: record.doc_id }, record });
+  function commit(record, sectionId) {
+    return options.commitDocumentChange?.({
+      target: { collection: "book", doc_id: record.doc_id }, record, bookSectionId: sectionId
+    }) || [];
   }
 
   async function copySelection(docIds, renderList) {
-    const destinations = [
-      ["new-chapter", "New chapter"],
-      ["existing-chapter", "Existing chapter"],
-      ["copy-only", "Copy only"]
-    ];
-    const mode = '<fieldset class="docsViewer__fieldGroup" data-book-mode aria-label="Destination">'
-      + destinations.map(([value, label]) =>
-        '<label class="docsViewer__field docsViewer__field--checkbox">'
-        + '<input class="docsViewer__checkboxInput" type="radio" name="book-copy-destination" value="' + value + '"'
-        + (value === "new-chapter" ? " checked" : "") + '>'
-        + '<span class="docsViewer__fieldLabel">' + label + "</span></label>").join("")
-      + "</fieldset>";
-    const name = '<div data-book-title-field>'
-      + field("Chapter title", '<input class="docsViewer__fieldInput" data-book-title type="text" autocomplete="off">') + "</div>";
-    const existing = '<div data-book-chapter-field hidden>'
-      + field("Chapter", '<select class="docsViewer__fieldInput" data-book-chapter><option value="">Choose a chapter</option></select>') + "</div>";
-    let chapterRead;
-    const result = await modal("Copy to Book", mode + name + existing, async ({ host }) => {
-      const current = host.querySelector('input[name="book-copy-destination"]:checked').value;
-      const payload = { doc_ids: docIds, mode: current };
-      if (current === "new-chapter") {
-        payload.title = host.querySelector("[data-book-title]").value.trim();
-        if (!payload.title) throw new Error("Enter a chapter title.");
-      } else if (current === "existing-chapter") {
-        payload.chapter_id = host.querySelector("[data-book-chapter]").value;
-        if (!payload.chapter_id) throw new Error("Choose a Book chapter.");
+    const [bookIndex, manifest] = await Promise.all([get(bookTree), get(bookManifest)]);
+    const sections = new Map(bookHeadings(bookIndex.tree).filter(node => !node.sections).map(node => [node.id, node]));
+    const chapters = new Map(manifest.docs.filter(row => !row.copied_from_library).map(row => [row.doc_id, row]));
+    const sectionField = field("Copy to section", '<select class="docsViewer__fieldInput" data-book-section>'
+      + option("", sections.size ? "Choose a section" : "No sections yet") + sectionOptions(bookIndex.tree) + "</select>");
+    const newChapter = '<div class="docsViewer__fieldGroup">'
+      + chapterCopyCheckbox("data-book-new", "Add to a new chapter")
+      + field("Chapter title", '<input class="docsViewer__fieldInput" data-book-title type="text" autocomplete="off" disabled>')
+      + "</div>";
+    const existingChapter = '<div class="docsViewer__fieldGroup">'
+      + chapterCopyCheckbox("data-book-existing", "Add to an existing chapter")
+      + field("Chapter", '<select class="docsViewer__fieldInput" data-book-chapter disabled></select>')
+      + "</div>";
+    let controls;
+    function updateChapterPicker() {
+      const section = sections.get(controls.section.value);
+      const choices = section ? section.doc_ids.map(id => chapters.get(id)).filter(Boolean) : [];
+      const placeholder = !section ? "Choose a section first"
+        : choices.length ? "Choose a chapter" : "No chapters in this section";
+      controls.chapter.innerHTML = option("", placeholder) + choices.map(row => option(row.doc_id, row.title)).join("");
+    }
+    const result = await modal("Copy to Book", sectionField + newChapter + existingChapter, () => {
+      const sectionId = controls.section.value;
+      if (!sectionId) throw new Error("Choose a Book section.");
+      const payload = { doc_ids: docIds, section_id: sectionId };
+      if (controls.addNew.checked) {
+        payload.new_chapter_title = controls.title.value.trim();
+        if (!payload.new_chapter_title) throw new Error("Enter a chapter title.");
+      }
+      if (controls.addExisting.checked) {
+        payload.existing_chapter_id = controls.chapter.value;
+        if (!payload.existing_chapter_id) throw new Error("Choose a chapter in the selected section.");
       }
       return post("/docs/book/copy", payload);
-    }, ({ host, setStatus }) => {
-      const modeControl = host.querySelector("[data-book-mode]");
-      modeControl.addEventListener("change", event => {
-        const current = event.target.value;
-        host.querySelector("[data-book-title-field]").hidden = current !== "new-chapter";
-        host.querySelector("[data-book-chapter-field]").hidden = current !== "existing-chapter";
-        if (current !== "existing-chapter" || chapterRead) return;
-        const picker = host.querySelector("[data-book-chapter]");
-        chapterRead = get(bookManifest).then(payload => {
-          const chapters = payload.docs.filter(row => !row.copied_from_library)
-            .sort((left, right) => left.title.localeCompare(right.title));
-          picker.innerHTML = option("", chapters.length ? "Choose a chapter" : "No chapters yet")
-            + chapters.map(row => option(row.doc_id, row.title)).join("");
-        }).catch(error => {
-          chapterRead = null;
-          setStatus(error.message);
-        });
+    }, ({ host }) => {
+      controls = {
+        section: host.querySelector("[data-book-section]"),
+        addNew: host.querySelector("[data-book-new]"),
+        addExisting: host.querySelector("[data-book-existing]"),
+        title: host.querySelector("[data-book-title]"),
+        chapter: host.querySelector("[data-book-chapter]")
+      };
+      host.querySelector('[data-role="modal-primary"]').disabled = !sections.size;
+      controls.section.addEventListener("change", updateChapterPicker);
+      controls.addNew.addEventListener("change", () => {
+        controls.title.disabled = !controls.addNew.checked;
       });
+      controls.addExisting.addEventListener("change", () => {
+        controls.chapter.disabled = !controls.addExisting.checked;
+      });
+      updateChapterPicker();
     }, "Copy");
     if (!result.ok) return;
     result.copied_doc_ids.forEach(id => copied.add(id));
-    result.records.forEach(commit);
+    const placements = new Set(result.placed_doc_ids);
+    const failures = result.records.flatMap(record =>
+      commit(record, placements.has(record.doc_id) ? result.section_id : undefined));
     renderList();
-    options.setStatus?.(result.copied_doc_ids.length + " copied to Book.", false);
+    const message = result.copied_doc_ids.length + " copied to " + sections.get(result.section_id).title + ".";
+    options.setStatus?.(failures.length
+      ? message + " Could not update the retained Book list. " + failures.map(error => error.message).join(" ")
+      : message, Boolean(failures.length));
   }
 
   async function clearCopyFlags(docIds, renderList) {
@@ -175,28 +327,6 @@ export async function createBookReportTools(options) {
     });
   }
 
-  async function editSources(docId) {
-    const chapter = navigation.rows().find(row => row.docId === docId)?.record;
-    if (!chapter || chapter.copied_from_library) return;
-    const saved = chapter.library_sources || [];
-    const records = new Map(saved.map(record => [record.doc_id, record]));
-    for (const { record } of navigation.rows()) {
-      const origin = record.copied_from_library;
-      if (origin && !records.has(origin.doc_id)) records.set(origin.doc_id, origin);
-    }
-    const checked = new Set(saved.map(record => record.doc_id));
-    const body = Array.from(records.values()).map(record =>
-      '<label class="docsViewer__field docsViewer__field--checkbox"><input type="checkbox" data-book-source value="'
-      + escapeHtml(record.doc_id) + '"' + (checked.has(record.doc_id) ? " checked" : "") + ">"
-      + '<span class="docsViewer__fieldLabel" title="' + escapeHtml(record.doc_id) + '">'
-      + escapeHtml(record.title) + "</span></label>").join("");
-    await modal("Library sources", body || "<p>No Library sources are available.</p>", async ({ host }) => {
-      const librarySources = Array.from(host.querySelectorAll("[data-book-source]:checked"), input => records.get(input.value));
-      const result = await post("/docs/book/sources", { doc_id: docId, library_sources: librarySources });
-      commit({ ...chapter, library_sources: result.library_sources });
-    });
-  }
-
   async function positionSelection(docIds) {
     const titles = new Map(navigation.rows().map(row => [row.docId, row.title]));
     const selected = new Set(docIds);
@@ -245,6 +375,7 @@ export async function createBookReportTools(options) {
   }
 
   return {
+    rowSelection: isBook ? createBookRowSelection(options) : null,
     withNewDocumentPlacement(openDocument) {
       const destinationId = headingId;
       if (!destinationId) return openDocument;
@@ -262,14 +393,16 @@ export async function createBookReportTools(options) {
         return openDocument(target, response);
       };
     },
-    renderIndicator(host, docId) {
-      if (isBook || !copied.has(docId)) return false;
+    renderIndicator(host, { doc_id: docId, copied_from_library: origin }) {
+      if (isBook ? !origin : !copied.has(docId)) return;
+      const label = isBook ? "Working copy from Library" : "Copied to Book";
       const icon = host.ownerDocument.createElement("span");
-      icon.className = "docsViewer__listIcon docsViewer__icon--dlf-doc";
-      icon.title = "Copied to Book";
+      icon.className = "docsViewer__listIcon " + (isBook
+        ? "docsViewer__icon--copy docsViewerBook__workingCopyIndicator" : "docsViewer__icon--dlf-doc");
+      icon.title = label;
       icon.setAttribute("aria-hidden", "true");
       host.append(icon);
-      return true;
+      return label;
     },
     mountSelectionControls(host, renderList) {
       const document = host.ownerDocument;
@@ -285,7 +418,6 @@ export async function createBookReportTools(options) {
         host.append(control);
       };
       if (isBook) {
-        add("sources", "Library sources…", () => editSources(controls.ids[0]), "docsViewer__icon--library");
         add("position", "Position…", () => positionSelection(controls.ids), "docsViewer__icon--arrow-up-down");
       } else {
         add("copy", "Copy to Book…", () => copySelection(controls.ids, renderList), "docsViewer__icon--dlf-doc");
@@ -302,8 +434,6 @@ export async function createBookReportTools(options) {
         controls.clearCopied.hidden = !controls.flaggedIds.length;
         return;
       }
-      const target = ids.length === 1 && navigation?.rows().find(row => row.docId === ids[0]);
-      controls.sources.hidden = !target || Boolean(target.record.copied_from_library);
       controls.position.hidden = !ids.length || !tree.length;
     },
     updateInventory(ids) {
@@ -312,6 +442,9 @@ export async function createBookReportTools(options) {
       for (const heading of bookHeadings(tree)) {
         heading.doc_ids = heading.doc_ids.filter(id => present.has(id));
       }
+    },
+    applyPlacement(sectionId, docId) {
+      bookHeadings(tree).find(node => node.id === sectionId).doc_ids.push(docId);
     },
     ...(isBook ? { mountSectionNavigation({ root, rows, rowForId, change }) {
       const document = root.ownerDocument;

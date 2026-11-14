@@ -8,8 +8,7 @@ var EDIT_ITEMS = [
   { actionId: ACTION_IDS.SET_DRAFT, label: "Mark as draft", artwork: "docsViewer__icon--circle-check", checked: false, contextAction: true },
   { actionId: ACTION_IDS.SET_SELECTED, label: "Star", artwork: "docsViewer__icon--star", checked: false, contextAction: true },
   { actionId: ACTION_IDS.THUMB, label: "Thumb", artwork: "docsViewer__icon--image", contextAction: true },
-  { actionId: ACTION_IDS.COPY_LINK, label: "Copy link", artwork: "docsViewer__icon--link", fallback: true },
-  { actionId: ACTION_IDS.DELETE, label: "Delete", artwork: "docsViewer__icon--trash", fallback: true }
+  { actionId: ACTION_IDS.COPY_LINK, label: "Copy link", artwork: "docsViewer__icon--link", fallback: true }
 ];
 
 /** Collection contributions retain their own handlers and live availability. */
@@ -45,7 +44,7 @@ export function renderDocsViewerEditMenu(context) {
     trigger.setAttribute("aria-haspopup", "menu");
     trigger.setAttribute("aria-expanded", "false");
     trigger.setAttribute("aria-controls", "docsViewerManageEditMenu");
-    trigger.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--pen"));
+    trigger.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--ellipsis"));
     var menu = documentRef.createElement("div");
     menu.id = "docsViewerManageEditMenu";
     menu.className = "docsViewer__actionsMenu docsViewer__editMenu";
@@ -110,19 +109,15 @@ export function createDocsViewerEditMenuController(options) {
       button.hidden = options.resolveAction(button.dataset.docsViewerAction, state.target).hidden;
     });
     var ordinary = state.available && !state.target.collection;
-    var deleteState = ordinary ? options.deleteState(state.target.doc_id) : null;
     EDIT_ITEMS.forEach(function (item) {
       if (item.contextAction) return;
       var button = current.menu.querySelector(':scope > [data-docs-viewer-action="' + item.actionId + '"]');
       var resolution = options.resolveAction(item.actionId, state.target);
-      var enabled = item.actionId === ACTION_IDS.EDIT_DOCUMENT || item.actionId === ACTION_IDS.REBUILD_DOCUMENT ? state.available
-        : item.actionId === ACTION_IDS.COPY_LINK ? ordinary
-          : item.actionId === ACTION_IDS.DELETE ? ordinary && deleteState && !deleteState.disabled && !deleteState.hidden : false;
-      button.hidden = resolution.hidden;
+      var enabled = item.actionId === ACTION_IDS.COPY_LINK ? ordinary : state.available;
+      button.hidden = resolution.hidden
+        || (item.actionId === ACTION_IDS.EDIT_DOCUMENT && Boolean(state.target?.collection));
       button.disabled = !enabled || resolution.disabled;
-      button.title = resolution.disabledReason || (enabled ? item.label
-        : item.actionId === ACTION_IDS.DELETE && deleteState ? deleteState.disabledReason
-          : "This action is unavailable for the displayed document.");
+      button.title = resolution.disabledReason || (enabled ? item.label : "This action is unavailable for the displayed document.");
     });
   }
   function enabledItems(menu) {
@@ -155,10 +150,6 @@ export function createDocsViewerEditMenuController(options) {
     else if (actionId === ACTION_IDS.REBUILD_DOCUMENT) options.rebuildDocument(state.target);
     else if (options.contextActions.owns(actionId)) options.contextActions.invoke(actionId);
     else if (!state.target.collection && actionId === ACTION_IDS.COPY_LINK) options.copyLink(state.target.doc_id);
-    else if (!state.target.collection && actionId === ACTION_IDS.DELETE) {
-      var deletion = options.deleteState(state.target.doc_id);
-      if (!deletion.disabled && !deletion.hidden) options.deleteDocument(state.target.doc_id, current.trigger);
-    }
     return true;
   }
   function handleRootClick(event) {

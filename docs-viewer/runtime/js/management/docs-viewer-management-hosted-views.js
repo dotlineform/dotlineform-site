@@ -43,7 +43,7 @@ export function createDocsViewerManagementViewDefinitions() {
       },
       {
         id: "edit",
-        label: "Edit document",
+        label: "Document actions",
         ownerType: "view",
         ownerViewId: "rendered-document",
         modeIds: ["rendered-document"],
@@ -51,6 +51,18 @@ export function createDocsViewerManagementViewDefinitions() {
         appKinds: ["manage"],
         features: ["management", "source-editing"],
         renderer: "manage-edit"
+      },
+      {
+        id: "collection-open-source",
+        actionId: DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT,
+        label: "Source editor",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["rendered-document"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["management", "source-editing"],
+        renderer: "collection-open-source"
       },
       {
         id: "return-to-doc",
@@ -62,6 +74,17 @@ export function createDocsViewerManagementViewDefinitions() {
         appKinds: ["manage"],
         features: ["source-editing"],
         renderer: "return-to-doc"
+      },
+      {
+        id: "return-to-collection",
+        label: "Return to collection",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "return-to-collection"
       },
       {
         id: "save-markdown-source",

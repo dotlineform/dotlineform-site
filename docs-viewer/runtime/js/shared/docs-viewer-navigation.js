@@ -46,12 +46,25 @@ export function createDocsViewerNavigation(options) {
     project();
   }
 
+  async function restoreCaller(caller) {
+    active = Object.assign({}, active, { callerId: "" });
+    await options.restore(caller);
+    await capture();
+  }
+
   async function open(destination, settings = {}) {
     if (busy) return null;
     busy = true;
     try {
       if (!await options.confirm()) return null;
       await options.prepare();
+      if (settings.returnToMatchingCaller) {
+        var caller = records.get(active?.callerId);
+        if (caller && settings.returnToMatchingCaller(caller) && options.callerAvailable(caller)) {
+          await restoreCaller(caller);
+          return destination.target;
+        }
+      }
       await capture();
       var replace = settings.replace === true;
       var previous = active;
@@ -137,9 +150,7 @@ export function createDocsViewerNavigation(options) {
       busy = true;
       try {
         await options.prepare();
-        active = Object.assign({}, active, { callerId: "" });
-        await options.restore(caller);
-        await capture();
+        await restoreCaller(caller);
         return true;
       } finally {
         busy = false;

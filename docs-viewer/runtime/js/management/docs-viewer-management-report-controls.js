@@ -20,7 +20,7 @@ export function projectDocsViewerReportControlState(options = {}) {
     editDocument: control({
       hidden: hidden || sourceMode,
       disabled: disabled || sourceMode || !editTarget,
-      label: "Edit document"
+      label: "Document actions"
     }, editTarget),
     returnToDoc: control({
       hidden: hidden || !sourceMode,

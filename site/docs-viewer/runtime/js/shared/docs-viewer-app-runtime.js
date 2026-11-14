@@ -181,6 +181,11 @@ export function startDocsViewerRuntime(options) {
 
   function documentActionContext() { return documentController ? documentController.actionContext() : {}; }
 
+  function openSourceFromLink(target, options) {
+    if (!sourceEditingEnabled || !sourceService || !managementUiEnabled) return false;
+    return managementRuntime?.controller()?.openSourceFromLink(target, options) || false;
+  }
+
   var appSession = composition.appSession;
   var state = appSession.state;
   appViewerControlHost = createDocsViewerControlSurfaceHost({
@@ -261,10 +266,18 @@ export function startDocsViewerRuntime(options) {
       routeWorkflowCommands.returnToDocument().catch(function (error) { statusController.setStatus(error.message, true); });
     });
   }
+  function openCollectionIndex(options) {
+    routeWorkflowCommands.openCollectionIndex(options).catch(function (error) { statusController.setStatus(error.message, true); });
+  }
+  mainViewControlOwners.set("return-to-collection", function (detail) {
+    if (detail.eventType === "click" && !detail.target.hidden && !detail.target.disabled) {
+      openCollectionIndex({ returnToMatchingCaller: true });
+    }
+  });
   if (mainViewRefs.collectionIndex) {
     mainViewRefs.collectionIndex.addEventListener("click", function () {
       if (mainViewRefs.collectionIndex.hidden || mainViewRefs.collectionIndex.disabled) return;
-      routeWorkflowCommands.openCollectionIndex().catch(function (error) { statusController.setStatus(error.message, true); });
+      openCollectionIndex();
     });
   }
   appViewerControlHost.render();
@@ -332,6 +345,8 @@ export function startDocsViewerRuntime(options) {
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {
+      openDocument: function (target, options) { return routeWorkflowCommands.loadDoc(target, options); },
+      openSourceFromLink: openSourceFromLink,
       newDoc: function (target, options) { return managementRuntime.controller().newDoc(target, options); },
       importDoc: function (target, options) { return managementRuntime.controller().importDoc(target, options); },
       importDocs: function (target, options) { return managementRuntime.controller().importDocs(target, options); },
@@ -399,6 +414,7 @@ export function startDocsViewerRuntime(options) {
     prepareDocumentNavigation: documentViewCoordinator.prepareDocumentNavigation,
     returnToDocument: documentViewCoordinator.returnToDocument,
     openPresentation: documentViewCoordinator.openPresentation,
+    openSourceFromLink: managementUiEnabled && sourceEditingEnabled && sourceService ? openSourceFromLink : null,
     onNavigationChange: renderMainViewControls,
     collectionConfig: function (collectionId) {
       var config = appSession.domains.workspaceConfig.activeConfig;
@@ -722,15 +738,25 @@ export function startDocsViewerRuntime(options) {
     });
     var rendered = activeState.activeViewId === "rendered-document"
       && activeState.activeModeId === "rendered-document";
+    var collectionIndexTarget = routeWorkflow?.commands.collectionIndexTarget();
+    var managementBusy = root.dataset.managementBusy === "true";
+    if (controlStateById["return-to-collection"]) {
+      var sourceBack = controlStateById["return-to-doc"];
+      controlStateById["return-to-collection"] = {
+        hidden: !collectionIndexTarget || Boolean(sourceBack?.hidden),
+        disabled: managementBusy || Boolean(sourceBack?.disabled),
+        busy: Boolean(sourceBack?.busy)
+      };
+    }
     var report = latestCollectionReportState;
     if (mainViewRefs.collectionIndex) {
-      mainViewRefs.collectionIndex.hidden = !rendered || !routeWorkflow || !routeWorkflow.commands.collectionIndexTarget();
-      mainViewRefs.collectionIndex.disabled = root.dataset.managementBusy === "true";
+      mainViewRefs.collectionIndex.hidden = !rendered || !collectionIndexTarget;
+      mainViewRefs.collectionIndex.disabled = managementBusy;
     }
     var mount = mainViewRefs.collectionActions;
     if (mount) {
-      // Manage detail actions use Edit while rendered; retain them here in other modes.
-      var host = appContext.kind === "manage" && report.state === "detail" && rendered ? null : report.actionHost || null;
+      var host = appContext.kind === "manage" && report.state === "detail" && rendered
+        ? report.toolbarActionHost || null : report.actionHost || null;
       if (mount.firstChild !== host) mount.replaceChildren(...(host ? [host] : []));
       mount.hidden = !rendered;
     }

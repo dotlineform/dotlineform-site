@@ -91,8 +91,8 @@ export function createDocsViewerManagementCollectionList(options) {
   const data = createManagedCollectionBrowsingData(options.browsingOptions);
   let thumbnailUpdate = null;
 
-  function inventoryChanged(reason, membershipChanged) {
-    options.notify({ type: "refresh", docIds: data.docIds, membershipChanged, reason });
+  function inventoryChanged(reason, membershipChanged, change) {
+    options.notify({ type: "refresh", docIds: data.docIds, membershipChanged, reason, change });
   }
 
   function renderCommittedChange() {
@@ -113,7 +113,7 @@ export function createDocsViewerManagementCollectionList(options) {
         if (!options.isMounted() || change.target.collection !== options.collectionId) return;
         const effect = data.apply(change, String(Date.now()));
         if (!effect) return;
-        inventoryChanged("document-committed", effect.membershipChanged);
+        inventoryChanged("document-committed", effect.membershipChanged, change);
         renderCommittedChange();
       });
     },

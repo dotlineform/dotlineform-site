@@ -27,10 +27,20 @@ export function createDocsViewerManagementControlRenderers() {
       });
     },
     "manage-edit": renderDocsViewerEditMenu,
+    "collection-open-source": function (context) {
+      return renderDocumentActionButton(context, {
+        artwork: "docsViewer__icon--square-code"
+      });
+    },
     "return-to-doc": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageReturnToDocButton",
         artwork: "docsViewer__icon--corner-down-left"
+      });
+    },
+    "return-to-collection": function (context) {
+      return renderDocumentActionButton(context, {
+        artwork: "docsViewer__icon--list"
       });
     },
     "markdown-source-save": function (context) {

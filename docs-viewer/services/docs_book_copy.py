@@ -7,6 +7,7 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+from docs_book_tree import book_headings, book_tree_paths, write_book_tree
 from docs_document_identity import allocate_doc_id, current_doc_timestamp, is_immutable_doc_id
 from docs_front_matter import book_source_records, rewrite_front_matter_fields
 from docs_generation import generate_documents
@@ -109,13 +110,16 @@ def save_chapter_sources(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
 
 
 def copy_to_book(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    mode = body.get("mode")
-    extra = {"new-chapter": {"title"}, "existing-chapter": {"chapter_id"}, "copy-only": set()}
-    if not isinstance(mode, str) or mode not in extra or set(body) != {"doc_ids", "mode"} | extra[mode]:
-        raise ValueError("Choose New chapter, Existing chapter or Copy only")
+    required = {"doc_ids", "section_id"}
+    if not required <= body.keys() <= required | {"new_chapter_title", "existing_chapter_id"}:
+        raise ValueError("Copy to Book requires selected documents and a Book section")
     doc_ids = library_selection_ids(body["doc_ids"])
-    if mode == "new-chapter" and (not isinstance(body["title"], str) or not body["title"].strip()):
-        raise ValueError("Enter a chapter title")
+    new_chapter_title = ""
+    if "new_chapter_title" in body:
+        title = body["new_chapter_title"]
+        if not isinstance(title, str) or not title.strip():
+            raise ValueError("Enter a chapter title")
+        new_chapter_title = title.strip()
 
     library = resolve_managed_document_collection(repo_root, collection="library")
     require_document_authoring(library.parent_config)
@@ -123,7 +127,18 @@ def copy_to_book(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         resolve_managed_document_collection(repo_root, collection="book", config=library.parent_config),
         workspace=library.workspace,
     )
-    chapter = read_chapter(book, body["chapter_id"]) if mode == "existing-chapter" else None
+    tree_paths = book_tree_paths(book.document_config)
+    tree = json.loads(tree_paths[0].read_text(encoding="utf-8"))
+    section_id = body["section_id"]
+    section = next((node for node in book_headings(tree) if node["id"] == section_id and "sections" not in node), None)
+    if section is None:
+        raise ValueError("Choose a Book section")
+    existing_chapter = None
+    if "existing_chapter_id" in body:
+        existing_id = body["existing_chapter_id"]
+        if existing_id not in section["doc_ids"]:
+            raise ValueError("Choose a chapter in the selected Book section")
+        existing_chapter = read_chapter(book, existing_id)
     flags_path = copied_flags_path(library)
     flags = set(json.loads(flags_path.read_text(encoding="utf-8")))
     timestamp = current_doc_timestamp()
@@ -139,7 +154,7 @@ def copy_to_book(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             path, new_id, title, markdown, config=book.document_config, timestamp=timestamp,
         )
 
-    copies = []
+    new_documents = []
     writes = []
     origins = []
     for source_id in doc_ids:
@@ -152,17 +167,25 @@ def copy_to_book(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         for field in ("summary", "date", "date_display"):
             if field in source.front_matter:
                 metadata[field] = source.front_matter[field]
-        copies.append(replace(new, body=adopted, front_matter=metadata, source_text=format_source(metadata, adopted)))
+        new_documents.append(replace(new, body=adopted, front_matter=metadata, source_text=format_source(metadata, adopted)))
         writes.extend(media)
         origins.append(origin)
 
-    if mode == "new-chapter":
-        chapter = new_book_document(body["title"].strip(), "")
-    updated = None
-    if chapter is not None:
-        existing = chapter.front_matter.get("library_sources", [])
+    if new_chapter_title:
+        chapter = new_book_document(new_chapter_title, "")
+        new_documents.append(with_chapter_sources(chapter, origins))
+
+    changed = new_documents.copy()
+    updated_chapter = None
+    if existing_chapter is not None:
+        existing = existing_chapter.front_matter.get("library_sources", [])
         present = {record["doc_id"] for record in existing}
-        updated = with_chapter_sources(chapter, existing + [origin for origin in origins if origin["doc_id"] not in present])
+        updated = with_chapter_sources(
+            existing_chapter, existing + [origin for origin in origins if origin["doc_id"] not in present],
+        )
+        if updated is not existing_chapter:
+            updated_chapter = updated
+            changed.append(updated)
 
     saved = []
     effects = []
@@ -170,17 +193,18 @@ def copy_to_book(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     try:
         write_prepared_source_media(writes, effects)
         phase = "source persistence"
-        for document in copies:
+        for document in new_documents:
             write_text_atomic_new(document.path, document.source_text)
             saved.append(document.doc_id)
-        changed = copies.copy()
-        if updated is not chapter:
-            write_chapter = write_text_atomic_new if mode == "new-chapter" else write_text_atomic
-            write_chapter(updated.path, updated.source_text)
-            saved.append(updated.doc_id)
-            changed.append(updated)
+        if updated_chapter is not None:
+            write_text_atomic(updated_chapter.path, updated_chapter.source_text)
+            saved.append(updated_chapter.doc_id)
         phase = "Working generation"
         complete_book_documents(repo_root, book, changed)
+        phase = "Book section placement"
+        placed_doc_ids = [document.doc_id for document in new_documents]
+        section["doc_ids"].extend(placed_doc_ids)
+        write_book_tree(tree_paths, tree)
         phase = "Library copy flags"
         if not set(doc_ids) <= flags:
             write_json(flags_path, sorted(flags.union(doc_ids)))
@@ -191,11 +215,8 @@ def copy_to_book(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         }
     return {
         "ok": True,
-        "copies": [
-            {"doc_id": document.doc_id, "copied_from_library": origin}
-            for document, origin in zip(copies, origins, strict=True)
-        ],
-        "chapter_id": updated.doc_id if updated is not None else None,
+        "section_id": section_id,
+        "placed_doc_ids": placed_doc_ids,
         "copied_doc_ids": doc_ids,
         "records": [
             committed_document_record(

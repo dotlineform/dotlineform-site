@@ -99,6 +99,10 @@
   mask-image: url("../icons/circle-ellipsis.svg");
 }
 
+.docsViewer__icon--ellipsis{
+  mask-image: url("../icons/ellipsis.svg");
+}
+
 .docsViewer__icon--corner-down-left{
   mask-image: url("../icons/corner-down-left.svg");
 }
@@ -217,6 +221,40 @@
   margin: 0;
 }
 
+.docsViewerBook__workingCopyIndicator{
+  margin-inline-end: 0.35rem;
+}
+
+.docsViewerReport__collectionFilterToolbar
+  > .docsViewerReport__contributionToolbar--list:has(> .docsViewerBook__listToolbar){
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.docsViewerBook__listToolbar{
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 0.6rem;
+}
+
+.docsViewerBook__selectableRow{
+  cursor: pointer;
+}
+
+.docsViewerReport[data-report-collection="book"] .docsViewerBook__selectableRow:has(> .docsViewerReport__collectionButton[aria-current="true"]){
+  margin-inline-start: -6px;
+  padding-inline-start: 6px;
+  border-radius: 6px;
+  background: var(--docs-viewer-selection-bg);
+}
+
+.docsViewerBook__selectableRow > [aria-current="true"]{
+  color: var(--docs-viewer-selection-text);
+}
+
 .docsViewerBook__clearCopyFlag{
   position: relative;
 }
@@ -288,6 +326,12 @@
   .docsViewerReport__collectionSelectionToolbar{
   flex-wrap: nowrap;
   width: auto;
+}
+
+.docsViewerBook__listToolbar > .docsViewerReport__collectionSelectionToolbar{
+  flex-wrap: wrap;
+  margin-inline-start: auto;
+  min-width: 0;
 }
 
 .docsViewerReport__collectionActionsHost{
@@ -1224,13 +1268,11 @@ select.docsViewer__positionTargets{
 .docsViewer__editMenu [data-docs-viewer-action="set-draft"]{ order: 2; }
 .docsViewer__editMenu [data-docs-viewer-action="set-selected"]{ order: 3; }
 .docsViewer__editMenu [data-docs-viewer-action="copy-link"]{ order: 4; }
-.docsViewer__editMenu [data-docs-viewer-action="delete"]{ order: 5; }
 .docsViewer__editMenu [data-docs-viewer-action="thumb"]{ order: 6; }
 .docsViewer__editMenu [data-docs-viewer-action="open-project-folder"]{ order: 7; }
 
 /* Contribution controls arrive after detail loading and own their live state. */
 .docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="copy-link"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="copy-link"],
-.docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="delete"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="delete"],
 .docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="open-project-folder"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="open-project-folder"]{
   display: none;
 }

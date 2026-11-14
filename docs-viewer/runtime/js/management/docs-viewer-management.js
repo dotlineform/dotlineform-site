@@ -242,7 +242,7 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  async function openDocumentEditor(target) {
+  async function openDocumentEditor(target, options) {
     try {
       var sourceTarget = normalizeManagedDocumentTarget(target);
       if (resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT, sourceTarget).disabled) return;
@@ -254,7 +254,7 @@ export function initDocsViewerManagement(context) {
         return;
       }
       if (!selectedDocument.documentTarget || !managedDocumentTargetsEqual(selectedDocument.documentTarget, sourceTarget) || !selectedDocument.displayedPayload) {
-        var payload = await context.routeCommands.loadDoc(sourceTarget);
+        var payload = await context.routeCommands.loadDoc(sourceTarget, options);
         if (!payload) return;
         if (payload.doc_id !== sourceTarget.doc_id) throw new Error("The document opened did not match the metadata target.");
       }
@@ -263,6 +263,13 @@ export function initDocsViewerManagement(context) {
       setManagementMessage(error.message || "Document source could not be opened.", true);
       renderManagementUi();
     }
+  }
+
+  function openSourceFromLink(target, options) {
+    if (!management.managementAvailable || management.managementBusy
+      || !resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT, target).enabled) return false;
+    openDocumentEditor(target, options);
+    return true;
   }
 
   function hideContextMenu(options) {
@@ -299,6 +306,11 @@ export function initDocsViewerManagement(context) {
     });
     if (typeof context.projectMainViewControlState === "function") {
       context.projectMainViewControlState("edit", projectedReportControls.editDocument.state);
+      var sourceAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT, actionContext.documentTarget);
+      context.projectMainViewControlState("collection-open-source", {
+        hidden: actionsHidden || !actionContext.documentTarget?.collection || sourceAction.hidden,
+        disabled: actionsDisabled || sourceAction.disabled
+      });
       context.projectMainViewControlState("return-to-doc", projectedReportControls.returnToDoc.state);
       context.projectMainViewControlState("save-markdown-source", {
         hidden: actionsHidden,
@@ -357,6 +369,11 @@ export function initDocsViewerManagement(context) {
 
     var resolution = actionId ? resolveAction(actionId) : null;
     if (actionId && (!resolution || !resolution.enabled)) return false;
+    if (controlId === "collection-open-source") {
+      if (detail.eventType !== "click" || detail.target.hidden || detail.target.disabled) return false;
+      openDocumentEditor(context.documentActionContext().documentTarget);
+      return true;
+    }
     if (controlId === "save-markdown-source") {
       actionController.handleMarkdownSave();
       return true;
@@ -666,11 +683,9 @@ export function initDocsViewerManagement(context) {
     documentActionContext: context.documentActionContext,
     activeViewState: context.activeViewState,
     editControl: function () { return projectedReportControls?.editDocument; },
-    deleteState: function (docId) { return indexController.actionControlState(DOCS_VIEWER_ACTION_IDS.DELETE, docId); },
     openSource: openDocumentEditor,
     rebuildDocument: actionController.handleRebuildDocument,
     copyLink: actionController.handleCopyLink,
-    deleteDocument: actionController.handleDeleteDoc,
     closeOtherMenus: function () { hideContextMenu(); eventRouter.hideManageActionsMenu(); }
   });
 
@@ -761,6 +776,7 @@ export function initDocsViewerManagement(context) {
     importDocs: openCollectionImport,
     importDoc: openCollectionImportDoc,
     newDoc: openCollectionNewDoc,
+    openSourceFromLink: openSourceFromLink,
     publishCollectionReportState: publishCollectionReportState,
     render: renderManagementUi,
   };
