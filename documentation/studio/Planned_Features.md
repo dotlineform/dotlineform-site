@@ -144,7 +144,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Book Publication](deliveries/Book_Publication.md) — Proposed release collection with an authored table of contents and independent chapter drafts copied from private Book. TOC authoring, reader navigation, release review, and later chapter revisions remain open.
+- [Book Publication](deliveries/Book_Publication.md) — Proposed release collection with one linked copy per Book chapter, Book-driven structure and deletion, and a generated ready-only table of contents. Copy details, release review, and substantial revisions to published chapters remain open.
 
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
 
