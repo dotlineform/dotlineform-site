@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from functools import partial
+from functools import cache, partial
 from pathlib import Path
+import sys
 from typing import Any
 
-from docs_book_toc import BookContents, book_contents, changed_book_contents, refresh_book_contents, render_book_contents
+from docs_book_toc import BookContents, book_contents, changed_book_contents, render_book_contents
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_publication_preparation import PublicationHandoffError, load_preparation, remove_working_media
 from docs_selected_documents import read_selected, refresh_selected_documents
@@ -27,6 +28,8 @@ def generate_documents(
     book_order: dict[str, Any] | None = None,
     book_manifests: dict[str, dict[str, Any]] | None = None,
     book_chapter_sources: tuple[str, list[dict[str, str]]] | None = None,
+    book_toc: tuple[str, BookContents] | None = None,
+    finalize_publication: bool = True,
 ) -> dict[str, Any]:
     """Prepare the requested scope, execute it, and hand off completed effects.
 
@@ -36,6 +39,7 @@ def generate_documents(
     """
     from docs_builder.collection_metadata import CollectionDocumentSummary, merge_collection_manifest, project_context_catalogue_targets
     from docs_builder.common import monotonic_time
+    from docs_builder.inline_icons import TOC_DIRECTIVE
     from docs_builder.links_builder import build_document_links, prepare_document_links
     from docs_builder.media_builds import build_collection_media_snapshot
     from docs_builder.ordinary_metadata import navigation_rows, read_saved_navigation, targeted_document_metadata
@@ -178,22 +182,31 @@ def generate_documents(
             started_at=started_at, project_item=project_item,
         )
     else:
-        generated_bodies = {}
+        toc_renderers = {}
         if publication is not None:
             hosts = {owner.report_host_doc_id: owner for owner in builder.config.collections if is_curated_book(owner)}
+            supplied_books = book_manifests or {}
+
+            def render_saved_toc(collection: str) -> str:
+                saved = supplied_books.get(collection)
+                if saved is None:
+                    saved = publication.metadata.read_management(collection)
+                return render_book_contents(collection, book_contents(saved))
+
             for doc in selected_docs:
                 book = hosts.get(doc.doc_id)
-                if book is None:
+                if book is None or TOC_DIRECTIVE not in doc.body_markdown:
                     continue
-                saved = (book_manifests or {}).get(book.collection)
-                if saved is None:
-                    saved = publication.metadata.read_management(book.collection)
-                generated_bodies[doc.doc_id] = render_book_contents(doc.title, book.collection, book_contents(saved))
+                if book_toc is not None and book_toc[0] == doc.doc_id:
+                    renderer = partial(render_book_contents, book.collection, book_toc[1])
+                else:
+                    renderer = partial(render_saved_toc, book.collection)
+                toc_renderers[doc.doc_id] = cache(renderer)
         result = builder.run(
             write=write, documents=selected_docs, document_identities=identities, stale_item_ids=stale_item_ids,
             related_documents=related_documents, project_item=project_item,
             index_tree_payload=navigation, recent_payload=recent, previous_tree_text=previous_tree_text,
-            generated_bodies=generated_bodies,
+            toc_renderers=toc_renderers,
         )
     result.update(media_snapshot=media_snapshot, links_build=links_build)
     if write and publication is not None and not collection:
@@ -210,7 +223,8 @@ def generate_documents(
             related_records=related_records, expand_dependencies=expand_dependencies,
             catalogue_work_selection=catalogue_work_selection,
             catalogue_pending=catalogue_pending,
-            book_refresh=book_refresh,
+            book_refresh=book_refresh, finalize_publication=finalize_publication,
+            automatic_book_host=book_toc is not None,
         )
     if emit_diagnostics:
         builder.print_diagnostics(result["diagnostics"])
@@ -223,17 +237,27 @@ def complete_generation(
     catalogue_work_selection: bool,
     catalogue_pending: dict[str, Any] | None,
     book_refresh: BookContents | None = None,
+    finalize_publication: bool, automatic_book_host: bool,
 ) -> None:
     """Record completed artifacts, finish bounded dependent work, then persist."""
     try:
-        publication.documents(builder, set(result["item_payloads"]), deleted,
-                              changed_ids=set(result["write_plan"]["changed_item_ids"]),
+        doc_ids = set(result["item_payloads"])
+        changed_ids = set(result["write_plan"]["changed_item_ids"])
+        if automatic_book_host:
+            doc_ids &= changed_ids | publication.restored_documents
+        publication.documents(builder, doc_ids, deleted, changed_ids=changed_ids,
                               catalogue_work_selection=catalogue_work_selection)
+        if not finalize_publication:
+            return
+        supplied = set(result["item_payloads"]) | set(deleted)
         if book_refresh is not None:
-            host = refresh_book_contents(builder.config, builder.media_owner, book_refresh)
+            host = rebuild_book_host(
+                builder.repo_root, builder.config, builder.workspace, builder.media_owner, book_refresh,
+                publication=publication, rendering_inputs=builder.rendering_inputs, related_records=related_records,
+            )
             if host is not None:
-                publication.select_ordinary_body(host["doc_id"])
                 result["book_toc"] = host
+                supplied.add(host["doc_id"])
         publication.write_metadata()
         if selected_changed:
             publication.selected()
@@ -243,7 +267,7 @@ def complete_generation(
             links = result["links_build"]
             changed = {Path(name).stem for name in links["written"]} if links is not None else set()
             prepare_dependencies(builder, {target: record for target, record in related_records.items() if target.doc_id in changed},
-                                 set(result["item_payloads"]) | set(deleted), publication)
+                                 supplied, publication)
             prepare_restored(builder, related_records, publication)
         publication.save()
         if publication.catalogue_documents:
@@ -256,6 +280,44 @@ def complete_generation(
             f"Selected local documents were generated, but their publication handoff is incomplete: {error}. "
             f"Completed Working removals: {len(publication.removal_effects)}.", removal_effects=publication.removal_effects,
         ) from error
+
+
+def rebuild_book_host(
+    repo_root: Path, config: Any, workspace: Any, book: Any, contents: BookContents, *,
+    publication: Any = None, rendering_inputs: Any = None, related_records: dict[Any, Any] | None = None,
+) -> dict[str, Any] | None:
+    """Render the exact host as an ordinary document with the completed Book order."""
+    build_dir = str(repo_root / "docs-viewer/build")
+    if build_dir not in sys.path:
+        sys.path.insert(0, build_dir)
+    from docs_builder.inline_icons import TOC_DIRECTIVE
+    from docs_builder.pipeline import DocsDataBuilder
+
+    standalone = publication is None
+    if standalone:
+        publication = load_preparation(repo_root, workspace)
+    parents = saved_navigation_parents(publication)
+    host_id = book.report_host_doc_id
+    if host_id not in parents:
+        raise FileNotFoundError(f"Book host is unavailable in the Index: {host_id}")
+    builder = DocsDataBuilder(
+        repo_root=repo_root, config=config, workspace=workspace, rendering_inputs=rendering_inputs,
+        only_doc_ids=[host_id], links_doc_ids=[], skip_media_builds=True, skip_recent=True,
+    )
+    docs = builder.load_docs([host_id], parent_ids={host_id: parents[host_id]})
+    if not docs:
+        raise FileNotFoundError(f"Book host source is unavailable: {host_id}")
+    if TOC_DIRECTIVE not in docs[0].body_markdown:
+        return None
+    result = generate_documents(
+        builder, write=True, documents=docs, parent_ids=parents, stale_item_ids=[],
+        update_selected=False, publication=publication, related_records=related_records or {},
+        expand_dependencies=standalone, finalize_publication=standalone,
+        media_writes={host_id: {}}, book_toc=(host_id, contents),
+    )
+    if host_id in result["write_plan"]["changed_item_ids"]:
+        return result["item_payloads"][host_id]
+    return None
 
 
 def complete_catalogue_handoff(publication: Any, *, pending: dict[str, Any] | None = None) -> None:
@@ -290,14 +352,7 @@ def render_targets(builder: Any, targets: list[Any], related_records: dict[Any, 
     from docs_builder.pipeline import DocsDataBuilder
 
     owners = {owner.collection: owner for owner in builder.config.collections}
-    parents: dict[str, str] = {}
-
-    def collect(rows: list[dict[str, Any]], parent: str = "") -> None:
-        for row in rows:
-            parents[row["doc_id"]] = parent
-            collect(row.get("children", []), row["doc_id"])
-
-    collect(operation.metadata.read_management("")["docs"])
+    parents = saved_navigation_parents(operation)
     for target in targets:
         arguments = {"repo_root": builder.repo_root, "config": builder.config, "workspace": builder.workspace,
                      "rendering_inputs": builder.rendering_inputs, "only_doc_ids": [target.doc_id], "links_doc_ids": [], "skip_media_builds": True}
@@ -312,3 +367,15 @@ def render_targets(builder: Any, targets: list[Any], related_records: dict[Any, 
                            publication=operation, expand_dependencies=False, update_selected=False,
                            media_writes={target.doc_id: {}},
                            catalogue_work_selection=False, **hierarchy)
+
+
+def saved_navigation_parents(publication: Any) -> dict[str, str]:
+    parents: dict[str, str] = {}
+
+    def collect(rows: list[dict[str, Any]], parent: str = "") -> None:
+        for row in rows:
+            parents[row["doc_id"]] = parent
+            collect(row.get("children", []), row["doc_id"])
+
+    collect(publication.metadata.read_management("")["docs"])
+    return parents

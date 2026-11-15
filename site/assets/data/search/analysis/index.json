@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-c8fd5b3bacbab7bd78e3bef59fb7efc5",
-    "generated_at_utc": "2026-11-15T16:35:20Z",
+    "version": "blake2b-fbd981596de4938f4e94d2d01e15c8b7",
+    "generated_at_utc": "2026-11-15T17:29:02Z",
     "count": 171
   },
   "fields": [
@@ -1431,9 +1431,9 @@
     },
     {
       "id": "d-20261111-230141-ae401b",
-      "title": "Part 1 preface",
-      "last_updated": "2026-11-11",
-      "display_meta": "2026-11-11 • Living Memory",
+      "title": "Part 1 - Preface",
+      "last_updated": "2026-11-15",
+      "display_meta": "2026-11-15 • Living Memory",
       "collection": "book",
       "report_doc_id": "d-20261111-120000-5af14d",
       "collection_title": "Living Memory"
@@ -67051,6 +67051,9 @@
       "title": [
         160
       ],
+      "heading": [
+        160
+      ],
       "summary": [
         100,
         109
@@ -67082,6 +67085,7 @@
         132,
         133,
         136,
+        160,
         162
       ]
     },
@@ -71605,6 +71609,9 @@
     },
     "preface": {
       "title": [
+        160
+      ],
+      "heading": [
         160
       ]
     },
@@ -89911,6 +89918,7 @@
         118,
         127,
         151,
+        160,
         161,
         162
       ]
@@ -95870,6 +95878,7 @@
         154,
         155,
         158,
+        160,
         161,
         162,
         163,
@@ -96766,6 +96775,11 @@
     "tms": {
       "body": [
         63
+      ]
+    },
+    "toc": {
+      "body": [
+        156
       ]
     },
     "today": {

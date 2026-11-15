@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 from .common import (
@@ -24,25 +24,24 @@ class PayloadBuilderMixin:
         self,
         doc: DocRecord,
         docs_by_id: Mapping[str, DocumentIdentity],
-        *, generated_body: str | None = None,
+        *, toc_html: Callable[[], str] | None = None,
     ) -> dict[str, Any]:
         summary_html = render_summary_paragraphs(doc.summary)
         entry = self.by_id_metadata_entry(doc, docs_by_id)
         if summary_html:
             entry["summary_html"] = summary_html
-        if generated_body is None:
-            entry["content_html"] = self.document_content_html(doc, docs_by_id, summary_html=summary_html)
-            if self.catalogue_references:
-                entry["catalogue"] = self.catalogue_reference_envelope()
-        else:
-            entry.pop("report", None)
-            entry["content_html"] = generated_body
+        entry["content_html"] = self.document_content_html(doc, docs_by_id, summary_html=summary_html, toc_html=toc_html)
+        if self.catalogue_references:
+            entry["catalogue"] = self.catalogue_reference_envelope()
         return entry
 
     def catalogue_reference_envelope(self) -> dict[str, Any]:
         return {"schema": "docs_catalogue_presentation_v1", "references": self.catalogue_references}
 
-    def document_content_html(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity], *, summary_html: str) -> str:
+    def document_content_html(
+        self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity],
+        *, summary_html: str, toc_html: Callable[[], str] | None = None,
+    ) -> str:
         """Render the body through its report, token, Links and URL owners.
 
         Package content consumes HTML without constructing unused by-ID metadata.
@@ -64,6 +63,7 @@ class PayloadBuilderMixin:
                 related_links=lambda heading: render_related_links(self, doc, heading, self.related_galleries),
                 summary_html=summary_html,
                 date_text=doc.date_display or doc.date,
+                toc_html=toc_html,
             )
         except ValueError as exc:
             collection = getattr(self, "collection_id", "")

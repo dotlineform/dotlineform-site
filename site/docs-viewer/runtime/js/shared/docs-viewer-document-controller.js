@@ -503,8 +503,9 @@ export function initDocsViewerDocumentController(context) {
     releaseTableDetails();
     releaseImageDetails();
     mountDocumentContent(content, payload);
-    var toc = !target.collection && content.querySelector("[data-docs-book-toc]");
-    if (toc) registerBookTocLinks(toc);
+    if (!target.collection) {
+      content.querySelectorAll("[data-docs-book-toc]").forEach(registerBookTocLinks);
+    }
     projectCollectionNavigation(record, collectionSequence);
     if (typeof context.mountRelatedLinks === "function") {
       context.mountRelatedLinks({
@@ -569,12 +570,16 @@ export function initDocsViewerDocumentController(context) {
     var key = documentTargetKey(documentTarget({ doc_id: payload.doc_id }));
     var record = retained.get(key);
     if (!record) return;
-    var current = record.root.querySelector("[data-docs-book-toc]");
     var body = document.createElement("div");
     mountDocumentContent(body, payload);
-    var toc = body.querySelector("[data-docs-book-toc]");
-    current.replaceWith(toc);
-    registerBookTocLinks(toc);
+    var contents = body.querySelectorAll("[data-docs-book-toc]");
+    record.root.querySelectorAll("[data-docs-book-toc]").forEach(function (current, index) {
+      var toc = contents[index];
+      if (toc) {
+        current.replaceWith(toc);
+        registerBookTocLinks(toc);
+      }
+    });
     record.payload = payload;
     selectedDocument.payloadCache.set(key, payload);
     if (record === activeRecord) selectedDocument.displayedPayload = payload;

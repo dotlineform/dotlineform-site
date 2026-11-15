@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from markdown_it.rules_block import StateBlock
-
 from markdown_renderer import build_markdown_renderer, normalize_markdown_blank_lines
+
+from .standalone_directive import install_standalone_directive
 
 
 SUMMARY_DIRECTIVE = "[[summary]]"
@@ -18,28 +18,10 @@ def install_summary_rule(renderer: Any, *, summary_html: str) -> None:
     The caller supplies completed restricted Summary markup. This rule wraps it
     without reparsing the authored text or interpreting more semantic tokens.
     """
-    def parse(state: StateBlock, start_line: int, end_line: int, silent: bool) -> bool:
-        del end_line
-        if state.is_code_block(start_line):
-            return False
-        start = state.bMarks[start_line] + state.tShift[start_line]
-        if state.src[start:state.eMarks[start_line]].strip() != SUMMARY_DIRECTIVE:
-            return False
-        if not silent:
-            token = state.push("docs_summary", "", 0)
-            token.map = [start_line, start_line + 1]
-            state.line = start_line + 1
-        return True
-
-    def render(tokens: Any, index: int, options: Any, env: Any) -> str:
-        del tokens, index, options, env
-        if not summary_html:
-            return ""
-        return f'<div class="docsViewer__summary">{summary_html}</div>\n'
-
-    # Do not interrupt a paragraph: its inline code may span this entire line.
-    renderer.block.ruler.before("paragraph", "docs_summary", parse, {"alt": ["reference", "blockquote", "list"]})
-    renderer.renderer.rules["docs_summary"] = render
+    install_standalone_directive(
+        renderer, SUMMARY_DIRECTIVE, "docs_summary",
+        lambda: f'<div class="docsViewer__summary">{summary_html}</div>\n' if summary_html else "",
+    )
 
 
 def omit_summary_directives(markdown: str) -> str:

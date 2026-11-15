@@ -201,6 +201,7 @@ Authoring extensions supported by the renderer include:
 - explicit Catalogue `media` and `image` tokens for Media View links and Catalogue images; the retired three-part Catalogue text form has no compatibility alias
 - standalone `[[summary]]` blocks for the current document's front-matter Summary
 - `[[date]]` for the current document's front-matter display date
+- standalone `[[toc]]` blocks for the ready chapters of a configured Book
 
 Ordinary Markdown document links are the relationship input. Local document href rewriting preserves explicit child selection, fragments and HTML escaping; URLs with a hostname, including protocol-relative external URLs, retain their authored destination.
 
@@ -209,6 +210,12 @@ Use [Docs Images And Assets](Docs_Images_And_Assets.md) for authoring guidance a
 ### Document Date
 
 Use `[[date]]` on its own line or within a sentence. It displays `date_display` when present and falls back to `date`. The rendered date is plain text. An empty date token on its own line produces no paragraph. Code examples preserve the literal token.
+
+### Book Table Of Contents
+
+Place `[[toc]]` on its own line in the Book's host document, with blank lines between the token and surrounding Markdown. The host source owns the title and any text, images, or other material around the list. Working document generation expands the token into ready chapters in saved Book order. Inline occurrences, code examples, and tokens in documents outside a configured Book host remain literal.
+
+Use **Edit doc → Rebuild** on the host for a manual refresh. Book operations that change the visible table of contents rebuild the host automatically. The host's draft status and the ordinary publication workflow determine when the updated page can be published. [Book Publication](deliveries/Book_Publication.md#table-of-contents-and-public-reader)
 
 ### Summary Block
 

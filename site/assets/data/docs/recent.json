@@ -1,7 +1,7 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-11-15T16:35:19Z",
+  "generated_at": "2026-11-15T17:29:01Z",
   "docs": [
     {
       "collection": "book",
@@ -30,6 +30,14 @@
     {
       "doc_id": "d-20261111-120000-5af14d",
       "title": "Living Memory",
+      "timestamp": "2026-11-15"
+    },
+    {
+      "collection": "book",
+      "collection_title": "Living Memory",
+      "doc_id": "d-20261111-230141-ae401b",
+      "report_doc_id": "d-20261111-120000-5af14d",
+      "title": "Part 1 - Preface",
       "timestamp": "2026-11-15"
     },
     {
@@ -110,14 +118,6 @@
       "doc_id": "d-20261111-205302-f7c451",
       "report_doc_id": "d-20261111-120000-5af14d",
       "title": "100 Words Related to Reflection & Memory",
-      "timestamp": "2026-11-11"
-    },
-    {
-      "collection": "book",
-      "collection_title": "Living Memory",
-      "doc_id": "d-20261111-230141-ae401b",
-      "report_doc_id": "d-20261111-120000-5af14d",
-      "title": "Part 1 preface",
       "timestamp": "2026-11-11"
     },
     {

@@ -7,11 +7,11 @@ import re
 from pathlib import Path
 from typing import Any
 
-from docs_book_toc import BookContents, changed_book_contents, refresh_book_contents
+from docs_book_toc import BookContents, changed_book_contents
+from docs_generation import rebuild_book_host
 from docs_generated_reads import read_generated_json
 from docs_management_document_target import ManagedDocumentCollection, resolve_managed_document_collection
 from docs_publication_paths import confined
-from docs_publication_preparation import queue_eligible_ordinary_body
 from docs_source_model import write_text_atomic
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, document_source_path, generated_documents_path, is_curated_book, require_document_authoring
 
@@ -135,10 +135,9 @@ def save_book_tree(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     result = {"ok": True, "book_order": order}
     if contents is not None:
         try:
-            host = refresh_book_contents(owner.parent_config, owner.document_config, contents)
+            host = rebuild_book_host(repo_root, owner.parent_config, owner.workspace, owner.document_config, contents)
             if host is not None:
                 result["book_toc"] = host
-                queue_eligible_ordinary_body(owner.workspace, host["doc_id"])
         except (OSError, RuntimeError, ValueError) as error:
             return {**result, "ok": False, "error": f"Book order saved, but its table of contents refresh failed: {error}"}
     return result

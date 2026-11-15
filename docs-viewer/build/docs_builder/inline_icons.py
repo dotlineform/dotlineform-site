@@ -14,6 +14,7 @@ from markdown_it.rules_inline import StateInline
 
 from .common import render_markdown_to_html
 from .related_links_directive import RELATED_LINKS_PREFIX, install_related_links_rule
+from .standalone_directive import install_standalone_directive
 from .summary_directive import SUMMARY_DIRECTIVE, install_summary_rule
 from markdown_renderer import build_markdown_renderer, normalize_markdown_blank_lines
 from docs_inline_icon_artwork import InlineIconArtwork
@@ -21,6 +22,7 @@ from docs_inline_icon_artwork import InlineIconArtwork
 
 ICON_TOKEN_PREFIX = "[[icon:"
 DATE_TOKEN = "[[date]]"
+TOC_DIRECTIVE = "[[toc]]"
 LITERAL_HTML_TAG_PATTERN = re.compile(r"</?(?:code|pre|script|style|textarea)\b", re.IGNORECASE)
 
 
@@ -73,7 +75,7 @@ class InlineIconRenderer(InlineIconArtwork):
 
     def render_markdown(
         self, markdown: str, *, related_links: Callable[[str], str] | None = None,
-        summary_html: str = "", date_text: str = "",
+        summary_html: str = "", date_text: str = "", toc_html: Callable[[], str] | None = None,
     ) -> str:
         """Expand inline icons and document fields, preserving literal code.
 
@@ -81,13 +83,18 @@ class InlineIconRenderer(InlineIconArtwork):
         escaped text and raw HTML attributes. Icon tokens create no relationships.
         """
         has_date = DATE_TOKEN in markdown
-        if ICON_TOKEN_PREFIX not in markdown and RELATED_LINKS_PREFIX not in markdown and SUMMARY_DIRECTIVE not in markdown and not has_date:
+        has_toc = toc_html is not None and TOC_DIRECTIVE in markdown
+        if not has_date and not has_toc and all(
+            marker not in markdown for marker in (ICON_TOKEN_PREFIX, RELATED_LINKS_PREFIX, SUMMARY_DIRECTIVE)
+        ):
             return render_markdown_to_html(markdown)
         renderer = build_markdown_renderer()
         if has_date:
             install_date_rule(renderer, date_text)
         if SUMMARY_DIRECTIVE in markdown:
             install_summary_rule(renderer, summary_html=summary_html)
+        if has_toc:
+            install_standalone_directive(renderer, TOC_DIRECTIVE, "docs_toc", toc_html)
         if RELATED_LINKS_PREFIX in markdown:
             if related_links is None:
                 raise ValueError("Related links require a prepared document relationship context")

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -75,13 +76,13 @@ class DocsDataBuilder(
         previous_tree_text: str | None,
         related_documents: dict[Any, Any],
         project_item: ItemProjection | None = None,
-        generated_bodies: dict[str, str] | None = None,
+        toc_renderers: Mapping[str, Callable[[], str]] | None = None,
     ) -> dict[str, Any]:
         """Render and write the supplied ordinary artifacts; return completed facts."""
         started_at = monotonic_time()
         self.related_documents = related_documents
-        bodies = generated_bodies or {}
-        item_payloads = {doc.doc_id: self.item_entry(doc, document_identities, generated_body=bodies.get(doc.doc_id)) for doc in documents}
+        renderers = toc_renderers or {}
+        item_payloads = {doc.doc_id: self.item_entry(doc, document_identities, toc_html=renderers.get(doc.doc_id)) for doc in documents}
         write_plan = self.build_write_plan(
             index_tree_payload, recent_payload, item_payloads,
             stale_item_ids=stale_item_ids, existing_tree_text=previous_tree_text, project_item=project_item,

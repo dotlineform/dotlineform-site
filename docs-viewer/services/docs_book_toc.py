@@ -1,4 +1,4 @@
-"""Project the ready reading order and render a Book's ordinary host body."""
+"""Project and render the ready reading order for a Book."""
 
 from __future__ import annotations
 
@@ -6,12 +6,6 @@ from dataclasses import dataclass
 from html import escape
 from typing import Any
 from urllib.parse import urlencode
-
-from docs_json_files import load_json_object
-from docs_publication_paths import confined
-from docs_publication_preparation import write_json
-from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generated_documents_path
-
 
 @dataclass(frozen=True)
 class Chapter:
@@ -62,7 +56,7 @@ def changed_book_contents(
     return completed if completed != book_contents(previous) else None
 
 
-def render_book_contents(title: str, collection: str, contents: BookContents) -> str:
+def render_book_contents(collection: str, contents: BookContents) -> str:
     def render_list(entries: BookContents) -> str:
         if not entries:
             return ""
@@ -76,20 +70,4 @@ def render_book_contents(title: str, collection: str, contents: BookContents) ->
             rows.append(f"<li>{body}</li>")
         return f"<ol>{''.join(rows)}</ol>"
 
-    return (f'<h1>{escape(title)}</h1>\n'
-            f'<nav data-docs-book-toc aria-label="Table of contents">{render_list(contents)}</nav>\n')
-
-
-def refresh_book_contents(
-    config: DocsStageConfig, book: DocsCollectionConfig, contents: BookContents,
-) -> dict[str, Any] | None:
-    """Replace the exact saved host body and return its completed payload."""
-    host_id = book.report_host_doc_id
-    path = confined(generated_documents_path(config), f"by-id/{host_id}.json")
-    payload = load_json_object(path, f"Book host {host_id}")
-    content = render_book_contents(payload["title"], book.collection, contents)
-    if payload["content_html"] == content:
-        return None
-    payload["content_html"] = content
-    write_json(path, payload)
-    return payload
+    return f'<nav data-docs-book-toc aria-label="Table of contents">{render_list(contents)}</nav>\n'
