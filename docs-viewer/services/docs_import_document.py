@@ -42,11 +42,12 @@ from docs_source_model import (  # noqa: E402
     write_text_atomic,
     write_text_atomic_new,
 )
-from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, require_document_authoring  # noqa: E402
+from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, is_curated_book, require_document_authoring  # noqa: E402
 from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order, tree_parent_ids  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
 from docs_document_media_ownership import DocumentMediaChange, compare_document_media  # noqa: E402
+from docs_book_tree import book_order_path, book_order_text, read_book_order  # noqa: E402
 
 
 IMPORT_DOCUMENT_CREATE = "create"
@@ -115,6 +116,7 @@ class ImportDocumentApplyResult:
     inline_media_written: tuple[dict[str, Any], ...] = ()
     interactive_html_written: tuple[dict[str, Any], ...] = ()
     parent_ids: dict[str, str] | None = None
+    book_order: dict[str, Any] | None = None
 
 
 def _clean_text(value: Any) -> str:
@@ -386,13 +388,21 @@ def apply_import_document(
 ) -> ImportDocumentApplyResult:
     """Materialize planned media and atomically write one planned source file."""
 
+    order_path = None
+    order = None
+    if plan.operation == IMPORT_DOCUMENT_CREATE and is_curated_book(plan.document_config):
+        order_path = book_order_path(plan.document_config)
+        order = read_book_order(order_path)
+        order["root"].append(plan.doc_id)
     apply_result = materialize_import_document_media(
         repo_root,
         plan,
         media_context=media_context,
     )
     tree = apply_import_document_source(plan)
-    return replace(apply_result, parent_ids=tree_parent_ids(tree) if tree is not None else None)
+    if order_path is not None:
+        write_text_atomic(order_path, book_order_text(order))
+    return replace(apply_result, parent_ids=tree_parent_ids(tree) if tree is not None else None, book_order=order)
 
 
 def materialize_import_document_media(
@@ -507,6 +517,8 @@ def import_document_result(
     }
     if plan.collection:
         result["collection"] = plan.collection
+        if apply_result.book_order is not None:
+            result["book_heading_id"] = ""
     else:
         result["viewer_url"] = viewer_url_for(plan.doc_id)
     return result

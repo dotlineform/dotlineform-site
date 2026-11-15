@@ -46,6 +46,8 @@ def safe_generation_result(generation: dict[str, Any]) -> dict[str, Any]:
                 "doc_ids": list(search.get("doc_ids") or []),
             },
         }
+        if "book_toc" in rebuild:
+            safe_rebuild["book_toc"] = rebuild["book_toc"]
     return {
         "status": str(generation.get("status") or "not-run"),
         "rebuild": safe_rebuild,

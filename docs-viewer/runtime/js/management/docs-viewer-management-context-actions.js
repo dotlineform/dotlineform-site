@@ -125,7 +125,9 @@ export function createDocsViewerManagementContextActions(options) {
       await toggleManagedDocDraft(state.target, !state.record.draft, {
         clientOptions: options.clientOptions(),
         onSaved: function (target, response) {
-          var failures = options.commitDocumentChange({ target: target, record: response.record }) || [];
+          var failures = options.commitDocumentChange({
+            target: target, record: response.record, book_toc: response.rebuild?.book_toc
+          }) || [];
           if (failures.length) throw new Error("Draft readiness saved, but a retained list could not be updated: " + failures.map(function (error) { return error.message; }).join("; "));
         }
       });

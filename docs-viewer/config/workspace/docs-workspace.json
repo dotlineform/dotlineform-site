@@ -111,10 +111,11 @@
         },
         {
           "collection": "book",
+          "collection_type": "curated-book",
           "document_media": true,
           "icon": "dlf-doc",
-          "include_in_site_search": false,
-          "title": "Book",
+          "include_in_site_search": true,
+          "title": "Living Memory",
           "report_host_doc_id": "d-20261111-120000-5af14d"
         },
         {

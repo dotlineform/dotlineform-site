@@ -441,6 +441,7 @@ def import_ordinary_source(
     rebuild = dependencies.rebuild_prepared_document(
         repo_root, destination, plan.prepared_document,
         parent_ids=apply_result.parent_ids, media_change=plan.media_change,
+        **({"book_order": apply_result.book_order} if apply_result.book_order is not None else {}),
     )
     event_name, event_details = import_document_event(
         repo_root,

@@ -1,6 +1,6 @@
 import { documentTarget, documentTargetKey } from "./docs-viewer-document-target.js";
 import { mountDocsContentHtml } from "./docs-viewer-asset-url.js";
-import { createCollectionNavigation } from "./docs-viewer-collection-navigation.js";
+import { createCollectionNavigation, registerBookTocLinks } from "./docs-viewer-collection-navigation.js";
 
 export function initDocsViewerDocumentController(context) {
   var routeSession = context.routeSession;
@@ -28,7 +28,7 @@ export function initDocsViewerDocumentController(context) {
     if (record.collectionSequence === sequence) return;
     record.collectionSequence = sequence;
     record.collectionNavigation?.remove();
-    var atTop = record.target.collection === "book";
+    var atTop = workspaceConfigState.activeConfig.collectionsById.get(record.target.collection)?.collectionType === "curated-book";
     record.collectionNavigation = sequence ? createCollectionNavigation(document, sequence, atTop) : null;
     if (record.collectionNavigation) {
       if (atTop) record.root.prepend(record.collectionNavigation);
@@ -63,7 +63,7 @@ export function initDocsViewerDocumentController(context) {
     selectedDocument.displayedRecord = record.doc;
     selectedDocument.displayedPayload = record.payload;
     content.hidden = waitForLayout;
-    showDocPane();
+    showDocPane(record.target);
     context.publishCollectionReportState(record.actionContext);
     document.title = (record.doc.title || record.target.doc_id) + " | dotlineform";
     context.renderManagementUi();
@@ -402,17 +402,19 @@ export function initDocsViewerDocumentController(context) {
     releaseReportPresentation();
     releaseMediaDetails();
     releaseTableDetails();
+    context.projectDocumentSidePane?.(null);
     projectDocumentShell({
       toolbarHidden: true,
       contentHidden: true
     });
   }
 
-  function showDocPane() {
+  function showDocPane(target = activeRecord?.target) {
     projectDocumentShell({
       toolbarHidden: false,
       contentHidden: false
     });
+    context.projectDocumentSidePane?.(target);
   }
 
   function renderDocumentStatus(message, isError, options) {
@@ -494,16 +496,15 @@ export function initDocsViewerDocumentController(context) {
     selectedDocument.payloadCache.set(documentTargetKey(target), payload);
     context.renderManagementUi();
 
-    showDocPane();
+    showDocPane(target);
     context.renderMeta(doc);
     releaseReportPresentation();
     releaseMediaDetails();
     releaseTableDetails();
     releaseImageDetails();
-    mountDocsContentHtml(content, payload.content_html, {
-      mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
-      viewerBaseUrl: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.viewerBaseUrl
-    });
+    mountDocumentContent(content, payload);
+    var toc = !target.collection && content.querySelector("[data-docs-book-toc]");
+    if (toc) registerBookTocLinks(toc);
     projectCollectionNavigation(record, collectionSequence);
     if (typeof context.mountRelatedLinks === "function") {
       context.mountRelatedLinks({
@@ -539,7 +540,7 @@ export function initDocsViewerDocumentController(context) {
     context.renderManagementUi();
   }
 
-  function renderDocLoadingState() {
+  function renderDocLoadingState(target) {
     retained.forEach(function (record) { record.root.hidden = true; });
     activeRecord = null;
     clearDisplayedDocument();
@@ -549,13 +550,35 @@ export function initDocsViewerDocumentController(context) {
     if (transientContent) transientContent.remove();
     transientContent = content;
     outerContent.appendChild(content);
-    showDocPane();
+    showDocPane(target);
     clearCollectionReportState("navigation-start", nextDocumentMountGeneration());
   }
 
   function handlePayloadError(error) {
     renderDocumentStatus(error.message || "Failed to load document.", true);
   }
+
+  function mountDocumentContent(node, payload) {
+    mountDocsContentHtml(node, payload.content_html, {
+      mediaRoot: workspaceConfigState.activeConfig?.mediaRoot,
+      viewerBaseUrl: workspaceConfigState.activeConfig?.viewerBaseUrl
+    });
+  }
+
+  context.collectionProvider.subscribeBookToc?.(function (payload) {
+    var key = documentTargetKey(documentTarget({ doc_id: payload.doc_id }));
+    var record = retained.get(key);
+    if (!record) return;
+    var current = record.root.querySelector("[data-docs-book-toc]");
+    var body = document.createElement("div");
+    mountDocumentContent(body, payload);
+    var toc = body.querySelector("[data-docs-book-toc]");
+    current.replaceWith(toc);
+    registerBookTocLinks(toc);
+    record.payload = payload;
+    selectedDocument.payloadCache.set(key, payload);
+    if (record === activeRecord) selectedDocument.displayedPayload = payload;
+  });
 
   function projectDocumentShell(projection) {
     if (typeof context.projectDocumentShell === "function") {
@@ -592,6 +615,9 @@ export function initDocsViewerDocumentController(context) {
     restore: restore,
     restoreRetained: restoreRetained,
     retainDocuments: retainDocuments,
+    projectActiveCollectionSequence: function (sequence) {
+      if (activeRecord?.root && !activeRecord.error) projectCollectionNavigation(activeRecord, sequence);
+    },
     scrollToHash: scrollToHash,
     handleMissingDoc: handleMissingDoc,
     handlePayloadError: handlePayloadError,

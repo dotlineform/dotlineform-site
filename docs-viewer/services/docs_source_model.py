@@ -29,6 +29,7 @@ from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
     document_source_path,
+    is_curated_book,
     path_label,
     resolve_workspace_path,
 )
@@ -211,8 +212,8 @@ def new_document_source(
     metadata = {"doc_id": doc_id, "title": title, "added_date": timestamp}
     collection = getattr(config, "collection", "")
     if collection_supports_draft(config):
-        metadata["draft"] = collection != "book"
-    if collection == "book":
+        metadata["draft"] = True
+    if is_curated_book(config):
         heading = f"# {title}"
         body = body.lstrip("\r\n")
         first_line, newline, remaining = body.partition("\n")

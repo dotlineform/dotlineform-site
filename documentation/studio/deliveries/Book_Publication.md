@@ -4,13 +4,13 @@ doc_id: d-20261114-213618-b4856c
 title: Book Publication
 added_date: "2026-11-14 21:36:18"
 last_updated: "2026-11-15"
-summary: Proposed shared design for curated books, starting with Living Memory, with a Manage split view and a generated table of contents for each book.
-ui_status: proposed
+summary: First local release of curated Books, with a desktop Manage split view and a generated table of contents for Living Memory. Pages deployment and live verification remain open.
+ui_status: active
 parent_id: d-20260428-000000-f5ff18
 ---
 # Book Publication
 
-**Proposed.** Continue the design before readiness and implementation. [Planned Features](../Planned_Features.md) · [Private Book curation](library_structure.md)
+**Local release complete.** The user accepted the first release on 2026-11-15 after Publish and code review. Living Memory is in Preview and the prepared site. Pages deployment, live verification, and the withdrawal trial remain open. [Planned Features](../Planned_Features.md) · [Private Book curation](library_structure.md)
 
 ## Library And Book Collections
 
@@ -54,7 +54,7 @@ Working generation refreshes the TOC when heading names, placement, order, chapt
 
 ## Living Memory Cutover
 
-The existing host is on the unpublishable list, and new documents in `book` currently start as non-draft. Keep the host excluded while reviewing existing chapters and temporary copies and setting their intended draft flags. Give documents without a Part or Section placement an initial saved order at Root. Set the Living Memory host to draft before removing its unpublishable entry. Clear the host's draft flag when Living Memory is ready to release through the ordinary Docs workflow. [Current Book curation](library_structure.md)
+The existing host and its collection configuration are titled **Living Memory**. The user removed the explicit exclusion, marked the host ready, and confirmed Publish on 2026-11-15. Its collection is configured for eligible Search and Recent discovery. The prepared site contains the host and six ready documents. [Current Book curation](library_structure.md)
 
 ## Chapter Links And Media
 
@@ -66,7 +66,7 @@ Book links and Related Links follow the ordinary collection rules, including vis
 
 Add a shared `[[date]]` body token for displaying a document-level date in Library and Book. It displays the current document's `date_display` when present and falls back to `date`. With both fields empty, the token produces no visible output. Review existing Library documents for chapter-level dates written in the body that would benefit from moving to front matter and using the token. Dates that are part of the prose stay in the text.
 
-## Proposed Deliverables
+## Deliverables
 
 - A shared desktop Manage split view with List and Tree modes, the existing Book curation actions scoped to the active book, and the Studio-style expand control.
 - A generated ready-only TOC at each book's host, a return link from public chapters, and standard Previous and Next controls in book order, starting with Living Memory.
@@ -81,7 +81,7 @@ Book uses the normal named-collection routes, document payloads, authoring opera
 | --- | --- |
 | Workspace `working/source/index-order.json` and generated `index-tree.json` | The authored file orders the main Index and places each book's host. The Index reads its usual generated tree. Public uses the eligible projection, prepared in Working as `public-index-tree.json` and published as `index-tree.json`. Book chapter order lives within the book. |
 | Book `working/source/collections/<id>/index-order.json` | The authored order of Root documents, Parts, and Sections. A complete Book build reads it once. A placement operation reads it if it needs prior placement or uses the updated tree it already has. The ordinary document build carries the completed placement from its saved management manifest merge. |
-| Book generated `manage-manifest.json` and current separate `index-tree.json` | Put the generated Book structure alongside document rows in the existing private `manage-manifest.json`, and retire the separate Book tree payload and its route. The visible Manage pane loads one manifest for the active book. List, Tree, search, reading order, width changes, and reopening a retained view use that loaded data. Copy to Book uses the retained manifest for its selected destination if available, or loads it when needed. Committed effects update the retained view. |
+| Book generated `manage-manifest.json` | The private manifest carries `book_order` alongside document rows. The visible Manage pane loads one manifest for the active book. List, Tree, search, reading order, width changes, and reopening a retained view use that loaded data. Copy to Book uses the retained manifest for its selected destination if available, or loads it when needed. Committed effects update the retained view. |
 | Public collection `manifest.json` | The ordinary eligible collection inventory for existing consumers. It follows the normal generation and publication flow. |
 | `by-id/<doc_id>.json` | The reader fetches the exact selected document through its standard route. The TOC is the host's ordinary generated by-ID payload. Its ordered chapter links carry their sequence into the common reader in memory, with zero index, manifest, or tree requests to establish Previous and Next. A chapter has zero Book-specific fetches or verifications, including when entered through a direct link. |
 
@@ -122,21 +122,39 @@ Use disposable Living Memory test chapters, including a few chapter-owned images
 
 ### Implementation
 
-- [ ] **Configured Book instance.** Resolve the book and host through collection configuration and scope the existing actions to that book. Confirm that Living Memory resolves to the existing `book` owner, host ID, document IDs, and media paths.
-- [ ] **Root placement and management projection.** Persist editable Root order with Parts and Sections. Project placements and document rows together in the Book management manifest. Confirm that new, moved, reordered, and deleted documents have the expected saved placement and that the manifest reflects the completed changes.
-- [ ] **Library copy and draft defaults.** Select the destination book and Root or Section, then apply the ordinary copy and chapter actions. Confirm that new copies, chapters, and imports start as drafts, adding sources preserves the existing chapter's draft flag, and Library still records the copy marker.
-- [ ] **Desktop Manage split view.** Mount List, Tree, and expand or collapse alongside the standard reader. Confirm that changing mode or width preserves the selected document and uses the retained manifest, and that the visible pane loads only the selected book's manifest on first use.
-- [ ] **Generated TOC.** Generate the host's ready-only links from the completed placement and document rows. Confirm that Root links come first, nested order follows the tree, empty headings are omitted, and a Root-only book renders as a flat list.
-- [ ] **TOC refresh and queue handoff.** Connect eligible title and readiness changes, placement changes, deletions, and host Rebuild to the exact host refresh. Confirm that a TOC-affecting batch completes one refresh, the displayed or reopened TOC shows the changed contents, a body-only save takes the ordinary build path, and changed host bytes enter the existing publication queue.
-- [ ] **Reader sequence.** Pass the saved order from List, Tree, and TOC links to the existing Previous and Next controls. Confirm navigation across Root and heading boundaries, the eligible public sequence, and the standard direct-entry and Back paths. Trace document and navigation requests against the read boundaries above.
-- [ ] **Date token and Library review.** Add `[[date]]` to the shared renderer. Verify display text, fallback to `date`, and empty output. Review existing Library documents and identify candidates for editorial updates.
+- [x] **Configured Book instance.** The `curated-book` type scopes the existing actions to the configured owner. The Working owner resolves to `book`, host `d-20261111-120000-5af14d`, the eight saved document IDs, and the existing Book media namespace. Display title and discovery settings are part of the Living Memory cutover.
+- [x] **Root placement and management projection.** Editable Root order, Parts, and Sections are saved and projected alongside document rows in the Book management manifest.
+- [x] **Library copy and draft defaults.** Copy uses the selected Book and Root or Section placement and records the Library copy marker. New copies, chapters, and imports start as drafts. Adding Library source records preserves the existing chapter's draft flag.
+- [x] **Desktop Manage split view.** List, Tree, and Expand run alongside the standard reader and use the selected Book's retained private manifest.
+- [x] **Generated TOC.** The host links ready Root documents and then ready chapters in saved order, omitting empty headings.
+- [x] **TOC refresh and queue handoff.** Visible title, readiness, order, and deletion changes refresh the exact host. Body-only saves skip the host refresh. Changed eligible host output uses the ordinary publication queue.
+- [x] **Reader sequence.** Book List, Tree, and TOC links supply their reading order to Previous and Next. Direct chapter URLs use the ordinary reader.
+- [x] **Date token and Library review.** The shared renderer uses `date_display`, then `date`, and omits an empty standalone date paragraph. Direct document rendering verified both values, empty output, escaped display text, and literal code. Of 152 Library sources, 44 have one valid trailing date that could move to front matter. Examples include *Abstract Art as Evolutionary Mechanism* and *Existentialism’s 21st‑Century Continuations - Psychology & Therapy*. *Dissolving self* has a mid-document date, and *Ecosystem Beyond Plants and Animals — Microbes, Fungi, Abiotic Forces* has an incomplete date. Both need individual review. [Date token](../Builder.md#document-date)
+
+The existing `book` order and manifest were migrated with all eight placements preserved and an empty Root. The former generated Book tree and its read route were retired. Complete and exact-document Book build dry runs reported zero planned writes and zero warnings. The user confirmed copying a Library document to Root and creating a new chapter on 2026-11-15. The saved manifest shows both at Root with `draft: true`. Move, reorder, Delete, Import, and existing-chapter provenance still have interactive verification open.
+
+Desktop Manage keeps one Book pane beside the reader. List uses the shared search and row controls. Tree uses the saved Root, Part, and Section order. Expand widens the curation pane and preserves its visible row. Pane links supply Book reading order to the reader. Narrow windows now use the standard reader and generated TOC. Direct chapter entry, switching mode or width with Source edits in progress, and browser request counts remain for the walkthrough.
+
+The configured Book host's authored report directive was retired. Its first Working TOC linked the eight ready documents in saved order and omitted the two Root drafts and empty Section. Working hosts use the same TOC renderer for full Build, exact host Rebuild, and refresh from completed placement or chapter changes. Direct-entry navigation and interactive TOC refresh remain for the walkthrough.
+
+The prepared public Index contains Living Memory. Its TOC matches the Working ready reading order and the six public manifest members. The first link is the ready Root document *Brain Structure — Illustrated Overview*. All six selected by-ID files are present, and the Root document's referenced SVG exists in Preview. Both publication queues were empty after Publish. Browser playback, live R2 response, and Pages deployment remain unverified.
 
 ### Verification And Closeout
 
-- [ ] **Code review.** Trace reads and checks in opening and switching the Manage pane, opening a chapter from the TOC or directly, ordinary chapter Save, placement changes, and TOC refresh. Account for every Book-specific read and verification, including those inside reused helpers, and verify the completed handoff to Publish. Apply the [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review).
-- [ ] **Living Memory live deployment.** Complete the first Publish and Pages deployment, then verify the ready TOC, chapter navigation, and representative images on the live site.
+- [x] **Code review.** Reviewed pane and reader requests, configured ownership, chapter and placement edits, TOC refresh, and prepared publication output using the [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review).
+
+The placement review traced one private manifest fetch per loaded Book for Manage and copy selection. Browser changes update retained order and rows from completed effects. Python validates submitted order against one saved inventory read. New, single-document Import, Copy, and Delete each read authored placement for their mutation and pass the completed order into generation. Ordinary chapter edits carry order through the manifest merge. The selected Book and chapter reads retain configured authority and confinement. Desktop request counts and interactive mutation outcomes remain for the walkthrough.
+
+The split-view review traced List, Tree, and Expand to the existing pane DOM and retained manifest. The report is mounted once per opened Book during the page session, and the reader owns document and Source state throughout. Opening a row uses the ordinary reader route. Batch Delete now asks the existing Source navigation guard before deleting the displayed chapter and uses the common reader departure after a completed removal.
+
+The TOC review traced chapter generation to the old and completed private manifest projections. A body-only save compares readiness and titles in memory and performs no host read. A changed TOC reads and writes the exact host payload, preserving its metadata and existing publication selections. Full Working Build passes the Book manifest assembled from its loaded sources and authored order to the ordinary host builder. The retained reader replaces the changed TOC subtree from the operation response, and TOC links provide the reading sequence in memory.
+
+Review fixes apply a pane link's sequence to the current chapter in place, limit placement-only publication to the completed public Index and eligible queue entry, and limit Library provenance edits to source and private manifest fields. The existing chapter in a copy batch contributes provenance alongside the newly generated drafts. Book actions retain configured owner and exact target checks, authored placement validates against one private inventory, and Publish consumes completed selections through its existing destination checks. Changed-file lint, public projection and site validation passed. Interactive scenarios remain separate evidence.
+
+- [x] **Local closeout.** The user accepted the first local release and confirmed Publish. The code review and prepared site inspection are recorded above. Remaining local scenario observations can be collected during normal use.
+- [ ] **Living Memory live deployment.** Deploy the prepared Pages snapshot when ready, then verify the live TOC, chapter navigation, and representative images.
 - [ ] **Living Memory withdrawal.** Set the host to draft, delete the disposable test chapters, and complete the withdrawal Publish and Pages deployment. Verify the live book withdrawal and R2 cleanup.
-- [ ] **Closeout.** Record what was verified in Working, site preview, and the live deployment and withdrawal. Note remaining editorial decisions and update the durable owners for collection browsing and publication.
+- [ ] **Final closeout.** Record live deployment and withdrawal evidence and any remaining editorial decisions.
 
 ## Follow-On
 

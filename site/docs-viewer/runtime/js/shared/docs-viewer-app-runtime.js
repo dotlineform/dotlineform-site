@@ -336,6 +336,45 @@ export function startDocsViewerRuntime(options) {
     viewRegistry: viewRegistry,
     viewerUrl: viewerUrl
   });
+  var managementDocumentActions = {
+    openDocument: function (target, options) { return routeWorkflowCommands.loadDoc(target, options); },
+    displayedDocumentTarget: function () { return appSession.domains.selectedDocument.documentTarget; },
+    confirmDocumentNavigation: documentViewCoordinator.confirmDocumentNavigation,
+    commitDisplayedDelete: async function (target) {
+      await documentViewCoordinator.prepareDocumentNavigation();
+      await routeWorkflowCommands.commitDeletedDocument(target);
+    },
+    openSourceFromLink: openSourceFromLink,
+    newDoc: function (target, options) { return managementRuntime.controller().newDoc(target, options); },
+    importDoc: function (target, options) { return managementRuntime.controller().importDoc(target, options); },
+    importDocs: function (target, options) { return managementRuntime.controller().importDocs(target, options); },
+    startBusyOperation: function () { return managementRuntime.controller().startBusyOperation(); },
+    resolveAction: function (actionId, target) {
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      return controller ? controller.resolveAction(actionId, target)
+        : { hidden: false, disabled: true, enabled: false, disabledReason: "Docs management is unavailable." };
+    },
+    regenerateCatalogue: function (collection, options) {
+      return loadManagementController().then(function (controller) {
+        if (!controller || typeof controller.regenerateCatalogue !== "function") {
+          throw new Error("Catalogue regeneration is unavailable.");
+        }
+        return controller.regenerateCatalogue(collection, options);
+      });
+    }
+  };
+  var projectDocumentSidePane = settings.createDocumentSidePane?.({
+    main: mainViewRefs.main,
+    root: root,
+    window: window,
+    isActive: function () { return routeWorkflow?.managementUiEnabled(); },
+    workspaceConfigState: appSession.domains.workspaceConfig,
+    managementService: managementService,
+    managementDocumentActions: managementDocumentActions,
+    collectionProvider: collectionProvider,
+    viewerUrlForDocument: viewerUrlForDocument,
+    setStatus: statusController.setStatus
+  });
   documentController = initDocsViewerDocumentController({
     appContext: appContext,
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
@@ -344,27 +383,8 @@ export function startDocsViewerRuntime(options) {
     imageDetailAdapter: settings.imageDetailAdapter,
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
-    managementDocumentActions: {
-      openDocument: function (target, options) { return routeWorkflowCommands.loadDoc(target, options); },
-      openSourceFromLink: openSourceFromLink,
-      newDoc: function (target, options) { return managementRuntime.controller().newDoc(target, options); },
-      importDoc: function (target, options) { return managementRuntime.controller().importDoc(target, options); },
-      importDocs: function (target, options) { return managementRuntime.controller().importDocs(target, options); },
-      startBusyOperation: function () { return managementRuntime.controller().startBusyOperation(); },
-      resolveAction: function (actionId, target) {
-        var controller = managementRuntime ? managementRuntime.controller() : null;
-        return controller ? controller.resolveAction(actionId, target)
-          : { hidden: false, disabled: true, enabled: false, disabledReason: "Docs management is unavailable." };
-      },
-      regenerateCatalogue: function (collection, options) {
-        return loadManagementController().then(function (controller) {
-          if (!controller || typeof controller.regenerateCatalogue !== "function") {
-            throw new Error("Catalogue regeneration is unavailable.");
-          }
-          return controller.regenerateCatalogue(collection, options);
-        });
-      }
-    },
+    managementDocumentActions: managementDocumentActions,
+    projectDocumentSidePane: projectDocumentSidePane,
     mountDocumentExtras: settings.mountDocumentExtras,
     replaceCatalogueSearch: function (query) { routeWorkflowCommands.replaceCatalogueSearch(query); },
     openDocument: async function (target, response) {
@@ -410,6 +430,7 @@ export function startDocsViewerRuntime(options) {
     restoreRetainedDocument: documentController.restoreRetained,
     retainedDocumentAvailable: documentController.hasRetained,
     retainDocuments: documentController.retainDocuments,
+    projectActiveCollectionSequence: documentController.projectActiveCollectionSequence,
     scrollToHash: documentController.scrollToHash,
     prepareDocumentNavigation: documentViewCoordinator.prepareDocumentNavigation,
     returnToDocument: documentViewCoordinator.returnToDocument,
@@ -573,6 +594,7 @@ export function startDocsViewerRuntime(options) {
       activeDocumentMount: documentController.activeMount,
       sourceEditorServices: sourceEditorServices,
       commitDocumentChange: collectionProvider.commitDocumentChange,
+      commitBookToc: collectionProvider.commitBookToc,
       commitDocumentStar: collectionProvider.commitDocumentStar,
       commitDeletedDocument: function (target) { return routeWorkflowCommands.commitDeletedDocument(target); },
       viewRegistry: viewRegistry,
@@ -739,19 +761,25 @@ export function startDocsViewerRuntime(options) {
     var rendered = activeState.activeViewId === "rendered-document"
       && activeState.activeModeId === "rendered-document";
     var collectionIndexTarget = routeWorkflow?.commands.collectionIndexTarget();
+    var documentCollection = appSession.domains.selectedDocument.documentTarget?.collection;
+    var bookChapter = appSession.domains.workspaceConfig.activeConfig?.collectionsById.get(documentCollection)?.collectionType === "curated-book";
     var managementBusy = root.dataset.managementBusy === "true";
     if (controlStateById["return-to-collection"]) {
       var sourceBack = controlStateById["return-to-doc"];
       controlStateById["return-to-collection"] = {
         hidden: !collectionIndexTarget || Boolean(sourceBack?.hidden),
         disabled: managementBusy || Boolean(sourceBack?.disabled),
-        busy: Boolean(sourceBack?.busy)
+        busy: Boolean(sourceBack?.busy),
+        ...(bookChapter ? { label: "Table of contents" } : {})
       };
     }
     var report = latestCollectionReportState;
     if (mainViewRefs.collectionIndex) {
       mainViewRefs.collectionIndex.hidden = !rendered || !collectionIndexTarget;
       mainViewRefs.collectionIndex.disabled = managementBusy;
+      var indexLabel = bookChapter ? "Table of contents" : "index";
+      mainViewRefs.collectionIndex.title = indexLabel;
+      mainViewRefs.collectionIndex.setAttribute("aria-label", indexLabel);
     }
     var mount = mainViewRefs.collectionActions;
     if (mount) {

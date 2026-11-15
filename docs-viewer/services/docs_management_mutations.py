@@ -7,9 +7,10 @@ from pathlib import Path
 from typing import Any, Dict
 
 import docs_source_model as source_model
+from docs_book_tree import book_order_path, book_order_text, placement_list, read_book_order
 from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order, tree_parent_ids
 from docs_management_document_target import committed_document_record, ManagedDocumentCollection, resolve_managed_document_collection
-from docs_workspace_config import require_document_authoring, resolve_external_data_root
+from docs_workspace_config import is_curated_book, require_document_authoring, resolve_external_data_root
 
 
 def relative_path(repo_root: Path, path: Path) -> str:
@@ -40,6 +41,7 @@ class ManagementMutationPlan:
     prepared_owner: ManagedDocumentCollection
     prepared_document: source_model.SourceDoc
     parent_ids: dict[str, str] | None = None
+    book_order: dict[str, Any] | None = None
     log_event_name: str | None = None
     log_details: Dict[str, Any] = field(default_factory=dict)
 
@@ -87,6 +89,14 @@ def plan_create(
         raise ValueError("Create uses target_doc_id and placement, not parent_id")
     order_path = index_order_path(resolved_collection.parent_config) if not collection else None
     tree = read_index_order(order_path) if order_path is not None else []
+    book_order = None
+    book_heading_id = body.get("book_heading_id", "")
+    if is_curated_book(resolved_collection.document_config):
+        order_path = book_order_path(resolved_collection.document_config)
+        book_order = read_book_order(order_path)
+        book_placement = placement_list(book_order, book_heading_id)
+    elif "book_heading_id" in body:
+        raise ValueError("Book placement requires a configured Book collection")
 
     timestamp = source_model.current_doc_timestamp()
     doc_id = work_id if collection == "catalogue" else source_model.allocate_doc_id(
@@ -98,6 +108,8 @@ def plan_create(
             tree, {"doc_id": doc_id},
             str(body.get("target_doc_id") or ""), str(body.get("placement") or "inside"),
         )
+    if book_order is not None:
+        book_placement.append(doc_id)
     target_path = target_root / f"{doc_id}.md"
     document = source_model.new_document_source(
         target_path, doc_id, title, f"# {title}\n" if body_markdown is None else body_markdown,
@@ -126,6 +138,8 @@ def plan_create(
     }
     if collection:
         response["collection"] = collection
+    if book_order is not None:
+        response["book_heading_id"] = book_heading_id
     log_details = {
         "doc_id": doc_id,
         "path": path,
@@ -142,11 +156,13 @@ def plan_create(
                 source_text,
                 create_only=True,
             ),
-            *((SourceWrite(order_path, index_order_text(tree)),) if order_path is not None else ()),
+            *((SourceWrite(order_path, book_order_text(book_order) if book_order is not None else index_order_text(tree)),)
+              if order_path is not None else ()),
         ),
         prepared_owner=resolved_collection,
         prepared_document=document,
         parent_ids=tree_parent_ids(tree) if not collection else None,
+        book_order=book_order,
         log_event_name="docs-create",
         log_details=log_details,
     )

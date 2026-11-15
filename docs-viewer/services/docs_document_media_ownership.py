@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from docs_document_images import THUMBNAIL_COLLECTIONS, document_thumbnail_filename
+from docs_document_images import document_thumbnail_filename, supports_document_thumbnail
 from docs_media_inventory import parsed_source_media_references
 
 
@@ -24,13 +24,15 @@ def document_media_references(owner: Any, *, doc_id: str, body: str) -> dict[str
     return {kind: sorted(names) for kind, names in references.items()}
 
 
-def owned_document_files(doc_id: str, collection: str, references: dict[str, list[str]]) -> dict[str, set[str]]:
+def owned_document_files(doc_id: str, owner: Any, references: dict[str, list[str]]) -> dict[str, set[str]]:
     """Limit removals to this document's namespace and fixed thumbnail identity."""
     media: dict[str, set[str]] = {}
     for kind, identities in references.items():
-        owned = {identity for identity in identities
-                 if (collection in THUMBNAIL_COLLECTIONS and identity == document_thumbnail_filename(doc_id, collection=collection)
-                     if kind == "thumbs" else identity.startswith(doc_id + "/"))}
+        if kind == "thumbs":
+            thumbnail = document_thumbnail_filename(doc_id)
+            owned = {thumbnail} if supports_document_thumbnail(owner) and thumbnail in identities else set()
+        else:
+            owned = {identity for identity in identities if identity.startswith(doc_id + "/")}
         if owned:
             media[kind] = owned
     return media
@@ -55,7 +57,6 @@ def compare_document_media(owner: Any, doc_id: str, *, previous_body: str, body:
     """Compare body-file ownership; Thumb owns independent artwork differences."""
     before = document_media_references(owner, doc_id=doc_id, body=previous_body)
     current = document_media_references(owner, doc_id=doc_id, body=body)
-    collection = getattr(owner, "collection", "")
     return DocumentMediaChange(current, removed_files(
-        owned_document_files(doc_id, collection, before), owned_document_files(doc_id, collection, current),
+        owned_document_files(doc_id, owner, before), owned_document_files(doc_id, owner, current),
     ), {kind: sorted(added) for kind, names in current.items() if (added := set(names) - set(before.get(kind, [])))})

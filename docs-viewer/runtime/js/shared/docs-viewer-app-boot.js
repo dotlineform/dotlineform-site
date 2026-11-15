@@ -186,6 +186,7 @@ export function resolveDocsViewerAppBootContext(options) {
         window: windowRef,
         assetVersion: assetVersion,
         createCollectionProvider: settings.createCollectionProvider,
+        createDocumentSidePane: settings.createDocumentSidePane,
         createSourceAdapter: settings.createSourceAdapter,
         contentDetailBackControlId: settings.contentDetailBackControlId,
         controlRendererContributions: settings.controlRendererContributions || {},

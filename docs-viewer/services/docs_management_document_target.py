@@ -17,6 +17,7 @@ from docs_workspace_config import (
     DocsWorkspaceConfig,
     COLLECTION_ID_PATTERN,
     document_source_path,
+    is_curated_book,
     load_docs_workspace_config,
     select_workspace_stage,
     resolve_workspace_path,
@@ -312,7 +313,7 @@ def committed_document_record(
         record["has_thumbnail"] = has_document_thumbnail(document_config, doc_id) if thumbnail is None else thumbnail
     if source_model.collection_supports_draft(document_config):
         record["draft"] = front_matter["draft"]
-    if collection == "book":
+    if is_curated_book(document_config):
         for field in ("copied_from_library", "library_sources"):
             if field in front_matter:
                 record[field] = front_matter[field]

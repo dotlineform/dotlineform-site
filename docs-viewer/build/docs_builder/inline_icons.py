@@ -20,20 +20,46 @@ from docs_inline_icon_artwork import InlineIconArtwork
 
 
 ICON_TOKEN_PREFIX = "[[icon:"
+DATE_TOKEN = "[[date]]"
 LITERAL_HTML_TAG_PATTERN = re.compile(r"</?(?:code|pre|script|style|textarea)\b", re.IGNORECASE)
+
+
+def inside_literal_html(state: StateInline) -> bool:
+    depth = 0
+    for token in state.tokens:
+        if token.type == "html_inline" and LITERAL_HTML_TAG_PATTERN.match(token.content):
+            depth = max(0, depth - 1) if token.content.startswith("</") else depth + 1
+    return depth > 0
+
+
+def install_date_rule(renderer: Any, date_text: str) -> None:
+    def parse(state: StateInline, silent: bool) -> bool:
+        if not state.src.startswith(DATE_TOKEN, state.pos, state.posMax) or inside_literal_html(state):
+            return False
+        if not silent:
+            token = state.push("text" if date_text else "docs_empty_date", "", 0)
+            token.content = date_text
+        state.pos += len(DATE_TOKEN)
+        return True
+
+    renderer.inline.ruler.before("link", "docs_date", parse)
+    if not date_text:
+        renderer.renderer.rules["docs_empty_date"] = lambda *_: ""
+
+        def suppress_empty_date_paragraph(state: Any) -> None:
+            for index, token in enumerate(state.tokens[1:-1], 1):
+                if token.type == "inline" and token.content.strip() == DATE_TOKEN and state.tokens[index - 1].type == "paragraph_open":
+                    state.tokens[index - 1].hidden = True
+                    state.tokens[index + 1].hidden = True
+
+        renderer.core.ruler.after("inline", "docs_empty_date_paragraph", suppress_empty_date_paragraph)
 
 
 class InlineIconRenderer(InlineIconArtwork):
     """Own exact SVG lookup and shared markup for authored/generated icons."""
 
     def _parse_icon(self, state: StateInline, silent: bool) -> bool:
-        if not state.src.startswith(ICON_TOKEN_PREFIX, state.pos):
-            return False
-        literal_depth = 0
-        for previous in state.tokens:
-            if previous.type == "html_inline" and LITERAL_HTML_TAG_PATTERN.match(previous.content):
-                literal_depth = max(0, literal_depth - 1) if previous.content.startswith("</") else literal_depth + 1
-        if literal_depth:
+        if not state.src.startswith(ICON_TOKEN_PREFIX, state.pos) or inside_literal_html(state):
             return False
         closing = state.src.find("]]", state.pos + len(ICON_TOKEN_PREFIX), state.posMax)
         if closing < 0:
@@ -45,15 +71,21 @@ class InlineIconRenderer(InlineIconArtwork):
         state.pos = closing + 2
         return True
 
-    def render_markdown(self, markdown: str, *, related_links: Callable[[str], str] | None = None, summary_html: str = "") -> str:
-        """Expand inline icons and document blocks, preserving literal code.
+    def render_markdown(
+        self, markdown: str, *, related_links: Callable[[str], str] | None = None,
+        summary_html: str = "", date_text: str = "",
+    ) -> str:
+        """Expand inline icons and document fields, preserving literal code.
 
         Normal Markdown parsing also protects fences, indented code, comments,
         escaped text and raw HTML attributes. Icon tokens create no relationships.
         """
-        if ICON_TOKEN_PREFIX not in markdown and RELATED_LINKS_PREFIX not in markdown and SUMMARY_DIRECTIVE not in markdown:
+        has_date = DATE_TOKEN in markdown
+        if ICON_TOKEN_PREFIX not in markdown and RELATED_LINKS_PREFIX not in markdown and SUMMARY_DIRECTIVE not in markdown and not has_date:
             return render_markdown_to_html(markdown)
         renderer = build_markdown_renderer()
+        if has_date:
+            install_date_rule(renderer, date_text)
         if SUMMARY_DIRECTIVE in markdown:
             install_summary_rule(renderer, summary_html=summary_html)
         if RELATED_LINKS_PREFIX in markdown:

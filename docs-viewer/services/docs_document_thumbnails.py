@@ -8,7 +8,7 @@ from typing import Any
 
 from docs_catalogue_media import read_catalogue_media_config
 from docs_document_identity import is_document_id
-from docs_document_images import THUMBNAIL_COLLECTIONS, document_thumbnail_path
+from docs_document_images import document_thumbnail_path, supports_document_thumbnail
 from docs_json_files import load_json_object
 from docs_management_document_target import committed_document_record, normalize_managed_document_target
 from docs_publication_paths import confined, shared_path
@@ -51,8 +51,6 @@ def set_document_thumbnail(repo_root: Path, body: dict[str, Any]) -> dict[str, A
         raise ValueError("Thumb requires collection and doc_id with either work_id (null to delete) or image_png")
     target = normalize_managed_document_target({key: body[key] for key in ("collection", "doc_id")})
     collection, doc_id = target["collection"], target["doc_id"]
-    if collection not in THUMBNAIL_COLLECTIONS:
-        raise ValueError("Thumb is available only for Library, Book, Context, Concepts and Moments")
     if "image_png" in body and not isinstance(body["image_png"], str):
         raise ValueError("Thumb image_png must contain the selected document image as base64 PNG")
     image_png = body.get("image_png")
@@ -62,7 +60,9 @@ def set_document_thumbnail(repo_root: Path, body: dict[str, Any]) -> dict[str, A
     workspace = load_docs_workspace_config(repo_root)
     working = select_workspace_stage(workspace, "working")
     require_document_authoring(working)
-    owner = next(item for item in working.collections if item.collection == collection)
+    owner = next((item for item in working.collections if item.collection == collection), None)
+    if not supports_document_thumbnail(owner):
+        raise ValueError("Thumb is available for configured authored collections with thumbnail storage")
     root = owner.generated.documents.location.path
     by_id_path = confined(root, Path("by-id") / f"{doc_id}.json")
     payload = load_json_object(by_id_path, "Document")
@@ -140,5 +140,5 @@ def set_document_thumbnail(repo_root: Path, body: dict[str, Any]) -> dict[str, A
         effects = ", ".join(completed) or "none"
         raise RuntimeError(f"Thumb {collection}/{doc_id} failed during {phase}: {error}. Completed: {effects}.") from error
     return {"ok": True, "target": target, "record": committed_document_record(
-        payload, doc_id, owner, collection=collection, thumbnail=present,
+        {**row, **payload}, doc_id, owner, collection=collection, thumbnail=present,
     )}

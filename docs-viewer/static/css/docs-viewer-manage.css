@@ -244,7 +244,7 @@
   cursor: pointer;
 }
 
-.docsViewerReport[data-report-collection="book"] .docsViewerBook__selectableRow:has(> .docsViewerReport__collectionButton[aria-current="true"]){
+.docsViewerReport .docsViewerBook__selectableRow:has(> .docsViewerReport__collectionButton[aria-current="true"]){
   margin-inline-start: -6px;
   padding-inline-start: 6px;
   border-radius: 6px;

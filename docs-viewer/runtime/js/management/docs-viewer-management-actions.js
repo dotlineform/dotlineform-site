@@ -266,7 +266,9 @@ export function createDocsViewerManagementActionController(options) {
         );
       },
       refreshAndSelect: function (target, response) {
-        if (context.commitDocumentChange) context.commitDocumentChange({ target: target, record: response.record });
+        if (response.ok !== false || response.book_heading_id === undefined) {
+          context.commitDocumentChange?.({ target: target, record: response.record, book_heading_id: response.book_heading_id });
+        }
         if (createSettings.refreshAndSelect) return createSettings.refreshAndSelect(target, response);
         if (target.collection) return context.routeCommands.loadDoc(target);
         return context.routeCommands.loadIndex({ preserveDocument: true }).then(function () { return context.routeCommands.loadDoc(target); });
@@ -398,7 +400,8 @@ export function createDocsViewerManagementActionController(options) {
     return createDocumentAndOpenSource(
       {
         ...fields,
-        collection: targetCollection.collection
+        collection: targetCollection.collection,
+        ...(createSettings.bookHeadingId !== undefined ? { book_heading_id: createSettings.bookHeadingId } : {})
       },
       {
         clientOptions: managementClientOptions(),
@@ -446,7 +449,9 @@ export function createDocsViewerManagementActionController(options) {
       if (!payload.record || payload.record.doc_id !== target.doc_id) {
         throw new Error("Document rebuilt, but its record did not match the displayed target.");
       }
-      var projectionErrors = context.commitDocumentChange({ target: completedTarget, record: payload.record }) || [];
+      var projectionErrors = context.commitDocumentChange({
+        target: completedTarget, record: payload.record, book_toc: payload.rebuild?.book_toc
+      }) || [];
       await context.routeCommands.refreshDocument(completedTarget);
       if (projectionErrors.length) throw new Error("Document rebuilt, but a retained list could not be updated: " + projectionErrors.map(function (error) { return error.message; }).join("; "));
       setManagementMessage("", false);

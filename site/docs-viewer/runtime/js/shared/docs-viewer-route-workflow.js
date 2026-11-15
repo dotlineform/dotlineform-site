@@ -139,6 +139,7 @@ export function initDocsViewerRouteWorkflow(context) {
         displayedHash = hash;
         displayedCatalogueSearch = catalogueSearch ?? displayedCatalogueSearch;
         navigation.replaceUrl(viewerUrl(target.doc_id, hash, search.searchQuery, target, displayedCatalogueSearch));
+        if (options.collectionSequence) context.projectActiveCollectionSequence(options.collectionSequence);
         if ((!hash || catalogueSearch !== undefined) && selected.displayedPayload && selected.displayedPayload.report
           && selected.displayedPayload.report.id === "docs_collection") {
           await navigation.update();

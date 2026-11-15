@@ -337,93 +337,125 @@
   font-size: 0.92em;
   overflow-wrap: anywhere;
 }
-.docsViewerBook__layout {
-  --docs-viewer-book-column-gap: 1rem;
-  /* Use half the spare space outside the document measure without moving its list column. */
-  --docs-viewer-book-tree-extension: clamp(0px,
-    (100vw - var(--docs-viewer-measure) - 2 * var(--docs-viewer-panel-clearance)) / 4, 5rem);
-  display: grid;
-  grid-template-columns:
-    minmax(10rem, calc((100% - var(--docs-viewer-book-tree-extension) - var(--docs-viewer-book-column-gap)) / 4 + var(--docs-viewer-book-tree-extension)))
-    minmax(0, 1fr);
-  gap: var(--docs-viewer-book-column-gap);
-  align-items: start;
-  max-width: none;
-  margin-inline-start: calc(-1 * var(--docs-viewer-book-tree-extension));
-  font-size: var(--docs-viewer-font-body);
+.docsViewerBookPane {
+  min-inline-size: 0;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: var(--docs-viewer-radius);
+  background: var(--docs-viewer-panel);
+  padding: var(--docs-viewer-space-3);
 }
 
-.docsViewer[data-viewer-layout="expanded-main"] .docsViewerBook__layout {
-  --docs-viewer-book-tree-extension: 0px;
+.docsViewerBook__viewControls,
+.docsViewerBook__modes {
+  display: flex;
+  align-items: center;
+  gap: var(--docs-viewer-space-1);
+  flex-wrap: wrap;
 }
 
-.docsViewerBook__documents {
-  min-width: 0;
-  font-size: var(--docs-viewer-font-small);
+.docsViewerBookPane__body {
+  min-block-size: 0;
 }
 
-.docsViewerBook__documents > .docsViewerReport__table {
-  margin-block-start: var(--docs-viewer-space-3);
+.docsViewerBook__viewControls {
+  margin-block-end: var(--docs-viewer-space-2);
 }
 
-.docsViewerBook__sectionList {
-  /* Match the first document title's inset, accounting for the tree pill's padding and border. */
-  margin-block-start: calc(var(--docs-viewer-space-3) + 0.85rem - 1px);
-  font-size: var(--docs-viewer-font-small);
+.docsViewerBookPane__expand {
+  margin-inline-start: auto;
 }
 
-.docsViewerBook__sectionList .docsViewer__navList--child {
-  margin-block: var(--docs-viewer-space-1) 0;
+.docsViewerBook__modes [aria-pressed="true"],
+.docsViewerBook__heading[aria-pressed="true"] {
+  color: var(--docs-viewer-text);
+  background: var(--docs-viewer-toolbar-icon-hover-bg);
+  border-color: var(--docs-viewer-border);
 }
 
-.docsViewerBook__sectionList :where(button.docsViewer__navLink) {
-  appearance: none;
-  background: transparent;
-  cursor: pointer;
+.docsViewerBookPane .docsViewerReport__collectionSelectionControl:not([hidden]) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.docsViewerBook__branch {
+  list-style: none;
+  margin-block-end: var(--docs-viewer-space-2);
+}
+
+.docsViewerBook__heading {
   font: inherit;
-  line-height: var(--docs-viewer-line-snug);
+  font-weight: 600;
   text-align: start;
+  color: var(--docs-viewer-text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--docs-viewer-radius);
+  padding: 0 .375rem;
+  cursor: pointer;
 }
 
-.docsViewerBook__sectionList .docsViewer__navLink {
-  min-width: 0;
-  overflow-wrap: anywhere;
+.docsViewerBook__branchRows {
+  margin-inline-start: .5rem;
+  padding-inline-start: .5rem;
+  border-inline-start: 1px solid var(--docs-viewer-border);
+}
+
+.docsViewerBook__branchRows:empty {
+  display: none;
 }
 
 .docsViewerBook__icon--folder-plus {
   mask-image: url("../icons/folder-plus.svg");
 }
 
-.docsViewerBook__icon--file-question-mark {
-  mask-image: url("../icons/file-question-mark.svg");
-}
-
-.docsViewerBook__layout .docsViewerReport__collectionSelectionControl:not([hidden]) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-}
-
-.docsViewerBook__sectionPicker,
-.docsViewerBook__control[hidden],
-.docsViewerBook__layout[data-book-heading-active="false"] .docsViewerReport__empty,
-.docsViewerBook__layout[data-book-heading-active="true"] .docsViewerReport__collectionSortButton {
+.docsViewerBook__control[hidden] {
   display: none;
 }
 
-@media (max-width: 55rem) {
-  .docsViewerBook__layout {
-    --docs-viewer-book-tree-extension: 0px;
-    grid-template-columns: minmax(0, 1fr);
+@media (width > 55rem) {
+  .docsViewer[data-book-pane="split"] > [data-docs-viewer-main-view-mount] {
+    --docs-viewer-book-pane-width: min(40%, 26rem);
+    display: grid;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    grid-template-columns: var(--docs-viewer-book-pane-width) minmax(0, 1fr);
+    gap: var(--docs-viewer-space-5);
+    align-items: start;
+    min-inline-size: 0;
   }
 
-  .docsViewerBook__sectionList {
-    display: none;
+  .docsViewer[data-book-pane="split"][data-book-pane-expanded="true"] > [data-docs-viewer-main-view-mount] {
+    --docs-viewer-book-pane-width: min(56%, 40rem);
   }
 
-  .docsViewerBook__sectionPicker {
-    display: block;
-    max-width: 100%;
-    margin-block-start: var(--docs-viewer-space-3);
+  .docsViewer[data-book-pane="split"]:not([data-viewer-layout="expanded-main"]):has(.docsViewer__sidebar:not([hidden])) > [data-docs-viewer-main-view-mount] {
+    grid-column-start: 2;
+  }
+
+  .docsViewer[data-book-pane="split"]:not([data-viewer-layout="expanded-main"])[data-info-panel-state="open"] > [data-docs-viewer-main-view-mount] {
+    grid-column-end: -2;
+  }
+
+  .docsViewer[data-book-pane="split"] .docsViewer__main {
+    grid-column: 2;
+    grid-row: 1;
+    width: min(100%, var(--docs-viewer-measure));
+    justify-self: start;
+  }
+
+  .docsViewer[data-book-pane="split"] .docsViewerBookPane {
+    display: flex;
+    flex-direction: column;
+    grid-column: 1;
+    grid-row: 1;
+    position: sticky;
+    inset-block-start: var(--docs-viewer-sticky-controls-end);
+    max-block-size: calc(100dvh - var(--docs-viewer-sticky-controls-end) - var(--docs-viewer-space-4));
+  }
+
+  .docsViewer[data-book-pane="split"] .docsViewerBookPane__body {
+    overflow: auto;
+    overscroll-behavior: contain;
   }
 }

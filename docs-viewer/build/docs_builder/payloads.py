@@ -24,15 +24,19 @@ class PayloadBuilderMixin:
         self,
         doc: DocRecord,
         docs_by_id: Mapping[str, DocumentIdentity],
+        *, generated_body: str | None = None,
     ) -> dict[str, Any]:
         summary_html = render_summary_paragraphs(doc.summary)
-        content_html = self.document_content_html(doc, docs_by_id, summary_html=summary_html)
         entry = self.by_id_metadata_entry(doc, docs_by_id)
         if summary_html:
             entry["summary_html"] = summary_html
-        entry["content_html"] = content_html
-        if self.catalogue_references:
-            entry["catalogue"] = self.catalogue_reference_envelope()
+        if generated_body is None:
+            entry["content_html"] = self.document_content_html(doc, docs_by_id, summary_html=summary_html)
+            if self.catalogue_references:
+                entry["catalogue"] = self.catalogue_reference_envelope()
+        else:
+            entry.pop("report", None)
+            entry["content_html"] = generated_body
         return entry
 
     def catalogue_reference_envelope(self) -> dict[str, Any]:
@@ -59,6 +63,7 @@ class PayloadBuilderMixin:
                 resolved,
                 related_links=lambda heading: render_related_links(self, doc, heading, self.related_galleries),
                 summary_html=summary_html,
+                date_text=doc.date_display or doc.date,
             )
         except ValueError as exc:
             collection = getattr(self, "collection_id", "")

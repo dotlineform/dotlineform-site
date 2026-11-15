@@ -8,6 +8,7 @@ import time
 from typing import Any, Callable
 
 from docs_build_manifest import remove_build_manifest, write_working_build_completion
+from docs_book_tree import book_order_path, read_book_order
 from docs_discovery_selection import DiscoverySelection, read_discovery_metadata, select_built_discovery_documents
 from docs_discovery_refresh import write_recent
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
@@ -15,7 +16,7 @@ from docs_publication_ignore import read_publication_ignore_ids
 from docs_selected_documents import read_selected, refresh_workspace_selected
 from docs_publication_preparation import load_preparation
 from docs_generation import generate_documents, prepare_dependencies, prepare_restored
-from docs_workspace_config import generated_documents_path, load_docs_workspace_config, require_document_authoring, select_workspace_stage
+from docs_workspace_config import generated_documents_path, is_curated_book, load_docs_workspace_config, require_document_authoring, select_workspace_stage
 
 
 def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
@@ -78,6 +79,14 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             documents[name] = perform(f"sources/{name or 'documents'}", load_sources)
             stale_ids[name] = builder.stale_doc_payload_ids([doc.doc_id for doc in documents[name]])
 
+        book_manifests = {
+            name: {
+                **builder.manage_manifest_payload(sorted(documents[name], key=builder.doc_sort_key)),
+                "book_order": read_book_order(book_order_path(builder.media_owner)),
+            }
+            for name, builder in builders.items() if is_curated_book(builder.media_owner)
+        }
+
         media = {}
         for name, builder in builders.items():
             if builder.media_owner.media is None:
@@ -97,6 +106,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             results[name] = perform(f"documents/{name or 'ordinary'}", lambda: generate_documents(builder,
                 write=True, documents=documents[name], related_records=related_records,
                 stale_item_ids=stale_ids[name], update_selected=False, publication=publication, expand_dependencies=False,
+                book_manifests=book_manifests,
                 **({"parent_ids": parents} if not name else {}),
             ))
             diagnostics = results[name]["diagnostics"]

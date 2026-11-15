@@ -236,10 +236,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     });
     if (event && event.type === "refresh") {
       inventoryDocIds = event.docIds;
-      if (event.change?.bookSectionId) {
-        bookTools?.applyPlacement(event.change.bookSectionId, event.change.target.doc_id);
-      }
-      if (event.membershipChanged) bookTools?.updateInventory(event.docIds);
     }
     if (
       event
@@ -439,7 +435,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     settings.actionHost.replaceChildren(...(regenerateButton ? [regenerateButton] : []));
     if (bookRowSelection) {
       host.classList.add("docsViewerBook__listToolbar");
-      bookRowSelection.prepare(currentDocIds, openBookRow);
+      bookRowSelection.prepare(openBookRow);
       if (sortButton) host.appendChild(sortButton);
     } else if (sortButton) {
       root.appendChild(sortButton);
@@ -616,7 +612,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     }
 
     var chapter = settings.document;
-    if (settings.toolbarActionHost && target.collection === "book" && chapter && !chapter.copied_from_library) {
+    if (settings.toolbarActionHost && options.bookConfig && chapter && !chapter.copied_from_library) {
       var sourcesButton = host.ownerDocument.createElement("button");
       var label = "Library sources…";
       sourcesButton.type = "button";
@@ -631,7 +627,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         try {
           var module = await import("./docs-viewer-book-tools.js");
           await module.openBookLibrarySources({
-            chapter: chapter, button: sourcesButton, root: options.root,
+            book: options.bookConfig, chapter: chapter, button: sourcesButton, root: options.root,
+            readBookManifest: options.readBookManifest,
             clientOptions: options.clientOptions, startBusyOperation: options.startBusyOperation,
             commitDocumentChange: options.commitDocumentChange
           });
@@ -684,6 +681,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
           resolveAction: options.resolveAction,
           startBusyOperation: options.startBusyOperation,
           commitDocumentChange: options.commitDocumentChange,
+          commitBookToc: options.commitBookToc,
           button: button,
           clientOptions: options.clientOptions || {},
           commitDeletedDocument: settings.commitDeletedDocument,
@@ -749,6 +747,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     },
     mountCatalogueSearchCopy: options.catalogueSearchHostId ? mountCatalogueSearchCopy : null,
     mountSectionNavigation: bookTools?.mountSectionNavigation,
+    readManifest: bookTools?.readManifest,
     restoreListState: function (saved) {
       selectionOwner.restore(saved, inventoryDocIds);
       bookRowSelection?.restore(saved?.bookDocId);

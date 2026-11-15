@@ -182,6 +182,7 @@ export function createDocsViewerManagementCollectionContribution(options) {
     captureListState: defaultContribution.captureListState,
     mountCatalogueSearchCopy: defaultContribution.mountCatalogueSearchCopy,
     mountSectionNavigation: defaultContribution.mountSectionNavigation,
+    readManifest: defaultContribution.readManifest,
     restoreListState: defaultContribution.restoreListState,
     notify: defaultContribution.notify,
     renderDetailToolbar: renderDetailToolbar,

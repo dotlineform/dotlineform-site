@@ -43,6 +43,7 @@ MANAGED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg", "thumbs"})
 COLLECTION_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 SEARCH_FIELDS = frozenset({"body", "code", "heading", "identity", "last_updated", "parent_title", "summary", "title"})
 DEFAULT_DOCS_SEARCH_FIELDS = ("title", "heading", "summary", "body", "code")
+CURATED_BOOK_TYPE = "curated-book"
 
 
 @dataclass(frozen=True)
@@ -117,6 +118,10 @@ class DocsCollectionConfig:
     public_projection: DocsPublicProjectionConfig | None
     collection_type: str = ""
     pin_starred_documents: bool = False
+
+
+def is_curated_book(config: DocsStageConfig | DocsCollectionConfig) -> bool:
+    return isinstance(config, DocsCollectionConfig) and config.collection_type == CURATED_BOOK_TYPE
 
 
 @dataclass(frozen=True)
@@ -470,7 +475,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
             item = {**item, "supports_return_import": False}
         child = normalize_collection_id(item["collection"], field=f"{field}.collection")
         collection_type = item.get("collection_type", "")
-        if collection_type not in {"", "book-collection"}:
+        if collection_type not in {"", "book-collection", CURATED_BOOK_TYPE}:
             raise ValueError(f"{field}.collection_type is unsupported: {collection_type!r}")
         owns_media = child in assets.document_media_collections
         if child in seen:

@@ -1,8 +1,37 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-11-14T10:05:19Z",
+  "generated_at": "2026-11-15T16:35:19Z",
   "docs": [
+    {
+      "collection": "book",
+      "collection_title": "Living Memory",
+      "doc_id": "d-20261111-205302-b3177a",
+      "report_doc_id": "d-20261111-120000-5af14d",
+      "title": "100 words",
+      "timestamp": "2026-11-15"
+    },
+    {
+      "collection": "book",
+      "collection_title": "Living Memory",
+      "doc_id": "d-20261115-145500-c8bbfa",
+      "report_doc_id": "d-20261111-120000-5af14d",
+      "title": "Brain Structure — Illustrated Overview",
+      "timestamp": "2026-11-15"
+    },
+    {
+      "collection": "book",
+      "collection_title": "Living Memory",
+      "doc_id": "d-20261114-203807-d2955a",
+      "report_doc_id": "d-20261111-120000-5af14d",
+      "title": "Grouping the 100 words by a subset again",
+      "timestamp": "2026-11-15"
+    },
+    {
+      "doc_id": "d-20261111-120000-5af14d",
+      "title": "Living Memory",
+      "timestamp": "2026-11-15"
+    },
     {
       "collection": "works",
       "collection_title": "Context",
@@ -10,6 +39,86 @@
       "report_doc_id": "d-20260801-073826-8865a8",
       "title": "catalogue randomness",
       "timestamp": "2026-11-14"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261114-134541-0b8636",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Geometry in quantum mechanics",
+      "timestamp": "2026-11-14"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261114-164459-f7cdec",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Grouping the 100 words by a subset",
+      "timestamp": "2026-11-14"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261114-162155-29c4b1",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Gödel Numbers",
+      "timestamp": "2026-11-14"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261114-163605-1eeb31",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Gödel Theory — Importance & Relevance",
+      "timestamp": "2026-11-14"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261114-163045-dbfff1",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Gödel — Reflective Summary",
+      "timestamp": "2026-11-14"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261114-163925-f409a3",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Gödel — Why & How",
+      "timestamp": "2026-11-14"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261114-163358-297d16",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Is Gödel’s Theorem Itself Unprovable?",
+      "timestamp": "2026-11-14"
+    },
+    {
+      "collection": "book",
+      "collection_title": "Living Memory",
+      "doc_id": "d-20261111-205302-1aea36",
+      "report_doc_id": "d-20261111-120000-5af14d",
+      "title": "100 words - Linguistic theories",
+      "timestamp": "2026-11-11"
+    },
+    {
+      "collection": "book",
+      "collection_title": "Living Memory",
+      "doc_id": "d-20261111-205302-f7c451",
+      "report_doc_id": "d-20261111-120000-5af14d",
+      "title": "100 Words Related to Reflection & Memory",
+      "timestamp": "2026-11-11"
+    },
+    {
+      "collection": "book",
+      "collection_title": "Living Memory",
+      "doc_id": "d-20261111-230141-ae401b",
+      "report_doc_id": "d-20261111-120000-5af14d",
+      "title": "Part 1 preface",
+      "timestamp": "2026-11-11"
     },
     {
       "collection": "works",
@@ -50,118 +159,6 @@
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Forgetting — Lost vs Inaccessible",
       "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-122252-edeac1",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Free Energy Principle (Bayesian thinking)",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-171009-d5bac8",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Free Energy Principle (FEP)",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-121736-67f1ea",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Free Energy Principle (FEP) - Perception–action loop",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-123246-8fd28b",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Freedom and Collapse",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-125413-aca68d",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Frequency Origins",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-125921-12ce13",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Future memories",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-130039-134421",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Future Memories — Anticipation, Intention, and the Art of Remembering Forward",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-115351-610a09",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Ontology of Fields",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-114705-4d73dc",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Square Grid — Field Theory Symbolism",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-164336-ceaab1",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Decoherence, interference and quantum computation",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-154331-7a5001",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Designed vs. Evolutionary",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-084726-91ec87",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Engram Lineage × Select–Change–Reconstruct",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-083644-ed987d",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Engram Neuron Synapse Estimates",
-      "timestamp": "2026-10-27"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261027-085236-87b158",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Engrams",
-      "timestamp": "2026-10-27"
     }
   ]
 }

@@ -605,6 +605,13 @@ function bindCollectionKeyboardNavigation(state) {
       state.filterInputNode.focus();
       return;
     }
+    if (state.sectionNavigation?.usesTreeRows()) {
+      var links = Array.from(state.rowsNode.querySelectorAll(".docsViewerReport__collectionButton"));
+      var next = links[links.indexOf(link) + (event.key === "ArrowUp" ? -1 : 1)];
+      if (next) next.focus();
+      else if (event.key === "ArrowUp") state.filterInputNode.focus();
+      return;
+    }
     var row = link.parentElement;
     var up = event.key === "ArrowUp";
     var adjacent = up ? row.previousElementSibling : row.nextElementSibling;
@@ -801,7 +808,10 @@ function renderRows(state, matches, pinnedMatches, retainedPinnedRows, thumbnail
   } else {
     clearNode(state.rowsNode);
     state.renderedDiscoveryList = null;
-    if (!matches.length && !rows.length) {
+    var treeRendered = state.sectionNavigation?.renderTree(state.rowsNode, Boolean(state.query.trim()), function (match, host) {
+      rows.push(appendDocRow(state, match, reserveThumbnailSpace, host, thumbnailLoading));
+    });
+    if (!treeRendered && !matches.length && !rows.length) {
       var empty = document.createElement("li");
       empty.className = "docsViewerReport__empty";
       empty.textContent = state.browsingData.rows.length
@@ -811,10 +821,12 @@ function renderRows(state, matches, pinnedMatches, retainedPinnedRows, thumbnail
       state.rowsNode.appendChild(empty);
       return;
     }
-    matches.forEach(function (match) {
-      if (match.galleryId) appendGalleryRow(state, match);
-      else rows.push(appendDocRow(state, match, reserveThumbnailSpace, state.rowsNode, thumbnailLoading));
-    });
+    if (!treeRendered) {
+      matches.forEach(function (match) {
+        if (match.galleryId) appendGalleryRow(state, match);
+        else rows.push(appendDocRow(state, match, reserveThumbnailSpace, state.rowsNode, thumbnailLoading));
+      });
+    }
     if (retainList) state.renderedDiscoveryList = { matches, items: rows };
   }
   if (!rows.some(function (record) { return record.hasLeadingContent; })) return;
@@ -1077,7 +1089,8 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   var refs = renderShell(context, collection, features);
   var readGallerySearch = collectionIdValue === "catalogue" && typeof context.openMediaTarget === "function"
     && context.collectionProvider.readCatalogueGalleryReportSearch;
-  var readContextManifest = collectionIdValue === "works" && context.collectionProvider.readContextManifest;
+  var readCollectionManifest = contributionCallback(contribution, "readManifest")
+    || (collectionIdValue === "works" && context.collectionProvider.readContextManifest);
   var state = {
     root: root,
     openDocument: context.openDocument,
@@ -1388,7 +1401,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   publishState(state, "loading", null, "report-loading");
   state.loadManifest = function (starsRead) {
     if (!state.mounted) return Promise.resolve(false);
-    return (readContextManifest ? readContextManifest() : fetchDocsCollectionManifest(url)).then(async function (payload) {
+    return (readCollectionManifest ? readCollectionManifest() : fetchDocsCollectionManifest(url)).then(async function (payload) {
       if (!state.mounted) return false;
       cancelCollectionSearch(state);
       state.browsingData.replace(payload.docs);

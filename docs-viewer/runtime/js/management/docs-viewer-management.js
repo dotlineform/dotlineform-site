@@ -66,7 +66,8 @@ export function createDocsViewerManagementActionContext(options = {}) {
   var contextOptions = {
     documentTarget: documentTarget,
     subtreeDocIds: subtreeDocIds,
-    collectionHostDocIds: options.collectionHostDocIds
+    collectionHostDocIds: options.collectionHostDocIds,
+    collectionType: options.collectionTypeFor?.(documentTarget)
   };
   return createDocsViewerActionContext(contextOptions);
 }
@@ -80,7 +81,8 @@ export function createDocsViewerManagementActionResolver(options = {}) {
       documentIndex: options.documentIndex,
       includeSubtree: definition && definition.target === DOCS_VIEWER_ACTION_TARGETS.DOCUMENT_SUBTREE,
       selectedDocument: selectedDocument,
-      collectionHostDocIds: options.collectionHostDocIds()
+      collectionHostDocIds: options.collectionHostDocIds(),
+      collectionTypeFor: options.collectionTypeFor
     };
     if (arguments.length > 1) {
       contextOptions.documentTarget = typeof target === "string" ? { doc_id: target } : target;
@@ -171,6 +173,11 @@ export function initDocsViewerManagement(context) {
   resolveAction = createDocsViewerManagementActionResolver({
     documentIndex: documentIndex,
     selectedDocument: selectedDocument,
+    collectionTypeFor: target => {
+      const config = domains.workspaceConfig.activeConfig;
+      return (target?.collection ? config?.collectionsById.get(target.collection)
+        : config?.collections.find(collection => collection.reportHostDocId === target?.doc_id))?.collectionType;
+    },
     collectionHostDocIds: function () {
       var config = domains.workspaceConfig.activeConfig;
       return config ? config.collections.map(function (collection) { return collection.reportHostDocId; }) : [];
@@ -199,6 +206,7 @@ export function initDocsViewerManagement(context) {
   function openCollectionNewDoc(destination, options = {}) {
     if (management.managementBusy || !management.managementAvailable || resolveAction(DOCS_VIEWER_ACTION_IDS.NEW_COLLECTION_DOC, destination).disabled) return;
     return actionController.handleCreateCollectionDocument(destination, {
+      bookHeadingId: options.bookHeadingId,
       refreshAndSelect: options.refreshDocument,
       restoreFocus: options.restoreFocus
     });
@@ -504,7 +512,10 @@ export function initDocsViewerManagement(context) {
 
   async function adoptImportResult(result) {
     if (result.dry_run || result.preview_only || !result.target || !result.record) return;
-    var projectionErrors = context.commitDocumentChange({ target: result.target, record: result.record }) || [];
+    var projectionErrors = context.commitDocumentChange({
+      target: result.target, record: result.record, book_heading_id: result.book_heading_id,
+      book_toc: result.rebuild?.book_toc
+    }) || [];
     if (selectedDocument.documentTarget && managedDocumentTargetsEqual(result.target, selectedDocument.documentTarget)) {
       try {
         await context.routeCommands.refreshDocument(result.target);
@@ -522,6 +533,7 @@ export function initDocsViewerManagement(context) {
     results.filter(Boolean).forEach(function (result) {
       if (result.dry_run || result.preview_only) return;
       if (result.collection === true) {
+        projectionErrors.push(...context.commitBookToc(result.generation?.rebuild?.book_toc));
         (result.records || []).forEach(function (item) {
           if (["created", "overwritten"].includes(item.status) && item.committed_document) {
             projectionErrors.push(...(context.commitDocumentChange(item.committed_document) || []));

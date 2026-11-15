@@ -69,6 +69,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             applied = True
         payload["rebuild"] = rebuild_prepared_document(
             repo_root, plan.prepared_owner, plan.prepared_document, parent_ids=plan.parent_ids,
+            book_order=plan.book_order,
         )["rebuild"]
     except Exception as error:
         if applied:

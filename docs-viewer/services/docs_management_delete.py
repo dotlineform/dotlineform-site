@@ -6,7 +6,7 @@ from typing import Any
 
 from docs_book_tree import remove_book_placements
 from docs_document_identity import is_document_id
-from docs_document_images import THUMBNAIL_COLLECTIONS, document_thumbnail_filename
+from docs_document_images import document_thumbnail_filename, supports_document_thumbnail
 from docs_index_order import exclude_nodes, index_order_path, index_order_text, read_index_order, tree_parent_ids
 from docs_management_context import log_event
 from docs_management_document_target import ManagedDocumentCollection, confined_document_path, normalize_managed_document_target, resolve_managed_document_collection
@@ -14,7 +14,7 @@ from docs_publication_paths import confined
 from docs_publication_preparation import PublicationHandoffError, PublicationPreparation, load_preparation
 from docs_selected_documents import read_selected, selected_path, selected_text
 from docs_source_model import write_text_atomic
-from docs_workspace_config import require_document_authoring
+from docs_workspace_config import is_curated_book, require_document_authoring
 from docs_write_rebuild import complete_document_deletion
 
 
@@ -24,6 +24,7 @@ def collect_deleted_media(owner: ManagedDocumentCollection, doc_ids: list[str], 
     directories: list[Path] = []
     if media is None:
         return directories
+    has_thumbnail_storage = supports_document_thumbnail(owner.document_config)
     for doc_id in doc_ids:
         removals: dict[str, list[str]] = {}
         for kind, config in media.types.items():
@@ -43,9 +44,9 @@ def collect_deleted_media(owner: ManagedDocumentCollection, doc_ids: list[str], 
                 directories.append(directory)
 
             if kind == "thumbs":
-                if owner.collection not in THUMBNAIL_COLLECTIONS:
+                if not has_thumbnail_storage:
                     continue
-                identity = document_thumbnail_filename(doc_id, collection=owner.collection)
+                identity = document_thumbnail_filename(doc_id)
                 path = confined(root, identity)
                 if path.exists():
                     identities.append(identity)
@@ -62,7 +63,7 @@ def collect_deleted_media(owner: ManagedDocumentCollection, doc_ids: list[str], 
 
 def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
     collection = "collection" in body
-    book_selection = body.get("collection") == "book" and "doc_ids" in body
+    book_selection = collection and "doc_ids" in body
     if book_selection:
         expected = {"collection", "doc_ids", "confirm"}
     else:
@@ -75,13 +76,17 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
     else:
         if not isinstance(body["doc_ids"], list) or not body["doc_ids"]:
             raise ValueError("Delete requires a nonempty document ID array")
-        identity = {"collection": "book"} if book_selection else {}
-        requested_ids = [normalize_managed_document_target({**identity, "doc_id": value})["doc_id"] for value in body["doc_ids"]]
+        identity = {"collection": body["collection"]} if book_selection else {}
+        targets = [normalize_managed_document_target({**identity, "doc_id": value}) for value in body["doc_ids"]]
+        requested_ids = [item["doc_id"] for item in targets]
         if book_selection and len(set(requested_ids)) != len(requested_ids):
             raise ValueError("Book Delete requires distinct document IDs")
-        target = identity if book_selection else {"doc_id": requested_ids[0]}
+        target = {"collection": targets[0]["collection"]} if book_selection else targets[0]
     owner = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
     require_document_authoring(owner.parent_config)
+    is_book = is_curated_book(owner.document_config)
+    if book_selection and not is_book:
+        raise ValueError("Batch collection Delete requires a configured Book collection")
     if owner.collection == "catalogue":
         raise ValueError("Catalogue documents are deleted through Regenerate")
     payload = {
@@ -92,6 +97,7 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
     }
     try:
         tree = None
+        book_order = None
         parents = None
         delete_ids = requested_ids
         source_paths = {}
@@ -144,16 +150,19 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
             write_text_atomic(order_path, index_order_text(exclude_nodes(tree, removed)))
             parents = {doc_id: parent for doc_id, parent in parents.items() if doc_id not in removed}
             payload["index_updated"] = True
-        elif owner.collection == "book":
+        elif is_book:
             payload["phase"] = "Book tree"
-            remove_book_placements(owner, removed)
+            book_order = remove_book_placements(owner, removed)
         payload["phase"] = "selected"
         if rows != selected["docs"]:
             write_text_atomic(selected_path(owner.parent_config), selected_text(updated_selected))
             publication.selected()
         payload["selected_updated"] = True
         payload["phase"] = "generation"
-        payload["rebuild"] = complete_document_deletion(repo_root, owner, delete_ids, updated_selected, parent_ids=parents, publication=publication)
+        payload["rebuild"] = complete_document_deletion(
+            repo_root, owner, delete_ids, updated_selected, parent_ids=parents,
+            publication=publication, book_order=book_order,
+        )
         payload.update(generation_complete=True, publication_handoff_complete=True, phase="Working media folder removal")
         for directory in media_directories:
             directory.rmdir()

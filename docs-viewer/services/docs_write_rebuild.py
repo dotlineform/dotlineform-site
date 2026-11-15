@@ -144,6 +144,7 @@ def _rebuild_outputs(
                  "doc_ids": targets or [], "reason": "explicit document generation",
                  **({"collection": collection} if collection else {})},
         "diagnostics": {"docs": result["diagnostics"]},
+        **({"book_toc": result["book_toc"]} if "book_toc" in result else {}),
     }
 
 
@@ -253,6 +254,7 @@ def rebuild_prepared_document_outputs(
     *, parent_ids: dict[str, str] | None = None,
     media_change: DocumentMediaChange | None = None,
     media_writes: dict[str, list[str]] | None = None,
+    book_order: dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
     """Carry one prepared source through the existing exact document/Links builder."""
     build_dir = Path(__file__).resolve().parents[1] / "build"
@@ -275,11 +277,13 @@ def rebuild_prepared_document_outputs(
     started_at = time.perf_counter()
     result = generate_documents(builder, write=True, documents=[record], media_changes={document.doc_id: media_change} if media_change is not None else None,
                          media_writes={document.doc_id: media_writes} if media_writes is not None else None,
+                         book_order=book_order,
                          **({"parent_ids": parent_ids} if not owner.collection else {}))
     return {
         "ok": True, "steps": [], "search": {"mode": "none", "doc_ids": []},
         "docs": {"mode": "targeted", "doc_ids": [document.doc_id], "reason": "prepared source supplied"},
         "diagnostics": {"docs": result["diagnostics"]},
+        **({"book_toc": result["book_toc"]} if "book_toc" in result else {}),
         "elapsed_seconds": round(time.perf_counter() - started_at, 3),
     }
 
@@ -364,6 +368,7 @@ def complete_document_deletion(
     repo_root: Path, owner: ManagedDocumentCollection, doc_ids: list[str],
     selected_payload: dict[str, Any], *, parent_ids: dict[str, str] | None,
     publication: PublicationPreparation,
+    book_order: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Apply known document/Links removals using carried configuration and selections."""
     build_dir = Path(__file__).resolve().parents[1] / "build"
@@ -390,9 +395,10 @@ def complete_document_deletion(
         remove_build_manifest(repo_root, owner.parent_config)
     result = generate_documents(
         builder, write=True, documents=[], stale_item_ids=doc_ids, parent_ids=parent_ids,
-        selected_payload=selected_payload, update_selected=False, publication=publication,
+        selected_payload=selected_payload, update_selected=False, publication=publication, book_order=book_order,
     )
-    return {"ok": True, "diagnostics": result["diagnostics"]}
+    return {"ok": True, "diagnostics": result["diagnostics"],
+            **({"book_toc": result["book_toc"]} if "book_toc" in result else {})}
 
 
 def perform_collection_source_write_and_rebuild(

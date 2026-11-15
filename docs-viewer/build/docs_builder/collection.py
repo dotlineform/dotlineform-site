@@ -22,7 +22,7 @@ from .rendering_inputs import RenderingInputs
 from .source import DocRecord, DocumentIdentity
 from .write_plan import ItemProjection
 from docs_document_identity import doc_updated_date
-from docs_workspace_config import DocsWorkspaceConfig
+from docs_workspace_config import DocsWorkspaceConfig, is_curated_book
 
 
 class CollectionDocsBuilder(DocsDataBuilder):
@@ -95,7 +95,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             row = self.manifest_row(doc)
             if self.config.stage == "working" and self.collection_id != "catalogue":
                 row["draft"] = doc.front_matter["draft"]
-                if self.collection_id == "book":
+                if is_curated_book(self.collection_config):
                     for field in ("copied_from_library", "library_sources"):
                         if field in doc.front_matter:
                             row[field] = doc.front_matter[field]

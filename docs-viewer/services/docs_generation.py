@@ -6,6 +6,7 @@ from functools import partial
 from pathlib import Path
 from typing import Any
 
+from docs_book_toc import BookContents, book_contents, changed_book_contents, refresh_book_contents, render_book_contents
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_publication_preparation import PublicationHandoffError, load_preparation, remove_working_media
 from docs_selected_documents import read_selected, refresh_selected_documents
@@ -23,6 +24,9 @@ def generate_documents(
     adopted_works: dict[str, dict[str, Any]] | None = None,
     media_changes: dict[str, Any] | None = None,
     media_writes: dict[str, dict[str, list[str]]] | None = None,
+    book_order: dict[str, Any] | None = None,
+    book_manifests: dict[str, dict[str, Any]] | None = None,
+    book_chapter_sources: tuple[str, list[dict[str, str]]] | None = None,
 ) -> dict[str, Any]:
     """Prepare the requested scope, execute it, and hand off completed effects.
 
@@ -37,9 +41,10 @@ def generate_documents(
     from docs_builder.ordinary_metadata import navigation_rows, read_saved_navigation, targeted_document_metadata
     from docs_builder.related_links import prepare_related_links
     from docs_catalogue_projection import CatalogueDocumentProjection
-    from docs_workspace_config import generated_documents_path
+    from docs_workspace_config import generated_documents_path, is_curated_book
 
     collection = getattr(builder, "collection_id", "")
+    working_book = builder.config.stage == "working" and is_curated_book(builder.media_owner)
     builder.warnings = []
     if not collection and parent_ids is None:
         parent_ids = tree_parent_ids(read_index_order(index_order_path(builder.config)))
@@ -60,13 +65,36 @@ def generate_documents(
 
     previous_tree = None
     previous_tree_text = None
+    book_refresh = None
     if collection:
         ordered_docs = sorted(docs, key=builder.doc_sort_key)
-        manifest = (builder.manage_manifest_payload(ordered_docs)
-                    if builder.config.stage == "working" else builder.public_manifest_payload(ordered_docs))
+        supplied_manifest = (book_manifests or {}).get(collection)
+        manifest = supplied_manifest if supplied_manifest is not None else (
+            builder.manage_manifest_payload(ordered_docs)
+            if builder.config.stage == "working" else builder.public_manifest_payload(ordered_docs)
+        )
         selected_manifest_rows = manifest["docs"]
+        previous_manifest = None
         if builder.targeted_build:
-            manifest = merge_collection_manifest(builder.saved_collection_metadata(), manifest, builder.only_doc_ids)
+            previous_manifest = builder.saved_collection_metadata()
+            manifest = merge_collection_manifest(previous_manifest, manifest, builder.only_doc_ids)
+        if working_book and supplied_manifest is None:
+            if not builder.targeted_build:
+                from docs_book_tree import book_order_path, read_book_order
+
+                book_order = read_book_order(book_order_path(builder.media_owner))
+                if write and (builder.output_dir / builder.manifest_filename).is_file():
+                    previous_manifest = builder.saved_collection_metadata()
+            if book_order is not None:
+                manifest["book_order"] = book_order
+            if book_chapter_sources is not None:
+                from docs_book_tree import project_chapter_sources
+
+                project_chapter_sources(manifest, *book_chapter_sources)
+            if write and previous_manifest is not None:
+                book_refresh = changed_book_contents(
+                    previous_manifest, manifest, selected=set(builder.only_doc_ids) if builder.targeted_build else None,
+                )
         identities = {row["doc_id"]: CollectionDocumentSummary(row["doc_id"], row["title"]) for row in manifest["docs"]}
         selected_docs = ordered_docs
         navigation = {}
@@ -126,9 +154,6 @@ def generate_documents(
                 project_context_catalogue_targets(
                     context_rows[doc.doc_id], builder.catalogue_references, builder.related_galleries,
                 )
-        if collection == "book" and builder.config.stage == "working" and not builder.targeted_build:
-            from docs_book_tree import rebuild_book_tree
-            rebuild_book_tree(builder.media_owner, set(identities), write=write)
 
     if publication is not None:
         publication.prepare(builder, selected_docs, navigation,
@@ -153,10 +178,22 @@ def generate_documents(
             started_at=started_at, project_item=project_item,
         )
     else:
+        generated_bodies = {}
+        if publication is not None:
+            hosts = {owner.report_host_doc_id: owner for owner in builder.config.collections if is_curated_book(owner)}
+            for doc in selected_docs:
+                book = hosts.get(doc.doc_id)
+                if book is None:
+                    continue
+                saved = (book_manifests or {}).get(book.collection)
+                if saved is None:
+                    saved = publication.metadata.read_management(book.collection)
+                generated_bodies[doc.doc_id] = render_book_contents(doc.title, book.collection, book_contents(saved))
         result = builder.run(
             write=write, documents=selected_docs, document_identities=identities, stale_item_ids=stale_item_ids,
             related_documents=related_documents, project_item=project_item,
             index_tree_payload=navigation, recent_payload=recent, previous_tree_text=previous_tree_text,
+            generated_bodies=generated_bodies,
         )
     result.update(media_snapshot=media_snapshot, links_build=links_build)
     if write and publication is not None and not collection:
@@ -173,6 +210,7 @@ def generate_documents(
             related_records=related_records, expand_dependencies=expand_dependencies,
             catalogue_work_selection=catalogue_work_selection,
             catalogue_pending=catalogue_pending,
+            book_refresh=book_refresh,
         )
     if emit_diagnostics:
         builder.print_diagnostics(result["diagnostics"])
@@ -184,12 +222,18 @@ def complete_generation(
     selected_changed: bool, related_records: dict[Any, Any], expand_dependencies: bool,
     catalogue_work_selection: bool,
     catalogue_pending: dict[str, Any] | None,
+    book_refresh: BookContents | None = None,
 ) -> None:
     """Record completed artifacts, finish bounded dependent work, then persist."""
     try:
         publication.documents(builder, set(result["item_payloads"]), deleted,
                               changed_ids=set(result["write_plan"]["changed_item_ids"]),
                               catalogue_work_selection=catalogue_work_selection)
+        if book_refresh is not None:
+            host = refresh_book_contents(builder.config, builder.media_owner, book_refresh)
+            if host is not None:
+                publication.select_ordinary_body(host["doc_id"])
+                result["book_toc"] = host
         publication.write_metadata()
         if selected_changed:
             publication.selected()

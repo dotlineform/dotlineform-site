@@ -142,9 +142,11 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - Close a delivery when the complete result works and its durable owner is current.
 - Feature documents should be updated with useful decisions and future direction without becoming long execution diaries.
 
-## Proposed Features
+## Active Features
 
-- [Book Publication](deliveries/Book_Publication.md) — Proposed shared design for curated books, starting with Living Memory, with a Manage split view, Library copy destinations, and a generated ready-only table of contents for each book.
+- [Book Publication](deliveries/Book_Publication.md) — First local release accepted and closed out on 2026-11-15. Living Memory is in Preview and the prepared site. Pages deployment, live verification, and the withdrawal trial remain open.
+
+## Proposed Features
 
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
 

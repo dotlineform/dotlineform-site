@@ -57,17 +57,19 @@ var PRIVATE_REPORT_DOC_IDS = new Set([
 var CATALOGUE_ACTION_IDS = new Set([IDS.SET_SELECTED, IDS.COPY_LINK, IDS.EXPORT_DOCS]);
 var STRUCTURAL_DOCUMENT_ACTION_IDS = new Set([IDS.DELETE, IDS.SET_SELECTED, IDS.SET_DRAFT]);
 
-function documentActionRestriction(actionId, target, collectionHostDocIds) {
+function documentActionRestriction(actionId, target, context) {
   if (!target) return "";
   if (actionId === IDS.NEW && target.collection) return "Use Collection Actions to create a collection document.";
-  if (actionId === IDS.THUMB && !["library", "book", "works", "concepts", "moments"].includes(target.collection)) {
+  if (actionId === IDS.THUMB && context.collectionType !== "curated-book"
+    && !["library", "works", "concepts", "moments"].includes(target.collection)) {
     return "Thumb is available for authored collection documents.";
   }
   if (target.collection === "catalogue" && !CATALOGUE_ACTION_IDS.has(actionId)) {
     return "Catalogue Work documents are managed through Work edits and Regenerate.";
   }
   if (!target.collection && STRUCTURAL_DOCUMENT_ACTION_IDS.has(actionId)) {
-    if (collectionHostDocIds.includes(target.doc_id)) {
+    if (normalizeIds(context.collectionHostDocIds).includes(target.doc_id)
+      && !(actionId === IDS.SET_DRAFT && context.collectionType === "curated-book")) {
       return "Collection hosts are maintained parts of the site structure.";
     }
     if (PRIVATE_REPORT_DOC_IDS.has(target.doc_id)) {
@@ -134,7 +136,8 @@ export function createDocsViewerActionContext(options = {}) {
   return {
     documentTarget: options.documentTarget || null,
     subtreeDocIds: normalizeIds(options.subtreeDocIds),
-    collectionHostDocIds: normalizeIds(options.collectionHostDocIds)
+    collectionHostDocIds: normalizeIds(options.collectionHostDocIds),
+    collectionType: options.collectionType
   };
 }
 
@@ -171,7 +174,7 @@ export function resolveDocsViewerAction(actionId, context = {}) {
   }
 
   var restriction = definition.target !== TARGETS.WORKSPACE || definition.id === IDS.NEW
-    ? documentActionRestriction(definition.id, documentTarget, normalizeIds(context.collectionHostDocIds)) : "";
+    ? documentActionRestriction(definition.id, documentTarget, context) : "";
   if (restriction) disabledReason = restriction;
   return {
     actionId: definition.id,

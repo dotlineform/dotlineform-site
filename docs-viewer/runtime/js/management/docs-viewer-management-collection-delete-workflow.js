@@ -10,10 +10,13 @@ export async function openBookSelectionDeleteWorkflow(options) {
   var label = count + " Book " + (count === 1 ? "document" : "documents");
   var confirmed = await openDocsViewerConfirmModal({
     root: options.root, restoreFocus: options.restoreFocus, title: "Delete " + label + "?",
-    body: "This permanently deletes the checked Book documents and their owned media and removes them from their sections. The Library originals stay in Library.",
+    body: "This permanently deletes the checked Book documents and their owned media and removes their placements. The Library originals stay in Library.",
     primaryLabel: "Delete", primaryTone: "danger", initialFocus: "cancel"
   });
   if (!confirmed) return;
+  var displayed = options.displayedDocumentTarget();
+  var deletingDisplayed = displayed?.collection === target.collection && target.doc_ids.includes(displayed.doc_id);
+  if (deletingDisplayed && !await options.confirmDocumentNavigation()) return;
 
   var stopBusy = options.startBusyOperation();
   options.setStatus("", false);
@@ -26,11 +29,16 @@ export async function openBookSelectionDeleteWorkflow(options) {
       deleteError = error;
       payload = error.payload;
     }
-    var failures = [];
-    for (var docId of payload?.deleted_doc_ids || []) {
+    var failures = options.commitBookToc(payload?.rebuild?.book_toc);
+    var deleted = payload?.deleted_doc_ids || [];
+    for (var docId of deleted) {
+      if (deletingDisplayed && docId === displayed.doc_id) continue;
       failures.push(...(options.commitDocumentChange({
         target: { collection: target.collection, doc_id: docId }, deleted: true
       }) || []));
+    }
+    if (deletingDisplayed && deleted.includes(displayed.doc_id)) {
+      try { await options.commitDisplayedDelete(displayed); } catch (error) { failures.push(error); }
     }
     if (failures.length) {
       var prefix = deleteError ? deleteError.message + " " : "Documents deleted. ";
@@ -91,7 +99,9 @@ export function createDocsViewerManagementCollectionDeleteWorkflow(options) {
         throw new Error("Delete did not return its completed exact collection target.");
       }
       complete = true;
+      var tocFailures = options.commitBookToc(payload.rebuild?.book_toc);
       await options.commitDeletedDocument(target);
+      if (tocFailures.length) throw new Error(tocFailures.map(error => error.message).join(" "));
       options.setStatus("", false);
       return payload;
     } catch (error) {

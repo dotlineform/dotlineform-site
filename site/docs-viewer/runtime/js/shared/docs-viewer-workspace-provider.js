@@ -91,6 +91,9 @@ export function createDocsViewerWorkspaceProvider(options) {
   };
 
   if (source) {
+    provider.readBookManifest = source.readBookManifest;
+    provider.commitBookToc = source.commitBookToc;
+    provider.subscribeBookToc = source.subscribeBookToc;
     provider.commitDocumentChange = source.commitDocumentChange;
     provider.subscribeDocumentChanges = source.subscribeDocumentChanges;
     provider.commitDocumentStar = source.commitDocumentStar;

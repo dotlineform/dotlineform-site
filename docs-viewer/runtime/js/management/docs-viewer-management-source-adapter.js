@@ -1,4 +1,5 @@
 import {
+  fetchManagementJson,
   prepareSourceMedia,
   readManagedDocSource,
   readManagedDocMetadata,
@@ -10,6 +11,7 @@ import {
   saveManagedDocSource
 } from "./docs-viewer-management-client.js";
 import { documentTarget } from "../shared/docs-viewer-document-target.js";
+import { createBookManifestStore } from "./docs-viewer-book-manifest.js";
 
 export function createDocsViewerManagementSourceAdapter(options) {
   var settings = options || {};
@@ -19,10 +21,13 @@ export function createDocsViewerManagementSourceAdapter(options) {
 
   var changeListeners = new Set();
   var starListeners = new Set();
+  var tocListeners = new Set();
+  var bookManifests = createBookManifestStore(path => fetchManagementJson(path, "GET", undefined, clientOptions({ cache: "no-store" })));
   function commitDocumentChange(change) {
     var target = documentTarget(change.target);
     if (!change.deleted && (!change.record || change.record.doc_id !== target.doc_id)) throw new Error("Committed record did not match its target.");
-    var failures = [];
+    var failures = commitBookToc(change.book_toc);
+    try { bookManifests.project(Object.assign({}, change, { target: target })); } catch (error) { failures.push(error); }
     changeListeners.forEach(function (listener) {
       try { listener(Object.assign({}, change, { target: target })); } catch (error) { failures.push(error); }
     });
@@ -30,9 +35,21 @@ export function createDocsViewerManagementSourceAdapter(options) {
     return failures;
   }
 
+  function commitBookToc(payload) {
+    var failures = [];
+    if (payload) tocListeners.forEach(function (listener) {
+      try { listener(payload); } catch (error) { failures.push(error); }
+    });
+    return failures;
+  }
+
   function projectSavedSource(response) {
     if (response && response.source_saved && response.committed_document) {
-      try { response.projection_errors = commitDocumentChange(response.committed_document).map(function (error) { return error.message; }); }
+      try {
+        response.projection_errors = commitDocumentChange({
+          ...response.committed_document, book_toc: response.rebuild?.book_toc
+        }).map(function (error) { return error.message; });
+      }
       catch (error) { response.projection_errors = [error.message]; }
     }
     return response;
@@ -48,6 +65,9 @@ export function createDocsViewerManagementSourceAdapter(options) {
   }
 
   var adapter = {
+    readBookManifest: bookManifests.read,
+    commitBookToc: commitBookToc,
+    subscribeBookToc: function (listener) { tocListeners.add(listener); },
     commitDocumentChange: commitDocumentChange,
     subscribeDocumentChanges: function (listener) { changeListeners.add(listener); return function () { changeListeners.delete(listener); }; },
     commitDocumentStar: function (change) { starListeners.forEach(function (listener) { listener(change); }); },

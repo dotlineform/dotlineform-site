@@ -8,9 +8,10 @@ from typing import Any
 
 from docs_document_media_ownership import DocumentMediaChange, document_media_references, owned_document_files
 from docs_document_images import document_thumbnail_filename
+from docs_json_files import load_json_object
 from docs_publication_ignore import read_publication_ignore_ids
-from docs_publication_metadata import PublicMetadata
-from docs_publication_paths import confined
+from docs_publication_metadata import PublicMetadata, tree_ids
+from docs_publication_paths import confined, shared_path
 from docs_publication_queue import read_queue, save_queue, select_document, select_shared
 from docs_publication_transfer import delete_path
 from docs_source_model import write_text_atomic
@@ -28,6 +29,20 @@ class PublicationHandoffError(RuntimeError):
 
 def write_json(path: Path, value: Any) -> None:
     write_text_atomic(path, json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def _select_ordinary_body(pending: dict[str, Any], doc_id: str) -> None:
+    media = pending["current_documents"].get(doc_id, {}).get("media", {})
+    select_document(pending, doc_id, "", media={}, current_media=media)
+
+
+def queue_eligible_ordinary_body(workspace: Any, doc_id: str) -> None:
+    """Hand off a changed body using the completed public Index and existing queue."""
+    index = load_json_object(shared_path(workspace, "workspace", "ordinary_index"), "Public Index")
+    if doc_id in tree_ids(index["docs"]):
+        pending = read_queue(workspace)
+        _select_ordinary_body(pending, doc_id)
+        save_queue(workspace, pending)
 
 
 def remove_working_media(removals: dict[tuple[str, str, str], Path], effects: list[dict[str, str]]) -> None:
@@ -86,13 +101,13 @@ class PublicationPreparation:
                 builder.media_owner, doc_id=doc.doc_id, body=doc.body_markdown,
             )
             if doc.has_thumbnail:
-                media["thumbs"] = [document_thumbnail_filename(doc.doc_id, collection=collection)]
+                media["thumbs"] = [document_thumbnail_filename(doc.doc_id)]
             self.media[doc.doc_id] = media
             if media_writes is not None and doc.doc_id in media_writes:
                 self.media_writes[doc.doc_id] = media_writes[doc.doc_id]
             else:
                 self.media_writes.pop(doc.doc_id, None)
-            self.current_owned_media[doc.doc_id] = owned_document_files(doc.doc_id, collection, media)
+            self.current_owned_media[doc.doc_id] = owned_document_files(doc.doc_id, builder.media_owner, media)
             self.ready_media[doc.doc_id] = change.ready if change is not None else {}
             removals = change.removed if change is not None else {}
             self.media_removals[doc.doc_id] = removals
@@ -181,6 +196,11 @@ class PublicationPreparation:
     def selected(self) -> None:
         """Select the saved author-owned list without filtering or copying it."""
         select_shared(self.pending, "workspace", "selected")
+
+    def select_ordinary_body(self, doc_id: str) -> None:
+        """Select a changed generated body while preserving any queued media effects."""
+        if doc_id in self.metadata.membership(""):
+            _select_ordinary_body(self.pending, doc_id)
 
     def shared(self, owner: str, output: str) -> None:
         """Select an already completed shared file without another representation."""

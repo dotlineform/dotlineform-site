@@ -1,6 +1,7 @@
 import {
   startDocsViewerManageApp
 } from "../shared/docs-viewer-app-boot.js";
+import { createDocsViewerBookPane } from "./docs-viewer-book-pane.js";
 import {
   docsViewerImageDetailAdapter
 } from "../shared/docs-viewer-image-detail.js";
@@ -103,6 +104,7 @@ startDocsViewerManageApp({
     }
   ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
+  createDocumentSidePane: createDocsViewerBookPane,
   imageDetailAdapter: docsViewerImageDetailAdapter,
   mediaDetailAdapter: docsViewerMediaDetailAdapter,
   viewRegistryContributions: withDocsViewerManagedTableToolDefinitions(

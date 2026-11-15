@@ -34,6 +34,7 @@ def merge_collection_manifest(
     rows = [dict(row) for row in previous["docs"] if row["doc_id"] not in selected]
     rows.extend(replacement["docs"])
     return {
+        **previous,
         "docs": sorted(rows, key=lambda row: (row["title"].lower(), row["doc_id"])),
     }
 

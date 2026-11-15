@@ -11,6 +11,13 @@ export function collectionSequenceForLink(link) {
   return sequencesByLink.get(link)?.();
 }
 
+export function registerBookTocLinks(toc) {
+  const links = Array.from(toc.querySelectorAll("a"));
+  if (links.length < 2) return;
+  const rows = links.map(link => ({ href: link.href, title: link.textContent }));
+  links.forEach((link, position) => registerCollectionNavigationLink(link, () => ({ rows, position })));
+}
+
 export function createCollectionNavigation(document, sequence, atTop) {
   const { rows, position } = sequence;
   const nav = document.createElement("nav");
