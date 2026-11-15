@@ -6,8 +6,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from docs_book_toc import edition_rows
 from docs_publication_paths import confined, shared_path, working_owner
-from docs_workspace_config import generated_documents_path, select_workspace_stage
+from docs_workspace_config import generated_documents_path, is_curated_book, select_workspace_stage
 
 
 def tree_ids(rows: list[dict[str, Any]]) -> set[str]:
@@ -104,14 +105,11 @@ class PublicMetadata:
         host_eligible = owner.report_host_doc_id in self.membership("")
         self.management[collection] = manifest
 
-        def draft(row: dict[str, Any]) -> bool:
-            return False if collection == "catalogue" else row["draft"]
-
         rows = []
         if host_eligible:
-            for row in manifest["docs"]:
-                if draft(row):
-                    continue
+            eligible = (edition_rows(manifest, "web").values() if is_curated_book(owner)
+                        else (row for row in manifest["docs"] if collection == "catalogue" or not row["draft"]))
+            for row in eligible:
                 public = {key: row[key] for key in ("doc_id", "title", "last_updated", "has_thumbnail", "catalogue_targets") if key in row}
                 rows.append(public)
         self._complete(collection, {"docs": rows}, {row["doc_id"] for row in rows})

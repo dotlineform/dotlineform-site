@@ -13,9 +13,29 @@ export function collectionSequenceForLink(link) {
 
 export function registerBookTocLinks(toc) {
   const links = Array.from(toc.querySelectorAll("a"));
-  if (links.length < 2) return;
-  const rows = links.map(link => ({ href: link.href, title: link.textContent }));
-  links.forEach((link, position) => registerCollectionNavigationLink(link, () => ({ rows, position })));
+  const order = toc.dataset.bookOrder;
+  if (!order) {
+    if (links.length < 2) return;
+    const rows = links.map(link => ({ href: link.href, title: link.textContent }));
+    links.forEach((link, position) => registerCollectionNavigationLink(link, () => ({ rows, position })));
+    return;
+  }
+  const hostId = toc.dataset.bookHost;
+  const collection = toc.dataset.docsBookToc;
+  const entries = JSON.parse(order);
+  if (entries.length < 2) return;
+  const rows = entries.map(([docId, title]) => {
+    const query = new URLSearchParams({ doc: docId });
+    if (docId !== hostId) query.set("collection", collection);
+    return { href: "?" + query.toString(), title };
+  });
+  const positions = new Map(entries.map(([docId], position) => [docId, position]));
+  const sequence = { rows, position: positions.get(hostId), bookHostId: hostId };
+  links.forEach(link => {
+    const docId = new URL(link.href).searchParams.get("doc");
+    registerCollectionNavigationLink(link, () => ({ ...sequence, position: positions.get(docId) }));
+  });
+  return sequence;
 }
 
 export function createCollectionNavigation(document, sequence, atTop) {
@@ -43,7 +63,7 @@ export function createCollectionNavigation(document, sequence, atTop) {
       link.classList.add("docsViewer__collectionNavigationLink--next");
       link.append(title, icon);
     }
-    registerCollectionNavigationLink(link, () => ({ rows, position: adjacent }));
+    registerCollectionNavigationLink(link, () => ({ ...sequence, position: adjacent }));
     nav.append(link);
   }
   return nav;

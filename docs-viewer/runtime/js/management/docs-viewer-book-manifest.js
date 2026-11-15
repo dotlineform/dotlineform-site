@@ -4,7 +4,13 @@ export function bookHeadings(tree) {
 
 export function bookDocumentList(order, headingId) {
   if (headingId === "") return order.root;
+  if (headingId === "@front") return order.front;
+  if (headingId === "@back") return order.back;
   return bookHeadings(order.tree).find(heading => heading.id === headingId).doc_ids;
+}
+
+export function isBookMatter(order, docId) {
+  return order.front.includes(docId) || order.back.includes(docId);
 }
 
 export function createBookManifestStore(fetchManifest) {
@@ -35,7 +41,7 @@ export function createBookManifestStore(fetchManifest) {
       if (index < 0) return;
       manifest.docs.splice(index, 1);
       const order = manifest.book_order;
-      const lists = [order.root, ...bookHeadings(order.tree).map(heading => heading.doc_ids)];
+      const lists = [order.front, order.root, ...bookHeadings(order.tree).map(heading => heading.doc_ids), order.back];
       const placement = lists.find(ids => ids.includes(docId));
       placement?.splice(placement.indexOf(docId), 1);
     } else if (index < 0) {

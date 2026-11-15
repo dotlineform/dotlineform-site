@@ -2,17 +2,22 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 import json
 import re
 from pathlib import Path
 from typing import Any
 
-from docs_book_toc import BookContents, changed_book_contents
-from docs_generation import rebuild_book_host
+from docs_book_toc import changed_book_contents
+from docs_front_matter import rewrite_front_matter_fields
+from docs_generation import generate_documents, rebuild_book_host
 from docs_generated_reads import read_generated_json
-from docs_management_document_target import ManagedDocumentCollection, resolve_managed_document_collection
+from docs_management_document_target import (
+    ManagedDocumentCollection, committed_document_record, confined_document_path,
+    resolve_managed_document_collection, source_doc_from_path,
+)
 from docs_publication_paths import confined
-from docs_source_model import write_text_atomic
+from docs_source_model import BOOK_EDITIONS, parse_collection_document_report, write_text_atomic
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, document_source_path, generated_documents_path, is_curated_book, require_document_authoring
 
 
@@ -66,13 +71,15 @@ def book_headings(tree: list[dict[str, Any]]):
 def placement_list(order: dict[str, Any], heading_id: str, *, section_only: bool = False) -> list[str]:
     if heading_id == "":
         return order["root"]
+    if not section_only and heading_id in {"@front", "@back"}:
+        return order[heading_id[1:]]
     for heading in book_headings(order["tree"]):
         if heading["id"] == heading_id and (not section_only or "sections" not in heading):
             return heading["doc_ids"]
     raise ValueError("Choose Root or a heading in the selected Book")
 
 
-def validate_book_order(order: Any, book_ids: set[str]) -> None:
+def validate_book_order(order: Any, book_ids: set[str], host_id: str) -> None:
     headings: set[str] = set()
     placements: set[str] = set()
 
@@ -95,8 +102,12 @@ def validate_book_order(order: Any, book_ids: set[str]) -> None:
         headings.add(node_id)
         documents(node["doc_ids"])
 
-    if not isinstance(order, dict) or set(order) != {"root", "tree"} or not isinstance(order["tree"], list):
-        raise ValueError("Book order requires Root documents and a list of headings")
+    if not isinstance(order, dict) or set(order) != {"front", "root", "tree", "back"} or not isinstance(order["tree"], list):
+        raise ValueError("Book order requires front matter, Root chapters, headings and back matter")
+    front = order["front"]
+    if not isinstance(front, list) or front.count(host_id) != 1:
+        raise ValueError("Place the Book table of contents among the opening pages")
+    documents([doc_id for doc_id in front if doc_id != host_id])
     documents(order["root"])
     for node in order["tree"]:
         if isinstance(node, dict) and "sections" in node:
@@ -107,46 +118,123 @@ def validate_book_order(order: Any, book_ids: set[str]) -> None:
                 heading(section, set())
         else:
             heading(node, set())
+    documents(order["back"])
     if placements != book_ids:
         raise ValueError("Book order must place every document")
 
 
-def commit_book_order(config: DocsCollectionConfig, order: Any) -> BookContents | None:
-    """Save browser-authored placement and project it using the inventory already read."""
-    manifest_path = book_manifest_path(config)
-    manifest = read_generated_json(manifest_path, "Book inventory")
-    if order == manifest["book_order"]:
-        return None
-    validate_book_order(order, {row["doc_id"] for row in manifest["docs"]})
-    completed = {**manifest, "book_order": order}
-    contents = changed_book_contents(manifest, completed)
-    write_text_atomic(book_order_path(config), book_order_text(order))
-    write_text_atomic(manifest_path, json.dumps(completed, ensure_ascii=False, indent=2) + "\n")
-    return contents
-
-
 def save_book_tree(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    if set(body) != {"collection", "book_order"}:
-        raise ValueError("Book order Save requires a Book collection and the complete order")
+    placement = set(body) == {"collection", "book_order"}
+    if not placement and set(body) != {"collection", "doc_id", "book_edition"}:
+        raise ValueError("Book Save requires the complete order or one front- or back-matter edition")
     owner = resolve_book_collection(repo_root, body["collection"])
     require_document_authoring(owner.parent_config)
-    order = body["book_order"]
-    contents = commit_book_order(owner.document_config, order)
-    result = {"ok": True, "book_order": order}
-    if contents is not None:
-        try:
-            host = rebuild_book_host(repo_root, owner.parent_config, owner.workspace, owner.document_config, contents)
-            if host is not None:
-                result["book_toc"] = host
-        except (OSError, RuntimeError, ValueError) as error:
-            return {**result, "ok": False, "error": f"Book order saved, but its table of contents refresh failed: {error}"}
+    config = owner.document_config
+    manifest_path = book_manifest_path(config)
+    manifest = read_generated_json(manifest_path, "Book inventory")
+    previous = manifest["book_order"]
+    order = body["book_order"] if placement else previous
+    rows = {row["doc_id"]: row for row in manifest["docs"]}
+    if placement:
+        if order == previous:
+            return {"ok": True, "book_order": order}
+        validate_book_order(order, set(rows), config.report_host_doc_id)
+        previous_matter = set(previous["front"]) | set(previous["back"])
+        matter = set(order["front"]) | set(order["back"])
+        into_chapters = previous_matter - matter
+        into_matter = matter - previous_matter
+        editions = {
+            doc_id: "both" for doc_id, row in rows.items()
+            if doc_id in into_chapters and row.get("book_edition", "both") != "both"
+        }
+        entering_export_only = [doc_id for doc_id, row in rows.items()
+                                if doc_id in into_matter and row.get("book_edition") == "export"]
+    else:
+        doc_id, edition = body["doc_id"], body["book_edition"]
+        if not isinstance(doc_id, str) or doc_id not in rows or doc_id not in (*order["front"], *order["back"]):
+            raise ValueError("Choose a front- or back-matter page")
+        if edition not in BOOK_EDITIONS:
+            raise ValueError("Choose Both, Web only or Export only")
+        if edition == rows[doc_id].get("book_edition", "both"):
+            return {"ok": True, "book_order": order}
+        editions = {doc_id: edition}
+        entering_export_only = []
+
+    prepared = []
+    records = {}
+    for doc_id in (*editions, *entering_export_only):
+        path = confined_document_path(owner.source_root, doc_id)
+        document = source_doc_from_path(path=path, requested_doc_id=doc_id)
+        metadata = document.front_matter
+        source = document.source_text
+        if doc_id in editions:
+            parts = document.parts
+            updates = {"book_edition": editions[doc_id]}
+            metadata = {**metadata, **updates}
+            source = rewrite_front_matter_fields(parts.prefix, updates, fields=parts.fields) + parts.body
+        report = parse_collection_document_report(
+            repo_root, owner.parent_config, config, source,
+            front_matter=metadata, body=document.body, source_name=path.name,
+        )
+        thumbnail = rows[doc_id].get("has_thumbnail", False)
+        prepared.append(replace(document, front_matter=metadata, source_text=source, parts=None,
+                                report=report, has_thumbnail=thumbnail))
+        if doc_id in editions:
+            records[doc_id] = committed_document_record(
+                metadata, doc_id, config, collection=owner.collection, thumbnail=thumbnail,
+            )
+
+    saved_records = []
+    result = {"ok": True, "records": saved_records}
+    phase = "saving Markdown"
+    target = owner.collection
+    try:
+        for document in prepared:
+            if document.doc_id in records:
+                target = document.doc_id
+                write_text_atomic(document.path, document.source_text)
+                saved_records.append(records[target])
+        if placement:
+            phase = "saving Book order"
+            target = "index-order.json"
+            write_text_atomic(book_order_path(config), book_order_text(order))
+
+        result["book_order"] = order
+        phase = "generating Working output"
+        target = owner.collection
+        if prepared:
+            from docs_write_rebuild import create_collection_builder, prepared_build_record
+
+            doc_ids = [document.doc_id for document in prepared]
+            builder = create_collection_builder(repo_root, owner, owner.workspace, doc_ids=doc_ids)
+            builder.collection_manifest = manifest
+            rebuilt = generate_documents(
+                builder, write=True, documents=[prepared_build_record(builder, document) for document in prepared],
+                book_order=order, related_records={}, media_writes={doc_id: {} for doc_id in doc_ids},
+            )
+            result["book_toc"] = rebuilt.get("book_toc")
+        else:
+            completed = {**manifest, "book_order": order}
+            contents = changed_book_contents(manifest, completed, config.report_host_doc_id)
+            write_text_atomic(manifest_path, json.dumps(completed, ensure_ascii=False, indent=2) + "\n")
+            if contents is not None:
+                result["book_toc"] = rebuild_book_host(repo_root, owner.parent_config, owner.workspace, config, contents)
+    except (OSError, RuntimeError, ValueError) as error:
+        message = f"Book Save failed while {phase} ({target}): {error}"
+        if saved_records:
+            saved_ids = ", ".join(record["doc_id"] for record in saved_records)
+            message += f" Saved edition changes for {saved_ids}."
+        if placement and "book_order" in result:
+            message += " Book order saved."
+        return {**result, "ok": False, "error": message}
     return result
 
 
 def remove_book_placements(owner: ManagedDocumentCollection, removed: set[str]) -> dict[str, Any]:
     path = book_order_path(owner.document_config)
     order = read_book_order(path)
-    order["root"] = [doc_id for doc_id in order["root"] if doc_id not in removed]
+    for key in ("front", "root", "back"):
+        order[key] = [doc_id for doc_id in order[key] if doc_id not in removed]
     for heading in book_headings(order["tree"]):
         heading["doc_ids"] = [doc_id for doc_id in heading["doc_ids"] if doc_id not in removed]
     write_text_atomic(path, book_order_text(order))

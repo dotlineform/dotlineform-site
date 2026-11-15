@@ -1,6 +1,8 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { DOCS_VIEWER_ACTION_IDS as ACTION_IDS } from "./docs-viewer-action-definitions.js";
 
+var contributionVisibility = new WeakMap();
+
 var EDIT_ITEMS = [
   { actionId: ACTION_IDS.EDIT_DOCUMENT, label: "Source editor", artwork: "docsViewer__icon--square-code" },
   { actionId: ACTION_IDS.REBUILD_DOCUMENT, label: "Rebuild", artwork: "docsViewer__icon--refresh-cw" },
@@ -18,6 +20,7 @@ export function createDocsViewerEditMenuItem(documentRef, item) {
   button.className = "docsViewer__actionMenuItem";
   button.dataset.docsViewerAction = item.actionId;
   if (item.contribution) button.dataset.docsViewerEditContribution = "true";
+  if (item.visible) contributionVisibility.set(button, item.visible);
   button.setAttribute("role", typeof item.checked === "boolean" ? "menuitemcheckbox" : "menuitem");
   if (typeof item.checked === "boolean") button.setAttribute("aria-checked", String(item.checked));
   button.setAttribute("aria-label", item.label);
@@ -106,7 +109,8 @@ export function createDocsViewerEditMenuController(options) {
     var host = state.context.state === "detail" ? state.context.actionHost : null;
     if (mount.firstChild !== host) mount.replaceChildren(...(host ? [host] : []));
     mount.querySelectorAll("[data-docs-viewer-action]").forEach(function (button) {
-      button.hidden = options.resolveAction(button.dataset.docsViewerAction, state.target).hidden;
+      button.hidden = options.resolveAction(button.dataset.docsViewerAction, state.target).hidden
+        || contributionVisibility.get(button)?.() === false;
     });
     var ordinary = state.available && !state.target.collection;
     EDIT_ITEMS.forEach(function (item) {

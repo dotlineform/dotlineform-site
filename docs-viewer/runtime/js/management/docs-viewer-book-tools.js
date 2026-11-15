@@ -1,9 +1,11 @@
 import { fetchManagementJson } from "./docs-viewer-management-client.js";
 import { escapeHtml, openDocsViewerManagementModal } from "./docs-viewer-management-modal-shell.js";
 import { openDocsViewerPositionModal } from "./docs-viewer-position-modal.js";
-import { collectionSequenceForLink } from "../shared/docs-viewer-collection-navigation.js";
+import { collectionSequenceForLink, registerCollectionNavigationLink } from "../shared/docs-viewer-collection-navigation.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { bookHeadings } from "./docs-viewer-book-manifest.js";
+import { bookHeadings, isBookMatter } from "./docs-viewer-book-manifest.js";
+
+const editionLabels = { both: "Both", web: "Web only", export: "Export only" };
 
 function button(document, label, action) {
   const control = document.createElement("button");
@@ -163,6 +165,51 @@ export async function openBookLibrarySources({ book, chapter, clientOptions, roo
   }
 }
 
+async function saveBookChanges(payload, options, applyOrder) {
+  const stop = options.startBusyOperation();
+  let result;
+  let failure;
+  try {
+    try {
+      result = await fetchManagementJson("/docs/book/tree", "POST", payload, options.clientOptions);
+    } catch (error) {
+      if (!error.payload?.book_order && !error.payload?.records?.length) throw error;
+      result = error.payload;
+      failure = error;
+    }
+    if (result.book_order) applyOrder?.(result.book_order, !result.records?.length);
+    const errors = options.commitBookToc(result.book_toc);
+    for (const record of result.records || []) {
+      errors.push(...options.commitDocumentChange({ target: { collection: payload.collection, doc_id: record.doc_id }, record }));
+    }
+    if (errors.length) {
+      throw new Error((failure?.message || "Book changes saved.") + " Could not update the open Book. "
+        + errors.map(error => error.message).join(" "));
+    }
+    if (failure) throw failure;
+  } finally {
+    stop();
+  }
+}
+
+export function openBookEdition({ target, manifest, ...options }) {
+  const saved = manifest.docs.find(row => row.doc_id === target.doc_id).book_edition || "both";
+  return openDocsViewerManagementModal({
+    root: options.root,
+    title: "Edition",
+    restoreFocus: () => options.root.querySelector("#docsViewerManageEditButton"),
+    bodyHtml: field("Include in", '<select class="docsViewer__fieldInput" data-book-edition>'
+      + Object.entries(editionLabels).map(([value, label]) => option(value, label)).join("") + "</select>"),
+    focusSelector: "[data-book-edition]",
+    actions: [{ role: "modal-primary", label: "Save" }, { role: "modal-cancel", label: "Cancel" }],
+    onOpen({ host }) { host.querySelector("[data-book-edition]").value = saved; },
+    onSubmit({ host }) {
+      const edition = host.querySelector("[data-book-edition]").value;
+      if (edition !== saved) return saveBookChanges({ ...target, book_edition: edition }, options);
+    }
+  });
+}
+
 export async function createBookReportTools(options) {
   const collection = options.collectionConfig.collection;
   const isBook = options.collectionConfig.collectionType === "curated-book";
@@ -176,8 +223,10 @@ export async function createBookReportTools(options) {
       stop?.();
     }
   };
-  const manifest = isBook ? await options.readBookManifest(options.collectionConfig) : null;
+  const manifest = options.bookManifest;
   const bookOrder = manifest?.book_order;
+  const hostId = options.collectionConfig.reportHostDocId;
+  const tocRow = { docId: hostId, title: "Table of contents", href: "?doc=" + encodeURIComponent(hostId) };
   const copied = new Set(isBook ? [] : (await get("/docs/book/copied")).doc_ids);
   let navigation;
   let headingId = "";
@@ -309,23 +358,11 @@ export async function createBookReportTools(options) {
   }
 
   async function saveOrder(next, selected = headingId) {
-    let result;
-    let failure;
-    try {
-      result = await post("/docs/book/tree", { collection, book_order: next });
-    } catch (error) {
-      if (!error.payload?.book_order) throw error;
-      result = error.payload;
-      failure = error;
-    }
-    Object.assign(bookOrder, result.book_order);
-    navigation.redraw(selected);
-    const errors = options.commitBookToc(result.book_toc);
-    if (errors.length) {
-      throw new Error((failure?.message || "Book order saved.") + " Could not update the open table of contents. "
-        + errors.map(error => error.message).join(" "));
-    }
-    if (failure) throw failure;
+    await saveBookChanges({ collection, book_order: next }, { ...options, clientOptions: client }, (order, redraw) => {
+      Object.assign(bookOrder, order);
+      if (redraw) navigation.redraw(selected);
+      else navigation.choose(selected);
+    });
   }
 
   async function addHeading(part) {
@@ -378,9 +415,16 @@ export async function createBookReportTools(options) {
   }
 
   async function positionSelection(docIds) {
-    const titles = new Map(navigation.rows().map(row => [row.docId, row.title]));
+    const titles = new Map(manifest.docs.map(row => [row.doc_id, row.title]));
+    titles.set(hostId, tocRow.title);
     const selected = new Set(docIds);
-    const inside = [{ id: "", title: "Root", depth: 0, headingId: "" }];
+    const movingToc = selected.has(hostId);
+    const resetsEdition = manifest.docs.some(row => selected.has(row.doc_id)
+      && isBookMatter(bookOrder, row.doc_id) && editionLabels[row.book_edition] && row.book_edition !== "both");
+    const inside = [
+      { id: "@front", title: "Opening pages", depth: 0, headingId: "@front" },
+      { id: "", title: "Root chapters", depth: 0, headingId: "" }
+    ];
     const beside = [];
     function addDocuments(ids, depth, headingId) {
       for (const docId of ids) {
@@ -394,23 +438,36 @@ export async function createBookReportTools(options) {
       beside.push({ ...row, disabled: true });
       addDocuments(heading.doc_ids, depth + 1, heading.id);
     }
+    addDocuments(bookOrder.front, 0, "@front");
     addDocuments(bookOrder.root, 0, "");
     for (const node of bookOrder.tree) {
       addDestinations(node, 0);
       for (const section of node.sections || []) addDestinations(section, 1);
     }
+    inside.push({ id: "@back", title: "Back matter", depth: 0, headingId: "@back" });
+    addDocuments(bookOrder.back, 0, "@back");
     const destinations = new Map([...beside, ...inside].map(row => [row.id, row]));
     await openDocsViewerPositionModal({
       root: options.root,
-      title: "Position " + (docIds.length === 1 ? titles.get(docIds[0]) : docIds.length + " documents"),
+      title: "Book Position",
+      note: docIds.length === 1 ? titles.get(docIds[0]) : docIds.length + " documents",
       insideLabel: "Inside (at end)",
       initialPlacement: "inside",
-      getDestinations: placement => placement === "inside" ? inside : beside,
+      getDestinations: placement => {
+        const targets = placement === "inside" ? inside : beside;
+        return movingToc ? targets.filter(target => target.headingId === "@front") : targets;
+      },
+      destinationNote: resetsEdition ? id => {
+        const destination = destinations.get(id);
+        return destination.headingId === "@front" || destination.headingId === "@back"
+          ? "" : "Saving this move will set the edition to Both for pages that are Web only or Export only.";
+      } : null,
       onSave: async (targetId, placement) => {
         const target = destinations.get(targetId);
         const next = structuredClone(bookOrder);
         let changed = false;
-        const placements = [["", next.root], ...bookHeadings(next.tree).map(node => [node.id, node.doc_ids])];
+        const placements = [["@front", next.front], ["", next.root],
+          ...bookHeadings(next.tree).map(node => [node.id, node.doc_ids]), ["@back", next.back]];
         for (const [id, previous] of placements) {
           const ordered = previous.filter(id => !selected.has(id));
           if (id === target.headingId) {
@@ -432,6 +489,9 @@ export async function createBookReportTools(options) {
     rowSelection: isBook ? createBookRowSelection(options) : null,
     newDocumentHeading: isBook ? () => mode === "tree" ? headingId : "" : null,
     readManifest: isBook ? () => Promise.resolve(manifest) : null,
+    editionSuffix({ doc_id: docId, book_edition: edition }) {
+      return isBook && edition && edition !== "both" && isBookMatter(bookOrder, docId) ? editionLabels[edition] : "";
+    },
     renderIndicator(host, { doc_id: docId, copied_from_library: origin }) {
       if (isBook ? !origin : !copied.has(docId)) return;
       const label = isBook ? "Working copy from Library" : "Copied to Book";
@@ -475,7 +535,7 @@ export async function createBookReportTools(options) {
       }
       controls.position.hidden = !ids.length;
     },
-    ...(isBook ? { mountSectionNavigation({ root, rows, rowForId, change }) {
+    ...(isBook ? { mountSectionNavigation({ root, rowForId, change }) {
       const document = root.ownerDocument;
       const toolbar = document.createElement("div");
       toolbar.className = "docsViewerBook__viewControls";
@@ -512,6 +572,7 @@ export async function createBookReportTools(options) {
       let browsingLocked = false;
       let headingControls = new Map();
       let matchesById;
+      let tocPosition;
       function projectControls() {
         root.dataset.bookMode = mode;
         list.setAttribute("aria-pressed", String(mode === "list"));
@@ -519,7 +580,8 @@ export async function createBookReportTools(options) {
         headingActions.hidden = mode !== "tree";
         list.disabled = tree.disabled = browsingLocked;
         for (const control of headingActions.children) control.disabled = browsingLocked;
-        edit.disabled = browsingLocked || !headingId;
+        edit.disabled = browsingLocked || !headingId || headingId.startsWith("@");
+        if (tocPosition) tocPosition.disabled = browsingLocked;
       }
       function setMode(next) {
         if (next === mode) return;
@@ -534,18 +596,40 @@ export async function createBookReportTools(options) {
         projectControls();
       }
       function readingIds() {
-        return [...bookOrder.root, ...bookHeadings(bookOrder.tree).flatMap(node => node.doc_ids)];
+        return [...bookOrder.front, ...bookOrder.root, ...bookHeadings(bookOrder.tree).flatMap(node => node.doc_ids), ...bookOrder.back];
+      }
+      function readingRows() {
+        return readingIds().map(id => id === hostId ? tocRow : rowForId(id)).filter(Boolean);
       }
       function renderTree(host, filtering, appendRow) {
         headingControls = new Map();
-        function renderBranch(parent, id, title, docIds, sections = []) {
+        tocPosition = null;
+        function renderBranch(parent, id, title, docIds, sections = [], beforeRows) {
           const item = document.createElement("li");
           item.className = "docsViewerBook__branch";
           const body = document.createElement("ul");
           body.className = "docsViewerReport__rows docsViewerBook__branchRows";
+          beforeRows?.(body);
           for (const docId of docIds) {
             const row = matchesById.get(docId);
             if (row) appendRow(row, body);
+            else if (docId === hostId && !filtering) {
+              const item = document.createElement("li");
+              item.className = "docsViewerReport__row";
+              const link = document.createElement("a");
+              link.className = "docsViewerReport__cellLink docsViewerReport__collectionButton";
+              link.href = tocRow.href;
+              link.textContent = tocRow.title;
+              registerCollectionNavigationLink(link, () => {
+                const rows = readingRows();
+                return { rows, position: rows.indexOf(tocRow) };
+              });
+              tocPosition = actionIcon("Position table of contents", "docsViewer__icon--arrow-up-down",
+                () => positionSelection([hostId]));
+              tocPosition.disabled = browsingLocked;
+              item.append(link, tocPosition);
+              body.append(item);
+            }
           }
           for (const section of sections) renderBranch(body, section.id, section.title, section.doc_ids);
           if (filtering && !body.childElementCount) return;
@@ -557,12 +641,14 @@ export async function createBookReportTools(options) {
           item.append(control, body);
           parent.appendChild(item);
         }
-        renderBranch(host, "", "Root", bookOrder.root);
+        renderBranch(host, "", "Root", bookOrder.root, [],
+          body => renderBranch(body, "@front", "Opening pages", bookOrder.front));
         for (const node of bookOrder.tree) renderBranch(host, node.id, node.title, node.doc_ids, node.sections);
+        renderBranch(host, "@back", "Back matter", bookOrder.back);
         return Boolean(host.childElementCount);
       }
 
-      navigation = { rows, choose, redraw(id) {
+      navigation = { choose, redraw(id) {
         choose(id);
         change();
       } };
@@ -580,9 +666,7 @@ export async function createBookReportTools(options) {
           projectControls();
           for (const control of headingControls.values()) control.disabled = locked;
         },
-        readingRows() {
-          return readingIds().map(rowForId).filter(Boolean);
-        },
+        readingRows,
         project(matches) {
           if (mode === "list") return matches;
           matchesById = new Map(matches.map(row => [row.docId, row]));

@@ -10,7 +10,8 @@ from dataclasses import dataclass
 from typing import Any
 import json
 
-from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generated_documents_path, resolve_workspace_path
+from docs_book_toc import edition_rows
+from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generated_documents_path, is_curated_book, resolve_workspace_path
 
 
 @dataclass(frozen=True)
@@ -49,10 +50,12 @@ def select_ordinary_documents(
 
 
 def _select_collection_rows(
-    rows: list[dict[str, Any]], collection: DocsCollectionConfig,
+    manifest: dict[str, Any], collection: DocsCollectionConfig,
 ) -> dict[str, dict[str, Any]]:
+    if is_curated_book(collection):
+        return edition_rows(manifest, "web")
     return {
-        row["doc_id"]: row for row in rows
+        row["doc_id"]: row for row in manifest["docs"]
         if collection.collection == "catalogue" or not row["draft"]
     }
 
@@ -68,7 +71,7 @@ def select_built_discovery_documents(
     """
     ordinary = select_ordinary_documents(tree, ignored_ids)
     collections = [
-        (collection, _select_collection_rows(manifests[collection.collection]["docs"], collection))
+        (collection, _select_collection_rows(manifests[collection.collection], collection))
         for collection in sorted(config.site_search_collections, key=lambda item: item.collection)
         if collection.report_host_doc_id in ordinary
     ]
@@ -85,7 +88,7 @@ def select_collection_documents(
             continue
         path = resolve_workspace_path(repo_root, generated_documents_path(collection)) / "manage-manifest.json"
         manifest = read_discovery_metadata(path)
-        selected = _select_collection_rows(manifest["docs"], collection)
+        selected = _select_collection_rows(manifest, collection)
         selections.append((collection, selected))
     return selections
 

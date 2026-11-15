@@ -83,6 +83,10 @@
   mask-image: url("../icons/book-image.svg");
 }
 
+.docsViewer__icon--book-open{
+  mask-image: url("../icons/book-open.svg");
+}
+
 .docsViewer__icon--book-up{
   mask-image: url("../icons/book-up.svg");
 }
@@ -337,11 +341,6 @@
 .docsViewerReport__collectionActionsHost{
   position: relative;
   display: inline-flex;
-}
-
-.docsViewerReport__collectionActionsMenu{
-  right: 0;
-  left: auto;
 }
 
 .docsViewerReport__collectionSelectionControl{
@@ -1250,6 +1249,7 @@ select.docsViewer__positionTargets{
 }
 
 .docsViewer__manageToolbarMount .docsViewer__actionsMenu,
+.docsViewerReport__collectionActionsMenu,
 .docsViewer__editMenu{
   right: 0;
   left: auto;

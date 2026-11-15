@@ -47,7 +47,8 @@ export function openDocsViewerPositionModal(options) {
       '<label class="docsViewer__fieldLabel" for="docsViewerPositionSearch">Find destination</label>' +
       '<input class="docsViewer__fieldInput" id="docsViewerPositionSearch" type="search" autocomplete="off">' +
       '<label class="docsViewer__fieldLabel" for="docsViewerPositionTarget">Destination</label>' +
-      '<select class="docsViewer__fieldInput docsViewer__positionTargets" id="docsViewerPositionTarget" size="9"></select>',
+      '<select class="docsViewer__fieldInput docsViewer__positionTargets" id="docsViewerPositionTarget" size="9"></select>' +
+      (options.destinationNote ? '<p class="docsViewer__modalNote muted small" data-position-note role="status" hidden></p>' : ''),
     actions: [
       { role: "modal-cancel", label: "Cancel" },
       { role: "modal-primary", label: "Save" }
@@ -58,7 +59,13 @@ export function openDocsViewerPositionModal(options) {
       mountSearchField(search);
       var placement = api.host.querySelector("#docsViewerPositionPlacement");
       var target = api.host.querySelector("#docsViewerPositionTarget");
+      var note = api.host.querySelector("[data-position-note]");
       if (options.initialPlacement) placement.value = options.initialPlacement;
+      function projectNote() {
+        if (!note) return;
+        note.textContent = target.selectedIndex < 0 ? "" : options.destinationNote(target.value, placement.value);
+        note.hidden = !note.textContent;
+      }
       function renderDestinations() {
         var selectedId = target.selectedIndex < 0 ? null : target.value;
         var query = search.value.trim().toLowerCase();
@@ -75,9 +82,11 @@ export function openDocsViewerPositionModal(options) {
           });
           if (selectedOption) selectedOption.selected = true;
         }
+        projectNote();
       }
       search.addEventListener("input", renderDestinations);
       placement.addEventListener("change", renderDestinations);
+      target.addEventListener("change", projectNote);
       renderDestinations();
     },
     onSubmit: function (api) {

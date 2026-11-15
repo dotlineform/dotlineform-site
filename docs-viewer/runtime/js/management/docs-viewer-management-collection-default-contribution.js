@@ -2,6 +2,7 @@ import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.
 import { CATALOGUE_SEARCH_PARAM } from "../shared/docs-viewer-router.js";
 import { createDocsViewerEditMenuItem } from "./docs-viewer-management-edit-menu.js";
 import { mountDocsViewerPaginationControl } from "./docs-viewer-pagination-control.js";
+import { isBookMatter } from "./docs-viewer-book-manifest.js";
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
@@ -300,6 +301,16 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     }
     var bookIndicatorLabel = bookTools?.renderIndicator(host, doc);
     if (bookIndicatorLabel) accessibleLabels.push(bookIndicatorLabel);
+    var edition = bookTools?.editionSuffix(doc);
+    if (bookTools) settings.link.querySelector("[data-book-edition-suffix]")?.remove();
+    if (edition) {
+      var suffix = host.ownerDocument.createElement("span");
+      suffix.className = "muted small";
+      suffix.dataset.bookEditionSuffix = "";
+      suffix.textContent = " · " + edition;
+      settings.link.append(suffix);
+      accessibleLabels.push(edition);
+    }
     return { accessibleLabels: accessibleLabels };
   }
 
@@ -612,6 +623,30 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     }
 
     var chapter = settings.document;
+    if (options.bookManifest && typeof settings.registerAction === "function") {
+      var editionAction = settings.registerAction({
+        id: DOCS_VIEWER_ACTION_IDS.BOOK_EDITION,
+        placement: "detail-toolbar",
+        targetKind: "validated-detail",
+        capability: true,
+        emptyState: "omitted",
+        refreshEffect: "none",
+        async handler(actionTarget) {
+          var { openBookEdition } = await import("./docs-viewer-book-tools.js");
+          return openBookEdition({ target: actionTarget, manifest: options.bookManifest, ...options });
+        }
+      });
+      var editionButton = createDocsViewerEditMenuItem(host.ownerDocument, {
+        actionId: DOCS_VIEWER_ACTION_IDS.BOOK_EDITION, label: "Edition…",
+        artwork: "docsViewer__icon--book-open", contribution: true,
+        visible: () => isBookMatter(options.bookManifest.book_order, target.doc_id)
+      });
+      editionButton.disabled = !editionAction.enabled;
+      editionButton.addEventListener("click", function () {
+        editionAction.invoke().catch(error => options.setStatus(error.message, true));
+      });
+      host.appendChild(editionButton);
+    }
     if (settings.toolbarActionHost && options.bookConfig && chapter && !chapter.copied_from_library) {
       var sourcesButton = host.ownerDocument.createElement("button");
       var label = "Library sources…";

@@ -91,11 +91,14 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
     import("./docs-viewer-management-collection-composition.js")
   ]).then(async function (modules) {
     var bookTools;
+    var bookManifest = isBook && settings.managementContext && clientOptions.baseUrl
+      ? await settings.collectionProvider.readBookManifest(collectionConfig) : null;
     if (contributionOptions.bookList && settings.managementContext && clientOptions.baseUrl
       && (collection === "library" || isBook)) {
       var bookModule = await import("./docs-viewer-book-tools.js");
       bookTools = await bookModule.createBookReportTools({
         collectionConfig: collectionConfig,
+        bookManifest: bookManifest,
         books: settings.workspaceConfigState.activeConfig.collections.filter(item => item.collectionType === "curated-book"),
         clientOptions: clientOptions, root: managementModalRoot(settings),
         expandControl: contributionOptions.bookExpandControl,
@@ -112,6 +115,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
     var defaultContribution = modules[0].createDocsViewerManagementCollectionDefaultContribution({
       bookTools: bookTools,
       bookConfig: isBook ? collectionConfig : null,
+      bookManifest: bookManifest,
       readBookManifest: settings.collectionProvider.readBookManifest,
       clientOptions: clientOptions,
       managementContext: Boolean(settings.managementContext),

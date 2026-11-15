@@ -19,16 +19,20 @@ export function initDocsViewerDocumentController(context) {
   function capture() {
     return {
       record: activeRecord,
-      collectionSequence: activeRecord?.collectionSequence,
+      collectionSequence: activeRecord?.invokingSequence,
       owners: (activeRecord && activeRecord.viewOwners || []).map(function (owner) { return { id: owner.id, state: owner.capture() }; })
     };
   }
 
   function projectCollectionNavigation(record, sequence) {
+    record.invokingSequence = sequence;
+    var returnedToBookToc = !record.target.collection && sequence?.bookHostId === record.target.doc_id;
+    if (!sequence || returnedToBookToc) sequence = record.bookSequence;
     if (record.collectionSequence === sequence) return;
     record.collectionSequence = sequence;
     record.collectionNavigation?.remove();
-    var atTop = workspaceConfigState.activeConfig.collectionsById.get(record.target.collection)?.collectionType === "curated-book";
+    var atTop = Boolean(record.bookSequence)
+      || workspaceConfigState.activeConfig.collectionsById.get(record.target.collection)?.collectionType === "curated-book";
     record.collectionNavigation = sequence ? createCollectionNavigation(document, sequence, atTop) : null;
     if (record.collectionNavigation) {
       if (atTop) record.root.prepend(record.collectionNavigation);
@@ -460,7 +464,7 @@ export function initDocsViewerDocumentController(context) {
     var target = documentTarget(doc, { review: context.appContext.kind === "review" });
     var key = documentTargetKey(target);
     var previous = retained.get(key);
-    var collectionSequence = options.preservePosition ? previous?.collectionSequence : options.collectionSequence;
+    var collectionSequence = options.preservePosition ? previous?.invokingSequence : options.collectionSequence;
     var committedRecord = previous && previous.committedRecord && JSON.stringify(payload) === JSON.stringify(previous.payload) ? previous.committedRecord : null;
     if (committedRecord) doc = Object.assign({}, doc, committedRecord, target);
     var mountGeneration = nextDocumentMountGeneration();
@@ -504,7 +508,9 @@ export function initDocsViewerDocumentController(context) {
     releaseImageDetails();
     mountDocumentContent(content, payload);
     if (!target.collection) {
-      content.querySelectorAll("[data-docs-book-toc]").forEach(registerBookTocLinks);
+      content.querySelectorAll("[data-docs-book-toc]").forEach(function (toc) {
+        record.bookSequence = registerBookTocLinks(toc);
+      });
     }
     projectCollectionNavigation(record, collectionSequence);
     if (typeof context.mountRelatedLinks === "function") {
@@ -577,9 +583,10 @@ export function initDocsViewerDocumentController(context) {
       var toc = contents[index];
       if (toc) {
         current.replaceWith(toc);
-        registerBookTocLinks(toc);
+        record.bookSequence = registerBookTocLinks(toc);
       }
     });
+    projectCollectionNavigation(record, record.invokingSequence);
     record.payload = payload;
     selectedDocument.payloadCache.set(key, payload);
     if (record === activeRecord) selectedDocument.displayedPayload = payload;

@@ -1,7 +1,7 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-11-15T17:29:01Z",
+  "generated_at": "2026-11-15T20:24:31Z",
   "docs": [
     {
       "collection": "book",
@@ -38,6 +38,14 @@
       "doc_id": "d-20261111-230141-ae401b",
       "report_doc_id": "d-20261111-120000-5af14d",
       "title": "Part 1 - Preface",
+      "timestamp": "2026-11-15"
+    },
+    {
+      "collection": "book",
+      "collection_title": "Living Memory",
+      "doc_id": "d-20261115-192937-43bc3d",
+      "report_doc_id": "d-20261111-120000-5af14d",
+      "title": "Preface",
       "timestamp": "2026-11-15"
     },
     {
@@ -150,14 +158,6 @@
       "doc_id": "d-20261028-120632-a22f31",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Five Grand Challenges of Memory",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-121000-5d3475",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Forgetting — Lost vs Inaccessible",
       "timestamp": "2026-10-28"
     }
   ]

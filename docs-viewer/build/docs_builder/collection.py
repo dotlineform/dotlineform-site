@@ -96,7 +96,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             if self.config.stage == "working" and self.collection_id != "catalogue":
                 row["draft"] = doc.front_matter["draft"]
                 if is_curated_book(self.collection_config):
-                    for field in ("copied_from_library", "library_sources"):
+                    for field in ("copied_from_library", "library_sources", "book_edition"):
                         if field in doc.front_matter:
                             row[field] = doc.front_matter[field]
             rows.append(row)

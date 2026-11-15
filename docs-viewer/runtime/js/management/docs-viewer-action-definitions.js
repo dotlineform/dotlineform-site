@@ -1,4 +1,5 @@
 export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
+  BOOK_EDITION: "book-edition",
   COPY_LINK: "copy-link",
   DELETE: "delete",
   EDIT_DOCUMENT: "edit-document",
@@ -59,6 +60,9 @@ var STRUCTURAL_DOCUMENT_ACTION_IDS = new Set([IDS.DELETE, IDS.SET_SELECTED, IDS.
 
 function documentActionRestriction(actionId, target, context) {
   if (!target) return "";
+  if (actionId === IDS.BOOK_EDITION && (!target.collection || context.collectionType !== "curated-book")) {
+    return "Edition is available for Book front and back matter.";
+  }
   if (actionId === IDS.NEW && target.collection) return "Use Collection Actions to create a collection document.";
   if (actionId === IDS.THUMB && context.collectionType !== "curated-book"
     && !["library", "works", "concepts", "moments"].includes(target.collection)) {
@@ -80,6 +84,7 @@ function documentActionRestriction(actionId, target, context) {
 }
 
 export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
+  [IDS.BOOK_EDITION]: actionDefinition(IDS.BOOK_EDITION, TARGETS.ACTIVE_DOCUMENT),
   [IDS.COPY_LINK]: actionDefinition(IDS.COPY_LINK, TARGETS.DOCUMENT),
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.DOCUMENT_SUBTREE),
   [IDS.EDIT_DOCUMENT]: actionDefinition(IDS.EDIT_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),

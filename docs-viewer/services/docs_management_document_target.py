@@ -314,7 +314,7 @@ def committed_document_record(
     if source_model.collection_supports_draft(document_config):
         record["draft"] = front_matter["draft"]
     if is_curated_book(document_config):
-        for field in ("copied_from_library", "library_sources"):
+        for field in ("copied_from_library", "library_sources", "book_edition"):
             if field in front_matter:
                 record[field] = front_matter[field]
     if not collection:

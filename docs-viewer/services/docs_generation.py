@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 from typing import Any
 
-from docs_book_toc import BookContents, book_contents, changed_book_contents, render_book_contents
+from docs_book_toc import BookContents, Chapter, book_contents, changed_book_contents, render_book_contents
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_publication_preparation import PublicationHandoffError, load_preparation, remove_working_media
 from docs_selected_documents import read_selected, refresh_selected_documents
@@ -97,7 +97,8 @@ def generate_documents(
                 project_chapter_sources(manifest, *book_chapter_sources)
             if write and previous_manifest is not None:
                 book_refresh = changed_book_contents(
-                    previous_manifest, manifest, selected=set(builder.only_doc_ids) if builder.targeted_build else None,
+                    previous_manifest, manifest, builder.media_owner.report_host_doc_id,
+                    selected=set(builder.only_doc_ids) if builder.targeted_build else None,
                 )
         identities = {row["doc_id"]: CollectionDocumentSummary(row["doc_id"], row["title"]) for row in manifest["docs"]}
         selected_docs = ordered_docs
@@ -187,20 +188,21 @@ def generate_documents(
             hosts = {owner.report_host_doc_id: owner for owner in builder.config.collections if is_curated_book(owner)}
             supplied_books = book_manifests or {}
 
-            def render_saved_toc(collection: str) -> str:
+            def render_saved_toc(collection: str, host: Chapter) -> str:
                 saved = supplied_books.get(collection)
                 if saved is None:
                     saved = publication.metadata.read_management(collection)
-                return render_book_contents(collection, book_contents(saved))
+                return render_book_contents(collection, host, book_contents(saved, host.doc_id))
 
             for doc in selected_docs:
                 book = hosts.get(doc.doc_id)
                 if book is None or TOC_DIRECTIVE not in doc.body_markdown:
                     continue
+                host = Chapter(doc.doc_id, doc.title)
                 if book_toc is not None and book_toc[0] == doc.doc_id:
-                    renderer = partial(render_book_contents, book.collection, book_toc[1])
+                    renderer = partial(render_book_contents, book.collection, host, book_toc[1])
                 else:
-                    renderer = partial(render_saved_toc, book.collection)
+                    renderer = partial(render_saved_toc, book.collection, host)
                 toc_renderers[doc.doc_id] = cache(renderer)
         result = builder.run(
             write=write, documents=selected_docs, document_identities=identities, stale_item_ids=stale_item_ids,

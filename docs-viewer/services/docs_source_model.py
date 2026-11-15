@@ -53,6 +53,7 @@ from docs_report_source import (
 
 SLUG_SEP_PATTERN = re.compile(r"[^a-z0-9]+")
 RECENT_EDIT_FRONT_MATTER_FIELDS = ("title", "summary")
+BOOK_EDITIONS = ("both", "web", "export")
 
 
 @dataclass
@@ -421,6 +422,9 @@ def validate_document_status_front_matter(
     source_name: str,
 ) -> None:
     """Require explicit source readiness independently of free-text visual status."""
+
+    if is_curated_book(collection_config) and front_matter.get("book_edition", "both") not in BOOK_EDITIONS:
+        raise ValueError(f"book_edition must be both, web or export in {source_name}")
 
     if "sub-scope" in front_matter or "sub_scope" in front_matter:
         raise ValueError(f"sub-scope front matter is retired; use collection: {source_name}")
