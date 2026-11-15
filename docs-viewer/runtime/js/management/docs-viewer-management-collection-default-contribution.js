@@ -129,8 +129,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   }
 
   function reportRoot() {
-    if (listToolbar && listToolbar.root) {
-      return listToolbar.root.closest(".docsViewerReport, [data-report-collection]");
+    if (listToolbar) {
+      return listToolbar.actionsHost.closest(".docsViewerReport, [data-report-collection]");
     }
     for (var record of rowSelections.values()) {
       var root = record.host.closest(".docsViewerReport, [data-report-collection]");
@@ -168,7 +168,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (root) root.dataset.reportCollectionSelection = active ? "active" : "inactive";
     if (!listToolbar) return snapshot;
 
-    bookRowSelection?.project(available && listToolbar.selectionReady && !selectionWorkflowActive, active);
+    var checkedIds = active ? eligible.filter(id => selected.has(id)) : null;
+    bookRowSelection?.project(available && listToolbar.selectionReady && !selectionWorkflowActive, checkedIds);
     listToolbar.actionsHost.hidden = hidden;
     listToolbar.actionsButton.disabled = !available || hidden || selectionWorkflowActive;
     listToolbar.selectButton.hidden = hidden || active;
@@ -180,7 +181,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
     listToolbar.clearButton.disabled = !active || selected.size === 0;
     listToolbar.doneButton.disabled = !active;
-    bookTools?.projectSelection(listToolbar.bookControls, active ? eligible.filter(id => selected.has(id)) : []);
+    if (listToolbar.bookControls) bookTools.projectSelection(listToolbar.bookControls, checkedIds || []);
 
     listToolbar.menuActions.forEach(function (action, index) {
       var resolution = resolutions[index];
@@ -220,6 +221,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (!listToolbar) return;
     listToolbar.document.removeEventListener("click", listToolbar.handleDocumentClick);
     listToolbar.document.removeEventListener("keydown", listToolbar.handleDocumentKeydown);
+    if (bookRowSelection) {
+      listToolbar.selectButton.remove();
+      listToolbar.selectionControl.remove();
+      listToolbar.actionsHost.remove();
+    }
     listToolbar = null;
   }
 
@@ -343,8 +349,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (settings.selectionReady && savedSelection.selectionModeActive) selectionOwner.restore(savedSelection, currentDocIds);
 
     var documentRef = host.ownerDocument;
-    var root = documentRef.createElement("div");
-    root.className = "docsViewerReport__collectionSelectionToolbar";
 
     var sortButton = null;
     if (settings.sort && typeof settings.sort.setMode === "function") {
@@ -354,7 +358,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       sortButton.dataset.docsCollectionSort = cleanString(settings.sort.mode);
       var titleMode = cleanString(settings.sort.mode) !== "last-updated-desc";
       sortButton.appendChild(createDocsViewerToolbarIcon(documentRef,
-        titleMode ? "docsViewer__icon--arrow-down-a-z" : "docsViewer__icon--clock-3"));
+        titleMode ? "docsViewer__icon--clock-3" : "docsViewer__icon--arrow-down-a-z"));
       sortButton.setAttribute(
         "aria-label",
         titleMode
@@ -445,16 +449,16 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var bookControls = bookTools?.mountSelectionControls(selectionControl, settings.renderList);
     settings.actionHost.replaceChildren(...(regenerateButton ? [regenerateButton] : []));
     if (bookRowSelection) {
-      host.classList.add("docsViewerBook__listToolbar");
       bookRowSelection.prepare(openBookRow);
       if (sortButton) host.appendChild(sortButton);
-    } else if (sortButton) {
-      root.appendChild(sortButton);
+      bookTools.mountListActions(selectButton, selectionControl, actionsHost);
+    } else {
+      var root = documentRef.createElement("div");
+      root.className = "docsViewerReport__collectionSelectionToolbar";
+      if (sortButton) root.appendChild(sortButton);
+      root.append(selectButton, selectionControl, actionsHost);
+      host.appendChild(root);
     }
-    root.appendChild(selectButton);
-    root.appendChild(selectionControl);
-    root.appendChild(actionsHost);
-    host.appendChild(root);
 
     function handleDocumentClick(event) {
       if (!actionsHost.contains(event.target)) hideActionsMenu(false);
@@ -478,7 +482,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       menu: menu,
       menuActions: renderedActions,
       regenerateButton: regenerateButton,
-      root: root,
       selectAllButton: selectAllButton,
       selectButton: selectButton,
       selectionChanged: settings.selectionChanged,

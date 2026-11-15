@@ -40,19 +40,25 @@ function chapterCopyCheckbox(attribute, label) {
     + '<span class="docsViewer__fieldLabel">' + escapeHtml(label) + "</span></label>";
 }
 
-function createBookRowSelection(options) {
+function createBookRowSelection(options, { projectPosition, clearHeading }) {
   let selectedId = "";
   let selectedRow = null;
   const visibleRows = new Map();
   let run;
   let enabled = false;
-  let checkboxMode = false;
+  let checkedIds = null;
+
+  function positionIds() {
+    if (!enabled) return [];
+    return checkedIds ?? (selectedId ? [selectedId] : []);
+  }
 
   function project() {
     if (selectedRow) {
-      if (checkboxMode) selectedRow.link.removeAttribute("aria-current");
+      if (checkedIds) selectedRow.link.removeAttribute("aria-current");
       else selectedRow.link.setAttribute("aria-current", "true");
     }
+    projectPosition(positionIds().length > 0);
   }
 
   function select(id) {
@@ -66,7 +72,11 @@ function createBookRowSelection(options) {
 
   function open(row, action) {
     row.link.focus({ preventScroll: true });
-    return action({ collection: options.collectionConfig.collection, doc_id: row.record.doc_id }, {
+    const target = { doc_id: row.record.doc_id };
+    if (target.doc_id !== options.collectionConfig.reportHostDocId) {
+      target.collection = options.collectionConfig.collection;
+    }
+    return action(target, {
       collectionSequence: collectionSequenceForLink(row.link)
     });
   }
@@ -90,6 +100,7 @@ function createBookRowSelection(options) {
           event.preventDefault();
           return;
         }
+        clearHeading();
         if (event.altKey) {
           // Let the shared reader handle a source link on the title itself.
           if (link.contains(event.target)) return;
@@ -97,7 +108,7 @@ function createBookRowSelection(options) {
           return;
         }
         event.preventDefault();
-        if (checkboxMode && event.detail !== 0) {
+        if (checkedIds && toggleChecked && event.detail !== 0) {
           link.focus({ preventScroll: true });
           toggleChecked();
           return;
@@ -108,15 +119,17 @@ function createBookRowSelection(options) {
         if (event.key !== " " || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
         event.preventDefault();
         if (!enabled) return;
-        if (checkboxMode) toggleChecked();
+        clearHeading();
+        if (checkedIds && toggleChecked) toggleChecked();
         else run(() => open(row, options.openDocument));
       });
     },
     capture: () => selectedId,
     restore(id) { select(id || ""); },
-    project(canInteract, bulk) {
+    positionIds,
+    project(canInteract, checked) {
       enabled = canInteract;
-      checkboxMode = bulk;
+      checkedIds = checked;
       project();
     }
   };
@@ -231,6 +244,16 @@ export async function createBookReportTools(options) {
   let navigation;
   let headingId = "";
   let mode = "list";
+  let positionButton;
+  let toolbarActions;
+  const rowSelection = isBook ? createBookRowSelection(options, {
+    projectPosition(canPosition) {
+      if (positionButton) positionButton.disabled = !canPosition;
+    },
+    clearHeading() {
+      if (headingId) navigation.choose("");
+    }
+  }) : null;
 
   function modal(title, bodyHtml, onSubmit, onOpen, primaryLabel = "Save") {
     return openDocsViewerManagementModal({
@@ -486,7 +509,7 @@ export async function createBookReportTools(options) {
   }
 
   return {
-    rowSelection: isBook ? createBookRowSelection(options) : null,
+    rowSelection,
     newDocumentHeading: isBook ? () => mode === "tree" ? headingId : "" : null,
     readManifest: isBook ? () => Promise.resolve(manifest) : null,
     editionSuffix({ doc_id: docId, book_edition: edition }) {
@@ -504,6 +527,7 @@ export async function createBookReportTools(options) {
       return label;
     },
     mountSelectionControls(host, renderList) {
+      if (isBook) return null;
       const document = host.ownerDocument;
       const controls = { ids: [] };
       const add = (key, label, run, artwork) => {
@@ -516,26 +540,20 @@ export async function createBookReportTools(options) {
         controls[key] = control;
         host.append(control);
       };
-      if (isBook) {
-        add("position", "Position…", () => positionSelection(controls.ids), "docsViewer__icon--arrow-up-down");
-      } else {
-        if (options.books.length) add("copy", "Copy to Book…", () => copySelection(controls.ids, renderList), "docsViewer__icon--dlf-doc");
-        add("clearCopied", "Clear Copied to Book", () => clearCopyFlags(controls.flaggedIds, renderList), "docsViewer__icon--dlf-doc");
-        controls.clearCopied.classList.add("docsViewerBook__clearCopyFlag");
-      }
+      if (options.books.length) add("copy", "Copy to Book…", () => copySelection(controls.ids, renderList), "docsViewer__icon--dlf-doc");
+      add("clearCopied", "Clear Copied to Book", () => clearCopyFlags(controls.flaggedIds, renderList), "docsViewer__icon--dlf-doc");
+      controls.clearCopied.classList.add("docsViewerBook__clearCopyFlag");
       return controls;
     },
     projectSelection(controls, ids) {
       controls.ids = ids;
-      if (!isBook) {
-        if (controls.copy) controls.copy.hidden = !ids.length;
-        controls.flaggedIds = ids.filter(id => copied.has(id));
-        controls.clearCopied.hidden = !controls.flaggedIds.length;
-        return;
-      }
-      controls.position.hidden = !ids.length;
+      if (controls.copy) controls.copy.hidden = !ids.length;
+      controls.flaggedIds = ids.filter(id => copied.has(id));
+      controls.clearCopied.hidden = !controls.flaggedIds.length;
     },
-    ...(isBook ? { mountSectionNavigation({ root, rowForId, change }) {
+    ...(isBook ? { mountListActions(selectButton, selectionControl, actionsHost) {
+      toolbarActions.prepend(selectButton, selectionControl, actionsHost);
+    }, mountSectionNavigation({ root, rowForId, change }) {
       const document = root.ownerDocument;
       const toolbar = document.createElement("div");
       toolbar.className = "docsViewerBook__viewControls";
@@ -543,9 +561,11 @@ export async function createBookReportTools(options) {
       viewControls.className = "docsViewerBook__modes";
       viewControls.setAttribute("role", "group");
       viewControls.setAttribute("aria-label", "Book view");
-      const list = button(document, "List", () => setMode("list"));
-      const tree = button(document, "Tree", () => setMode("tree"));
-      viewControls.append(list, tree);
+      const viewToggle = button(document, "", toggleMode);
+      viewToggle.className = "docsViewer__toolbarIconButton";
+      const viewIcon = createDocsViewerToolbarIcon(document, "docsViewerBook__icon--list-tree");
+      viewToggle.append(viewIcon);
+      viewControls.append(viewToggle);
 
       const headingActions = document.createElement("div");
       headingActions.className = "docsViewerReport__toolbar";
@@ -559,33 +579,39 @@ export async function createBookReportTools(options) {
         control.replaceChildren(createDocsViewerToolbarIcon(document, artwork));
         return control;
       }
+      positionButton = actionIcon("Position…", "docsViewer__icon--arrow-up-down",
+        () => positionSelection(rowSelection.positionIds()));
+      positionButton.disabled = !rowSelection.positionIds().length;
+      viewControls.append(positionButton);
       const edit = actionIcon("Edit heading…", "docsViewer__icon--pen", editHeading);
       headingActions.append(
         actionIcon("New section…", "docsViewer__icon--file-plus-corner", () => addHeading(false)),
         actionIcon("New part…", "docsViewerBook__icon--folder-plus", () => addHeading(true)),
         edit
       );
-      toolbar.append(viewControls, headingActions);
-      if (options.expandControl) toolbar.append(options.expandControl);
+      toolbarActions = document.createElement("div");
+      toolbarActions.className = "docsViewerBook__toolbarActions";
+      if (options.expandControl) toolbarActions.append(options.expandControl);
+      toolbar.append(viewControls, headingActions, toolbarActions);
       root.prepend(toolbar);
 
       let browsingLocked = false;
       let headingControls = new Map();
       let matchesById;
-      let tocPosition;
       function projectControls() {
         root.dataset.bookMode = mode;
-        list.setAttribute("aria-pressed", String(mode === "list"));
-        tree.setAttribute("aria-pressed", String(mode === "tree"));
-        headingActions.hidden = mode !== "tree";
-        list.disabled = tree.disabled = browsingLocked;
-        for (const control of headingActions.children) control.disabled = browsingLocked;
+        const tree = mode === "tree";
+        viewIcon.classList.toggle("docsViewer__icon--list", tree);
+        viewIcon.classList.toggle("docsViewerBook__icon--list-tree", !tree);
+        const label = tree ? "Show List view" : "Show Tree view";
+        viewToggle.title = label;
+        viewToggle.setAttribute("aria-label", label);
+        viewToggle.disabled = browsingLocked;
+        headingActions.hidden = !tree || browsingLocked;
         edit.disabled = browsingLocked || !headingId || headingId.startsWith("@");
-        if (tocPosition) tocPosition.disabled = browsingLocked;
       }
-      function setMode(next) {
-        if (next === mode) return;
-        mode = next;
+      function toggleMode() {
+        mode = mode === "tree" ? "list" : "tree";
         projectControls();
         change();
       }
@@ -603,13 +629,11 @@ export async function createBookReportTools(options) {
       }
       function renderTree(host, filtering, appendRow) {
         headingControls = new Map();
-        tocPosition = null;
-        function renderBranch(parent, id, title, docIds, sections = [], beforeRows) {
+        function renderBranch(parent, id, title, docIds, sections) {
           const item = document.createElement("li");
           item.className = "docsViewerBook__branch";
           const body = document.createElement("ul");
           body.className = "docsViewerReport__rows docsViewerBook__branchRows";
-          beforeRows?.(body);
           for (const docId of docIds) {
             const row = matchesById.get(docId);
             if (row) appendRow(row, body);
@@ -624,25 +648,27 @@ export async function createBookReportTools(options) {
                 const rows = readingRows();
                 return { rows, position: rows.indexOf(tocRow) };
               });
-              tocPosition = actionIcon("Position table of contents", "docsViewer__icon--arrow-up-down",
-                () => positionSelection([hostId]));
-              tocPosition.disabled = browsingLocked;
-              item.append(link, tocPosition);
+              item.append(link);
+              rowSelection.bindRow(link, { doc_id: hostId });
               body.append(item);
             }
           }
-          for (const section of sections) renderBranch(body, section.id, section.title, section.doc_ids);
+          for (const section of sections ?? []) renderBranch(body, section.id, section.title, section.doc_ids);
           if (filtering && !body.childElementCount) return;
-          const control = button(document, title, () => choose(id));
-          control.className = "docsViewerBook__heading";
-          control.disabled = browsingLocked;
-          control.setAttribute("aria-pressed", String(id === headingId));
-          headingControls.set(id, control);
-          item.append(control, body);
+          if (title !== null) {
+            const control = button(document, title, () => choose(id));
+            control.className = "docsViewerBook__heading";
+            if (sections) control.classList.add("docsViewerBook__heading--part");
+            control.disabled = browsingLocked;
+            control.setAttribute("aria-pressed", String(id === headingId));
+            headingControls.set(id, control);
+            item.append(control);
+          }
+          item.append(body);
           parent.appendChild(item);
         }
-        renderBranch(host, "", "Root", bookOrder.root, [],
-          body => renderBranch(body, "@front", "Opening pages", bookOrder.front));
+        renderBranch(host, "@front", "Opening pages", bookOrder.front);
+        if (bookOrder.root.length) renderBranch(host, "", null, bookOrder.root);
         for (const node of bookOrder.tree) renderBranch(host, node.id, node.title, node.doc_ids, node.sections);
         renderBranch(host, "@back", "Back matter", bookOrder.back);
         return Boolean(host.childElementCount);

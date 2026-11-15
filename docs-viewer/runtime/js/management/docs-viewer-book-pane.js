@@ -18,7 +18,7 @@ export function createDocsViewerBookPane(options) {
     pane.setAttribute("aria-label", config.title + " documents");
     const expand = document.createElement("button");
     expand.type = "button";
-    expand.className = "docsViewer__toolbarIconButton docsViewerBookPane__expand";
+    expand.className = "docsViewer__toolbarIconButton";
     const reportRoot = document.createElement("section");
     reportRoot.className = "docsViewerReport";
     const body = document.createElement("div");
@@ -54,7 +54,7 @@ export function createDocsViewerBookPane(options) {
       bookExpandControl: expand,
       onBookSelectionReady(selectDocument) {
         entry.selectDocument = selectDocument;
-        selectDocument(target?.collection === config.collection ? target.doc_id : "");
+        selectDocument(book?.collection === config.collection ? target.doc_id : "");
       }
     });
     import("../shared/docs-collection-report.js").then(({ mountDocsCollectionReport }) => mountDocsCollectionReport({
@@ -81,7 +81,7 @@ export function createDocsViewerBookPane(options) {
     if (shown && shown !== next) shown.pane.hidden = true;
     if (next) {
       next.pane.hidden = false;
-      next.selectDocument?.(target.collection ? target.doc_id : "");
+      next.selectDocument?.(target.doc_id);
     }
     shown = next;
     root.dataset.bookPane = next ? "split" : "";

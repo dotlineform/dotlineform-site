@@ -31,13 +31,8 @@ export function initDocsViewerDocumentController(context) {
     if (record.collectionSequence === sequence) return;
     record.collectionSequence = sequence;
     record.collectionNavigation?.remove();
-    var atTop = Boolean(record.bookSequence)
-      || workspaceConfigState.activeConfig.collectionsById.get(record.target.collection)?.collectionType === "curated-book";
-    record.collectionNavigation = sequence ? createCollectionNavigation(document, sequence, atTop) : null;
-    if (record.collectionNavigation) {
-      if (atTop) record.root.prepend(record.collectionNavigation);
-      else record.root.append(record.collectionNavigation);
-    }
+    record.collectionNavigation = sequence ? createCollectionNavigation(document, sequence) : null;
+    if (record.collectionNavigation) record.root.append(record.collectionNavigation);
   }
 
   function waitsForCatalogueLayout(payload) {

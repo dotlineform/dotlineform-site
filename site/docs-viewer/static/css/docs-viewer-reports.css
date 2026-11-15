@@ -138,8 +138,10 @@
   background: var(--shared-search-result-bg);
 }
 
+.docsViewerReport[data-report-collection="book"] .docsViewerReport__row,
 .docsViewerReport[data-report-collection="catalogue"] .docsViewerReport__row,
 .docsViewerReport[data-report-collection="concepts"] .docsViewerReport__row,
+.docsViewerReport[data-report-collection="library"] .docsViewerReport__row,
 .docsViewerReport[data-report-collection="works"] .docsViewerReport__row,
 .docsViewerReport[data-report-collection="moments"] .docsViewerReport__row,
 .docsViewerReport[data-report-id="selected_documents"] .docsViewerReport__row{
@@ -159,6 +161,10 @@
   color: var(--docs-viewer-link);
   overflow-wrap: anywhere;
   text-decoration: none;
+}
+
+:where(.docsViewerReport[data-report-collection]) .docsViewerReport__cellLink{
+  color: var(--docs-viewer-text);
 }
 
 .docsViewerReport__cellLink:hover{
@@ -299,6 +305,10 @@
 
 .docsViewerReport__title{
   font-weight: 700;
+}
+
+.docsViewerReport[data-report-collection] .docsViewerReport__title{
+  font-weight: 400;
 }
 
 .docsViewerReport__empty{

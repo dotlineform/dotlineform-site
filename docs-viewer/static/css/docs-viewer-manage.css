@@ -229,26 +229,11 @@
   margin-inline-end: 0.35rem;
 }
 
-.docsViewerReport__collectionFilterToolbar
-  > .docsViewerReport__contributionToolbar--list:has(> .docsViewerBook__listToolbar){
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.docsViewerBook__listToolbar{
-  display: flex;
-  flex: 1 1 auto;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.35rem 0.6rem;
-}
-
 .docsViewerBook__selectableRow{
   cursor: pointer;
 }
 
-.docsViewerReport .docsViewerBook__selectableRow:has(> .docsViewerReport__collectionButton[aria-current="true"]){
+.docsViewerReport[data-report-collection] .docsViewerBook__selectableRow:has(> .docsViewerReport__collectionButton[aria-current="true"]){
   margin-inline-start: -6px;
   padding-inline-start: 6px;
   border-radius: 6px;
@@ -330,12 +315,6 @@
   .docsViewerReport__collectionSelectionToolbar{
   flex-wrap: nowrap;
   width: auto;
-}
-
-.docsViewerBook__listToolbar > .docsViewerReport__collectionSelectionToolbar{
-  flex-wrap: wrap;
-  margin-inline-start: auto;
-  min-width: 0;
 }
 
 .docsViewerReport__collectionActionsHost{

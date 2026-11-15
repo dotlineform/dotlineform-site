@@ -688,7 +688,7 @@ function updateCollectionControls(state, pageIndex = state.pageIndex) {
       var recentMode = state.sortMode === "last-updated-desc";
       button.dataset.docsCollectionSort = state.sortMode;
       button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument,
-        recentMode ? "docsViewer__icon--clock-3" : "docsViewer__icon--arrow-down-a-z"));
+        recentMode ? "docsViewer__icon--arrow-down-a-z" : "docsViewer__icon--clock-3"));
       button.title = recentMode ? "Sorted by recently updated. Switch to title A–Z."
         : "Sorted by title A–Z. Switch to recently updated.";
       button.setAttribute("aria-label", button.title);

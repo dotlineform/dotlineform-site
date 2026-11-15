@@ -38,11 +38,10 @@ export function registerBookTocLinks(toc) {
   return sequence;
 }
 
-export function createCollectionNavigation(document, sequence, atTop) {
+export function createCollectionNavigation(document, sequence) {
   const { rows, position } = sequence;
   const nav = document.createElement("nav");
   nav.className = "docsViewer__collectionNavigation";
-  nav.classList.add(atTop ? "docsViewer__collectionNavigation--top" : "docsViewer__collectionNavigation--bottom");
   nav.setAttribute("aria-label", "Collection document navigation");
 
   for (const [offset, label, direction] of [[-1, "Previous", "left"], [1, "Next", "right"]]) {
