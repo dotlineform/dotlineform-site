@@ -160,4 +160,4 @@ Review fixes apply a pane link's sequence to the current chapter in place, limit
 
 ## Follow-On
 
-A Broken Links report tailored to books can be considered after the first release. The workflow for reviewing substantial revisions to published chapters across multiple saves remains open. Multiple editions of a book and downloadable editions can be scoped once the first release workflow has been reviewed.
+[Book Editions](Book_Editions.md) proposes one Book Tree for web and export, with editable front-matter pages and per-page edition inclusion. A Broken Links report tailored to books can be considered after the first release. The workflow for reviewing substantial revisions to published chapters across multiple saves remains open.
