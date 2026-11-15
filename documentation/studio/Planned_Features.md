@@ -144,7 +144,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Book Publication](deliveries/Book_Publication.md) — Proposed release collection with one linked copy per Book chapter, Book-driven structure and deletion, and a generated ready-only table of contents. Copy details, release review, and substantial revisions to published chapters remain open.
+- [Book Publication](deliveries/Book_Publication.md) — Proposed shared design for curated books, starting with Living Memory, with a Manage split view, Library copy destinations, and a generated ready-only table of contents for each book.
 
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
 
