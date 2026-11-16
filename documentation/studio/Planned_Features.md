@@ -150,7 +150,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Book Parts And Sections](deliveries/Book_Parts_And_Sections.md) — Give each Book one setting for linking Part headings to their first document and keep editorial Sections private.
+- [Book Parts And Sections](deliveries/Book_Parts_And_Sections.md) — Give each Book one setting for linking Part headings to their first ready document and keep editorial Sections private.
 
 - [Export Book](deliveries/Book_Editions.md#follow-on-book-export) — Prepare a whole-Book PDF or EPUB from the saved Tree, including the authored TOC in reading order.
 
