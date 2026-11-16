@@ -48,6 +48,13 @@ export function createDocsViewerManagementControlRenderers() {
         id: "docsViewerManageSourceSaveButton",
         artwork: "docsViewer__icon--download"
       });
+    },
+    "source-add-date": function (context) {
+      var button = renderDocumentActionButton(context, {
+        artwork: "docsViewer__icon--calendar"
+      });
+      button.setAttribute("aria-haspopup", "dialog");
+      return button;
     }
   };
 }

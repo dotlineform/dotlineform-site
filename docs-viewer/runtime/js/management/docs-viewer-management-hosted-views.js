@@ -98,7 +98,18 @@ export function createDocsViewerManagementViewDefinitions() {
         features: ["source-editing"],
         renderer: "markdown-source-save"
       },
-      directiveActionsControlDefinition()
+      directiveActionsControlDefinition(),
+      {
+        id: "source-add-date",
+        label: "Add date",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "source-add-date"
+      }
     ]
   };
 }

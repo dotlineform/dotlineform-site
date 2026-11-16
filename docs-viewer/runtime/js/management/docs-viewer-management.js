@@ -324,9 +324,11 @@ export function initDocsViewerManagement(context) {
         hidden: actionsHidden,
         disabled: actionsDisabled
       });
-      context.projectMainViewControlState("source-directives", {
-        hidden: actionsHidden || !markdownMode,
-        disabled: actionsDisabled
+      ["source-directives", "source-add-date"].forEach(function (controlId) {
+        context.projectMainViewControlState(controlId, {
+          hidden: actionsHidden || !markdownMode,
+          disabled: actionsDisabled
+        });
       });
     }
     if (editMenuController) editMenuController.render();
@@ -386,7 +388,7 @@ export function initDocsViewerManagement(context) {
       actionController.handleMarkdownSave();
       return true;
     }
-    if (controlId === "source-directives" && management.managementBusy) return false;
+    if (management.managementBusy && ["source-directives", "source-add-date"].includes(controlId)) return false;
     var contributions = context.mainViewControlHandlerContributions || {};
     var contribution = typeof contributions[controlId] === "function"
       ? contributions[controlId]

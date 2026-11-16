@@ -211,6 +211,12 @@ Use [Docs Images And Assets](Docs_Images_And_Assets.md) for authoring guidance a
 
 Use `[[date]]` on its own line or within a sentence. It displays `date_display` when present and falls back to `date`. The rendered date is plain text. An empty date token on its own line produces no paragraph. Code examples preserve the literal token.
 
+In Source, use the **Add date** calendar button to enter a date and an optional label. Enter `YYYY-MM-DD` or day/month/year. Entries such as `1/1/26` and `1/1/2026` both become `2026-01-01` in front matter. Two-digit years mean 2000–2099. Use four digits for other years. The editable display date combines the label with the normalized date. For January 1, it suggests the year alone so an approximate date can read `from chats 2026`. Enter `from chats 2026-01-01` when January 1 is exact. Clear the display field to use the date itself.
+
+**Insert date** updates `date` and `date_display` in the source and inserts `<br><small class="muted">[[date]]</small>` at the cursor. A cursor in front matter inserts the token at the start of the body. Use **Save** to keep the changes. The displayed text uses the reader's muted color in either theme.
+
+To change an existing date, put the cursor inside its token and click the calendar button. **Update date** changes the front matter and keeps the token in place.
+
 ### Book Table Of Contents
 
 Place `[[toc]]` on its own line in the Book's host document, with blank lines between the token and surrounding Markdown. The host source owns the title and any text, images, or other material around the list. Working lists the web edition's ready opening pages after the TOC, followed by its ready chapters in Tree order. Empty Parts and Sections are omitted. Included pages before the TOC and in back matter participate in reader navigation. Inline occurrences, code examples, and tokens in documents outside a configured Book host remain literal. [Book editions](Sub_Scope_Index_Architecture.md#book-editions)

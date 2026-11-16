@@ -161,3 +161,11 @@ Review fixes apply a pane link's sequence to the current chapter in place, limit
 ## Follow-On
 
 [Book Editions](Book_Editions.md) proposes one Book Tree for web and export, with editable front-matter pages and per-page edition inclusion. A Broken Links report tailored to books can be considered after the first release. The workflow for reviewing substantial revisions to published chapters across multiple saves remains open.
+
+### Source Date Authoring
+
+- [x] **Implementation.** The Source calendar button offers an editable display date, updates the document date fields, and inserts the muted date token. [Date authoring](../Builder.md#document-date)
+- [x] **Code review.** Add date uses the loaded buffer and applies the header and body changes together through the existing captured range edit. The browser checks the calendar value at entry. Source Save owns front matter validation, persistence, and generation. The modal adds no service calls or separate save. Changed JavaScript lint and whitespace checks passed. Direct renderer output retained the small markup and muted class.
+- [ ] **Manual review.** Open the modal in Manage, insert and save `1/1/26`, then check that Source stores `2026-01-01` and the rendered text shows the year in grey. Reopen the modal from inside the token and edit the display date. Verify the body still contains the original token.
+
+- [x] **Library date migration.** On 2026-11-16, 68 complete dates moved from footers to front matter with their original labels, and 82 documents without a footer date received `2025-01-01` with `from chats, 2025` as the display text. One incomplete footer retained its known month as `2025-09`, using the fallback date in front matter. The image credit in *Brain Diagrams* and the section date in *Dissolving self* stayed in the body. The targeted Working build generated and queued all 151 changed documents with no warnings. Their saved date fields and rendered footers matched the migration. One already dated document needed no change.

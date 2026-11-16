@@ -52,6 +52,7 @@ import {
   createDirectiveActionsMainViewControlHandlers,
   directiveActionsControlRenderer
 } from "./source-editor/directive-actions.js";
+import { handleSourceAddDateControl } from "./source-editor/source-editor-date.js";
 import {
   mountSemanticTokenTargetLinks
 } from "./source-editor/semantic-token-targets.js";
@@ -121,11 +122,12 @@ startDocsViewerManageApp({
   mainViewControlHandlerContributions: Object.assign(
     {},
     createDirectiveActionsMainViewControlHandlers(),
+    { "source-add-date": handleSourceAddDateControl },
     managedTableTools.controlHandlers()
   ),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageExtras,
   reportPresentationAdapter: reportPresentationAdapter,
-  sourceEditorActionControlIds: [DIRECTIVE_ACTIONS_CONTROL_ID],
+  sourceEditorActionControlIds: [DIRECTIVE_ACTIONS_CONTROL_ID, "source-add-date"],
   tableDetailAdapter: managedTableDetailAdapter
 });

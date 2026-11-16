@@ -7,13 +7,11 @@ export function sourceBodyStart(source) {
   return closing ? opening[0].length + closing.index + closing[0].length : text.length;
 }
 
-/** Give Title authoring feedback locally; the service owns complete header syntax. */
-export function sourceTitleError(source) {
-  var match = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/.exec(String(source || ""));
-  if (!match) return "";
-  var titles = [];
+/** Read scalar field positions without interpreting literal Summary content as fields. */
+export function sourceHeaderPairs(lines) {
+  var fields = [];
   var summaryIndent = null;
-  match[1].split(/\r?\n/).forEach(function (line) {
+  lines.forEach(function (line, index) {
     var trimmed = line.trim();
     var indent = line.length - line.trimStart().length;
     if (summaryIndent !== null) {
@@ -26,8 +24,18 @@ export function sourceTitleError(source) {
     var key = pair[1].trim();
     var raw = pair[2].trim();
     if (key === "summary" && /^[|>]/.test(raw)) summaryIndent = indent;
-    if (key === "title") titles.push(raw);
+    fields.push({ key: key, raw: raw, index: index });
   });
+  return fields;
+}
+
+/** Give Title authoring feedback locally; the service owns complete header syntax. */
+export function sourceTitleError(source) {
+  var match = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/.exec(String(source || ""));
+  if (!match) return "";
+  var titles = sourceHeaderPairs(match[1].split(/\r?\n/))
+    .filter(function (field) { return field.key === "title"; })
+    .map(function (field) { return field.raw; });
   if (!titles.length) return "Enter a nonblank Title in front matter.";
   if (titles.length !== 1) return "";
   var title = titles[0];

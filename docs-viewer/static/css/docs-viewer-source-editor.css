@@ -1,3 +1,7 @@
+.docsViewer__icon--calendar{
+  mask-image: url("../icons/calendar.svg");
+}
+
 .docsViewerSourceEditor{
   display: flex;
   flex-direction: column;

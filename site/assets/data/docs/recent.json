@@ -1,15 +1,15 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-11-15T22:21:18Z",
+  "generated_at": "2026-11-16T13:06:35Z",
   "docs": [
     {
-      "collection": "works",
-      "collection_title": "Context",
-      "doc_id": "d-20261113-101744-c4dd8f",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "title": "catalogue randomness",
-      "timestamp": "2026-11-14"
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261027-151507-580a1a",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Episodic vs Semantic — Select · Change · Reconstruct",
+      "timestamp": "2026-11-16"
     },
     {
       "collection": "library",
@@ -17,6 +17,14 @@
       "doc_id": "d-20261114-134541-0b8636",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Geometry in quantum mechanics",
+      "timestamp": "2026-11-16"
+    },
+    {
+      "collection": "works",
+      "collection_title": "Context",
+      "doc_id": "d-20261113-101744-c4dd8f",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "title": "catalogue randomness",
       "timestamp": "2026-11-14"
     },
     {
@@ -153,14 +161,6 @@
       "doc_id": "d-20261028-125921-12ce13",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Future memories",
-      "timestamp": "2026-10-28"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261028-130039-134421",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Future Memories — Anticipation, Intention, and the Art of Remembering Forward",
       "timestamp": "2026-10-28"
     }
   ]
