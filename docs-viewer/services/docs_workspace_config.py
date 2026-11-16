@@ -261,6 +261,7 @@ class DocsWorkspaceConfig:
     assets: DocsAssetsConfig
     catalogue: DocsCatalogueConfig
     media_report_metadata: ArtifactLocation
+    r2_media_report: ArtifactLocation
     projects_report_metadata: ArtifactLocation
     broken_links_report: ArtifactLocation
     links_report: ArtifactLocation
@@ -594,7 +595,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         raise ValueError(f"invalid Docs workspace JSON: {exc}") from exc
     payload = _object(raw, field="Docs workspace", required={
         "schema_version", "public_viewer_base_url", "default_doc_id", "public_projection", "search_fields", "recent_limit", "stages",
-        "assets", "catalogue", "media_report_metadata", "projects_report_metadata", "broken_links_report", "links_report",
+        "assets", "catalogue", "media_report_metadata", "r2_media_report", "projects_report_metadata", "broken_links_report", "links_report",
         "uncataloged_files_report",
     })
     if payload["schema_version"] != SCHEMA_VERSION:
@@ -619,6 +620,10 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     if not media_report_path.is_relative_to(Path("working/generated/reports")) or media_report_path.name != "metadata.json":
         raise ValueError("media_report_metadata must name metadata.json within working/generated/reports")
     media_report_metadata = location_child(workspace_root, media_report_path)
+    r2_media_report_path = safe_relative_path(payload["r2_media_report"], field="r2_media_report")
+    if not r2_media_report_path.is_relative_to(Path("working/generated/reports")) or r2_media_report_path.name != "report.json":
+        raise ValueError("r2_media_report must name report.json within working/generated/reports")
+    r2_media_report = location_child(workspace_root, r2_media_report_path)
     projects_report_path = safe_relative_path(payload["projects_report_metadata"], field="projects_report_metadata")
     if not projects_report_path.is_relative_to(Path("working/generated/reports")) or projects_report_path.name != "metadata.json":
         raise ValueError("projects_report_metadata must name metadata.json within working/generated/reports")
@@ -684,6 +689,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         assets,
         _catalogue(payload["catalogue"], workspace_root=workspace_root),
         media_report_metadata,
+        r2_media_report,
         projects_report_metadata,
         broken_links_report,
         links_report,

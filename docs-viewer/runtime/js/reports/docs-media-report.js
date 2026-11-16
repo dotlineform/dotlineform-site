@@ -411,9 +411,10 @@ function renderShell(root) {
   };
 }
 
-export function mountDocsMediaReport(context) {
+function mountDocsMediaReport(context) {
   const routeSort = readRouteSort();
   const nodes = renderShell(context.reportRoot);
+  if (context.reportViewSwitch) nodes.runButton.before(context.reportViewSwitch);
   const state = Object.assign({
     busy: false,
     context,
@@ -449,4 +450,71 @@ export function mountDocsMediaReport(context) {
     return Promise.resolve();
   }
   return loadMedia(state);
+}
+
+export function mountDocsMediaReports(context) {
+  if (!context.managementContext || !context.reportService?.readR2MediaReport) {
+    return mountDocsMediaReport(context);
+  }
+
+  const root = context.reportRoot;
+  const document = root.ownerDocument;
+  const views = new Map();
+  const mounts = {
+    working: mountDocsMediaReport,
+    r2: (options) => import("./docs-r2-media-report.js").then((module) => module.mountDocsR2MediaReport(options))
+  };
+  let active = "working";
+  for (const id of Object.keys(mounts)) {
+    const panel = document.createElement("div");
+    panel.className = "docsViewerReport";
+    panel.dataset.reportId = id === "working" ? "docs_media" : "docs_r2_media";
+    root.append(panel);
+    views.set(id, { panel, mounted: null });
+  }
+
+  function createViewSwitch(id) {
+    const group = document.createElement("div");
+    group.className = "docsViewerReport__collectionFilters";
+    group.setAttribute("role", "group");
+    group.setAttribute("aria-label", "Docs Media reports");
+    for (const [mode, label] of [["working", "Working"], ["r2", "R2"]]) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "docsViewerReport__filter";
+      button.textContent = label;
+      button.setAttribute("aria-pressed", String(mode === id));
+      if (mode === id) views.get(id).selectedButton = button;
+      button.addEventListener("click", async () => {
+        if (active === mode) return;
+        await show(mode);
+        if (active === mode) views.get(mode).selectedButton.focus();
+      });
+      group.append(button);
+    }
+    return group;
+  }
+
+  function show(id) {
+    active = id;
+    for (const [name, view] of views) view.panel.hidden = name !== id;
+    const view = views.get(id);
+    if (!view.mounted) {
+      const reportViewSwitch = createViewSwitch(id);
+      view.mounted = Promise.resolve(mounts[id]({ ...context, reportRoot: view.panel, reportViewSwitch })).catch((error) => {
+        const note = document.createElement("p");
+        note.textContent = error.message || "Could not open the report.";
+        view.panel.replaceChildren(reportViewSwitch, note);
+        view.mounted = null;
+      });
+    }
+    return view.mounted;
+  }
+
+  context.registerRetainedView?.({
+    id: "docs-media-page",
+    capture: () => active,
+    restore: (id) => { if (views.has(id)) active = id; }
+  });
+  return show(active);
 }

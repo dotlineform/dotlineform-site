@@ -29,6 +29,7 @@ import docs_import_doc  # noqa: E402
 import docs_local_links  # noqa: E402
 import docs_media_actions  # noqa: E402
 import docs_media_metadata  # noqa: E402
+import docs_r2_media_report  # noqa: E402
 import docs_management_position  # noqa: E402
 import docs_management_delete  # noqa: E402
 import docs_book_copy  # noqa: E402
@@ -165,6 +166,10 @@ def docs_management_post_response(
         if dry_run:
             raise ValueError("Docs Media refresh does not support dry_run")
         return HTTPStatus.OK, docs_media_metadata.refresh_media_metadata(repo_root)
+    if path == routes.R2_MEDIA_REPORT_PATH:
+        if not isinstance(body, dict) or body or dry_run:
+            raise ValueError("R2 media report refresh requires an empty request object")
+        return HTTPStatus.OK, docs_r2_media_report.refresh_report(repo_root)
     if path == routes.BROKEN_LINKS_PATH:
         if dry_run:
             raise ValueError("Broken Links refresh does not support dry_run")

@@ -1,7 +1,6 @@
 /* Local-only Docs Viewer report implementations and controls. */
 
-.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__toolbar,
-.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__toolbar{
+.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__toolbar{
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 }
@@ -18,13 +17,18 @@
   justify-self: center;
 }
 
+.docsViewerReport__refreshGroup > .docsViewerReport__collectionFilters{
+  flex: none;
+}
+
 .docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__filter,
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__filter{
   border: 0;
 }
 
-.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__search{
-  min-width: 0;
+.docsViewerReport[data-report-id="docs_media"] > .docsViewerReport__toolbar >
+  :is(.docsViewerReport__refreshGroup, .docsViewerReport__collectionFilters){
+  flex-wrap: wrap;
 }
 
 .docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__title,
@@ -67,6 +71,14 @@
 
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__status{
   white-space: pre-line;
+}
+
+.docsViewerReport[data-report-id="docs_media"] .docsViewerReport[data-report-id="docs_r2_media"] :is(.docsViewerReport__head, .docsViewerReport__row){
+  grid-template-columns: minmax(6rem, 10rem) minmax(12rem, 2fr) minmax(8rem, 1fr) minmax(8rem, 12rem);
+}
+
+.docsViewerReport[data-report-id="docs_r2_media"] .docsViewerReport__row code{
+  overflow-wrap: anywhere;
 }
 
 .docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__headLabel,

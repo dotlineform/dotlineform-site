@@ -146,7 +146,11 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 - [Book Publication](deliveries/Book_Publication.md) — First local release accepted and closed out on 2026-11-15. Living Memory is in Preview and the prepared site. Pages deployment, live verification, and the withdrawal trial remain open.
 
+- [R2 Orphan Report](deliveries/R2_Orphan_Report.md) — Implemented with a saved all-collection scan and a Manage filter. Manual acceptance remains open.
+
 ## Proposed Features
+
+- [Book Parts And Sections](deliveries/Book_Parts_And_Sections.md) — Give each Book one setting for linking Part headings to their first document and keep editorial Sections private.
 
 - [Export Book](deliveries/Book_Editions.md#follow-on-book-export) — Prepare a whole-Book PDF or EPUB from the saved Tree, including the authored TOC in reading order.
 

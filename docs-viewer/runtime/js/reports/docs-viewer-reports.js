@@ -55,7 +55,7 @@ const REPORT_LOADERS = {
   docs_media: {
     load: function () {
       return import("./docs-media-report.js").then(function (module) {
-        return module.mountDocsMediaReport;
+        return module.mountDocsMediaReports;
       });
     }
   },

@@ -110,6 +110,16 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    readR2MediaReport: function () {
+      return fetchReportJson("/docs/r2-media-report", Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
+    },
+    refreshR2MediaReport: function () {
+      return fetchReportJson("/docs/r2-media-report", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {},
+        requireOkEnvelope: true
+      }));
+    },
     readUncatalogedFiles: function () {
       return fetchReportJson("/docs/uncataloged-files", Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },

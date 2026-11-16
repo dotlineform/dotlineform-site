@@ -34,7 +34,7 @@ Library documents generally contribute to one book. The existing **Copied to Boo
 
 ## Manage Split View
 
-The split view is for desktop Manage, served by the local Docs server. Opening a Book host or chapter there shows the standard Docs Viewer reader on the right and keeps the left pane available. The Book host opens with the generated TOC on the right.
+The split view is for desktop Manage, served by the local Docs server. Opening a Book host or chapter there shows the standard Docs Viewer reader on the right and keeps the left pane available. The pane starts in **Tree** view when first opened. The Book host opens with the generated TOC on the right.
 
 - **List** shows a searchable list of Book documents, including Root documents and drafts. Selecting a row opens that document on the right.
 - **Tree** shows the ordered documents at **Root**, followed by Parts and Sections with their chapters in saved order. Selecting a document opens the same reader. Use the existing Book actions to edit headings and position documents, including changing their order at Root. Use the existing document actions for Source, draft status, and Delete.

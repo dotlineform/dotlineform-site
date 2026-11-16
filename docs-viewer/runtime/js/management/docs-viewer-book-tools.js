@@ -243,7 +243,7 @@ export async function createBookReportTools(options) {
   const copied = new Set(isBook ? [] : (await get("/docs/book/copied")).doc_ids);
   let navigation;
   let headingId = "";
-  let mode = "list";
+  let mode = "tree";
   let positionButton;
   let toolbarActions;
   const rowSelection = isBook ? createBookRowSelection(options, {

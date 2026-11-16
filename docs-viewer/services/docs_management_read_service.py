@@ -12,6 +12,7 @@ from docs_series_galleries_report import read_series_galleries_report
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_media_metadata
+import docs_r2_media_report
 import docs_project_state
 import docs_uncataloged_files
 from docs_management_broken_links_service import read_broken_links
@@ -82,6 +83,10 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         if params:
             raise ValueError("Docs Media metadata reads do not accept parameters")
         return docs_media_metadata.read_media_metadata(repo_root)
+    if path == routes.R2_MEDIA_REPORT_PATH:
+        if params:
+            raise ValueError("R2 media report reads do not accept parameters")
+        return docs_r2_media_report.read_report(repo_root)
     if path == routes.BROKEN_LINKS_PATH:
         if params:
             raise ValueError("Broken Links reads do not accept parameters")
