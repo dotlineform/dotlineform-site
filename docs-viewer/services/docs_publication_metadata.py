@@ -99,7 +99,9 @@ class PublicMetadata:
             if owner.report_host_doc_id in changed_hosts:
                 self.collection(owner.collection, self.read_management(owner.collection))
 
-    def collection(self, collection: str, manifest: dict[str, Any]) -> None:
+    def collection(
+        self, collection: str, manifest: dict[str, Any], *, book_rows: dict[str, dict[str, Any]] | None = None,
+    ) -> None:
         """Project the selected complete management manifest without source work."""
         owner = working_owner(self.workspace, collection)
         host_eligible = owner.report_host_doc_id in self.membership("")
@@ -107,8 +109,10 @@ class PublicMetadata:
 
         rows = []
         if host_eligible:
-            eligible = (edition_rows(manifest, "web").values() if is_curated_book(owner)
-                        else (row for row in manifest["docs"] if collection == "catalogue" or not row["draft"]))
+            if is_curated_book(owner):
+                eligible = (edition_rows(manifest, "web") if book_rows is None else book_rows).values()
+            else:
+                eligible = (row for row in manifest["docs"] if collection == "catalogue" or not row["draft"])
             for row in eligible:
                 public = {key: row[key] for key in ("doc_id", "title", "last_updated", "has_thumbnail", "catalogue_targets") if key in row}
                 rows.append(public)

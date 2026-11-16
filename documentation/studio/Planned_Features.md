@@ -150,8 +150,6 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Book Parts And Sections](deliveries/Book_Parts_And_Sections.md) — Give each Book one setting for linking Part headings to their first ready document and keep editorial Sections private.
-
 - [Export Book](deliveries/Book_Editions.md#follow-on-book-export) — Prepare a whole-Book PDF or EPUB from the saved Tree, including the authored TOC in reading order.
 
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
@@ -161,6 +159,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
+
+- [Book Parts And Sections](deliveries/Book_Parts_And_Sections.md) — Complete and accepted on 2026-11-16. Retain the delivery pending manual archive. [Book curation and editions](Sub_Scope_Index_Architecture.md#book-curation-in-manage) owns the current workflow.
 
 - [Book Editions](deliveries/Book_Editions.md) — Complete and accepted on 2026-11-15. Retain for the Export Book proposal. [Book editions](Sub_Scope_Index_Architecture.md#book-editions) owns the shipped workflow.
 

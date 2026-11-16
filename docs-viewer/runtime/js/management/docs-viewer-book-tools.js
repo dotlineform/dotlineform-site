@@ -34,7 +34,7 @@ function sectionOptions(tree) {
   }).join("");
 }
 
-function chapterCopyCheckbox(attribute, label) {
+function checkboxField(attribute, label) {
   return '<label class="docsViewer__field docsViewer__field--checkbox">'
     + '<input class="docsViewer__checkboxInput" type="checkbox" ' + attribute + '>'
     + '<span class="docsViewer__fieldLabel">' + escapeHtml(label) + "</span></label>";
@@ -245,7 +245,7 @@ export async function createBookReportTools(options) {
   let headingId = "";
   let mode = "tree";
   let positionButton;
-  let toolbarActions;
+  let settingsButton;
   const rowSelection = isBook ? createBookRowSelection(options, {
     projectPosition(canPosition) {
       if (positionButton) positionButton.disabled = !canPosition;
@@ -290,11 +290,11 @@ export async function createBookReportTools(options) {
     const sectionField = field("Placement", '<select class="docsViewer__fieldInput" data-book-section>'
       + option("", "Choose a book first") + "</select>");
     const newChapter = '<div class="docsViewer__fieldGroup">'
-      + chapterCopyCheckbox("data-book-new", "Add to a new chapter")
+      + checkboxField("data-book-new", "Add to a new chapter")
       + field("Chapter title", '<input class="docsViewer__fieldInput" data-book-title type="text" autocomplete="off" disabled>')
       + "</div>";
     const existingChapter = '<div class="docsViewer__fieldGroup">'
-      + chapterCopyCheckbox("data-book-existing", "Add to an existing chapter")
+      + checkboxField("data-book-existing", "Add to an existing chapter")
       + field("Chapter", '<select class="docsViewer__fieldInput" data-book-chapter disabled></select>')
       + "</div>";
     let controls;
@@ -380,11 +380,23 @@ export async function createBookReportTools(options) {
     renderList();
   }
 
-  async function saveOrder(next, selected = headingId) {
-    await saveBookChanges({ collection, book_order: next }, { ...options, clientOptions: client }, (order, redraw) => {
+  async function saveOrderChange(change, selected = headingId) {
+    await saveBookChanges({ collection, ...change }, { ...options, clientOptions: client }, (order, redraw) => {
       Object.assign(bookOrder, order);
       if (redraw) navigation.redraw(selected);
       else navigation.choose(selected);
+    });
+  }
+
+  function openBookSettings() {
+    const saved = bookOrder.link_part_headings ?? false;
+    const selector = "[data-book-link-part-headings]";
+    const body = checkboxField("data-book-link-part-headings", "Link Part headings to their first ready document");
+    return modal("Book settings", body, ({ host }) => {
+      const linked = host.querySelector(selector).checked;
+      if (linked !== saved) return saveOrderChange({ link_part_headings: linked });
+    }, ({ host }) => {
+      host.querySelector(selector).checked = saved;
     });
   }
 
@@ -403,7 +415,7 @@ export async function createBookReportTools(options) {
       const node = { id: crypto.randomUUID(), title, doc_ids: [] };
       if (part) node.sections = [];
       group.push(node);
-      await saveOrder(next, node.id);
+      await saveOrderChange({ book_order: next }, node.id);
     });
   }
 
@@ -430,7 +442,7 @@ export async function createBookReportTools(options) {
         const to = partId ? next.tree.find(node => node.id === partId).sections : next.tree;
         to.push(from.splice(index, 1)[0]);
       }
-      await saveOrder(next);
+      await saveOrderChange({ book_order: next });
     }, ({ host }) => {
       const picker = host.querySelector("[data-book-parent]");
       if (picker) picker.value = oldPart?.id || "";
@@ -502,7 +514,7 @@ export async function createBookReportTools(options) {
             changed = true;
           }
         }
-        if (changed) await saveOrder(next, target.headingId);
+        if (changed) await saveOrderChange({ book_order: next }, target.headingId);
         else if (target.headingId !== headingId) navigation.choose(target.headingId);
       }
     });
@@ -552,7 +564,7 @@ export async function createBookReportTools(options) {
       controls.clearCopied.hidden = !controls.flaggedIds.length;
     },
     ...(isBook ? { mountListActions(selectButton, selectionControl, actionsHost) {
-      toolbarActions.prepend(selectButton, selectionControl, actionsHost);
+      settingsButton.after(selectButton, selectionControl, actionsHost);
     }, mountSectionNavigation({ root, rowForId, change }) {
       const document = root.ownerDocument;
       const toolbar = document.createElement("div");
@@ -589,8 +601,10 @@ export async function createBookReportTools(options) {
         actionIcon("New part…", "docsViewerBook__icon--folder-plus", () => addHeading(true)),
         edit
       );
-      toolbarActions = document.createElement("div");
+      const toolbarActions = document.createElement("div");
       toolbarActions.className = "docsViewerBook__toolbarActions";
+      settingsButton = actionIcon("Book settings", "docsViewerBook__icon--settings", openBookSettings);
+      toolbarActions.append(settingsButton);
       if (options.expandControl) toolbarActions.append(options.expandControl);
       toolbar.append(viewControls, headingActions, toolbarActions);
       root.prepend(toolbar);
@@ -634,8 +648,13 @@ export async function createBookReportTools(options) {
           item.className = "docsViewerBook__branch";
           const body = document.createElement("ul");
           body.className = "docsViewerReport__rows docsViewerBook__branchRows";
+          let linkTarget;
           for (const docId of docIds) {
             const row = matchesById.get(docId);
+            if (sections && bookOrder.link_part_headings && !linkTarget) {
+              const candidate = row ?? rowForId(docId);
+              if (candidate && !candidate.record.draft) linkTarget = candidate;
+            }
             if (row) appendRow(row, body);
             else if (docId === hostId && !filtering) {
               const item = document.createElement("li");
@@ -658,7 +677,16 @@ export async function createBookReportTools(options) {
           if (title !== null) {
             const control = button(document, title, () => choose(id));
             control.className = "docsViewerBook__heading";
-            if (sections) control.classList.add("docsViewerBook__heading--part");
+            if (sections) {
+              control.classList.add("docsViewerBook__heading--part");
+              if (linkTarget) {
+                const hint = document.createElement("span");
+                hint.className = "docsViewerBook__partLinkHint";
+                hint.textContent = " · Opens " + linkTarget.title;
+                control.title = title + hint.textContent;
+                control.append(hint);
+              }
+            }
             control.disabled = browsingLocked;
             control.setAttribute("aria-pressed", String(id === headingId));
             headingControls.set(id, control);

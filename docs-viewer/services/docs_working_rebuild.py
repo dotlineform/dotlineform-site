@@ -117,7 +117,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             changed = {Path(name).stem for name in payload["diagnostics"]["relationships"]["written"]}
             supplied = {target.doc_id for target in all_documents} | {target.doc_id for target in deleted}
             prepare_dependencies(ordinary, {target: record for target, record in related_records.items() if target.doc_id in changed}, supplied, publication)
-            prepare_restored(ordinary, related_records, publication)
+            prepare_restored(ordinary.config, related_records, publication, rendering_inputs=ordinary.rendering_inputs)
 
         perform("document dependencies", rebuild_dependencies)
         updated_selected = perform("selected", lambda: refresh_workspace_selected(

@@ -10,7 +10,7 @@ from docs_document_media_ownership import DocumentMediaChange, document_media_re
 from docs_document_images import document_thumbnail_filename
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_publication_metadata import PublicMetadata
-from docs_publication_paths import confined
+from docs_publication_paths import confined, working_owner
 from docs_publication_queue import read_queue, save_queue, select_document, select_shared
 from docs_publication_transfer import delete_path
 from docs_source_model import write_text_atomic
@@ -102,9 +102,9 @@ class PublicationPreparation:
                     self.working_removals[(collection, kind, identity)] = confined(root, identity)
             self.metadata.restored.pop(doc.doc_id, None)
 
-    def documents(self, builder: Any, doc_ids: set[str], deleted: list[str], *, changed_ids: set[str], catalogue_work_selection: bool = True) -> None:
+    def documents(self, document_owner: Any, doc_ids: set[str], deleted: list[str], *, changed_ids: set[str], catalogue_work_selection: bool = True) -> None:
         """Select completed document effects under the prepared membership."""
-        collection = getattr(builder, "collection_id", "")
+        collection = getattr(document_owner, "collection", "")
         eligible = self.metadata.membership(collection)
         if collection == "catalogue" and catalogue_work_selection:
             self.catalogue_documents.update(doc_ids & eligible)
@@ -123,9 +123,9 @@ class PublicationPreparation:
                 if (doc_id not in self.metadata.withdrawn and not pending and not removals
                         and (self.changes_only or doc_id not in deleted)):
                     continue
-            elif self.changes_only and doc_id not in changed_ids and doc_id not in self.restored_documents and not pending and not removals and not self.media_changed(builder.media_owner, media):
+            elif self.changes_only and doc_id not in changed_ids and doc_id not in self.restored_documents and not pending and not removals and not self.media_changed(document_owner, media):
                 continue
-            restored = self.restored_media(builder, doc_id, owner) if doc_id not in deleted else {}
+            restored = self.restored_media(doc_id, owner) if doc_id not in deleted else {}
             writes = media if doc_id in self.restored_documents else self.media_writes.get(doc_id, media)
             select_document(self.pending, doc_id, owner, media=writes, current_media=media,
                             removed_media=removals, restored_media=restored, delete=deleting)
@@ -134,14 +134,14 @@ class PublicationPreparation:
             self.metadata.restored.pop(doc_id, None)
         self.metadata.withdrawn.clear()
 
-    def restored_media(self, builder: Any, doc_id: str, collection: str) -> dict[str, list[str]]:
+    def restored_media(self, doc_id: str, collection: str) -> dict[str, list[str]]:
         """Cancel only exact pending removals restored with ready Working bytes."""
         pending = (self.pending["current_documents"].get(doc_id) or self.pending["deleted_documents"].get(doc_id) or {}).get("removed_media", {})
         if not pending or doc_id not in self.current_owned_media:
             return {}
         owned = self.current_owned_media[doc_id]
         ready = self.ready_media[doc_id]
-        owner = next(item for item in builder.config.collections if item.collection == collection) if collection else builder.config
+        owner = working_owner(self.workspace, collection)
         return {kind: [name for name in names if name in owned.get(kind, set()) and
                        (name in ready.get(kind, []) or confined(owner.media.types[kind].asset_location.path, name).is_file())]
                 for kind, names in pending.items()}

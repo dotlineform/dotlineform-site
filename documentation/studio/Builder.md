@@ -219,7 +219,9 @@ To change an existing date, put the cursor inside its token and click the calend
 
 ### Book Table Of Contents
 
-Place `[[toc]]` on its own line in the Book's host document, with blank lines between the token and surrounding Markdown. The host source owns the title and any text, images, or other material around the list. Working lists the web edition's ready opening pages after the TOC, followed by its ready chapters in Tree order. Empty Parts and Sections are omitted. Included pages before the TOC and in back matter participate in reader navigation. Inline occurrences, code examples, and tokens in documents outside a configured Book host remain literal. [Book editions](Sub_Scope_Index_Architecture.md#book-editions)
+Place `[[toc]]` on its own line in the Book's host document, with blank lines between the token and surrounding Markdown. The host source owns the title and any text, images, or other material around the list. Working lists the web edition's ready opening pages after the TOC, followed by its ready Root chapters and Parts in Tree order. The TOC omits Sections and Parts with no ready page filed directly under them. Included pages before the TOC and in back matter participate in reader navigation. Inline occurrences, code examples, and tokens in documents outside a configured Book host remain literal. [Book editions](Sub_Scope_Index_Architecture.md#book-editions)
+
+Part headings are plain text by default. When **Link Part headings to their first ready document** is checked in **Book settings**, the heading uses the Part title to link to the first ready page filed directly under it. The TOC skips that page's separate row. Its authored title and position in the reading sequence are preserved. [Book curation](Sub_Scope_Index_Architecture.md#book-curation-in-manage)
 
 Use **Edit doc → Rebuild** on the host for a manual refresh. Book operations that change the TOC entries or the web reading sequence rebuild the host automatically. The host's draft status and the ordinary publication workflow determine when the updated page can be published. [TOC generation](../../docs-viewer/services/docs_book_toc.py)
 

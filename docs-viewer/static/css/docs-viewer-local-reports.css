@@ -443,6 +443,15 @@
   border-end-end-radius: 0;
 }
 
+.docsViewerBook__partLinkHint {
+  font-size: .85em;
+  font-weight: 400;
+}
+
+.docsViewerBook__icon--settings {
+  mask-image: url("../icons/settings.svg");
+}
+
 .docsViewerBook__branchRows {
   margin-inline-start: .5rem;
   padding-inline-start: .5rem;

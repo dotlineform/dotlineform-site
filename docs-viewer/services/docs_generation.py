@@ -247,7 +247,7 @@ def complete_generation(
         changed_ids = set(result["write_plan"]["changed_item_ids"])
         if automatic_book_host:
             doc_ids &= changed_ids | publication.restored_documents
-        publication.documents(builder, doc_ids, deleted, changed_ids=changed_ids,
+        publication.documents(builder.media_owner, doc_ids, deleted, changed_ids=changed_ids,
                               catalogue_work_selection=catalogue_work_selection)
         if not finalize_publication:
             return
@@ -270,7 +270,7 @@ def complete_generation(
             changed = {Path(name).stem for name in links["written"]} if links is not None else set()
             prepare_dependencies(builder, {target: record for target, record in related_records.items() if target.doc_id in changed},
                                  supplied, publication)
-            prepare_restored(builder, related_records, publication)
+            prepare_restored(builder.config, related_records, publication, rendering_inputs=builder.rendering_inputs)
         publication.save()
         if publication.catalogue_documents:
             complete_catalogue_handoff(publication, pending=catalogue_pending)
@@ -336,29 +336,47 @@ def complete_catalogue_handoff(publication: Any, *, pending: dict[str, Any] | No
 
 def prepare_dependencies(builder: Any, related_records: dict[Any, Any], supplied: set[str], operation: Any) -> None:
     targets = [target for target, record in related_records.items() if target.doc_id not in supplied and record is not None]
-    render_targets(builder, targets, related_records, operation)
+    render_targets(builder.config, targets, related_records, operation, rendering_inputs=builder.rendering_inputs)
 
 
-def prepare_restored(builder: Any, related_records: dict[Any, Any], operation: Any) -> None:
+def prepare_restored(
+    config: Any, related_records: dict[Any, Any], operation: Any, *,
+    rendering_inputs: Any = None, finalize_publication: bool = True,
+) -> Any:
+    """Prepare restored documents and carry their rendering inputs forward."""
+    if not operation.metadata.restored:
+        return rendering_inputs
+    build_dir = str(operation.repo_root / "docs-viewer/build")
+    if build_dir not in sys.path:
+        sys.path.insert(0, build_dir)
     from docs_builder.links_model import DocumentTarget
 
     targets = [DocumentTarget(collection, doc_id) for doc_id, collection in operation.metadata.restored.items()]
-    render_targets(builder, targets, related_records, operation)
+    return render_targets(config, targets, related_records, operation,
+                          rendering_inputs=rendering_inputs, finalize_publication=finalize_publication)
 
 
-def render_targets(builder: Any, targets: list[Any], related_records: dict[Any, Any], operation: Any) -> None:
+def render_targets(
+    config: Any, targets: list[Any], related_records: dict[Any, Any], operation: Any, *,
+    rendering_inputs: Any, finalize_publication: bool = True,
+) -> Any:
     """Execute only the supplied dependent/restored targets, without expansion."""
     if not targets:
-        return
+        return rendering_inputs
     from docs_builder.collection import CollectionDocsBuilder
     from docs_builder.pipeline import DocsDataBuilder
+    from docs_builder.rendering_inputs import RenderingInputs
 
-    owners = {owner.collection: owner for owner in builder.config.collections}
-    parents = saved_navigation_parents(operation)
+    if rendering_inputs is None:
+        rendering_inputs = RenderingInputs.load(operation.repo_root)
+    owners = {owner.collection: owner for owner in config.collections}
+    parents = saved_navigation_parents(operation) if any(not target.collection for target in targets) else None
     for target in targets:
-        arguments = {"repo_root": builder.repo_root, "config": builder.config, "workspace": builder.workspace,
-                     "rendering_inputs": builder.rendering_inputs, "only_doc_ids": [target.doc_id], "links_doc_ids": [], "skip_media_builds": True}
+        arguments = {"repo_root": operation.repo_root, "config": config, "workspace": operation.workspace,
+                     "rendering_inputs": rendering_inputs, "only_doc_ids": [target.doc_id], "links_doc_ids": [], "skip_media_builds": True}
         neighbour = CollectionDocsBuilder(**arguments, collection=owners[target.collection]) if target.collection else DocsDataBuilder(**arguments, skip_recent=True)
+        if target.collection:
+            neighbour.collection_manifest = operation.metadata.management.get(target.collection)
         hierarchy = {"parent_ids": parents} if not target.collection else {}
         docs = neighbour.load_docs([target.doc_id], **hierarchy)
         if not docs:
@@ -368,7 +386,8 @@ def render_targets(builder: Any, targets: list[Any], related_records: dict[Any, 
         generate_documents(neighbour, write=True, documents=docs, related_records=related_records,
                            publication=operation, expand_dependencies=False, update_selected=False,
                            media_writes={target.doc_id: {}},
-                           catalogue_work_selection=False, **hierarchy)
+                           catalogue_work_selection=False, finalize_publication=finalize_publication, **hierarchy)
+    return rendering_inputs
 
 
 def saved_navigation_parents(publication: Any) -> dict[str, str]:

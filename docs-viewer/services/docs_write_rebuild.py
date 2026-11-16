@@ -356,9 +356,9 @@ def project_document_position(
     from docs_generation import prepare_restored
     publication = load_preparation(repo_root, builder.workspace, navigation=previous, navigation_text=tree_text)
     publication.metadata.ordinary(navigation)
-    publication.documents(builder, {doc_id}, [], changed_ids={doc_id})
+    publication.documents(builder.media_owner, {doc_id}, [], changed_ids={doc_id})
     publication.write_metadata()
-    prepare_restored(builder, {}, publication)
+    prepare_restored(builder.config, {}, publication, rendering_inputs=builder.rendering_inputs)
     publication.save()
     remove_build_manifest(repo_root, owner.parent_config)
     return committed
