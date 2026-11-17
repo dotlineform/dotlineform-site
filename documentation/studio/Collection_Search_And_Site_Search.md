@@ -9,7 +9,7 @@ parent_id: d-20260428-000000-f5ff18
 ---
 # Collection Search And Site Search
 
-This feature records implemented site-search selection and Recents generation/copying, with proposed collection search and editorial curation. It is maintained under [Planned Features](Planned_Features.md). The Search and Recents slices below are implemented; the remaining candidates are separate deliveries.
+This feature records the earlier site search and Recent deliveries, along with editorial curation proposals. It is maintained under [Planned Features](Planned_Features.md). Portfolio and collection scopes now share the main Index in Manage and Public. See [Docs Viewer Search](Docs_Viewer_Search.md) for the accepted behaviour and [Search Index](Docs_Search_Index.md) for the current coverage and files. The search plans and snapshots below describe earlier deliveries.
 
 Current publication follow-through is queue-only: Full Working Build generates and queues Recent; explicit Search builds queue saved index bytes. Ordinary operations preserve both, and Publish transfers only queued output without generation or freshness checks. [Generated Data Contracts](Generated_Data_Contracts.md) owns the current lifecycle; earlier scope/snapshot observations below retain their historical evidence limits.
 

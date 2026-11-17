@@ -11,6 +11,7 @@ from typing import Any
 import json
 
 from docs_book_toc import edition_rows
+from docs_search_scopes import COLLECTION_SEARCH_SCOPES
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generated_documents_path, is_curated_book, resolve_workspace_path
 
 
@@ -20,6 +21,11 @@ class DiscoverySelection:
 
     ordinary: dict[str, dict[str, Any]]
     collections: list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]
+
+
+def discovery_collections(config: DocsStageConfig):
+    return [owner for owner in config.collections
+            if owner.include_in_site_search or owner.collection in COLLECTION_SEARCH_SCOPES]
 
 
 def read_discovery_metadata(path: Path) -> dict[str, Any]:
@@ -72,7 +78,7 @@ def select_built_discovery_documents(
     ordinary = select_ordinary_documents(tree, ignored_ids)
     collections = [
         (collection, _select_collection_rows(manifests[collection.collection], collection))
-        for collection in sorted(config.site_search_collections, key=lambda item: item.collection)
+        for collection in discovery_collections(config)
         if collection.report_host_doc_id in ordinary
     ]
     return DiscoverySelection(ordinary, collections)
@@ -83,7 +89,7 @@ def select_collection_documents(
 ) -> list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]:
     """Select eligible-host collection rows; Catalogue has no draft state."""
     selections = []
-    for collection in sorted(config.site_search_collections, key=lambda item: item.collection):
+    for collection in discovery_collections(config):
         if collection.report_host_doc_id not in ordinary_ids:
             continue
         path = resolve_workspace_path(repo_root, generated_documents_path(collection)) / "manage-manifest.json"

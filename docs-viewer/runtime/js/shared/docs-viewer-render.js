@@ -24,11 +24,16 @@ export function renderResultEntry(options) {
   var icon = options.iconUrl
     ? '<span class="docsViewer__listIcon" aria-hidden="true" style="mask-image:url(&quot;' + escapeHtml(options.iconUrl) + '&quot;)"></span>'
     : '<span class="docsViewer__listIcon docsViewer__icon--dlf-doc" aria-hidden="true"></span>';
+  var title = icon + '<span>' + escapeHtml(options.title) + '</span>';
+  if (options.galleryId) {
+    return '<li class="docsViewer__resultItem"><button type="button" class="docsViewer__resultTitle" data-result-gallery-id="'
+      + escapeHtml(options.galleryId) + '">' + title + '</button></li>';
+  }
   return (
     '<li class="docsViewer__resultItem">' +
       '<a class="docsViewer__resultTitle" data-result-doc-id="' + escapeHtml(options.docId) +
       '" data-result-collection="' + escapeHtml(options.collection) + '" href="' + escapeHtml(options.href) + '">' +
-      icon + '<span>' + escapeHtml(options.title) + '</span></a>' +
+      title + '</a>' +
     '</li>'
   );
 }

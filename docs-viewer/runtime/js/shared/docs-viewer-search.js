@@ -87,6 +87,10 @@ function searchScoreV2(index, position, query, matchedFields) {
   return 100;
 }
 
+export const PORTFOLIO_SEARCH_SCOPE = "portfolio";
+export const COLLECTION_SEARCH_SCOPES = new Set(["works", "concepts", "moments", "library", "book"]);
+export const REFERENCE_SEARCH_SCOPES = new Set(["library", "book"]);
+
 /** Query the v4 payload already validated by the workspace provider; no per-query schema pass. */
 export function collectSearchMatches(index, rawQuery) {
   var query = normalizeSearchText(rawQuery);

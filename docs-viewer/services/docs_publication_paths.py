@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any
 
-from docs_workspace_config import generated_documents_path, generated_search_path, safe_relative_path, select_workspace_stage, source_control_path
+from docs_workspace_config import generated_documents_path, safe_relative_path, select_workspace_stage, source_control_path
 
 
 def confined(root: Path, relative: str | Path) -> Path:
@@ -27,8 +27,6 @@ def shared_path(workspace: Any, owner: str, output: str) -> Path:
     """Resolve one queued identity to its existing completed input."""
     working = select_workspace_stage(workspace, "working")
     if owner == "workspace":
-        if output == "search":
-            return generated_search_path(working)
         if output == "selected":
             return source_control_path(working, "selected.json")
         names = {"ordinary_index": "public-index-tree.json", "recent": "recent.json"}

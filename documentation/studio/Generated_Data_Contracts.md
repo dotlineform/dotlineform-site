@@ -45,9 +45,9 @@ The shared browser renderer fills slots using the open document and resolves por
 
 | Owner | Docs root | Search root |
 | --- | --- | --- |
-| Manage/local | `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/documents/` | `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/search/index.json` |
-| Prepared artifact | `$DOTLINEFORM_DOCS_BASE_DIR/preview/documents/` | `$DOTLINEFORM_DOCS_BASE_DIR/preview/search/index.json` |
-| Site-preview / public | `site/assets/data/docs/` | `site/assets/data/search/analysis/index.json` |
+| Manage/local | `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/documents/` | `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/search/` |
+| Prepared artifact | `$DOTLINEFORM_DOCS_BASE_DIR/preview/documents/` | `$DOTLINEFORM_DOCS_BASE_DIR/preview/search/` |
+| Site-preview / public | `site/assets/data/docs/` | `site/assets/data/search/analysis/` |
 
 Working builders and management follow-through write local output and finished public artifacts. They queue exact completed writes/removals; Publish applies only those selections to Preview and configured public destinations. Named collections retain their configured Preview/public reader roots. [Builder](Builder.md#publish-preparation) owns preparation and queue handoffs.
 
@@ -128,12 +128,7 @@ A report host carries `report` with required `id` and `collection` only for `doc
 
 ## Search Contract
 
-Search runtime reads the separate search payload through `search_index_url`, such as:
-
-- Public: `/assets/data/search/analysis/index.json`
-- Manage: `/docs/search`, resolved to configured Working output
-
-Search selects eligible targets from saved Working metadata, reads each required source through its confined exact path and parses front-matter fields plus report declarations needed for text extraction. It does not reopen collection by-ID documents, reread canonical ordinary ancestry, repeat Subject/readiness/thumbnail validation or compare source/title/date/parent metadata against generated output. The final table retains supplied display metadata; normalization belongs to term/token generation. The complete Working Build supplies its already loaded records through the same projection. Search build inputs do not depend on retired public docs `index.json`.
+The reader loads one Search scope at a time. Manage reads `/docs/search` with `search-scope`. Public derives the corresponding static file from the configured Portfolio index URL. Working queues each changed scope separately and Publish copies the selected bytes. [Search Index](Docs_Search_Index.md) owns the files, fields, eligibility and Build inputs.
 
 ## Recent Contract
 

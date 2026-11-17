@@ -1,3 +1,5 @@
+import { REFERENCE_SEARCH_SCOPES } from "./docs-viewer-search.js";
+
 /** Project the displayed document into the mounted Index tree. */
 export function initDocsViewerSidebarRenderer(context) {
   var documentIndex = context.documentIndex;
@@ -104,9 +106,15 @@ export function initDocsViewerSidebarRenderer(context) {
     list.className = parentId ? "docsViewer__navList docsViewer__navList--child" : "docsViewer__navList";
 
     var docs = documentIndex.childrenByParent.get(parentId) || [];
-    docs.forEach(function (doc) {
+    var previousReference = false;
+    var byHost = context.workspaceConfig.activeConfig.collectionsByReportHostId;
+    docs.forEach(function (doc, position) {
+      var collection = byHost.get(doc.doc_id);
       var item = document.createElement("li");
       item.className = "docsViewer__navItem";
+      var reference = REFERENCE_SEARCH_SCOPES.has(collection?.collection);
+      if (position && reference !== previousReference) item.classList.add("docsViewer__navItem--groupStart");
+      previousReference = reference;
       var row = document.createElement("div");
       row.className = "docsViewer__navRow";
       row.dataset.docRowId = doc.doc_id;
@@ -151,14 +159,17 @@ export function initDocsViewerSidebarRenderer(context) {
         draftIcon.title = "Draft";
         link.appendChild(draftIcon);
       }
+      if (doc.report_id === "docs_collection" && !collection) {
+        throw new Error("Collection report is missing its configured index icon: " + doc.doc_id);
+      }
+      if (collection) {
+        var collectionIcon = document.createElement("span");
+        collectionIcon.className = "docsViewer__listIcon docsViewer__navReportIcon";
+        collectionIcon.style.maskImage = 'url("' + collection.iconUrl + '")';
+        collectionIcon.setAttribute("aria-hidden", "true");
+        link.appendChild(collectionIcon);
+      }
       if (doc.report_id === "docs_collection") {
-        var collection = context.workspaceConfig.activeConfig.collectionsByReportHostId.get(doc.doc_id);
-        if (!collection) throw new Error("Collection report is missing its configured index icon: " + doc.doc_id);
-        var reportIcon = document.createElement("span");
-        reportIcon.className = "docsViewer__listIcon docsViewer__navReportIcon";
-        reportIcon.style.maskImage = 'url("' + collection.iconUrl + '")';
-        reportIcon.setAttribute("aria-hidden", "true");
-        link.appendChild(reportIcon);
         var reportLabel = document.createElement("span");
         reportLabel.className = "visually-hidden";
         reportLabel.textContent = "Collection report: ";

@@ -206,6 +206,7 @@ export function startDocsViewerRuntime(options) {
     onDispatch: function (detail) {
       if (!searchController) return;
       if (detail.controlId === "recent" && detail.eventType === "click") searchController.handleRecentControl();
+      if (detail.controlId === "portfolio-search" && detail.eventType === "click") searchController.togglePortfolio();
       if (detail.controlId === "search" && detail.eventType === "input") {
         searchController.handleSearchInput(detail.event.target.value);
       }
@@ -403,7 +404,10 @@ export function startDocsViewerRuntime(options) {
     mountRelatedLinks: documentViewCoordinator.mountRelatedLinks,
     reportPresentationAdapter: settings.reportPresentationAdapter,
     projectDocumentShell: panelLayout.projectMainView,
-    projectIndexLocation: sidebarRenderer.trackLocation,
+    projectIndexLocation: function () {
+      sidebarRenderer.trackLocation();
+      renderIndexListControls();
+    },
     renderManagementUi: renderManagementUi,
     renderMeta: renderMeta,
     publishCollectionReportState: publishCollectionReportState,
@@ -441,9 +445,10 @@ export function startDocsViewerRuntime(options) {
       var config = appSession.domains.workspaceConfig.activeConfig;
       return config && config.collectionsById.get(collectionId);
     },
-    syncIndexRoute: function (query) {
-      if (searchController) searchController.applyRoute(query);
+    syncIndexRoute: function (query, scope, target) {
+      if (searchController) searchController.applyRoute(query, scope, target);
     },
+    selectIndexTarget: function (target) { searchController?.selectIndexTarget(target); },
     confirmDocumentNavigation: documentViewCoordinator.confirmDocumentNavigation,
     activeViewState: documentViewCoordinator.activeViewState,
     managedDocumentContext: function () { return latestCollectionReportState; },
@@ -496,6 +501,13 @@ export function startDocsViewerRuntime(options) {
     },
     collectionProvider: collectionProvider,
     hideContextMenu: hideContextMenu,
+    openGallery: function (id, button) {
+      return settings.mediaDetailAdapter.openPanelTarget({
+        mediaTarget: { kind: "catalogue-gallery", id: id }, invocationControl: button,
+        isCurrentDocument: function () { return results.isConnected; }
+      }, results, documentController.activeMount);
+    },
+    renderControls: renderIndexListControls,
     hasActiveQuery: hasActiveQuery,
     currentDocumentTarget: currentDocumentTarget,
     workspaceConfig: appSession.domains.workspaceConfig,
@@ -667,13 +679,15 @@ export function startDocsViewerRuntime(options) {
 
   function renderIndexListControls() {
     if (!indexListControlHost) return [];
+    var scope = searchController?.controls();
     return indexListControlHost.render({
       controlStateById: {
         "recent": {
           label: recentControlLabel,
           pressed: latestIndexProjection && latestIndexProjection.activeViewId === "recent-results"
         },
-        "search": { label: "Search" }
+        "portfolio-search": scope?.scopeButton || { hidden: true },
+        "search": { label: scope?.label || "Search" }
       }
     });
   }

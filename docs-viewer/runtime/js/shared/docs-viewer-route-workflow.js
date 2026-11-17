@@ -1,4 +1,4 @@
-import { buildViewerUrl, CATALOGUE_SEARCH_PARAM, routeFromAnchorHref } from "./docs-viewer-router.js";
+import { buildViewerUrl, CATALOGUE_SEARCH_PARAM, routeFromAnchorHref, SEARCH_SCOPE_PARAM } from "./docs-viewer-router.js";
 import { documentTarget, documentTargetKey } from "./docs-viewer-document-target.js";
 import { createDocsViewerNavigation } from "./docs-viewer-navigation.js";
 import { collectionSequenceForLink } from "./docs-viewer-collection-navigation.js";
@@ -32,7 +32,8 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   function viewerUrl(docId, hash, query, targetOptions = {}, catalogueSearch = "") {
     return buildViewerUrl({ docId: docId, collection: targetOptions.collection || "", hash: hash,
-      query: query, catalogueSearch: catalogueSearch, origin: window.location.origin, preservedQueryParams: preservedQueryParams(),
+      query: query, searchScope: search.searchScope, catalogueSearch: catalogueSearch,
+      origin: window.location.origin, preservedQueryParams: preservedQueryParams(),
       viewerBaseUrl: currentValue(context.viewerBaseUrl) });
   }
   function viewerUrlForDocument(docId, options = {}) { return viewerUrl(docId, "", "", options); }
@@ -93,7 +94,8 @@ export function initDocsViewerRouteWorkflow(context) {
     var target = destination.target;
     var sameTarget = selected.documentTarget && documentTargetKey(selected.documentTarget) === documentTargetKey(target);
     displayedCatalogueSearch = destination.catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : "");
-    var viewOptions = { catalogueSearch: destination.catalogueSearch, collectionSequence: destination.collectionSequence };
+    var viewOptions = { catalogueSearch: destination.catalogueSearch, collectionSequence: destination.collectionSequence,
+      focusCatalogueSearch: !destination.force && !displayedHash && isCatalogueHost(target) };
     if (!destination.force && await context.restoreRetainedDocument(target, displayedHash, viewOptions)) return target;
     selected.documentTarget = target;
     var request = ++selected.requestId;
@@ -143,7 +145,8 @@ export function initDocsViewerRouteWorkflow(context) {
         if ((!hash || catalogueSearch !== undefined) && selected.displayedPayload && selected.displayedPayload.report
           && selected.displayedPayload.report.id === "docs_collection") {
           await navigation.update();
-          await context.restoreRetainedDocument(target, hash, { catalogueSearch: catalogueSearch });
+          await context.restoreRetainedDocument(target, hash, { catalogueSearch: catalogueSearch,
+            focusCatalogueSearch: !hash && isCatalogueHost(target) });
         } else {
           context.scrollToHash(hash);
           await navigation.update();
@@ -200,7 +203,7 @@ export function initDocsViewerRouteWorkflow(context) {
       if (!initialized) {
         initialized = true;
         var catalogueSearch = catalogueSearchFor(target, new URLSearchParams(window.location.search).get(CATALOGUE_SEARCH_PARAM));
-        context.syncIndexRoute(currentQuery());
+        context.syncIndexRoute(currentQuery(), new URLSearchParams(window.location.search).get(SEARCH_SCOPE_PARAM), target);
         return await navigation.initialize({ target: target, hash: currentHash(), catalogueSearch: catalogueSearch,
           url: viewerUrl(target.doc_id, currentHash(), currentQuery(), target, catalogueSearch) });
       }
@@ -266,8 +269,10 @@ export function initDocsViewerRouteWorkflow(context) {
       }
       event.preventDefault();
       if (route.error) { setStatus(route.error, true); return; }
+      var selectedFromIndex = anchor.classList.contains("docsViewer__navLink");
       loadDoc(route.target, { hash: route.hash, catalogueSearch: route.catalogueSearch,
         collectionSequence: collectionSequenceForLink(anchor) })
+        .then(function (target) { if (target && selectedFromIndex) context.selectIndexTarget(target); })
         .catch(function (error) { setStatus(error.message, true); });
     });
   }

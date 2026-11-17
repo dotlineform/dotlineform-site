@@ -11,6 +11,7 @@ import {
 import { fetchDocsCollectionManifest } from "./docs-viewer-data.js";
 import { documentTarget } from "./docs-viewer-document-target.js";
 import { docsViewerLinksDocumentHref } from "./docs-viewer-links-presentation.js";
+import { PORTFOLIO_SEARCH_SCOPE } from "./docs-viewer-search.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -51,9 +52,15 @@ export function createDocsViewerWorkspaceProvider(options) {
     return generatedData.readDocumentPayload(target, { contentUrl: url, collection: target.collection || "", docId: target.doc_id });
   }
 
-  function readSearch(optionsForRead) {
-    var config = collectionConfig(optionsForRead);
-    return generatedData.readSearchIndex({ searchIndexUrl: config.searchIndexUrl }).then(function (payload) {
+  function readSearch(scope) {
+    var config = collectionConfig();
+    var searchIndexUrl = config.searchIndexUrl;
+    if (scope !== PORTFOLIO_SEARCH_SCOPE && routeContext().routeConfig?.appKind === "public") {
+      var url = new URL(searchIndexUrl, settings.window.location.href);
+      url.pathname = url.pathname.replace(/[^/]+$/, encodeURIComponent(scope) + ".json");
+      searchIndexUrl = url.href;
+    }
+    return generatedData.readSearchIndex({ searchIndexUrl: searchIndexUrl, searchScope: scope }).then(function (payload) {
       if (!payload || !payload.header || payload.header.schema !== "docs_viewer_search_index_v4") {
         throw new Error("Search data has an unsupported schema.");
       }
@@ -160,15 +167,12 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
   if (provider.readCatalogueGallery) {
     provider.readCatalogueGalleryPresentation = async function (galleryId) {
-      var [payload, policy, manifest] = await Promise.all([
+      var [payload, policy] = await Promise.all([
         provider.readCatalogueGallery(galleryId),
-        provider.readCatalogueMediaConfig(),
-        provider.readContextManifest().catch(function () { return null; })
+        provider.readCatalogueMediaConfig()
       ]);
       var config = routeContext().routeConfig || {};
-      var presentation = catalogueGalleryMediaPresentation(payload, galleryId, policy, config.catalogueWorkThumbnailsBaseUrl, manifest?.docs);
-      presentation.gallery.context_unavailable = manifest === null;
-      return presentation;
+      return catalogueGalleryMediaPresentation(payload, galleryId, policy, config.catalogueWorkThumbnailsBaseUrl);
     };
   }
   if (source && typeof source.readCatalogueGalleryReportSearch === "function") {

@@ -7,7 +7,7 @@ import { catalogueMediaTargetWorkId } from "./docs-viewer-catalogue-media.js";
 import { mountCatalogueDocument } from "./docs-viewer-catalogue-rendering.js";
 import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
-import { buildViewerUrl } from "./docs-viewer-router.js";
+import { buildViewerUrl, SEARCH_SCOPE_PARAM } from "./docs-viewer-router.js";
 import {
   DOCS_VIEWER_MEDIA_GALLERY_LAYOUT,
   docsViewerMediaGalleryPage,
@@ -359,19 +359,23 @@ export function createDocsViewerMediaDetailAdapter() {
       content: list,
       isCurrentDocument: function () { return list.isConnected; },
       openMediaTarget: function (request) {
-        var root = activeDocumentMount();
-        var state = root && stateByRoot.get(root);
-        if (!state) throw new Error("Catalogue media is unavailable in this view.");
-        return openTarget(Object.assign({}, request, {
-          content: root,
-          invocationRoot: list,
-          documentMountGeneration: state.documentMountGeneration,
-          documentTarget: state.documentTarget,
-          isCurrentDocument: function () { return activeDocumentMount() === root && request.isCurrentDocument(); }
-        }));
+        return openPanelTarget(request, list, activeDocumentMount);
       }
     });
     return function () { cleanups.forEach(function (cleanup) { cleanup(); }); };
+  }
+
+  async function openPanelTarget(request, list, activeDocumentMount) {
+    var root = activeDocumentMount();
+    var state = root && stateByRoot.get(root);
+    if (!state) throw new Error("Catalogue media is unavailable in this view.");
+    return openTarget(Object.assign({}, request, {
+      content: root,
+      invocationRoot: list,
+      documentMountGeneration: state.documentMountGeneration,
+      documentTarget: state.documentTarget,
+      isCurrentDocument: function () { return activeDocumentMount() === root && request.isCurrentDocument(); }
+    }));
   }
 
   /** Open a supplied runtime presentation within the existing document-owned host. */
@@ -519,6 +523,8 @@ export function createDocsViewerMediaDetailAdapter() {
     var galleryPage = 0;
     var failedImage = null;
     var imageCleanups = [];
+    var contextManifestRead;
+    var contextMatches = new WeakMap();
     var feedback = documentRef.createElement("p");
     feedback.setAttribute("role", "status");
     feedback.hidden = true;
@@ -652,14 +658,15 @@ export function createDocsViewerMediaDetailAdapter() {
       if (!catalogue || !/^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(catalogue.reportHostDocId)
         || !viewerConfig.viewerBaseUrl) throw new Error("Catalogue document host is not configured.");
       var catalogueLink = documentRef.createElement("a");
+      var readerUrl = new URL(documentRef.URL);
       catalogueLink.href = buildViewerUrl({
         viewerBaseUrl: viewerConfig.viewerBaseUrl,
-        origin: new URL(documentRef.baseURI).origin,
-        docId: work.target.id, collection: "catalogue"
+        origin: readerUrl.origin,
+        docId: work.target.id, collection: "catalogue",
+        query: readerUrl.searchParams.get("q"),
+        searchScope: readerUrl.searchParams.get(SEARCH_SCOPE_PARAM)
       });
-      catalogueLink.target = "_blank";
-      catalogueLink.rel = "noopener noreferrer";
-      catalogueLink.setAttribute("aria-label", "Open Catalogue document " + work.target.id + " in a new tab");
+      catalogueLink.setAttribute("aria-label", "Open Catalogue document " + work.target.id);
       catalogueLink.textContent = work.target.id;
       catalogueNumber.append("cat. ", catalogueLink);
       caption.appendChild(catalogueNumber);
@@ -669,15 +676,9 @@ export function createDocsViewerMediaDetailAdapter() {
         groups.splice(firstSeriesLink < 0 ? groups.length : firstSeriesLink, 0,
           { target: supplied.gallery.target, label: supplied.gallery.label, relation: "context" });
       }
-      appendGalleryLinks(caption, groups.filter(function (entry) { return entry.relation !== "series"; }));
-      var relatedGalleries = groups.filter(function (entry) { return entry.relation === "series"; });
-      if (relatedGalleries.length) {
-        var relatedLabel = documentRef.createElement("p");
-        relatedLabel.className = "docsViewer__mediaDetailRelatedLabel";
-        relatedLabel.textContent = "related:";
-        caption.appendChild(relatedLabel);
-        appendGalleryLinks(caption, relatedGalleries);
-      }
+      appendGalleryLinks(caption, groups.filter(function (entry) { return entry.relation !== "series"; })
+        .concat(groups.filter(function (entry) { return entry.relation === "series"; })));
+      appendContextLinks(caption, work);
       if (supplied.gallery) {
         var position = docsViewerMediaGalleryPosition(supplied.gallery, work.target);
         imagePane.appendChild(navigationControls("Work", position.index + 1, position.total,
@@ -720,7 +721,7 @@ export function createDocsViewerMediaDetailAdapter() {
       var information = documentRef.createElement("div");
       information.className = "docsViewer__mediaDetailCaption docsViewer__mediaDetailCaption--simple";
       information.appendChild(titleElement(gallery.label));
-      appendContextLinks(information, gallery);
+      if (groupTarget(gallery.target)) appendContextLinks(information, gallery);
       if (page.pageCount > 1) {
         var pagination = navigationControls("page", page.pageIndex + 1, page.pageCount,
           function () { selectGalleryPage(page.pageIndex - 1); },
@@ -731,19 +732,39 @@ export function createDocsViewerMediaDetailAdapter() {
       return container;
     }
 
-    function appendContextLinks(information, gallery) {
-      if (gallery.contextUnavailable) {
+    function matchingContextDocuments(docs, selection) {
+      if (contextMatches.has(selection)) return contextMatches.get(selection);
+      var gallery = groupTarget(selection.target);
+      var workIds = new Set(gallery ? selection.members.map(function (member) { return member.target.id; })
+        : [selection.target.id]);
+      var matches = docs.filter(function (doc) {
+        var targets = doc.catalogue_targets;
+        return targets && ((gallery && targets.gallery_ids.includes(selection.target.id))
+          || targets.work_ids.some(function (id) { return workIds.has(id); }));
+      });
+      contextMatches.set(selection, matches);
+      return matches;
+    }
+
+    async function appendContextLinks(information, selection) {
+      if (!contextManifestRead) {
+        contextManifestRead = state.collectionProvider.readContextManifest().catch(function () { return null; });
+      }
+      var manifest = await contextManifestRead;
+      if (!isCurrent() || !viewport.contains(information)) return;
+      if (!manifest) {
         var status = documentRef.createElement("p");
         status.setAttribute("role", "status");
         status.textContent = "Context links are unavailable.";
         information.appendChild(status);
         return;
       }
-      if (!gallery.contextDocuments.length) return;
+      var docs = matchingContextDocuments(manifest.docs, selection);
+      if (!docs.length) return;
       var iconUrl = state.viewerConfig.collectionsById.get("works").iconUrl;
       var links = documentRef.createElement("ul");
       links.className = "docsViewer__mediaDetailGalleryLinks";
-      gallery.contextDocuments.forEach(function (doc) {
+      docs.forEach(function (doc) {
         var link = documentRef.createElement("a");
         link.href = state.collectionProvider.documentHref({ collection: "works", doc_id: doc.doc_id });
         link.textContent = doc.title;
@@ -862,6 +883,7 @@ export function createDocsViewerMediaDetailAdapter() {
     mountPanelLinks: mountPanelLinks,
     openPresentation: openPresentation,
     openTarget: openTarget,
+    openPanelTarget: openPanelTarget,
     loadTarget: loadTarget,
     mountPresentation: mountPresentation,
     releaseDocument: releaseDocument

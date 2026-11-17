@@ -160,7 +160,7 @@ export function normalizeDocsViewerControlState(record) {
   ].forEach(function (key) {
     if (Object.prototype.hasOwnProperty.call(source, key)) state[key] = Boolean(source[key]);
   });
-  ["label", "href"].forEach(function (key) {
+  ["label", "href", "iconUrl"].forEach(function (key) {
     if (Object.prototype.hasOwnProperty.call(source, key)) state[key] = cleanString(source[key]);
   });
   ["count", "total"].forEach(function (key) {
@@ -246,6 +246,14 @@ export function createDocsViewerSharedViewDefinitions() {
         surfaceId: "index-lists",
         features: ["search"],
         renderer: "search-input"
+      },
+      {
+        id: "portfolio-search",
+        label: "Search portfolio",
+        ownerType: "app",
+        surfaceId: "index-lists",
+        features: ["search"],
+        renderer: "portfolio-button"
       },
       {
         id: "recent",

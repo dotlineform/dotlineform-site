@@ -7,18 +7,28 @@ function appViewerConfigMount(root) {
     : null;
 }
 
-function renderRecentButton(context) {
-  var control = context.control;
+function renderIndexIconButton(context, id, icon) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
     button = context.document.createElement("button");
-    button.className = "docsViewer__toolbarIconButton docsViewer__recentButton";
+    button.className = "docsViewer__toolbarIconButton";
     button.type = "button";
-    button.id = "docsViewerRecentButton";
-    button.setAttribute("aria-pressed", "false");
+    button.id = id;
+    button.appendChild(createDocsViewerToolbarIcon(context.document, icon));
   }
-  button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--clock-9"));
-  button.classList.toggle("is-active", Boolean(control.state && control.state.pressed));
+  return button;
+}
+
+function renderRecentButton(context) {
+  var button = renderIndexIconButton(context, "docsViewerRecentButton", "docsViewer__icon--clock-9");
+  button.classList.toggle("is-active", Boolean(context.control.state?.pressed));
+  return button;
+}
+
+function renderPortfolioButton(context) {
+  var button = renderIndexIconButton(context, "docsViewerPortfolioButton", "docsViewer__icon--portfolio-globe");
+  var iconUrl = context.control.state?.iconUrl;
+  button.firstElementChild.style.maskImage = iconUrl ? 'url("' + iconUrl + '")' : "";
   return button;
 }
 
@@ -50,6 +60,11 @@ function renderSearchInput(context) {
 
     wrap.append(label, input);
     mountSearchField(input);
+  }
+  var scopeLabel = control.state?.label;
+  if (scopeLabel) {
+    input.placeholder = scopeLabel;
+    wrap.querySelector("label").textContent = scopeLabel;
   }
   return { root: wrap, interactive: input };
 }
@@ -94,6 +109,7 @@ function renderContentDetailOpenNewTab(context) {
 export function createDocsViewerSharedControlRenderers() {
   return {
     "recent-button": renderRecentButton,
+    "portfolio-button": renderPortfolioButton,
     "search-input": renderSearchInput,
     "content-detail-back": renderContentDetailBack,
     "content-detail-label": renderContentDetailLabel,

@@ -29,7 +29,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
     build_dir = repo_root / "docs-viewer/build"
     if str(build_dir) not in sys.path:
         sys.path.insert(0, str(build_dir))
-    from build_search import DocsViewerSearchDataBuilder, search_records_from_build
+    from build_search import DocsViewerSearchDataBuilder
     from docs_builder.browser_config import write_browser_config
     from docs_builder.collection import CollectionDocsBuilder
     from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH
@@ -145,21 +145,15 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
         if payload["diagnostics"]["recent"]["wrote"]:
             publication.shared("workspace", "recent")
         perform("publication handoff", publication.save)
-        search_builder = DocsViewerSearchDataBuilder(repo_root=repo_root, stage="working", config=config)
+        search_builder = DocsViewerSearchDataBuilder(repo_root=repo_root, workspace=workspace, config=config)
 
-        def rebuild_search() -> dict[str, Any]:
-            built_discovery = DiscoverySelection(discovery.ordinary, [entry for entry in discovery.collections if entry[0].collection in documents])
-            search_documents = search_records_from_build(built_discovery, documents)
-            for owner, selection in discovery.collections:
-                if owner.collection not in documents:
-                    search_documents.extend(search_builder.load_named_collection_docs(owner, selection))
-            return search_builder.run(write=True, force=False, documents=search_documents)
+        def select_search(output: str) -> None:
+            publication.shared("workspace", output)
+            publication.save()
 
-        search = perform("search", rebuild_search)
-        payload["diagnostics"]["search"] = search["diagnostics"]
-        if search["diagnostics"]["wrote"]:
-            publication.shared("workspace", "search")
-            perform("Search publication handoff", publication.save)
+        payload["diagnostics"]["search"] = perform("search", lambda: search_builder.run(
+            discovery, write=True, documents=documents, on_written=select_search,
+        ))
         perform("browser-configuration", lambda: write_browser_config(
             repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config",
         ))

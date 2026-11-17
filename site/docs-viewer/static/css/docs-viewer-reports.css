@@ -30,6 +30,10 @@
   gap: 0.35rem 0.55rem;
 }
 
+.docsViewerReport__collectionFilterToolbar:empty{
+  display: none;
+}
+
 .docsViewerReport__button:focus-visible,
 .docsViewerReport__cellLink:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);

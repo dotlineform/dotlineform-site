@@ -111,9 +111,13 @@ def read_generated_recent(repo_root: Path) -> Dict[str, Any]:
     )
 
 
-def read_generated_search_index(repo_root: Path) -> Dict[str, Any]:
+def read_generated_search_index(repo_root: Path, scope: str) -> Dict[str, Any]:
+    from docs_publication_paths import confined
+    from docs_search_scopes import search_artifact
+
+    _, filename = search_artifact(scope)
     return read_generated_json(
-        generated_search_index_path(repo_root),
+        confined(generated_search_index_path(repo_root).parent, filename),
         "generated search index",
     )
 

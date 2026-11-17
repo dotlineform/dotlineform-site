@@ -1,6 +1,7 @@
 import { documentTarget } from "./docs-viewer-document-target.js";
 
 export const CATALOGUE_SEARCH_PARAM = "catalogue-search";
+export const SEARCH_SCOPE_PARAM = "search-scope";
 
 /** Construct a destination in the active reader route; callers live only in history. */
 export function buildViewerUrl(options) {
@@ -16,7 +17,10 @@ export function buildViewerUrl(options) {
   });
   if (target.collection) url.searchParams.set("collection", target.collection);
   url.searchParams.set("doc", target.doc_id);
-  if (settings.query) url.searchParams.set("q", settings.query.trim());
+  if (settings.query) {
+    url.searchParams.set("q", settings.query.trim());
+    if (settings.searchScope) url.searchParams.set(SEARCH_SCOPE_PARAM, settings.searchScope);
+  }
   if (settings.catalogueSearch) url.searchParams.set(CATALOGUE_SEARCH_PARAM, settings.catalogueSearch);
   url.hash = settings.hash || "";
   return url.pathname + url.search + url.hash;

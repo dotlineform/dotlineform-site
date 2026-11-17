@@ -75,7 +75,7 @@ function collectionTitle(record) {
 function collectionBrowsingFeatures(collection) {
   var boundedBrowsing = ["catalogue", "works"].includes(collection.collection)
     || collection.collectionType === "book-collection";
-  return { pagination: boundedBrowsing, delayedSearch: boundedBrowsing, filterToolbarSort: boundedBrowsing };
+  return { pagination: boundedBrowsing, filterToolbarSort: boundedBrowsing };
 }
 
 function collectionItemsLabel(collection) {
@@ -251,17 +251,17 @@ function appendGalleryRow(state, gallery) {
   state.rowsNode.appendChild(row);
 }
 
-function renderFilterShell(context, collection) {
+function renderFilterShell(collection) {
   var toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar docsViewerReport__collectionFilterToolbar";
   toolbar.dataset.docsCollectionFilters = "true";
+  if (collectionId(collection) !== "catalogue") return { toolbarNode: toolbar, inputNode: null, clearNode: null };
   filterIdSequence += 1;
   var searchId = "docs-collection-title-filter-" + collectionId(collection) + "-" + filterIdSequence;
   var searchLabel = document.createElement("label");
   searchLabel.className = "docsViewerReport__selectLabel visually-hidden";
   searchLabel.htmlFor = searchId;
-  searchLabel.textContent = collectionId(collection) === "catalogue"
-    ? "Filter Works and Galleries by title or Work ID" : "Filter " + collectionItemsLabel(collection) + " by title";
+  searchLabel.textContent = "Filter Works and Galleries by title or Work ID";
 
   var search = document.createElement("span");
   search.className = "docsViewerReport__search";
@@ -271,10 +271,12 @@ function renderFilterShell(context, collection) {
   input.type = "search";
   input.autocomplete = "off";
   input.spellcheck = false;
-  input.placeholder = ({ catalogue: "work or gallery", concepts: "concept", moments: "moment", works: "title" })[collectionId(collection)] || "search";
+  input.placeholder = "work or gallery";
 
   search.appendChild(input);
   var clear = mountSearchField(input).clearButton;
+  clear.setAttribute("aria-label", "Clear Works and Galleries search");
+  clear.title = clear.getAttribute("aria-label");
 
   toolbar.appendChild(searchLabel);
   toolbar.appendChild(search);
@@ -291,7 +293,7 @@ function renderShell(context, collection, features) {
   root.dataset.reportColumns = "1";
   root.dataset.reportCollection = collectionId(collection);
 
-  var filters = renderFilterShell(context, collection);
+  var filters = renderFilterShell(collection);
   var status = document.createElement("p");
   status.className = "docsViewerReport__status visually-hidden";
   status.setAttribute("aria-live", "polite");
@@ -387,15 +389,8 @@ function renderShell(context, collection, features) {
 }
 
 function updateFilterControls(state) {
-  if (state.filterInputNode.value !== state.query) {
-    state.filterInputNode.value = state.query;
-  }
-  state.filterClearNode.setAttribute(
-    "aria-label",
-    state.collectionId === "works" ? "Clear document search"
-      : "Clear " + collectionItemsLabel(state.collection) + (state.features.delayedSearch ? " search" : " title filter")
-  );
-  state.filterClearNode.title = state.filterClearNode.getAttribute("aria-label");
+  if (!state.filterInputNode) return;
+  if (state.filterInputNode.value !== state.query) state.filterInputNode.value = state.query;
   state.searchCopy?.update(state.query);
 }
 
@@ -550,30 +545,26 @@ function gallerySearchPending(state) {
 }
 
 function bindFilterControls(state) {
-  state.filterInputNode.addEventListener("input", function () {
+  state.filterInputNode?.addEventListener("input", function () {
     if (!state.mounted || state.selectionActive) return;
     state.query = state.filterInputNode.value;
     state.searchCopy?.update(state.query);
-    if (state.features.delayedSearch) {
-      cancelCollectionSearch(state);
-      state.listNeedsRender = true;
-      if (!normalizeDocsCollectionFilterValue(state.query)) {
-        state.pageIndex = 0;
-        renderListProjectionContained(state, "collection-search-clear");
-        return;
-      }
-      state.searchTimer = setTimeout(function () {
-        state.searchTimer = null;
-        if (!state.mounted) return;
-        state.pageIndex = 0;
-        if (state.root.dataset.reportState === "list") {
-          renderListProjectionContained(state, "collection-search");
-        }
-      }, COLLECTION_SEARCH_DELAY_MS);
-      updateCollectionControls(state);
+    cancelCollectionSearch(state);
+    state.listNeedsRender = true;
+    if (!normalizeDocsCollectionFilterValue(state.query)) {
+      state.pageIndex = 0;
+      renderListProjectionContained(state, "collection-search-clear");
       return;
     }
-    renderListProjectionContained(state, "title-filter");
+    state.searchTimer = setTimeout(function () {
+      state.searchTimer = null;
+      if (!state.mounted) return;
+      state.pageIndex = 0;
+      if (state.root.dataset.reportState === "list") {
+        renderListProjectionContained(state, "collection-search");
+      }
+    }, COLLECTION_SEARCH_DELAY_MS);
+    updateCollectionControls(state);
   });
 }
 
@@ -598,18 +589,18 @@ function bindCollectionKeyboardNavigation(state) {
     }
 
     var link = event.target.closest(".docsViewerReport__collectionButton");
-    if (!link || !state.tableNode.contains(link)) return;
+    if (!link || !state.tableNode.contains(link) || (event.key === "Escape" && !state.filterInputNode)) return;
     event.preventDefault();
     event.stopPropagation();
     if (event.key === "Escape") {
-      state.filterInputNode.focus();
+      state.filterInputNode?.focus();
       return;
     }
     if (state.sectionNavigation?.usesTreeRows()) {
       var links = Array.from(state.rowsNode.querySelectorAll(".docsViewerReport__collectionButton"));
       var next = links[links.indexOf(link) + (event.key === "ArrowUp" ? -1 : 1)];
       if (next) next.focus();
-      else if (event.key === "ArrowUp") state.filterInputNode.focus();
+      else if (event.key === "ArrowUp") state.filterInputNode?.focus();
       return;
     }
     var row = link.parentElement;
@@ -624,7 +615,7 @@ function bindCollectionKeyboardNavigation(state) {
     if (adjacent) {
       adjacent.querySelector(".docsViewerReport__collectionButton")?.focus();
     } else if (up) {
-      state.filterInputNode.focus();
+      state.filterInputNode?.focus();
     }
   }
 
@@ -650,8 +641,10 @@ function updateCollectionControls(state, pageIndex = state.pageIndex) {
   var locked = state.selectionActive;
   var discoveryActive = catalogueDiscoveryActive(state);
   var gallery = catalogueGalleryActive(state);
-  state.filterInputNode.disabled = !state.manifestLoaded || locked;
-  state.filterClearNode.disabled = state.filterInputNode.disabled;
+  if (state.filterInputNode) {
+    state.filterInputNode.disabled = !state.manifestLoaded || locked;
+    state.filterClearNode.disabled = state.filterInputNode.disabled;
+  }
   state.selectionControls?.setReady(selectionReady(state));
   state.paginationControl?.update(state.pagedBrowsing);
   if (state.paginationControl) state.paginationControl.button.disabled = locked;
@@ -991,7 +984,7 @@ function restoreListControls(state, saved) {
   var current = captureListControls(state);
   if (JSON.stringify(current) === JSON.stringify(saved)) return;
   cancelCollectionSearch(state);
-  if (typeof saved.query === "string") state.query = saved.query;
+  if (state.filterInputNode && typeof saved.query === "string") state.query = saved.query;
   if (["title-asc", "last-updated-desc"].includes(saved.sort)) state.sortMode = saved.sort;
   if (typeof state.contribution?.paginationDefault === "boolean" && typeof saved.pagination === "boolean") {
     state.pagedBrowsing = saved.pagination;
@@ -1177,7 +1170,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   });
   if (state.listActionHost) state.listActionHost.className = "docsViewer__collectionActions";
   if (features.pagination) {
-    state.filterInputNode.disabled = true;
+    if (state.filterInputNode) state.filterInputNode.disabled = true;
     state.pager = createCollectionPager(root.ownerDocument,
       state.collectionId === "works" ? "document" : collectionItemsLabel(state.collection), function (pageIndex) {
       if (!state.mounted || state.selectionActive || state.searchTimer !== null || gallerySearchPending(state) || pageIndex < 0
@@ -1349,7 +1342,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
       state.pageIndex = 0;
       state.listNeedsRender = true;
     }
-    renderListView(state);
+    var rendered = renderListView(state);
     state.catalogueSearchRoute?.replaceQuery(state.query);
     if (catalogueSearch === undefined) {
       if (state.galleryPreferred && !state.galleryFits && catalogueDiscoveryActive(state) && state.listDiscovery.position) {
@@ -1357,6 +1350,10 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
       } else {
         remembered.restorePosition();
       }
+    }
+    if (lifetime.focusCatalogueSearch) {
+      lifetime.focusCatalogueSearch = false;
+      if (rendered && !root.closest("[hidden]")) state.filterInputNode?.focus({ preventScroll: true });
     }
   }
   function dispose() {
@@ -1451,14 +1448,16 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
 export function mountDocsCollectionReport(context) {
   var root = context && context.reportRoot;
   if (!root) return Promise.resolve(false);
-  var lifetime = { active: true, view: null, catalogueSearch: context.catalogueSearchRoute?.query };
+  var lifetime = { active: true, view: null, catalogueSearch: context.catalogueSearchRoute?.query,
+    focusCatalogueSearch: context.catalogueSearchRoute?.focusOnEntry };
   context.registerRetainedView?.({
     id: "collection:" + context.reportMeta.collection,
     dispose: function () { lifetime.active = false; lifetime.view?.dispose(); lifetime.view = null; },
     capture: function () { return lifetime.view?.capture() || null; },
-    restore: function () { lifetime.view?.restore(); },
-    resume: function (catalogueSearch) {
+    restore: function () { lifetime.focusCatalogueSearch = false; lifetime.view?.restore(); },
+    resume: function (catalogueSearch, focusCatalogueSearch) {
       if (catalogueSearch !== undefined) lifetime.catalogueSearch = catalogueSearch;
+      lifetime.focusCatalogueSearch = focusCatalogueSearch;
       lifetime.view?.resume();
     }
   });

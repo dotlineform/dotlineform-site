@@ -160,6 +160,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
+- [Public Index Search Scopes](Public_Index_Search_Scopes.md) — Complete and accepted locally on 2026-11-17. Keep the delivery pending manual archive. The [Search guide](Docs_Viewer_Search.md) and [Search Index contract](Docs_Search_Index.md) own the current behaviour and files. Deploy Public remains a separate release action.
+
 - [Book Parts And Sections](deliveries/Book_Parts_And_Sections.md) — Complete and accepted on 2026-11-16. Retain the delivery pending manual archive. [Book curation and editions](Sub_Scope_Index_Architecture.md#book-curation-in-manage) owns the current workflow.
 
 - [Book Editions](deliveries/Book_Editions.md) — Complete and accepted on 2026-11-15. Retain for the Export Book proposal. [Book editions](Sub_Scope_Index_Architecture.md#book-editions) owns the shipped workflow.

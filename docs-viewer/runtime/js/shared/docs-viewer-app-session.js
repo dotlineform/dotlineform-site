@@ -56,9 +56,7 @@ function createStateDefaults(settings) {
     displayedPayload: null,
     expandedDocIds: new Set(),
     requestId: 0,
-    searchIndex: null,
-    searchLoaded: false,
-    searchRequestPromise: null,
+    searchScope: "",
     recentEntries: [],
     recentLoaded: false,
     recentRequestPromise: null,
@@ -158,9 +156,7 @@ function createStateDomains(state, settings) {
       "reloadExpectedDocId"
     ]),
     searchRecent: stateDomain("searchRecent", "generated static data or local generated-read service plus browser-only query state", state, [
-      "searchIndex",
-      "searchLoaded",
-      "searchRequestPromise",
+      "searchScope",
       "recentEntries",
       "recentLoaded",
       "recentRequestPromise",

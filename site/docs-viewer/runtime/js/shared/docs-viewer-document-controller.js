@@ -84,14 +84,14 @@ export function initDocsViewerDocumentController(context) {
       });
     } else handleMissingDoc();
   }
-  async function restoreRetained(target, hash, { catalogueSearch, collectionSequence } = {}) {
+  async function restoreRetained(target, hash, { catalogueSearch, collectionSequence, focusCatalogueSearch } = {}) {
     var record = retained.get(documentTargetKey(target));
     if (!record) return false;
     projectCollectionNavigation(record, collectionSequence);
     if (!await activate(record)) return false;
     // A list owner may resume its last visible state independently of this entry.
     var resumed = false;
-    record.viewOwners.forEach(function (owner) { if (owner.resume) { owner.resume(catalogueSearch); resumed = true; } });
+    record.viewOwners.forEach(function (owner) { if (owner.resume) { owner.resume(catalogueSearch, focusCatalogueSearch); resumed = true; } });
     if (hash) scrollToHash(hash);
     else if (!resumed || catalogueSearch !== undefined) window.scrollTo(0, 0);
     return true;
@@ -160,7 +160,7 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
-  function mountDocumentExtras(doc, payload, mountGeneration, catalogueSearch) {
+  function mountDocumentExtras(doc, payload, mountGeneration, { catalogueSearch, focusCatalogueSearch }) {
     var mountContent = content;
     var mountedRecord = activeRecord;
     var lifetime = mountedRecord.lifetime;
@@ -210,6 +210,7 @@ export function initDocsViewerDocumentController(context) {
       openDocument: context.openDocument,
       catalogueSearchRoute: payload.report?.id === "docs_collection" && payload.report.collection === "catalogue" ? {
         query: catalogueSearch,
+        focusOnEntry: focusCatalogueSearch,
         replaceQuery: function (query) {
           if (lifetime.active && activeRecord === mountedRecord) context.replaceCatalogueSearch(query);
         }
@@ -520,7 +521,7 @@ export function initDocsViewerDocumentController(context) {
     var mediaMount = mountMediaDetails(doc, payload, mountGeneration);
     if (waitForLayout && !await revealCatalogueLayout(record, mediaMount, mountGeneration)) return;
     mountImageDetails(doc, payload, mountGeneration);
-    mountDocumentExtras(doc, payload, mountGeneration, options.catalogueSearch);
+    mountDocumentExtras(doc, payload, mountGeneration, options);
     document.title = payload.title + " | dotlineform";
     setStatus("", false);
     context.renderManagementUi();

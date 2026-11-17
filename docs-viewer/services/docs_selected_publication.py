@@ -11,6 +11,7 @@ from docs_catalogue_projection import rendered_catalogue_assets
 from docs_publication_paths import confined, shared_path
 from docs_publication_queue import FAMILIES, has_selections, complete_publication
 from docs_publication_transfer import SelectedTransfers, completed_effect, delete_path, read_bytes, write_bytes
+from docs_search_scopes import search_artifact
 from docs_workspace_config import generated_documents_path, generated_search_path, preview_documents_path, preview_search_path, public_documents_path, public_search_path, select_workspace_stage
 
 
@@ -111,10 +112,11 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
         for owner, outputs in tuple(pending[family].items()):
             for output in tuple(outputs):
                 result.update(phase="shared Preview", target=f"{owner}/{output}")
-                if output == "search" and owner == "workspace":
-                    source = generated_search_path(working)
-                    target = preview_search_path(preview)
-                    destination = repo_root / public_search_path(preview)
+                if owner == "workspace" and (output == "search" or output.startswith("search-")):
+                    _, filename = search_artifact(output.removeprefix("search-") if output != "search" else "portfolio")
+                    source = confined(generated_search_path(working).parent, filename)
+                    target = confined(preview_search_path(preview).parent, filename)
+                    destination = confined(repo_root / public_search_path(preview).parent, filename)
                 else:
                     _source_owner, preview_owner = owners["" if owner == "workspace" else owner]
                     filename = {"ordinary_index": "index-tree.json", "recent": "recent.json", "selected": "selected.json", "collection_manifest": "manifest.json"}[output]

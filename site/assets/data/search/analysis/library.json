@@ -1,0 +1,10801 @@
+{
+  "header": {
+    "schema": "docs_viewer_search_index_v4",
+    "version": "blake2b-73e30c5fd266317266de5604bbfa8f63",
+    "generated_at_utc": "2026-11-17T10:44:03Z",
+    "count": 152
+  },
+  "fields": [
+    "title",
+    "summary"
+  ],
+  "docs": [
+    {
+      "id": "d-20260809-130120-28fb85",
+      "title": "Beauty × Memory × Meaning",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-3054b0",
+      "title": "Entropy & Evolution Under Two Cosmologies",
+      "last_updated": "2026-08-09",
+      "display_meta": "2026-08-09 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-44384d",
+      "title": "Beyond Conscious vs. Subconscious",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-461754",
+      "title": "Abstract Thought and Physical Processes",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-837891",
+      "title": "Beauty",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-91c97f",
+      "title": "Bayesian Reasoning",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-a7bc91",
+      "title": "Evolutionary Psychology",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-b96ba9",
+      "title": "From 3D Space to Many Dimensions",
+      "last_updated": "2026-10-16",
+      "display_meta": "2026-10-16 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-c5c511",
+      "title": "Coincidence Inevitability",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-d66e0b",
+      "title": "Can the Brain Comprehend How It Works?",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-e6793d",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
+      "last_updated": "2026-08-09",
+      "display_meta": "2026-08-09 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20260809-130120-ed5b30",
+      "title": "Coincidence Salience Worksheet",
+      "last_updated": "2026-08-09",
+      "display_meta": "2026-08-09 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261016-235314-073b44",
+      "title": "5 aspects of memory",
+      "last_updated": "2026-10-16",
+      "display_meta": "2026-10-16 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-111531-f1b36a",
+      "title": "100 words - Linguistic theories",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-112353-93c738",
+      "title": "100 Words Related to Reflection & Memory",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-112923-e02f33",
+      "title": "Reality Layers — Absolute • Intersubjective • Subjective",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-160051-1a6829",
+      "title": "Abstract Art as Evolutionary Mechanism",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-162603-c45f6b",
+      "title": "Acceleration vs Entropy",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-172422-3921c8",
+      "title": "Aliveness of Images",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-174644-6d7f78",
+      "title": "Archetypal Patterns",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-182310-3b3ecb",
+      "title": "Are Information and Entropy Consciously Accessible",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-220135-4d19fc",
+      "title": "Attractor-network Memory",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-220718-82b513",
+      "title": "Hopfield Attractor-Network Memory",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-221439-845822",
+      "title": "Hopfield Attractor Networks — Resilience & Failure Adaptation",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-223524-f16e89",
+      "title": "Bergson",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-223804-cc24e4",
+      "title": "Biological and physical memories",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-231122-eeaf16",
+      "title": "Biological vs Non‑Organic Memory",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-231636-6bdc1b",
+      "title": "Brain machines",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-232312-733b50",
+      "title": "SpiNNaker",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-232727-55cf60",
+      "title": "PyNN",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-233803-9f11b8",
+      "title": "Neuromorphic Computing",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-101404-0c91f3",
+      "title": "Neuromorphic Continuity vs State Saving",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-103357-e62ff8",
+      "title": "Problems SpiNNaker is used to Solve",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-104047-10bc42",
+      "title": "SpiNNaker State & Outputs",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-105902-482d5b",
+      "title": "Brain signals",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-111445-823b77",
+      "title": "Brain Structure",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-113347-fc1318",
+      "title": "Brain Structure — Illustrated Overview",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-122554-80436e",
+      "title": "Brain Diagrams",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-153132-bdf76b",
+      "title": "Brain Connectivity",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-154315-4f5ade",
+      "title": "Brain ⇄ Mind: Emergence and Feedback",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-161532-ad1a8a",
+      "title": "Brain ⇄ Mind in Memory",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-162318-a42409",
+      "title": "Brain ⇄ Mind Dynamic in Evolution",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-163309-a8c088",
+      "title": "Brains & Organisms Inside a Mathematical Universe",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-163650-ef5305",
+      "title": "Awe",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-164432-3924d1",
+      "title": "Bridging Systems",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-170327-aa729d",
+      "title": "Buddhism, Kant, Science",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-171054-0e8f96",
+      "title": "Buddhism, Neuroscience",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-172349-eb5ad1",
+      "title": "Buddhism ↔ Neuroscience ↔ Bridging Metaphors",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-172748-9d8c5f",
+      "title": "John Cage & I-Ching",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-174455-98f8ad",
+      "title": "Complexity ↔ Simplicity",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-174758-928481",
+      "title": "Complexity ↔ Simplicity — Cycle",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-175456-55e627",
+      "title": "Computational Neuroscience Models",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-180055-7aac51",
+      "title": "Conceptual thinking",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-180844-a879d4",
+      "title": "Conceptual Metaphor Theory",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-181612-7121ad",
+      "title": "Conscious & Subconscious",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-182351-b4b64e",
+      "title": "Conscious vs. Subconscious Roles in Memory",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-183506-38d43e",
+      "title": "Does Consciousness Create Reality?",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-184252-5c4879",
+      "title": "Consciousness Windows Across Scales",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-190806-09e53f",
+      "title": "Constructive Episodic Simulation (CES)",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-191608-b3e36d",
+      "title": "Continuity Without Memory — Neuroscience × Buddhism",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-192639-058475",
+      "title": "Continuity > Boundary > Update",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-202531-230319",
+      "title": "How many living creatures are there on earth?",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-203525-da6bae",
+      "title": "How often do Buddhas arise?",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-205254-c83306",
+      "title": "Cross-generational Memory in Plants and Invertebrates",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-205951-12f3d8",
+      "title": "Cultural Differences in Earliest Autobiographical Memory",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-211249-dbb1be",
+      "title": "Existentialism: From 20th‑Century Movement to 21st‑Century Continuum",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261018-211837-04a4c0",
+      "title": "Existentialism’s 21st‑Century Continuations - Philosophy & Continental Thought",
+      "last_updated": "2026-10-20",
+      "display_meta": "2026-10-20 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261020-082510-8fac65",
+      "title": "Existentialism’s 21st‑Century Continuations - Psychology & Therapy",
+      "last_updated": "2026-10-20",
+      "display_meta": "2026-10-20 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261020-091237-191db7",
+      "title": "Existentialism’s 21st‑Century Continuations - Environmental Philosophy & Eco‑Existentialism",
+      "last_updated": "2026-10-20",
+      "display_meta": "2026-10-20 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261020-092527-9a002c",
+      "title": "Existentialism’s 21st‑Century Continuations - Technology & AI Ethics",
+      "last_updated": "2026-10-20",
+      "display_meta": "2026-10-20 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261020-093023-c3f7e4",
+      "title": "Existentialism’s 21st‑Century Continuations - Cultural & Artistic Discourse",
+      "last_updated": "2026-10-20",
+      "display_meta": "2026-10-20 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261020-093513-7a4a30",
+      "title": "Cyclical Universe — Information Across a Bounce or Singularity",
+      "last_updated": "2026-10-20",
+      "display_meta": "2026-10-20 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261021-215030-5d65bf",
+      "title": "Deceit and the Ethics of Remembering",
+      "last_updated": "2026-10-21",
+      "display_meta": "2026-10-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261021-215701-5f389c",
+      "title": "Default Mode Network — Hubs, Discovery, Timeline",
+      "last_updated": "2026-10-21",
+      "display_meta": "2026-10-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261021-220354-62bf68",
+      "title": "Dependable truth",
+      "last_updated": "2026-10-21",
+      "display_meta": "2026-10-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261021-220722-8f21a0",
+      "title": "Dependent Origination, Brain, and Evolution",
+      "last_updated": "2026-10-21",
+      "display_meta": "2026-10-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261021-221403-8ee297",
+      "title": "Diffusion of Innovations",
+      "last_updated": "2026-10-21",
+      "display_meta": "2026-10-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-084054-bb270a",
+      "title": "Direct Realism & Enactivism",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-084538-13135e",
+      "title": "Dissipative Structures, Boundary Conditions, and Memory",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-085427-904a56",
+      "title": "Dissolving self",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-090028-00ed95",
+      "title": "Distributed Self‑Organization - A Universal Principle",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-090826-bc4afb",
+      "title": "Divine Eye & Past Lives",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-091719-c87850",
+      "title": "Does Rebirth Imply Memory Outside the Brain?",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-093413-c0852e",
+      "title": "Dream within a Dream",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-094254-4845ef",
+      "title": "Dreaming & Memory",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-094832-725e2a",
+      "title": "Dreams — Philosophy × Psychology Timeline",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-095718-30ac87",
+      "title": "Dreams",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-100230-fcf298",
+      "title": "Dynamic Equivalence",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-100727-066b8e",
+      "title": "Ecology and mind",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-101228-14ce32",
+      "title": "Ecosystem Beyond Plants and Animals — Microbes, Fungi, Abiotic Forces",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-103952-912d31",
+      "title": "Ecosystem memory",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-104717-53432c",
+      "title": "Ecosystem",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-105328-cb37fe",
+      "title": "Embedded memory",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-121305-c65f2b",
+      "title": "Embedded Memory × Evolutionary Psychology",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-122231-6c81b3",
+      "title": "Embedded Memory — Select · Change · Reconstruct",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-122644-1612d9",
+      "title": "Embodied mind",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-123427-baf422",
+      "title": "Embodied mind: conceptual map",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-214006-ff0888",
+      "title": "Emergence Ladder",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-214500-1e384c",
+      "title": "Emergence — Patterns Without Essence",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-215510-c7af87",
+      "title": "Emergence of Symmetry & Geometry",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-220408-d0f876",
+      "title": "Emergent Properties",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-222411-df5168",
+      "title": "Evolutionary Psychiatry",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-224537-5fa7cc",
+      "title": "Emotion as Context (eCMR)",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261025-224954-0e3adf",
+      "title": "Emptiness and the Role of Memory",
+      "last_updated": "2026-10-25",
+      "display_meta": "2026-10-25 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-083644-ed987d",
+      "title": "Engram Neuron Synapse Estimates",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-084726-91ec87",
+      "title": "Engram Lineage × Select–Change–Reconstruct",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-085236-87b158",
+      "title": "Engrams",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-085402-88d78f",
+      "title": "Entanglement in quantum computing",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-142333-0630ff",
+      "title": "Entropy",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-143050-6a9898",
+      "title": "Epilogue",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-143142-eb451a",
+      "title": "Episodic vs semantic memory",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-151035-c079c8",
+      "title": "Episodic ↔ Semantic Metaphor — Wetland Pools → River System",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-151507-580a1a",
+      "title": "Episodic vs Semantic — Select · Change · Reconstruct",
+      "last_updated": "2026-11-16",
+      "display_meta": "2026-11-16 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-152100-e54ca6",
+      "title": "Epistemic Boundary — I Ching × Quantum Measurement",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-152430-c069d8",
+      "title": "Event Boundaries (Memory) vs Event Horizon (Black Holes)",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-153249-cef53e",
+      "title": "Event Boundaries as Temporal Cuts",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-153445-340fd4",
+      "title": "Evolution of brain",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-153830-259acf",
+      "title": "Evolution of Embedded Memory & Dynamic Architecture",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-154331-7a5001",
+      "title": "Designed vs. Evolutionary",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-155019-5c41cf",
+      "title": "Evolutionary factors in memory",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-160419-07ca8d",
+      "title": "Why Memory Is Reconstructive — Evolutionary Factors and Benefits",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-160843-e2cc33",
+      "title": "Evolutionary Psychology and Memory",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-161049-dd77d8",
+      "title": "Evolutionary Psychology and Sexual Attraction",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-161334-5f5cfe",
+      "title": "When Evolutionary Traits Become Dysfunctional",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-161856-d59dd4",
+      "title": "Existentialism",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-164336-ceaab1",
+      "title": "Decoherence, interference and quantum computation",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-164704-fa606f",
+      "title": "Fast Minds, Slow Earth — Temporal Mismatch & Integration",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-165149-c32c62",
+      "title": "Feedback and Correction: Evolution’s Long Arc of Honesty",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-165633-1b8015",
+      "title": "Feedback Loops — Mathematical Form vs. Neurological Implementation",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-165837-39cc63",
+      "title": "Feedback Loops — Balancing Expansion and Refinement in the Translation Membrane",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-170452-a2652c",
+      "title": "FEP × Physics via Non‑Equilibrium Steady States (NESS)",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-171009-d5bac8",
+      "title": "Free Energy Principle (FEP)",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261027-171439-913752",
+      "title": "What is a field (physics)?",
+      "last_updated": "2026-10-27",
+      "display_meta": "2026-10-27 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-113959-7459a8",
+      "title": "Field (Physics)",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-114705-4d73dc",
+      "title": "Square Grid — Field Theory Symbolism",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-115351-610a09",
+      "title": "Ontology of Fields",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-115808-756e62",
+      "title": "Field as Collective Memory (Sheldrake)",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-120632-a22f31",
+      "title": "Five Grand Challenges of Memory",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-121000-5d3475",
+      "title": "Forgetting — Lost vs Inaccessible",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-121736-67f1ea",
+      "title": "Free Energy Principle (FEP) - Perception–action loop",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-122252-edeac1",
+      "title": "Free Energy Principle (Bayesian thinking)",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-123246-8fd28b",
+      "title": "Freedom and Collapse",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-125413-aca68d",
+      "title": "Frequency Origins",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-125921-12ce13",
+      "title": "Future memories",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261028-130039-134421",
+      "title": "Future Memories — Anticipation, Intention, and the Art of Remembering Forward",
+      "last_updated": "2026-10-28",
+      "display_meta": "2026-10-28 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261114-134541-0b8636",
+      "title": "Geometry in quantum mechanics",
+      "last_updated": "2026-11-16",
+      "display_meta": "2026-11-16 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261114-162155-29c4b1",
+      "title": "Gödel Numbers",
+      "last_updated": "2026-11-14",
+      "display_meta": "2026-11-14 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261114-163045-dbfff1",
+      "title": "Gödel — Reflective Summary",
+      "last_updated": "2026-11-14",
+      "display_meta": "2026-11-14 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261114-163358-297d16",
+      "title": "Is Gödel’s Theorem Itself Unprovable?",
+      "last_updated": "2026-11-14",
+      "display_meta": "2026-11-14 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261114-163605-1eeb31",
+      "title": "Gödel Theory — Importance & Relevance",
+      "last_updated": "2026-11-14",
+      "display_meta": "2026-11-14 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261114-163925-f409a3",
+      "title": "Gödel — Why & How",
+      "last_updated": "2026-11-14",
+      "display_meta": "2026-11-14 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261114-164459-f7cdec",
+      "title": "Grouping the 100 words by a subset",
+      "last_updated": "2026-11-14",
+      "display_meta": "2026-11-14 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    }
+  ],
+  "terms": {
+    "100": {
+      "title": [
+        13,
+        14,
+        151
+      ]
+    },
+    "20th": {
+      "title": [
+        65
+      ],
+      "summary": [
+        65
+      ]
+    },
+    "21st": {
+      "title": [
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+      ]
+    },
+    "3d": {
+      "title": [
+        7
+      ],
+      "summary": [
+        7
+      ]
+    },
+    "4d": {
+      "summary": [
+        7
+      ]
+    },
+    "5": {
+      "title": [
+        12
+      ]
+    },
+    "abiotic": {
+      "title": [
+        89
+      ],
+      "summary": [
+        89
+      ]
+    },
+    "about": {
+      "summary": [
+        18,
+        114,
+        137
+      ]
+    },
+    "absolute": {
+      "title": [
+        15
+      ]
+    },
+    "abstract": {
+      "title": [
+        3,
+        16
+      ],
+      "summary": [
+        3,
+        13,
+        20,
+        53,
+        95
+      ]
+    },
+    "abstracts": {
+      "summary": [
+        29
+      ]
+    },
+    "abundance": {
+      "summary": [
+        61
+      ]
+    },
+    "accelerating": {
+      "summary": [
+        17
+      ]
+    },
+    "acceleration": {
+      "title": [
+        17
+      ]
+    },
+    "accessible": {
+      "title": [
+        20
+      ]
+    },
+    "accessing": {
+      "summary": [
+        13
+      ]
+    },
+    "accommodation": {
+      "summary": [
+        43
+      ]
+    },
+    "according": {
+      "summary": [
+        13
+      ]
+    },
+    "account": {
+      "summary": [
+        43
+      ]
+    },
+    "across": {
+      "title": [
+        57,
+        71
+      ],
+      "summary": [
+        19,
+        29,
+        39,
+        44,
+        65,
+        71,
+        80,
+        94,
+        97,
+        120
+      ]
+    },
+    "act": {
+      "summary": [
+        144
+      ]
+    },
+    "acting": {
+      "summary": [
+        122
+      ]
+    },
+    "action": {
+      "title": [
+        139
+      ],
+      "summary": [
+        18,
+        55,
+        77,
+        139,
+        144
+      ]
+    },
+    "active": {
+      "summary": [
+        65,
+        73
+      ]
+    },
+    "activity": {
+      "summary": [
+        22,
+        73,
+        75
+      ]
+    },
+    "actuate": {
+      "summary": [
+        33
+      ]
+    },
+    "adapt": {
+      "summary": [
+        140
+      ]
+    },
+    "adaptable": {
+      "summary": [
+        118
+      ]
+    },
+    "adaptation": {
+      "title": [
+        23
+      ],
+      "summary": [
+        23
+      ]
+    },
+    "adaptive": {
+      "summary": [
+        38,
+        58,
+        120
+      ]
+    },
+    "addiction": {
+      "summary": [
+        101
+      ]
+    },
+    "addressable": {
+      "summary": [
+        22,
+        23
+      ]
+    },
+    "adds": {
+      "summary": [
+        101
+      ]
+    },
+    "adoption": {
+      "summary": [
+        76
+      ]
+    },
+    "advance": {
+      "summary": [
+        13
+      ]
+    },
+    "aesthetic": {
+      "summary": [
+        44
+      ]
+    },
+    "affect": {
+      "summary": [
+        47,
+        127
+      ]
+    },
+    "affective": {
+      "summary": [
+        18
+      ]
+    },
+    "after": {
+      "summary": [
+        20
+      ]
+    },
+    "age": {
+      "summary": [
+        64
+      ]
+    },
+    "agency": {
+      "summary": [
+        18,
+        141
+      ]
+    },
+    "ai": {
+      "title": [
+        69
+      ],
+      "summary": [
+        32
+      ]
+    },
+    "aims": {
+      "summary": [
+        140
+      ]
+    },
+    "air": {
+      "summary": [
+        89
+      ]
+    },
+    "aligns": {
+      "summary": [
+        105
+      ]
+    },
+    "alive": {
+      "summary": [
+        18
+      ]
+    },
+    "aliveness": {
+      "title": [
+        18
+      ],
+      "summary": [
+        18
+      ]
+    },
+    "all": {
+      "summary": [
+        81,
+        101,
+        136,
+        140
+      ]
+    },
+    "alleles": {
+      "summary": [
+        101
+      ]
+    },
+    "allow": {
+      "summary": [
+        44
+      ]
+    },
+    "allows": {
+      "summary": [
+        38,
+        46
+      ]
+    },
+    "alone": {
+      "summary": [
+        98,
+        100
+      ]
+    },
+    "also": {
+      "summary": [
+        15,
+        26,
+        64,
+        72,
+        101
+      ]
+    },
+    "alter": {
+      "summary": [
+        41,
+        114
+      ]
+    },
+    "altered": {
+      "summary": [
+        63
+      ]
+    },
+    "ambitious": {
+      "summary": [
+        140
+      ]
+    },
+    "amid": {
+      "summary": [
+        65
+      ]
+    },
+    "among": {
+      "summary": [
+        89,
+        98
+      ]
+    },
+    "analog": {
+      "summary": [
+        30
+      ]
+    },
+    "ancestral": {
+      "summary": [
+        122
+      ]
+    },
+    "anchored": {
+      "summary": [
+        52
+      ]
+    },
+    "animals": {
+      "title": [
+        89
+      ],
+      "summary": [
+        89,
+        93
+      ]
+    },
+    "another": {
+      "summary": [
+        60
+      ]
+    },
+    "anticipation": {
+      "title": [
+        144
+      ]
+    },
+    "anticipations": {
+      "summary": [
+        144
+      ]
+    },
+    "anxiety": {
+      "summary": [
+        101
+      ]
+    },
+    "any": {
+      "summary": [
+        98
+      ]
+    },
+    "anything": {
+      "summary": [
+        75
+      ]
+    },
+    "apa": {
+      "summary": [
+        51
+      ]
+    },
+    "apa-styled": {
+      "summary": [
+        51
+      ]
+    },
+    "apparent": {
+      "summary": [
+        71
+      ]
+    },
+    "apparently": {
+      "summary": [
+        100
+      ]
+    },
+    "appear": {
+      "summary": [
+        19
+      ]
+    },
+    "appearance": {
+      "summary": [
+        62
+      ]
+    },
+    "appears": {
+      "summary": [
+        50,
+        100,
+        139
+      ]
+    },
+    "approach": {
+      "summary": [
+        87
+      ]
+    },
+    "approximate": {
+      "summary": [
+        30
+      ]
+    },
+    "arc": {
+      "title": [
+        127
+      ]
+    },
+    "archetypal": {
+      "title": [
+        19
+      ]
+    },
+    "archetype": {
+      "summary": [
+        19
+      ]
+    },
+    "archetypes": {
+      "summary": [
+        19
+      ]
+    },
+    "architecture": {
+      "title": [
+        117
+      ],
+      "summary": [
+        28,
+        46,
+        52
+      ]
+    },
+    "architectures": {
+      "summary": [
+        29
+      ]
+    },
+    "areas": {
+      "summary": [
+        38
+      ]
+    },
+    "arena": {
+      "summary": [
+        41
+      ]
+    },
+    "argue": {
+      "summary": [
+        77,
+        100
+      ]
+    },
+    "arise": {
+      "title": [
+        62
+      ],
+      "summary": [
+        98
+      ]
+    },
+    "arises": {
+      "summary": [
+        8,
+        9,
+        97,
+        113
+      ]
+    },
+    "arising": {
+      "summary": [
+        47,
+        56,
+        62,
+        75
+      ]
+    },
+    "arrow": {
+      "summary": [
+        132
+      ]
+    },
+    "art": {
+      "title": [
+        16,
+        144
+      ]
+    },
+    "artistic": {
+      "title": [
+        70
+      ],
+      "summary": [
+        144
+      ]
+    },
+    "arts": {
+      "summary": [
+        19
+      ]
+    },
+    "aspect": {
+      "summary": [
+        113
+      ]
+    },
+    "aspects": {
+      "title": [
+        12
+      ]
+    },
+    "asserting": {
+      "summary": [
+        47
+      ]
+    },
+    "assigns": {
+      "summary": [
+        132,
+        133
+      ]
+    },
+    "assuming": {
+      "summary": [
+        71,
+        130
+      ]
+    },
+    "asynchronous": {
+      "summary": [
+        28
+      ]
+    },
+    "attending": {
+      "summary": [
+        13
+      ]
+    },
+    "attention": {
+      "summary": [
+        39,
+        73,
+        122,
+        126
+      ]
+    },
+    "attraction": {
+      "title": [
+        122
+      ],
+      "summary": [
+        122
+      ]
+    },
+    "attractor": {
+      "title": [
+        21,
+        22,
+        23
+      ],
+      "summary": [
+        22
+      ]
+    },
+    "attractor-network": {
+      "title": [
+        21,
+        22
+      ]
+    },
+    "attractors": {
+      "summary": [
+        22
+      ]
+    },
+    "audience": {
+      "summary": [
+        87
+      ]
+    },
+    "authenticity": {
+      "summary": [
+        65
+      ]
+    },
+    "autobiographical": {
+      "title": [
+        64
+      ],
+      "summary": [
+        64
+      ]
+    },
+    "autocatalytic": {
+      "summary": [
+        50
+      ]
+    },
+    "available": {
+      "summary": [
+        15
+      ]
+    },
+    "aware": {
+      "summary": [
+        20
+      ]
+    },
+    "awe": {
+      "title": [
+        43
+      ],
+      "summary": [
+        43
+      ]
+    },
+    "back": {
+      "summary": [
+        50,
+        56
+      ]
+    },
+    "balance": {
+      "summary": [
+        53
+      ]
+    },
+    "balancing": {
+      "title": [
+        129
+      ]
+    },
+    "bands": {
+      "summary": [
+        142
+      ]
+    },
+    "based": {
+      "summary": [
+        3
+      ]
+    },
+    "bases": {
+      "summary": [
+        49
+      ]
+    },
+    "basis": {
+      "summary": [
+        47
+      ]
+    },
+    "bayesian": {
+      "title": [
+        5,
+        140
+      ],
+      "summary": [
+        97
+      ]
+    },
+    "bayesian-like": {
+      "summary": [
+        97
+      ]
+    },
+    "beauty": {
+      "title": [
+        0,
+        4
+      ],
+      "summary": [
+        4
+      ]
+    },
+    "beauvoir": {
+      "summary": [
+        65
+      ]
+    },
+    "because": {
+      "summary": [
+        120
+      ]
+    },
+    "become": {
+      "title": [
+        123
+      ],
+      "summary": [
+        3,
+        9,
+        63,
+        144
+      ]
+    },
+    "becomes": {
+      "summary": [
+        113
+      ]
+    },
+    "bedau": {
+      "summary": [
+        98
+      ]
+    },
+    "been": {
+      "summary": [
+        138
+      ]
+    },
+    "before": {
+      "summary": [
+        47,
+        50,
+        144
+      ]
+    },
+    "begin": {
+      "summary": [
+        50
+      ]
+    },
+    "beginning": {
+      "summary": [
+        27
+      ]
+    },
+    "begins": {
+      "summary": [
+        49
+      ]
+    },
+    "behavior": {
+      "summary": [
+        136
+      ]
+    },
+    "behaviour": {
+      "summary": [
+        122
+      ]
+    },
+    "being": {
+      "summary": [
+        122
+      ]
+    },
+    "benefits": {
+      "title": [
+        120
+      ]
+    },
+    "bergson": {
+      "title": [
+        24
+      ]
+    },
+    "better": {
+      "summary": [
+        101
+      ]
+    },
+    "between": {
+      "summary": [
+        26,
+        34,
+        40,
+        47,
+        56,
+        62,
+        88,
+        113
+      ]
+    },
+    "beyond": {
+      "title": [
+        2,
+        89
+      ],
+      "summary": [
+        25,
+        63
+      ]
+    },
+    "bias": {
+      "summary": [
+        63
+      ]
+    },
+    "big": {
+      "summary": [
+        145
+      ]
+    },
+    "billions": {
+      "summary": [
+        62
+      ]
+    },
+    "bind": {
+      "summary": [
+        114
+      ]
+    },
+    "binds": {
+      "summary": [
+        60
+      ]
+    },
+    "biohybrid": {
+      "summary": [
+        30
+      ]
+    },
+    "biological": {
+      "title": [
+        25,
+        26
+      ],
+      "summary": [
+        25,
+        26,
+        63,
+        75,
+        78
+      ]
+    },
+    "biologically": {
+      "summary": [
+        28,
+        41
+      ]
+    },
+    "biology": {
+      "summary": [
+        49,
+        50,
+        80,
+        101,
+        136
+      ]
+    },
+    "biotic": {
+      "summary": [
+        89
+      ]
+    },
+    "birth": {
+      "summary": [
+        47
+      ]
+    },
+    "black": {
+      "title": [
+        114
+      ],
+      "summary": [
+        10
+      ]
+    },
+    "blending": {
+      "summary": [
+        13
+      ]
+    },
+    "born": {
+      "summary": [
+        59
+      ]
+    },
+    "both": {
+      "summary": [
+        29,
+        34,
+        113,
+        114
+      ]
+    },
+    "bottom": {
+      "summary": [
+        139
+      ]
+    },
+    "bottom-up": {
+      "summary": [
+        139
+      ]
+    },
+    "bounce": {
+      "title": [
+        71
+      ],
+      "summary": [
+        71
+      ]
+    },
+    "bound": {
+      "summary": [
+        139
+      ]
+    },
+    "boundaries": {
+      "title": [
+        114,
+        115
+      ],
+      "summary": [
+        10,
+        114
+      ]
+    },
+    "boundary": {
+      "title": [
+        10,
+        60,
+        78,
+        113
+      ],
+      "summary": [
+        60,
+        78,
+        113
+      ]
+    },
+    "brain": {
+      "title": [
+        9,
+        27,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        75,
+        82,
+        116
+      ],
+      "summary": [
+        3,
+        9,
+        20,
+        25,
+        27,
+        28,
+        30,
+        32,
+        34,
+        38,
+        39,
+        40,
+        46,
+        47,
+        64,
+        73,
+        75,
+        82,
+        97,
+        142
+      ]
+    },
+    "brain-inspired": {
+      "summary": [
+        28,
+        32
+      ]
+    },
+    "brain-like": {
+      "summary": [
+        27
+      ]
+    },
+    "brains": {
+      "title": [
+        42
+      ],
+      "summary": [
+        39,
+        41,
+        42,
+        63,
+        80,
+        117,
+        136,
+        139,
+        140
+      ]
+    },
+    "branch": {
+      "summary": [
+        101
+      ]
+    },
+    "breakdown": {
+      "summary": [
+        9,
+        71
+      ]
+    },
+    "bridge": {
+      "summary": [
+        26,
+        47
+      ]
+    },
+    "bridges": {
+      "summary": [
+        15
+      ]
+    },
+    "bridging": {
+      "title": [
+        44,
+        47
+      ],
+      "summary": [
+        44,
+        126
+      ]
+    },
+    "brief": {
+      "summary": [
+        51
+      ]
+    },
+    "broader": {
+      "summary": [
+        80
+      ]
+    },
+    "buddha": {
+      "summary": [
+        62,
+        81
+      ]
+    },
+    "buddhas": {
+      "title": [
+        62
+      ],
+      "summary": [
+        62
+      ]
+    },
+    "buddhism": {
+      "title": [
+        45,
+        46,
+        47,
+        59
+      ],
+      "summary": [
+        46,
+        47,
+        95
+      ]
+    },
+    "buddhist": {
+      "summary": [
+        56,
+        59,
+        62,
+        144
+      ]
+    },
+    "build": {
+      "summary": [
+        15,
+        27,
+        30
+      ]
+    },
+    "built": {
+      "summary": [
+        32,
+        56
+      ]
+    },
+    "but": {
+      "summary": [
+        3,
+        20,
+        27,
+        41,
+        56,
+        63,
+        64,
+        78,
+        88,
+        100,
+        113,
+        118,
+        127
+      ]
+    },
+    "cage": {
+      "title": [
+        48
+      ]
+    },
+    "called": {
+      "summary": [
+        101
+      ]
+    },
+    "camus": {
+      "summary": [
+        65
+      ]
+    },
+    "can": {
+      "title": [
+        9
+      ],
+      "summary": [
+        18,
+        19,
+        20,
+        30,
+        47,
+        60,
+        62,
+        63,
+        100
+      ]
+    },
+    "capacity": {
+      "summary": [
+        100
+      ]
+    },
+    "carried": {
+      "summary": [
+        63,
+        71
+      ]
+    },
+    "carry": {
+      "summary": [
+        47,
+        111
+      ]
+    },
+    "causal": {
+      "summary": [
+        30,
+        114
+      ]
+    },
+    "causality": {
+      "summary": [
+        53
+      ]
+    },
+    "causation": {
+      "summary": [
+        57
+      ]
+    },
+    "causes": {
+      "summary": [
+        144
+      ]
+    },
+    "cell": {
+      "summary": [
+        25
+      ]
+    },
+    "cells": {
+      "summary": [
+        78,
+        117
+      ]
+    },
+    "central": {
+      "summary": [
+        32,
+        107
+      ]
+    },
+    "century": {
+      "title": [
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+      ],
+      "summary": [
+        65
+      ]
+    },
+    "ces": {
+      "title": [
+        58
+      ]
+    },
+    "challenge": {
+      "summary": [
+        77
+      ]
+    },
+    "challenges": {
+      "title": [
+        137
+      ],
+      "summary": [
+        27
+      ]
+    },
+    "challenging": {
+      "summary": [
+        61
+      ]
+    },
+    "change": {
+      "title": [
+        94,
+        105,
+        112
+      ],
+      "summary": [
+        17,
+        41,
+        94,
+        105,
+        112,
+        126
+      ]
+    },
+    "changes": {
+      "summary": [
+        25,
+        117,
+        132
+      ]
+    },
+    "changing": {
+      "summary": [
+        140
+      ]
+    },
+    "channel": {
+      "summary": [
+        63
+      ]
+    },
+    "channels": {
+      "summary": [
+        76
+      ]
+    },
+    "characteristic": {
+      "summary": [
+        76
+      ]
+    },
+    "chemical": {
+      "summary": [
+        3,
+        34
+      ]
+    },
+    "chemically": {
+      "summary": [
+        34
+      ]
+    },
+    "chemistry": {
+      "summary": [
+        97
+      ]
+    },
+    "ching": {
+      "title": [
+        48,
+        113
+      ],
+      "summary": [
+        113
+      ]
+    },
+    "circuits": {
+      "summary": [
+        39
+      ]
+    },
+    "circular": {
+      "summary": [
+        39
+      ]
+    },
+    "claims": {
+      "summary": [
+        47
+      ]
+    },
+    "classic": {
+      "summary": [
+        43
+      ]
+    },
+    "classical": {
+      "summary": [
+        47,
+        71
+      ]
+    },
+    "climate": {
+      "summary": [
+        89
+      ]
+    },
+    "clock": {
+      "summary": [
+        28
+      ]
+    },
+    "closed": {
+      "summary": [
+        108
+      ]
+    },
+    "closer": {
+      "summary": [
+        33
+      ]
+    },
+    "cluster": {
+      "summary": [
+        13
+      ]
+    },
+    "clusters": {
+      "summary": [
+        13
+      ]
+    },
+    "cmr": {
+      "title": [
+        102
+      ]
+    },
+    "co": {
+      "summary": [
+        56
+      ]
+    },
+    "code": {
+      "summary": [
+        29
+      ]
+    },
+    "codes": {
+      "summary": [
+        20
+      ]
+    },
+    "coding": {
+      "summary": [
+        139
+      ]
+    },
+    "cognition": {
+      "summary": [
+        50,
+        73,
+        95
+      ]
+    },
+    "cognitive": {
+      "summary": [
+        32,
+        95,
+        144
+      ]
+    },
+    "coherence": {
+      "summary": [
+        4,
+        13,
+        40
+      ]
+    },
+    "coherent": {
+      "summary": [
+        73
+      ]
+    },
+    "coincidence": {
+      "title": [
+        8,
+        11
+      ]
+    },
+    "coincidences": {
+      "summary": [
+        8
+      ]
+    },
+    "collapse": {
+      "title": [
+        141
+      ]
+    },
+    "collective": {
+      "title": [
+        136
+      ]
+    },
+    "communicate": {
+      "summary": [
+        38
+      ]
+    },
+    "communication": {
+      "summary": [
+        28,
+        34,
+        76
+      ]
+    },
+    "compare": {
+      "summary": [
+        10
+      ]
+    },
+    "comparisons": {
+      "title": [
+        10
+      ]
+    },
+    "complex": {
+      "summary": [
+        50,
+        80,
+        117,
+        132
+      ]
+    },
+    "complexity": {
+      "title": [
+        49,
+        50
+      ],
+      "summary": [
+        49,
+        50,
+        57
+      ]
+    },
+    "components": {
+      "summary": [
+        89,
+        100
+      ]
+    },
+    "comprehend": {
+      "title": [
+        9
+      ],
+      "summary": [
+        9
+      ]
+    },
+    "computation": {
+      "title": [
+        125
+      ],
+      "summary": [
+        28,
+        30
+      ]
+    },
+    "computational": {
+      "title": [
+        51
+      ],
+      "summary": [
+        51,
+        95
+      ]
+    },
+    "computations": {
+      "summary": [
+        20
+      ]
+    },
+    "compute": {
+      "summary": [
+        32
+      ]
+    },
+    "computer": {
+      "summary": [
+        30
+      ]
+    },
+    "computers": {
+      "summary": [
+        107
+      ]
+    },
+    "computing": {
+      "title": [
+        30,
+        107
+      ],
+      "summary": [
+        27,
+        28,
+        32
+      ]
+    },
+    "concept": {
+      "summary": [
+        59,
+        95,
+        105
+      ]
+    },
+    "concepts": {
+      "summary": [
+        3
+      ]
+    },
+    "conceptual": {
+      "title": [
+        52,
+        53,
+        96
+      ],
+      "summary": [
+        13,
+        51,
+        52,
+        53,
+        75
+      ]
+    },
+    "conceptually": {
+      "summary": [
+        20
+      ]
+    },
+    "concrete": {
+      "summary": [
+        13,
+        53
+      ]
+    },
+    "conditional": {
+      "summary": [
+        75
+      ]
+    },
+    "conditioning": {
+      "summary": [
+        144
+      ]
+    },
+    "conditions": {
+      "title": [
+        78
+      ],
+      "summary": [
+        78,
+        101
+      ]
+    },
+    "conduction": {
+      "summary": [
+        34
+      ]
+    },
+    "confer": {
+      "summary": [
+        8
+      ]
+    },
+    "conflict": {
+      "summary": [
+        9
+      ]
+    },
+    "connected": {
+      "summary": [
+        21
+      ]
+    },
+    "connectivity": {
+      "title": [
+        38
+      ],
+      "summary": [
+        38,
+        57,
+        73
+      ]
+    },
+    "connects": {
+      "summary": [
+        130
+      ]
+    },
+    "conscious": {
+      "title": [
+        2,
+        54,
+        55
+      ],
+      "summary": [
+        55,
+        72
+      ]
+    },
+    "consciously": {
+      "title": [
+        20
+      ]
+    },
+    "consciousness": {
+      "title": [
+        56,
+        57
+      ],
+      "summary": [
+        49,
+        56,
+        57,
+        100
+      ]
+    },
+    "consequence": {
+      "summary": [
+        127
+      ]
+    },
+    "considered": {
+      "summary": [
+        62
+      ]
+    },
+    "consistent": {
+      "summary": [
+        10,
+        73
+      ]
+    },
+    "consolidation": {
+      "summary": [
+        50
+      ]
+    },
+    "constant": {
+      "summary": [
+        88
+      ]
+    },
+    "constants": {
+      "summary": [
+        49
+      ]
+    },
+    "constituted": {
+      "summary": [
+        77
+      ]
+    },
+    "constitutive": {
+      "summary": [
+        113
+      ]
+    },
+    "constrained": {
+      "summary": [
+        3,
+        83
+      ]
+    },
+    "constrains": {
+      "summary": [
+        113
+      ]
+    },
+    "constraints": {
+      "summary": [
+        98,
+        118
+      ]
+    },
+    "construal": {
+      "summary": [
+        13,
+        64
+      ]
+    },
+    "constructed": {
+      "summary": [
+        47,
+        122
+      ]
+    },
+    "construction": {
+      "summary": [
+        39,
+        47
+      ]
+    },
+    "constructive": {
+      "title": [
+        58
+      ],
+      "summary": [
+        47,
+        58
+      ]
+    },
+    "constructivist": {
+      "summary": [
+        56
+      ]
+    },
+    "constructs": {
+      "summary": [
+        20
+      ]
+    },
+    "contact": {
+      "summary": [
+        77
+      ]
+    },
+    "containment": {
+      "summary": [
+        53
+      ]
+    },
+    "contemplatives": {
+      "summary": [
+        47
+      ]
+    },
+    "contemporary": {
+      "summary": [
+        47
+      ]
+    },
+    "content": {
+      "summary": [
+        19,
+        22,
+        23
+      ]
+    },
+    "content-addressable": {
+      "summary": [
+        23
+      ]
+    },
+    "context": {
+      "title": [
+        102
+      ],
+      "summary": [
+        18,
+        40,
+        60
+      ]
+    },
+    "contexts": {
+      "summary": [
+        120
+      ]
+    },
+    "contextual": {
+      "summary": [
+        94
+      ]
+    },
+    "continental": {
+      "title": [
+        66
+      ]
+    },
+    "continuations": {
+      "title": [
+        66,
+        67,
+        68,
+        69,
+        70
+      ]
+    },
+    "continuity": {
+      "title": [
+        31,
+        59,
+        60
+      ],
+      "summary": [
+        46,
+        60
+      ]
+    },
+    "continuous": {
+      "summary": [
+        60
+      ]
+    },
+    "continuum": {
+      "title": [
+        65
+      ]
+    },
+    "contributes": {
+      "summary": [
+        51
+      ]
+    },
+    "convection": {
+      "summary": [
+        78
+      ]
+    },
+    "cooperation": {
+      "summary": [
+        89
+      ]
+    },
+    "coordinate": {
+      "summary": [
+        44
+      ]
+    },
+    "core": {
+      "summary": [
+        19,
+        65,
+        94
+      ]
+    },
+    "correcting": {
+      "summary": [
+        22,
+        23
+      ]
+    },
+    "correction": {
+      "title": [
+        127
+      ]
+    },
+    "corrects": {
+      "summary": [
+        127
+      ]
+    },
+    "correlate": {
+      "summary": [
+        20
+      ]
+    },
+    "cosmologies": {
+      "title": [
+        1
+      ]
+    },
+    "cosmology": {
+      "summary": [
+        62
+      ]
+    },
+    "cosmos": {
+      "summary": [
+        49
+      ]
+    },
+    "cost": {
+      "summary": [
+        120
+      ]
+    },
+    "could": {
+      "summary": [
+        26,
+        61
+      ]
+    },
+    "counter": {
+      "summary": [
+        127
+      ]
+    },
+    "counterintuitive": {
+      "summary": [
+        107
+      ]
+    },
+    "counterpoints": {
+      "summary": [
+        77
+      ]
+    },
+    "coupling": {
+      "summary": [
+        127
+      ]
+    },
+    "cpu": {
+      "summary": [
+        33
+      ]
+    },
+    "create": {
+      "title": [
+        56
+      ],
+      "summary": [
+        44
+      ]
+    },
+    "creates": {
+      "summary": [
+        60,
+        126
+      ]
+    },
+    "creative": {
+      "summary": [
+        49
+      ]
+    },
+    "creativity": {
+      "summary": [
+        127
+      ]
+    },
+    "creatures": {
+      "title": [
+        61
+      ],
+      "summary": [
+        61
+      ]
+    },
+    "cross": {
+      "title": [
+        10,
+        63
+      ],
+      "summary": [
+        10,
+        63,
+        105
+      ]
+    },
+    "cross-generational": {
+      "title": [
+        63
+      ],
+      "summary": [
+        63
+      ]
+    },
+    "crossroads": {
+      "summary": [
+        95,
+        144
+      ]
+    },
+    "cue": {
+      "summary": [
+        22
+      ]
+    },
+    "culminating": {
+      "summary": [
+        73
+      ]
+    },
+    "cultural": {
+      "title": [
+        64,
+        70
+      ],
+      "summary": [
+        44,
+        47,
+        64,
+        126,
+        127
+      ]
+    },
+    "culturally": {
+      "summary": [
+        122
+      ]
+    },
+    "culture": {
+      "summary": [
+        18,
+        39,
+        41
+      ]
+    },
+    "cultures": {
+      "summary": [
+        19
+      ]
+    },
+    "current": {
+      "summary": [
+        27
+      ]
+    },
+    "currently": {
+      "summary": [
+        57
+      ]
+    },
+    "cuts": {
+      "title": [
+        115
+      ]
+    },
+    "cycle": {
+      "title": [
+        50
+      ],
+      "summary": [
+        49,
+        50,
+        112
+      ]
+    },
+    "cyclical": {
+      "title": [
+        71
+      ],
+      "summary": [
+        71
+      ]
+    },
+    "darwinian": {
+      "summary": [
+        101
+      ]
+    },
+    "days": {
+      "summary": [
+        126
+      ]
+    },
+    "de": {
+      "summary": [
+        65
+      ]
+    },
+    "dealing": {
+      "summary": [
+        145
+      ]
+    },
+    "death": {
+      "summary": [
+        108
+      ]
+    },
+    "decay": {
+      "summary": [
+        17,
+        108
+      ]
+    },
+    "deceit": {
+      "title": [
+        72
+      ],
+      "summary": [
+        72,
+        127
+      ]
+    },
+    "decode": {
+      "summary": [
+        33
+      ]
+    },
+    "decoherence": {
+      "title": [
+        125
+      ],
+      "summary": [
+        57
+      ]
+    },
+    "deep": {
+      "summary": [
+        52
+      ]
+    },
+    "deeper": {
+      "summary": [
+        83,
+        99
+      ]
+    },
+    "default": {
+      "title": [
+        73
+      ],
+      "summary": [
+        73,
+        108
+      ]
+    },
+    "defining": {
+      "title": [
+        10
+      ]
+    },
+    "definition": {
+      "summary": [
+        10,
+        26
+      ]
+    },
+    "degrades": {
+      "summary": [
+        23
+      ]
+    },
+    "deliberate": {
+      "summary": [
+        55
+      ]
+    },
+    "dense": {
+      "summary": [
+        8
+      ]
+    },
+    "departing": {
+      "summary": [
+        87
+      ]
+    },
+    "dependable": {
+      "title": [
+        74
+      ]
+    },
+    "dependence": {
+      "summary": [
+        118
+      ]
+    },
+    "dependent": {
+      "title": [
+        75
+      ],
+      "summary": [
+        25,
+        57,
+        75,
+        114,
+        144
+      ]
+    },
+    "depending": {
+      "summary": [
+        34,
+        61
+      ]
+    },
+    "depends": {
+      "summary": [
+        62,
+        64
+      ]
+    },
+    "deployment": {
+      "summary": [
+        29
+      ]
+    },
+    "depression": {
+      "summary": [
+        101
+      ]
+    },
+    "derivable": {
+      "summary": [
+        100
+      ]
+    },
+    "descendants": {
+      "summary": [
+        63
+      ]
+    },
+    "describes": {
+      "summary": [
+        26
+      ]
+    },
+    "description": {
+      "summary": [
+        3,
+        75
+      ]
+    },
+    "designed": {
+      "title": [
+        118
+      ]
+    },
+    "designs": {
+      "summary": [
+        118
+      ]
+    },
+    "desire": {
+      "summary": [
+        122
+      ]
+    },
+    "detached": {
+      "summary": [
+        52
+      ]
+    },
+    "determinate": {
+      "summary": [
+        113
+      ]
+    },
+    "developed": {
+      "summary": [
+        28
+      ]
+    },
+    "devices": {
+      "summary": [
+        33
+      ]
+    },
+    "diagrams": {
+      "title": [
+        37
+      ]
+    },
+    "die": {
+      "summary": [
+        59
+      ]
+    },
+    "difference": {
+      "summary": [
+        40
+      ]
+    },
+    "differences": {
+      "title": [
+        64
+      ],
+      "summary": [
+        139
+      ]
+    },
+    "different": {
+      "summary": [
+        19,
+        27,
+        38,
+        44
+      ]
+    },
+    "differentiate": {
+      "summary": [
+        50
+      ]
+    },
+    "differentiation": {
+      "summary": [
+        49
+      ]
+    },
+    "diffuse": {
+      "summary": [
+        57
+      ]
+    },
+    "diffusion": {
+      "title": [
+        76
+      ],
+      "summary": [
+        76
+      ]
+    },
+    "digital": {
+      "summary": [
+        27
+      ]
+    },
+    "dimensional": {
+      "summary": [
+        7
+      ]
+    },
+    "dimensions": {
+      "title": [
+        7
+      ],
+      "summary": [
+        7
+      ]
+    },
+    "direct": {
+      "title": [
+        77
+      ],
+      "summary": [
+        77,
+        122
+      ]
+    },
+    "direction": {
+      "summary": [
+        108
+      ]
+    },
+    "directly": {
+      "summary": [
+        33
+      ]
+    },
+    "disconnect": {
+      "summary": [
+        88
+      ]
+    },
+    "discourse": {
+      "title": [
+        70
+      ],
+      "summary": [
+        13
+      ]
+    },
+    "discovery": {
+      "title": [
+        73
+      ]
+    },
+    "disorder": {
+      "summary": [
+        108
+      ]
+    },
+    "disorders": {
+      "summary": [
+        101
+      ]
+    },
+    "dissipative": {
+      "title": [
+        78
+      ],
+      "summary": [
+        50,
+        78
+      ]
+    },
+    "dissolving": {
+      "title": [
+        79
+      ]
+    },
+    "distill": {
+      "summary": [
+        50
+      ]
+    },
+    "distinction": {
+      "summary": [
+        112
+      ]
+    },
+    "distortion": {
+      "summary": [
+        120
+      ]
+    },
+    "distortions": {
+      "summary": [
+        72
+      ]
+    },
+    "distress": {
+      "summary": [
+        9
+      ]
+    },
+    "distributed": {
+      "title": [
+        80
+      ],
+      "summary": [
+        23,
+        29,
+        30
+      ]
+    },
+    "diversity": {
+      "summary": [
+        49,
+        61
+      ]
+    },
+    "divination": {
+      "summary": [
+        113
+      ]
+    },
+    "divine": {
+      "title": [
+        81
+      ]
+    },
+    "dmn": {
+      "summary": [
+        73
+      ]
+    },
+    "dna": {
+      "summary": [
+        49
+      ]
+    },
+    "do": {
+      "title": [
+        62
+      ],
+      "summary": [
+        18,
+        27,
+        38,
+        44,
+        93
+      ]
+    },
+    "document": {
+      "summary": [
+        51,
+        112
+      ]
+    },
+    "does": {
+      "title": [
+        56,
+        82
+      ],
+      "summary": [
+        17,
+        31,
+        39,
+        56,
+        59,
+        90,
+        101,
+        103,
+        138
+      ]
+    },
+    "domain": {
+      "summary": [
+        10
+      ]
+    },
+    "domains": {
+      "summary": [
+        53
+      ]
+    },
+    "down": {
+      "summary": [
+        139
+      ]
+    },
+    "dream": {
+      "title": [
+        83
+      ]
+    },
+    "dreaming": {
+      "title": [
+        84
+      ],
+      "summary": [
+        83
+      ]
+    },
+    "dreams": {
+      "title": [
+        85,
+        86
+      ]
+    },
+    "drifting": {
+      "summary": [
+        60
+      ]
+    },
+    "drive": {
+      "summary": [
+        139
+      ]
+    },
+    "driven": {
+      "summary": [
+        28,
+        29,
+        30,
+        32
+      ]
+    },
+    "due": {
+      "summary": [
+        61
+      ]
+    },
+    "dunes": {
+      "summary": [
+        78
+      ]
+    },
+    "durable": {
+      "summary": [
+        25
+      ]
+    },
+    "during": {
+      "summary": [
+        55,
+        73
+      ]
+    },
+    "dynamic": {
+      "title": [
+        41,
+        87,
+        117
+      ],
+      "summary": [
+        23,
+        87
+      ]
+    },
+    "dynamics": {
+      "summary": [
+        22,
+        23
+      ]
+    },
+    "dysfunction": {
+      "summary": [
+        9
+      ]
+    },
+    "dysfunctional": {
+      "title": [
+        123
+      ]
+    },
+    "déjà": {
+      "summary": [
+        144
+      ]
+    },
+    "e.g": {
+      "summary": [
+        78
+      ]
+    },
+    "each": {
+      "summary": [
+        21,
+        51
+      ]
+    },
+    "earliest": {
+      "title": [
+        64
+      ],
+      "summary": [
+        64
+      ]
+    },
+    "early": {
+      "summary": [
+        65
+      ]
+    },
+    "earth": {
+      "title": [
+        61,
+        126
+      ],
+      "summary": [
+        61
+      ]
+    },
+    "ecmr": {
+      "title": [
+        102
+      ]
+    },
+    "eco": {
+      "title": [
+        68
+      ]
+    },
+    "ecological": {
+      "summary": [
+        126,
+        127
+      ]
+    },
+    "ecology": {
+      "title": [
+        88
+      ],
+      "summary": [
+        88
+      ]
+    },
+    "ecosystem": {
+      "title": [
+        89,
+        90,
+        91
+      ],
+      "summary": [
+        89,
+        90,
+        93
+      ]
+    },
+    "effect": {
+      "summary": [
+        87
+      ]
+    },
+    "efficiency": {
+      "summary": [
+        118
+      ]
+    },
+    "efficient": {
+      "summary": [
+        20,
+        28,
+        32
+      ]
+    },
+    "efficiently": {
+      "summary": [
+        60
+      ]
+    },
+    "electrical": {
+      "summary": [
+        34
+      ]
+    },
+    "electrically": {
+      "summary": [
+        34
+      ]
+    },
+    "eliminated": {
+      "summary": [
+        113
+      ]
+    },
+    "elsewhere": {
+      "summary": [
+        61
+      ]
+    },
+    "embedded": {
+      "title": [
+        92,
+        93,
+        94,
+        117
+      ],
+      "summary": [
+        78,
+        93,
+        94,
+        117
+      ]
+    },
+    "embedding": {
+      "summary": [
+        127
+      ]
+    },
+    "embodied": {
+      "title": [
+        95,
+        96
+      ],
+      "summary": [
+        32,
+        52,
+        53,
+        77,
+        94,
+        95
+      ]
+    },
+    "embody": {
+      "summary": [
+        75
+      ]
+    },
+    "emerge": {
+      "summary": [
+        89,
+        99
+      ]
+    },
+    "emerged": {
+      "summary": [
+        95,
+        120
+      ]
+    },
+    "emergence": {
+      "title": [
+        39,
+        97,
+        98,
+        99
+      ],
+      "summary": [
+        39,
+        98,
+        100
+      ]
+    },
+    "emergent": {
+      "title": [
+        100
+      ],
+      "summary": [
+        39,
+        99,
+        100
+      ]
+    },
+    "emerges": {
+      "summary": [
+        80
+      ]
+    },
+    "emotion": {
+      "title": [
+        102
+      ],
+      "summary": [
+        4,
+        120
+      ]
+    },
+    "emotional": {
+      "summary": [
+        52,
+        55
+      ]
+    },
+    "emphasizing": {
+      "summary": [
+        56
+      ]
+    },
+    "empirical": {
+      "summary": [
+        47
+      ]
+    },
+    "emptiness": {
+      "title": [
+        103
+      ]
+    },
+    "empty": {
+      "summary": [
+        103
+      ]
+    },
+    "enables": {
+      "summary": [
+        72,
+        120
+      ]
+    },
+    "enabling": {
+      "summary": [
+        22,
+        28
+      ]
+    },
+    "enactivism": {
+      "title": [
+        77
+      ],
+      "summary": [
+        77
+      ]
+    },
+    "encode": {
+      "summary": [
+        146
+      ]
+    },
+    "encoded": {
+      "summary": [
+        60
+      ]
+    },
+    "encoding": {
+      "summary": [
+        55
+      ]
+    },
+    "encountered": {
+      "summary": [
+        18
+      ]
+    },
+    "endgame": {
+      "summary": [
+        13
+      ]
+    },
+    "energetic": {
+      "summary": [
+        118
+      ]
+    },
+    "energy": {
+      "title": [
+        131,
+        139,
+        140
+      ],
+      "summary": [
+        28,
+        32,
+        80,
+        89,
+        108,
+        120,
+        139,
+        140
+      ]
+    },
+    "energy-efficient": {
+      "summary": [
+        28,
+        32
+      ]
+    },
+    "engineered": {
+      "summary": [
+        118
+      ]
+    },
+    "engram": {
+      "title": [
+        104,
+        105
+      ],
+      "summary": [
+        105
+      ]
+    },
+    "engrams": {
+      "title": [
+        106
+      ]
+    },
+    "enough": {
+      "summary": [
+        15,
+        127
+      ]
+    },
+    "entanglement": {
+      "title": [
+        107
+      ],
+      "summary": [
+        56,
+        107
+      ]
+    },
+    "enter": {
+      "summary": [
+        63
+      ]
+    },
+    "entire": {
+      "summary": [
+        49
+      ]
+    },
+    "entropy": {
+      "title": [
+        1,
+        17,
+        20,
+        108
+      ],
+      "summary": [
+        17,
+        20,
+        108,
+        140
+      ]
+    },
+    "environment": {
+      "summary": [
+        63
+      ]
+    },
+    "environmental": {
+      "title": [
+        68
+      ],
+      "summary": [
+        65
+      ]
+    },
+    "environments": {
+      "summary": [
+        122
+      ]
+    },
+    "epigenetic": {
+      "summary": [
+        25
+      ]
+    },
+    "epilogue": {
+      "title": [
+        109
+      ]
+    },
+    "episodic": {
+      "title": [
+        58,
+        110,
+        111,
+        112
+      ],
+      "summary": [
+        55,
+        58,
+        111,
+        112
+      ]
+    },
+    "epistemic": {
+      "title": [
+        113
+      ],
+      "summary": [
+        113
+      ]
+    },
+    "equally": {
+      "summary": [
+        89
+      ]
+    },
+    "equilibrium": {
+      "title": [
+        130
+      ]
+    },
+    "equivalence": {
+      "title": [
+        87
+      ],
+      "summary": [
+        87,
+        114
+      ]
+    },
+    "eras": {
+      "summary": [
+        105
+      ]
+    },
+    "erasing": {
+      "summary": [
+        127
+      ]
+    },
+    "error": {
+      "summary": [
+        20,
+        22,
+        23,
+        60
+      ]
+    },
+    "error-correcting": {
+      "summary": [
+        23
+      ]
+    },
+    "errors": {
+      "summary": [
+        139
+      ]
+    },
+    "essay": {
+      "summary": [
+        50
+      ]
+    },
+    "essence": {
+      "title": [
+        98
+      ]
+    },
+    "establish": {
+      "summary": [
+        10
+      ]
+    },
+    "estimates": {
+      "title": [
+        104
+      ]
+    },
+    "estimating": {
+      "summary": [
+        61
+      ]
+    },
+    "ethical": {
+      "summary": [
+        126
+      ]
+    },
+    "ethics": {
+      "title": [
+        69,
+        72
+      ],
+      "summary": [
+        65
+      ]
+    },
+    "evaluating": {
+      "summary": [
+        13
+      ]
+    },
+    "even": {
+      "summary": [
+        87,
+        145
+      ]
+    },
+    "event": {
+      "title": [
+        114,
+        115
+      ],
+      "summary": [
+        10,
+        28,
+        29,
+        30,
+        32,
+        60,
+        62
+      ]
+    },
+    "event-driven": {
+      "summary": [
+        28,
+        29,
+        30,
+        32
+      ]
+    },
+    "events": {
+      "summary": [
+        114,
+        144
+      ]
+    },
+    "eventually": {
+      "summary": [
+        30
+      ]
+    },
+    "everett": {
+      "summary": [
+        76
+      ]
+    },
+    "every": {
+      "summary": [
+        21,
+        49,
+        132,
+        133,
+        146
+      ]
+    },
+    "everything": {
+      "summary": [
+        103
+      ]
+    },
+    "evidence": {
+      "summary": [
+        43,
+        139
+      ]
+    },
+    "evoke": {
+      "summary": [
+        144
+      ]
+    },
+    "evolution": {
+      "title": [
+        1,
+        41,
+        75,
+        116,
+        117,
+        127
+      ],
+      "summary": [
+        41,
+        75,
+        97,
+        118,
+        127
+      ]
+    },
+    "evolutionarily": {
+      "summary": [
+        39
+      ]
+    },
+    "evolutionary": {
+      "title": [
+        6,
+        16,
+        93,
+        101,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123
+      ],
+      "summary": [
+        93,
+        101,
+        122
+      ]
+    },
+    "evolutionary-psychology": {
+      "summary": [
+        122
+      ]
+    },
+    "evolved": {
+      "summary": [
+        122
+      ]
+    },
+    "exceptionally": {
+      "summary": [
+        62
+      ]
+    },
+    "exhibit": {
+      "summary": [
+        118
+      ]
+    },
+    "existence": {
+      "summary": [
+        88,
+        103
+      ]
+    },
+    "existentialism": {
+      "title": [
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        124
+      ],
+      "summary": [
+        65
+      ]
+    },
+    "exists": {
+      "summary": [
+        61,
+        82
+      ]
+    },
+    "expanded": {
+      "summary": [
+        7
+      ]
+    },
+    "expansion": {
+      "title": [
+        129
+      ]
+    },
+    "expectation": {
+      "summary": [
+        47
+      ]
+    },
+    "experience": {
+      "summary": [
+        8,
+        18,
+        25,
+        40,
+        60,
+        117
+      ]
+    },
+    "experience-dependent": {
+      "summary": [
+        25
+      ]
+    },
+    "experiences": {
+      "summary": [
+        19,
+        47,
+        144
+      ]
+    },
+    "experimental": {
+      "summary": [
+        43
+      ]
+    },
+    "explain": {
+      "summary": [
+        140
+      ]
+    },
+    "explains": {
+      "summary": [
+        76
+      ]
+    },
+    "explanation": {
+      "summary": [
+        101,
+        142
+      ]
+    },
+    "explanatory": {
+      "summary": [
+        3
+      ]
+    },
+    "explicit": {
+      "summary": [
+        55
+      ]
+    },
+    "exploit": {
+      "summary": [
+        75
+      ]
+    },
+    "explore": {
+      "summary": [
+        32
+      ]
+    },
+    "expression": {
+      "summary": [
+        80
+      ]
+    },
+    "extend": {
+      "summary": [
+        63
+      ]
+    },
+    "extending": {
+      "summary": [
+        126
+      ]
+    },
+    "extends": {
+      "summary": [
+        78
+      ]
+    },
+    "external": {
+      "summary": [
+        52
+      ]
+    },
+    "extraordinary": {
+      "summary": [
+        107
+      ]
+    },
+    "eye": {
+      "title": [
+        81
+      ],
+      "summary": [
+        81
+      ]
+    },
+    "factors": {
+      "title": [
+        119,
+        120
+      ]
+    },
+    "failure": {
+      "title": [
+        23
+      ],
+      "summary": [
+        23
+      ]
+    },
+    "families": {
+      "summary": [
+        51
+      ]
+    },
+    "fast": {
+      "title": [
+        126
+      ],
+      "summary": [
+        57
+      ]
+    },
+    "feature": {
+      "summary": [
+        113
+      ]
+    },
+    "feedback": {
+      "title": [
+        39,
+        127,
+        128,
+        129
+      ],
+      "summary": [
+        39,
+        41,
+        49,
+        57,
+        80,
+        117,
+        127
+      ]
+    },
+    "feedbacks": {
+      "summary": [
+        126
+      ]
+    },
+    "feeling": {
+      "summary": [
+        40
+      ]
+    },
+    "feelings": {
+      "summary": [
+        20
+      ]
+    },
+    "felt": {
+      "summary": [
+        8
+      ]
+    },
+    "fep": {
+      "title": [
+        130,
+        131,
+        139
+      ],
+      "summary": [
+        130,
+        140
+      ]
+    },
+    "few": {
+      "summary": [
+        49
+      ]
+    },
+    "field": {
+      "title": [
+        132,
+        133,
+        134,
+        136
+      ],
+      "summary": [
+        13,
+        132,
+        133,
+        136
+      ]
+    },
+    "fields": {
+      "title": [
+        135
+      ],
+      "summary": [
+        135,
+        136
+      ]
+    },
+    "filters": {
+      "summary": [
+        8
+      ]
+    },
+    "firing": {
+      "summary": [
+        49
+      ]
+    },
+    "first": {
+      "summary": [
+        13
+      ]
+    },
+    "five": {
+      "title": [
+        137
+      ],
+      "summary": [
+        105,
+        137
+      ]
+    },
+    "fixed": {
+      "summary": [
+        19
+      ]
+    },
+    "flow": {
+      "summary": [
+        78
+      ]
+    },
+    "flows": {
+      "summary": [
+        80,
+        89
+      ]
+    },
+    "flux": {
+      "summary": [
+        88
+      ]
+    },
+    "following": {
+      "summary": [
+        80
+      ]
+    },
+    "follows": {
+      "summary": [
+        76
+      ]
+    },
+    "force": {
+      "summary": [
+        53
+      ]
+    },
+    "forces": {
+      "title": [
+        89
+      ],
+      "summary": [
+        49
+      ]
+    },
+    "foresight": {
+      "summary": [
+        120
+      ]
+    },
+    "forget": {
+      "summary": [
+        138
+      ]
+    },
+    "forgetting": {
+      "title": [
+        138
+      ]
+    },
+    "form": {
+      "title": [
+        128
+      ],
+      "summary": [
+        21,
+        26,
+        57,
+        78,
+        87,
+        144
+      ]
+    },
+    "formal": {
+      "summary": [
+        19,
+        20,
+        146
+      ]
+    },
+    "forms": {
+      "summary": [
+        19,
+        26,
+        50
+      ]
+    },
+    "formula": {
+      "summary": [
+        146
+      ]
+    },
+    "formulated": {
+      "summary": [
+        73
+      ]
+    },
+    "forward": {
+      "title": [
+        144
+      ],
+      "summary": [
+        63
+      ]
+    },
+    "foundation": {
+      "summary": [
+        73
+      ]
+    },
+    "four": {
+      "summary": [
+        49
+      ]
+    },
+    "fragile": {
+      "summary": [
+        57
+      ]
+    },
+    "fragments": {
+      "summary": [
+        58
+      ]
+    },
+    "frame": {
+      "summary": [
+        13
+      ]
+    },
+    "framed": {
+      "summary": [
+        87,
+        136
+      ]
+    },
+    "frames": {
+      "summary": [
+        43,
+        50
+      ]
+    },
+    "framework": {
+      "summary": [
+        29,
+        94,
+        105
+      ]
+    },
+    "frameworks": {
+      "summary": [
+        140
+      ]
+    },
+    "framing": {
+      "summary": [
+        47
+      ]
+    },
+    "free": {
+      "title": [
+        131,
+        139,
+        140
+      ],
+      "summary": [
+        139,
+        140
+      ]
+    },
+    "freedom": {
+      "title": [
+        141
+      ],
+      "summary": [
+        65
+      ]
+    },
+    "frequency": {
+      "title": [
+        142
+      ],
+      "summary": [
+        62,
+        142
+      ]
+    },
+    "friston": {
+      "summary": [
+        140
+      ]
+    },
+    "frontier": {
+      "summary": [
+        137
+      ]
+    },
+    "fully": {
+      "summary": [
+        9,
+        22
+      ]
+    },
+    "function": {
+      "summary": [
+        122
+      ]
+    },
+    "functional": {
+      "summary": [
+        87
+      ]
+    },
+    "functions": {
+      "summary": [
+        30,
+        38,
+        40
+      ]
+    },
+    "fundamental": {
+      "summary": [
+        27,
+        49,
+        89,
+        107,
+        145
+      ]
+    },
+    "fungi": {
+      "title": [
+        89
+      ],
+      "summary": [
+        89
+      ]
+    },
+    "furber": {
+      "summary": [
+        28
+      ]
+    },
+    "future": {
+      "title": [
+        143,
+        144
+      ],
+      "summary": [
+        60,
+        144
+      ]
+    },
+    "futures": {
+      "summary": [
+        58,
+        73
+      ]
+    },
+    "gain": {
+      "summary": [
+        107
+      ]
+    },
+    "gap": {
+      "summary": [
+        126
+      ]
+    },
+    "gaps": {
+      "summary": [
+        126
+      ]
+    },
+    "generalises": {
+      "summary": [
+        120
+      ]
+    },
+    "generate": {
+      "summary": [
+        49
+      ]
+    },
+    "generated": {
+      "summary": [
+        73
+      ]
+    },
+    "generational": {
+      "title": [
+        63
+      ],
+      "summary": [
+        63
+      ]
+    },
+    "generations": {
+      "summary": [
+        39,
+        122,
+        126
+      ]
+    },
+    "generative": {
+      "summary": [
+        50,
+        139
+      ]
+    },
+    "genes": {
+      "summary": [
+        41
+      ]
+    },
+    "geometry": {
+      "title": [
+        99,
+        145
+      ],
+      "summary": [
+        99,
+        145
+      ]
+    },
+    "give": {
+      "summary": [
+        49
+      ]
+    },
+    "gives": {
+      "summary": [
+        52
+      ]
+    },
+    "global": {
+      "summary": [
+        28
+      ]
+    },
+    "globally": {
+      "summary": [
+        118
+      ]
+    },
+    "good": {
+      "summary": [
+        15
+      ]
+    },
+    "governance": {
+      "summary": [
+        126
+      ]
+    },
+    "gracefully": {
+      "summary": [
+        23
+      ]
+    },
+    "grand": {
+      "title": [
+        137
+      ]
+    },
+    "grid": {
+      "title": [
+        134
+      ]
+    },
+    "ground": {
+      "summary": [
+        56
+      ]
+    },
+    "grouping": {
+      "title": [
+        151
+      ]
+    },
+    "guide": {
+      "summary": [
+        144
+      ]
+    },
+    "guided": {
+      "summary": [
+        13
+      ]
+    },
+    "guises": {
+      "summary": [
+        19
+      ]
+    },
+    "gödel": {
+      "title": [
+        146,
+        147,
+        148,
+        149,
+        150
+      ],
+      "summary": [
+        146,
+        149
+      ]
+    },
+    "habits": {
+      "summary": [
+        55,
+        136
+      ]
+    },
+    "handle": {
+      "summary": [
+        38
+      ]
+    },
+    "happen": {
+      "summary": [
+        144
+      ]
+    },
+    "hardware": {
+      "summary": [
+        29
+      ]
+    },
+    "harmful": {
+      "summary": [
+        72
+      ]
+    },
+    "harmony": {
+      "summary": [
+        93
+      ]
+    },
+    "has": {
+      "summary": [
+        41,
+        47,
+        101,
+        136,
+        138
+      ]
+    },
+    "have": {
+      "summary": [
+        26,
+        90,
+        103,
+        122
+      ]
+    },
+    "healing": {
+      "summary": [
+        72
+      ]
+    },
+    "heat": {
+      "summary": [
+        108
+      ]
+    },
+    "heidegger": {
+      "summary": [
+        65
+      ]
+    },
+    "higher": {
+      "summary": [
+        3,
+        7,
+        13
+      ]
+    },
+    "highly": {
+      "summary": [
+        118
+      ]
+    },
+    "historical": {
+      "summary": [
+        118
+      ]
+    },
+    "historically": {
+      "summary": [
+        65
+      ]
+    },
+    "holes": {
+      "title": [
+        114
+      ],
+      "summary": [
+        10
+      ]
+    },
+    "honesty": {
+      "title": [
+        127
+      ]
+    },
+    "hopfield": {
+      "title": [
+        22,
+        23
+      ],
+      "summary": [
+        21,
+        22
+      ]
+    },
+    "horizon": {
+      "title": [
+        114
+      ]
+    },
+    "horizons": {
+      "summary": [
+        10,
+        114
+      ]
+    },
+    "how": {
+      "title": [
+        9,
+        61,
+        62,
+        150
+      ],
+      "summary": [
+        7,
+        17,
+        19,
+        23,
+        31,
+        32,
+        38,
+        39,
+        42,
+        51,
+        52,
+        59,
+        76,
+        93,
+        97,
+        99,
+        104,
+        107,
+        113,
+        114,
+        132,
+        137,
+        140,
+        149
+      ]
+    },
+    "hubs": {
+      "title": [
+        73
+      ],
+      "summary": [
+        38
+      ]
+    },
+    "human": {
+      "summary": [
+        126
+      ]
+    },
+    "humanities": {
+      "summary": [
+        65
+      ]
+    },
+    "humans": {
+      "summary": [
+        20,
+        89,
+        101
+      ]
+    },
+    "humble": {
+      "summary": [
+        15
+      ]
+    },
+    "hypothesis": {
+      "summary": [
+        136
+      ]
+    },
+    "i-ching": {
+      "title": [
+        48
+      ]
+    },
+    "idea": {
+      "summary": [
+        7,
+        73,
+        77,
+        94
+      ]
+    },
+    "idealist": {
+      "summary": [
+        56
+      ]
+    },
+    "ideas": {
+      "summary": [
+        76
+      ]
+    },
+    "if": {
+      "summary": [
+        17,
+        30,
+        38,
+        39,
+        61,
+        82,
+        87,
+        103
+      ]
+    },
+    "ignorance": {
+      "summary": [
+        113
+      ]
+    },
+    "illustrated": {
+      "title": [
+        36
+      ]
+    },
+    "image": {
+      "summary": [
+        18
+      ]
+    },
+    "images": {
+      "title": [
+        18
+      ],
+      "summary": [
+        18
+      ]
+    },
+    "imagination": {
+      "summary": [
+        47
+      ]
+    },
+    "imagine": {
+      "summary": [
+        58
+      ]
+    },
+    "immune": {
+      "summary": [
+        25
+      ]
+    },
+    "immunity": {
+      "summary": [
+        25
+      ]
+    },
+    "implementation": {
+      "title": [
+        128
+      ]
+    },
+    "implemented": {
+      "summary": [
+        3
+      ]
+    },
+    "implements": {
+      "summary": [
+        20
+      ]
+    },
+    "implication": {
+      "summary": [
+        108
+      ]
+    },
+    "implicit": {
+      "summary": [
+        20,
+        55
+      ]
+    },
+    "implies": {
+      "summary": [
+        71
+      ]
+    },
+    "imply": {
+      "title": [
+        82
+      ]
+    },
+    "importance": {
+      "title": [
+        149
+      ]
+    },
+    "important": {
+      "summary": [
+        149
+      ]
+    },
+    "impression": {
+      "summary": [
+        144
+      ]
+    },
+    "improbable": {
+      "summary": [
+        8
+      ]
+    },
+    "inability": {
+      "summary": [
+        9
+      ]
+    },
+    "inaccessible": {
+      "title": [
+        138
+      ],
+      "summary": [
+        138
+      ]
+    },
+    "includes": {
+      "summary": [
+        51
+      ]
+    },
+    "including": {
+      "summary": [
+        140
+      ]
+    },
+    "incomprehensible": {
+      "summary": [
+        61
+      ]
+    },
+    "increase": {
+      "summary": [
+        101,
+        108
+      ]
+    },
+    "increased": {
+      "summary": [
+        122
+      ]
+    },
+    "increases": {
+      "summary": [
+        43
+      ]
+    },
+    "increasingly": {
+      "summary": [
+        30
+      ]
+    },
+    "incredibly": {
+      "summary": [
+        61
+      ]
+    },
+    "indeterminacy": {
+      "summary": [
+        141
+      ]
+    },
+    "individual": {
+      "summary": [
+        63,
+        122
+      ]
+    },
+    "inert": {
+      "summary": [
+        78
+      ]
+    },
+    "inevitability": {
+      "title": [
+        8
+      ]
+    },
+    "inevitable": {
+      "summary": [
+        8
+      ]
+    },
+    "inference": {
+      "summary": [
+        3,
+        97
+      ]
+    },
+    "infinite": {
+      "summary": [
+        7
+      ]
+    },
+    "influence": {
+      "summary": [
+        76
+      ]
+    },
+    "influenced": {
+      "summary": [
+        141
+      ]
+    },
+    "information": {
+      "title": [
+        10,
+        20,
+        71
+      ],
+      "summary": [
+        10,
+        20,
+        30,
+        71,
+        99,
+        114
+      ]
+    },
+    "inherent": {
+      "summary": [
+        9,
+        103
+      ]
+    },
+    "inherit": {
+      "summary": [
+        63
+      ]
+    },
+    "innate": {
+      "summary": [
+        19
+      ]
+    },
+    "inner": {
+      "summary": [
+        77
+      ]
+    },
+    "innovations": {
+      "title": [
+        76
+      ],
+      "summary": [
+        76
+      ]
+    },
+    "inside": {
+      "title": [
+        42
+      ]
+    },
+    "insight": {
+      "summary": [
+        13
+      ]
+    },
+    "inspired": {
+      "summary": [
+        27,
+        28,
+        32
+      ]
+    },
+    "instead": {
+      "summary": [
+        101
+      ]
+    },
+    "institutions": {
+      "summary": [
+        41
+      ]
+    },
+    "integrated": {
+      "summary": [
+        50
+      ]
+    },
+    "integrates": {
+      "summary": [
+        94,
+        112,
+        120
+      ]
+    },
+    "integrating": {
+      "summary": [
+        73
+      ]
+    },
+    "integration": {
+      "title": [
+        126
+      ],
+      "summary": [
+        9
+      ]
+    },
+    "intention": {
+      "title": [
+        144
+      ]
+    },
+    "intentions": {
+      "summary": [
+        144
+      ]
+    },
+    "interact": {
+      "summary": [
+        100
+      ]
+    },
+    "interacting": {
+      "summary": [
+        55,
+        60
+      ]
+    },
+    "interaction": {
+      "summary": [
+        49,
+        113
+      ]
+    },
+    "interactions": {
+      "summary": [
+        89,
+        98
+      ]
+    },
+    "interacts": {
+      "summary": [
+        132
+      ]
+    },
+    "interdependent": {
+      "summary": [
+        75
+      ]
+    },
+    "interface": {
+      "summary": [
+        29
+      ]
+    },
+    "interference": {
+      "title": [
+        125
+      ]
+    },
+    "internal": {
+      "summary": [
+        73
+      ]
+    },
+    "internally": {
+      "summary": [
+        73
+      ]
+    },
+    "interoperability": {
+      "summary": [
+        44
+      ]
+    },
+    "interpretations": {
+      "summary": [
+        62
+      ]
+    },
+    "intersubjective": {
+      "title": [
+        15
+      ],
+      "summary": [
+        15
+      ]
+    },
+    "into": {
+      "summary": [
+        22,
+        29,
+        38,
+        49,
+        50,
+        60,
+        81,
+        127,
+        136
+      ]
+    },
+    "intrinsic": {
+      "summary": [
+        73,
+        136
+      ]
+    },
+    "intuition": {
+      "summary": [
+        19
+      ]
+    },
+    "invertebrates": {
+      "title": [
+        63
+      ],
+      "summary": [
+        63
+      ]
+    },
+    "invoking": {
+      "summary": [
+        75
+      ]
+    },
+    "involved": {
+      "summary": [
+        104
+      ]
+    },
+    "inward": {
+      "summary": [
+        73
+      ]
+    },
+    "irreducible": {
+      "summary": [
+        100
+      ]
+    },
+    "isolated": {
+      "summary": [
+        60
+      ]
+    },
+    "itinerary": {
+      "summary": [
+        13
+      ]
+    },
+    "its": {
+      "summary": [
+        4,
+        30,
+        62,
+        65,
+        87,
+        122
+      ]
+    },
+    "itself": {
+      "title": [
+        148
+      ],
+      "summary": [
+        9,
+        56
+      ]
+    },
+    "john": {
+      "title": [
+        48
+      ]
+    },
+    "join": {
+      "summary": [
+        38
+      ]
+    },
+    "jungian": {
+      "summary": [
+        19
+      ]
+    },
+    "just": {
+      "summary": [
+        53,
+        138
+      ]
+    },
+    "kant": {
+      "title": [
+        45
+      ]
+    },
+    "karl": {
+      "summary": [
+        140
+      ]
+    },
+    "key": {
+      "summary": [
+        135
+      ]
+    },
+    "kierkegaard": {
+      "summary": [
+        65
+      ]
+    },
+    "kind": {
+      "summary": [
+        101
+      ]
+    },
+    "knowing": {
+      "summary": [
+        13,
+        81,
+        113
+      ]
+    },
+    "knowledge": {
+      "summary": [
+        113
+      ]
+    },
+    "ladder": {
+      "title": [
+        97
+      ]
+    },
+    "lagged": {
+      "summary": [
+        126
+      ]
+    },
+    "language": {
+      "summary": [
+        29,
+        53
+      ]
+    },
+    "languages": {
+      "summary": [
+        44
+      ]
+    },
+    "large": {
+      "summary": [
+        28,
+        32,
+        57
+      ]
+    },
+    "large-scale": {
+      "summary": [
+        28,
+        32
+      ]
+    },
+    "later": {
+      "summary": [
+        144
+      ]
+    },
+    "layer": {
+      "summary": [
+        101
+      ]
+    },
+    "layered": {
+      "summary": [
+        89
+      ]
+    },
+    "layers": {
+      "title": [
+        15
+      ],
+      "summary": [
+        44
+      ]
+    },
+    "leads": {
+      "summary": [
+        88
+      ]
+    },
+    "learning": {
+      "summary": [
+        20,
+        50,
+        55,
+        120,
+        139
+      ]
+    },
+    "left": {
+      "summary": [
+        101
+      ]
+    },
+    "less": {
+      "summary": [
+        50,
+        83
+      ]
+    },
+    "level": {
+      "summary": [
+        41,
+        98,
+        100
+      ]
+    },
+    "levels": {
+      "summary": [
+        3,
+        94,
+        97,
+        100
+      ]
+    },
+    "lexical": {
+      "summary": [
+        13
+      ]
+    },
+    "licensed": {
+      "summary": [
+        13
+      ]
+    },
+    "lies": {
+      "summary": [
+        127
+      ]
+    },
+    "life": {
+      "summary": [
+        42,
+        49,
+        61,
+        99
+      ]
+    },
+    "lifetime": {
+      "summary": [
+        46
+      ]
+    },
+    "lifetimes": {
+      "summary": [
+        63
+      ]
+    },
+    "lightspeed": {
+      "summary": [
+        57
+      ]
+    },
+    "like": {
+      "summary": [
+        3,
+        27,
+        29,
+        61,
+        97,
+        111,
+        118,
+        136
+      ]
+    },
+    "likely": {
+      "summary": [
+        20
+      ]
+    },
+    "limited": {
+      "summary": [
+        59
+      ]
+    },
+    "limits": {
+      "summary": [
+        9,
+        57
+      ]
+    },
+    "lineage": {
+      "title": [
+        105
+      ]
+    },
+    "linguistic": {
+      "title": [
+        13
+      ]
+    },
+    "linked": {
+      "summary": [
+        65
+      ]
+    },
+    "links": {
+      "summary": [
+        51
+      ]
+    },
+    "list": {
+      "summary": [
+        51
+      ]
+    },
+    "literacy": {
+      "summary": [
+        126
+      ]
+    },
+    "literal": {
+      "summary": [
+        47,
+        114
+      ]
+    },
+    "lived": {
+      "summary": [
+        40
+      ]
+    },
+    "lives": {
+      "title": [
+        81
+      ],
+      "summary": [
+        47,
+        81
+      ]
+    },
+    "living": {
+      "title": [
+        61
+      ],
+      "summary": [
+        61,
+        78,
+        89,
+        140
+      ]
+    },
+    "local": {
+      "summary": [
+        13,
+        46,
+        80,
+        136
+      ]
+    },
+    "locally": {
+      "summary": [
+        136
+      ]
+    },
+    "logic": {
+      "summary": [
+        78
+      ]
+    },
+    "logical": {
+      "summary": [
+        146
+      ]
+    },
+    "long": {
+      "title": [
+        127
+      ]
+    },
+    "longer": {
+      "summary": [
+        126
+      ]
+    },
+    "looking": {
+      "summary": [
+        81
+      ]
+    },
+    "lookup": {
+      "summary": [
+        51
+      ]
+    },
+    "loop": {
+      "title": [
+        139
+      ],
+      "summary": [
+        39,
+        127
+      ]
+    },
+    "loops": {
+      "title": [
+        128,
+        129
+      ],
+      "summary": [
+        41,
+        57,
+        127
+      ]
+    },
+    "loss": {
+      "summary": [
+        71
+      ]
+    },
+    "lost": {
+      "title": [
+        138
+      ],
+      "summary": [
+        59,
+        138
+      ]
+    },
+    "low": {
+      "summary": [
+        32
+      ]
+    },
+    "lower": {
+      "summary": [
+        100
+      ]
+    },
+    "machines": {
+      "title": [
+        27
+      ],
+      "summary": [
+        27,
+        31
+      ]
+    },
+    "main": {
+      "summary": [
+        34,
+        41,
+        135
+      ]
+    },
+    "maintain": {
+      "summary": [
+        108,
+        139,
+        140
+      ]
+    },
+    "maintained": {
+      "summary": [
+        78
+      ]
+    },
+    "maintaining": {
+      "summary": [
+        73
+      ]
+    },
+    "maintains": {
+      "summary": [
+        127
+      ]
+    },
+    "major": {
+      "summary": [
+        51
+      ]
+    },
+    "make": {
+      "summary": [
+        27,
+        40,
+        56
+      ]
+    },
+    "making": {
+      "summary": [
+        113
+      ]
+    },
+    "manchester": {
+      "summary": [
+        28
+      ]
+    },
+    "manifestation": {
+      "summary": [
+        113
+      ]
+    },
+    "manifolds": {
+      "summary": [
+        42
+      ]
+    },
+    "manipulation": {
+      "summary": [
+        72
+      ]
+    },
+    "many": {
+      "title": [
+        7,
+        61
+      ],
+      "summary": [
+        80,
+        104,
+        122
+      ]
+    },
+    "map": {
+      "title": [
+        96
+      ],
+      "summary": [
+        51,
+        105
+      ]
+    },
+    "mapping": {
+      "summary": [
+        26,
+        53
+      ]
+    },
+    "mappings": {
+      "summary": [
+        53
+      ]
+    },
+    "maps": {
+      "summary": [
+        137
+      ]
+    },
+    "marks": {
+      "summary": [
+        60
+      ]
+    },
+    "massively": {
+      "summary": [
+        28
+      ]
+    },
+    "mate": {
+      "summary": [
+        122
+      ]
+    },
+    "mathematical": {
+      "title": [
+        42,
+        128
+      ]
+    },
+    "mathematics": {
+      "summary": [
+        7,
+        53
+      ]
+    },
+    "matrix": {
+      "summary": [
+        51
+      ]
+    },
+    "maturation": {
+      "summary": [
+        64
+      ]
+    },
+    "may": {
+      "summary": [
+        71
+      ]
+    },
+    "mean": {
+      "summary": [
+        138
+      ]
+    },
+    "meaning": {
+      "title": [
+        0
+      ],
+      "summary": [
+        3,
+        4,
+        8,
+        14,
+        18,
+        33,
+        40,
+        44,
+        65,
+        120
+      ]
+    },
+    "means": {
+      "summary": [
+        135
+      ]
+    },
+    "measurement": {
+      "title": [
+        113
+      ],
+      "summary": [
+        113
+      ]
+    },
+    "mechanics": {
+      "title": [
+        145
+      ],
+      "summary": [
+        145
+      ]
+    },
+    "mechanism": {
+      "title": [
+        16
+      ]
+    },
+    "mechanisms": {
+      "summary": [
+        40
+      ]
+    },
+    "medicine": {
+      "summary": [
+        101
+      ]
+    },
+    "meet": {
+      "summary": [
+        139
+      ]
+    },
+    "membrane": {
+      "title": [
+        129
+      ]
+    },
+    "memories": {
+      "title": [
+        25,
+        143,
+        144
+      ],
+      "summary": [
+        22,
+        25,
+        47,
+        73,
+        78,
+        111,
+        136,
+        144
+      ]
+    },
+    "memory": {
+      "title": [
+        0,
+        12,
+        14,
+        21,
+        22,
+        26,
+        40,
+        55,
+        59,
+        63,
+        64,
+        78,
+        82,
+        84,
+        90,
+        92,
+        93,
+        94,
+        103,
+        110,
+        114,
+        117,
+        119,
+        120,
+        121,
+        136,
+        137
+      ],
+      "summary": [
+        4,
+        10,
+        14,
+        18,
+        19,
+        23,
+        25,
+        26,
+        31,
+        38,
+        40,
+        44,
+        49,
+        50,
+        51,
+        52,
+        55,
+        57,
+        58,
+        59,
+        60,
+        63,
+        64,
+        72,
+        73,
+        77,
+        78,
+        82,
+        88,
+        90,
+        93,
+        94,
+        103,
+        104,
+        111,
+        114,
+        117,
+        120,
+        126,
+        136,
+        137,
+        138,
+        144
+      ]
+    },
+    "mental": {
+      "summary": [
+        101
+      ]
+    },
+    "merleau": {
+      "summary": [
+        65
+      ]
+    },
+    "metaphor": {
+      "title": [
+        53,
+        111
+      ],
+      "summary": [
+        13,
+        53,
+        114
+      ]
+    },
+    "metaphors": {
+      "title": [
+        47
+      ],
+      "summary": [
+        13
+      ]
+    },
+    "microbes": {
+      "title": [
+        89
+      ],
+      "summary": [
+        89
+      ]
+    },
+    "mid": {
+      "summary": [
+        65
+      ]
+    },
+    "middle": {
+      "summary": [
+        56
+      ]
+    },
+    "might": {
+      "summary": [
+        99
+      ]
+    },
+    "millions": {
+      "summary": [
+        62
+      ]
+    },
+    "milliseconds": {
+      "summary": [
+        126
+      ]
+    },
+    "mind": {
+      "title": [
+        39,
+        40,
+        41,
+        88,
+        95,
+        96
+      ],
+      "summary": [
+        39,
+        40,
+        41,
+        42,
+        46,
+        56,
+        77,
+        88,
+        95,
+        97,
+        99
+      ]
+    },
+    "minds": {
+      "title": [
+        126
+      ],
+      "summary": [
+        41
+      ]
+    },
+    "minimizing": {
+      "summary": [
+        139
+      ]
+    },
+    "mismatch": {
+      "title": [
+        126
+      ],
+      "summary": [
+        126
+      ]
+    },
+    "mode": {
+      "title": [
+        73
+      ]
+    },
+    "model": {
+      "summary": [
+        73,
+        139
+      ]
+    },
+    "modeling": {
+      "summary": [
+        29,
+        32
+      ]
+    },
+    "models": {
+      "title": [
+        51
+      ],
+      "summary": [
+        9,
+        30,
+        41,
+        51,
+        56,
+        57,
+        95
+      ]
+    },
+    "modern": {
+      "summary": [
+        88
+      ]
+    },
+    "modifies": {
+      "summary": [
+        39
+      ]
+    },
+    "molecular": {
+      "summary": [
+        63,
+        117
+      ]
+    },
+    "moment": {
+      "summary": [
+        75
+      ]
+    },
+    "moment-to-moment": {
+      "summary": [
+        75
+      ]
+    },
+    "moments": {
+      "summary": [
+        60,
+        73
+      ]
+    },
+    "morality": {
+      "summary": [
+        53
+      ]
+    },
+    "more": {
+      "summary": [
+        60,
+        132
+      ]
+    },
+    "morphic": {
+      "summary": [
+        136
+      ]
+    },
+    "most": {
+      "summary": [
+        73,
+        107,
+        140
+      ]
+    },
+    "motion": {
+      "summary": [
+        53
+      ]
+    },
+    "motivational": {
+      "summary": [
+        122
+      ]
+    },
+    "movement": {
+      "title": [
+        65
+      ]
+    },
+    "multi": {
+      "summary": [
+        89
+      ]
+    },
+    "multiple": {
+      "summary": [
+        7,
+        127
+      ]
+    },
+    "myth": {
+      "summary": [
+        19
+      ]
+    },
+    "naker": {
+      "title": [
+        28,
+        32,
+        33
+      ],
+      "summary": [
+        28,
+        29,
+        32,
+        33
+      ]
+    },
+    "narrative": {
+      "summary": [
+        8,
+        55
+      ]
+    },
+    "narratives": {
+      "summary": [
+        19
+      ]
+    },
+    "native": {
+      "summary": [
+        20,
+        44
+      ]
+    },
+    "natural": {
+      "summary": [
+        3,
+        44,
+        90,
+        101,
+        122,
+        146
+      ]
+    },
+    "naturally": {
+      "summary": [
+        97
+      ]
+    },
+    "nature": {
+      "summary": [
+        88,
+        136
+      ]
+    },
+    "near": {
+      "summary": [
+        28
+      ]
+    },
+    "nearest": {
+      "summary": [
+        22
+      ]
+    },
+    "need": {
+      "summary": [
+        43
+      ]
+    },
+    "negative": {
+      "summary": [
+        73
+      ]
+    },
+    "neighbouring": {
+      "summary": [
+        60
+      ]
+    },
+    "neither": {
+      "summary": [
+        60
+      ]
+    },
+    "ness": {
+      "title": [
+        130
+      ],
+      "summary": [
+        130
+      ]
+    },
+    "network": {
+      "title": [
+        21,
+        22,
+        73
+      ],
+      "summary": [
+        21,
+        22,
+        28,
+        73
+      ]
+    },
+    "networks": {
+      "title": [
+        23
+      ],
+      "summary": [
+        21,
+        22,
+        28,
+        32
+      ]
+    },
+    "neural": {
+      "summary": [
+        18,
+        21,
+        22,
+        25,
+        26,
+        28,
+        29,
+        33,
+        42,
+        47,
+        94,
+        126,
+        127
+      ]
+    },
+    "neurological": {
+      "title": [
+        128
+      ]
+    },
+    "neuromodulators": {
+      "summary": [
+        38
+      ]
+    },
+    "neuromorphic": {
+      "title": [
+        30,
+        31
+      ],
+      "summary": [
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    "neuron": {
+      "title": [
+        104
+      ]
+    },
+    "neurons": {
+      "summary": [
+        32,
+        34,
+        49,
+        104
+      ]
+    },
+    "neuroscience": {
+      "title": [
+        46,
+        47,
+        51,
+        59
+      ],
+      "summary": [
+        33,
+        46,
+        47,
+        51,
+        95,
+        137,
+        140
+      ]
+    },
+    "new": {
+      "summary": [
+        76,
+        101
+      ]
+    },
+    "next": {
+      "summary": [
+        62
+      ]
+    },
+    "niche": {
+      "summary": [
+        39
+      ]
+    },
+    "nietzsche": {
+      "summary": [
+        65
+      ]
+    },
+    "nn": {
+      "title": [
+        29
+      ],
+      "summary": [
+        29
+      ]
+    },
+    "no": {
+      "summary": [
+        20,
+        47
+      ]
+    },
+    "noise": {
+      "summary": [
+        23,
+        57
+      ]
+    },
+    "noisy": {
+      "summary": [
+        22
+      ]
+    },
+    "non": {
+      "title": [
+        26,
+        130
+      ],
+      "summary": [
+        26,
+        46,
+        78,
+        89,
+        126,
+        136,
+        145
+      ]
+    },
+    "non-fundamental": {
+      "summary": [
+        145
+      ]
+    },
+    "non-living": {
+      "summary": [
+        78
+      ]
+    },
+    "non-local": {
+      "summary": [
+        46
+      ]
+    },
+    "nonetheless": {
+      "summary": [
+        3
+      ]
+    },
+    "nor": {
+      "summary": [
+        60
+      ]
+    },
+    "norms": {
+      "summary": [
+        127
+      ]
+    },
+    "not": {
+      "summary": [
+        9,
+        15,
+        18,
+        41,
+        44,
+        53,
+        56,
+        63,
+        64,
+        78,
+        98,
+        100,
+        101,
+        113,
+        114,
+        118,
+        127
+      ]
+    },
+    "note": {
+      "summary": [
+        26
+      ]
+    },
+    "noticed": {
+      "summary": [
+        73
+      ]
+    },
+    "number": {
+      "summary": [
+        61,
+        132,
+        146
+      ]
+    },
+    "numbers": {
+      "title": [
+        146
+      ],
+      "summary": [
+        61,
+        146
+      ]
+    },
+    "object": {
+      "summary": [
+        132
+      ]
+    },
+    "objective": {
+      "summary": [
+        15
+      ]
+    },
+    "objectivity": {
+      "summary": [
+        15
+      ]
+    },
+    "observer": {
+      "summary": [
+        114
+      ]
+    },
+    "observers": {
+      "summary": [
+        114
+      ]
+    },
+    "occasional": {
+      "summary": [
+        120
+      ]
+    },
+    "occupy": {
+      "summary": [
+        56,
+        130
+      ]
+    },
+    "off": {
+      "summary": [
+        120
+      ]
+    },
+    "offer": {
+      "summary": [
+        101
+      ]
+    },
+    "often": {
+      "title": [
+        62
+      ],
+      "summary": [
+        50,
+        87
+      ]
+    },
+    "one": {
+      "summary": [
+        60,
+        62,
+        80,
+        88,
+        104,
+        107,
+        111,
+        113,
+        114,
+        127,
+        140
+      ]
+    },
+    "only": {
+      "summary": [
+        9,
+        64,
+        71,
+        89
+      ]
+    },
+    "ontology": {
+      "title": [
+        135
+      ]
+    },
+    "opacity": {
+      "summary": [
+        127
+      ]
+    },
+    "openness": {
+      "summary": [
+        43
+      ]
+    },
+    "operate": {
+      "summary": [
+        38
+      ]
+    },
+    "operates": {
+      "summary": [
+        88
+      ]
+    },
+    "operations": {
+      "summary": [
+        60
+      ]
+    },
+    "optimises": {
+      "summary": [
+        120
+      ]
+    },
+    "optimized": {
+      "summary": [
+        118
+      ]
+    },
+    "order": {
+      "summary": [
+        13,
+        80,
+        139,
+        140
+      ]
+    },
+    "ordered": {
+      "summary": [
+        13
+      ]
+    },
+    "organic": {
+      "title": [
+        26
+      ],
+      "summary": [
+        26
+      ]
+    },
+    "organisation": {
+      "summary": [
+        97
+      ]
+    },
+    "organised": {
+      "summary": [
+        60
+      ]
+    },
+    "organising": {
+      "summary": [
+        13
+      ]
+    },
+    "organisms": {
+      "title": [
+        42
+      ],
+      "summary": [
+        18,
+        130,
+        139
+      ]
+    },
+    "organization": {
+      "title": [
+        80
+      ]
+    },
+    "organize": {
+      "summary": [
+        78
+      ]
+    },
+    "organized": {
+      "summary": [
+        3
+      ]
+    },
+    "original": {
+      "summary": [
+        87
+      ]
+    },
+    "origination": {
+      "title": [
+        75
+      ],
+      "summary": [
+        75,
+        144
+      ]
+    },
+    "origins": {
+      "title": [
+        142
+      ]
+    },
+    "other": {
+      "summary": [
+        21,
+        101,
+        111
+      ]
+    },
+    "others": {
+      "summary": [
+        113
+      ]
+    },
+    "our": {
+      "summary": [
+        3
+      ]
+    },
+    "ourselves": {
+      "summary": [
+        88
+      ]
+    },
+    "out": {
+      "summary": [
+        108
+      ]
+    },
+    "outputs": {
+      "title": [
+        33
+      ],
+      "summary": [
+        33
+      ]
+    },
+    "outside": {
+      "title": [
+        82
+      ],
+      "summary": [
+        25,
+        75,
+        82,
+        114
+      ]
+    },
+    "over": {
+      "summary": [
+        18,
+        47,
+        76,
+        122,
+        126
+      ]
+    },
+    "overlap": {
+      "summary": [
+        111
+      ]
+    },
+    "overly": {
+      "summary": [
+        95
+      ]
+    },
+    "overview": {
+      "title": [
+        36
+      ]
+    },
+    "packet": {
+      "summary": [
+        28
+      ]
+    },
+    "page": {
+      "summary": [
+        137
+      ]
+    },
+    "parallel": {
+      "summary": [
+        28
+      ]
+    },
+    "parallelism": {
+      "summary": [
+        32
+      ]
+    },
+    "part": {
+      "summary": [
+        89,
+        98
+      ]
+    },
+    "partial": {
+      "summary": [
+        22
+      ]
+    },
+    "partners": {
+      "summary": [
+        122
+      ]
+    },
+    "parts": {
+      "summary": [
+        38,
+        80,
+        98,
+        100
+      ]
+    },
+    "pass": {
+      "summary": [
+        8,
+        62
+      ]
+    },
+    "past": {
+      "title": [
+        81
+      ],
+      "summary": [
+        58,
+        63,
+        136
+      ]
+    },
+    "path": {
+      "summary": [
+        118
+      ]
+    },
+    "pattern": {
+      "summary": [
+        50,
+        100
+      ]
+    },
+    "patterns": {
+      "title": [
+        19,
+        98
+      ],
+      "summary": [
+        19,
+        22,
+        49,
+        76,
+        78,
+        122,
+        136
+      ]
+    },
+    "people": {
+      "summary": [
+        44
+      ]
+    },
+    "perceived": {
+      "summary": [
+        19
+      ]
+    },
+    "perception": {
+      "title": [
+        139
+      ],
+      "summary": [
+        38,
+        49,
+        55,
+        77,
+        83
+      ]
+    },
+    "perceptual": {
+      "summary": [
+        8,
+        126
+      ]
+    },
+    "persist": {
+      "summary": [
+        101,
+        136
+      ]
+    },
+    "personal": {
+      "summary": [
+        19
+      ]
+    },
+    "perspective": {
+      "summary": [
+        122
+      ]
+    },
+    "phase": {
+      "summary": [
+        49
+      ]
+    },
+    "phases": {
+      "summary": [
+        34,
+        50
+      ]
+    },
+    "phenomena": {
+      "summary": [
+        47,
+        52,
+        107
+      ]
+    },
+    "phenomenologically": {
+      "summary": [
+        20
+      ]
+    },
+    "phenomenology": {
+      "summary": [
+        137,
+        144
+      ]
+    },
+    "philosophy": {
+      "title": [
+        66,
+        68,
+        85
+      ],
+      "summary": [
+        50,
+        65,
+        95
+      ]
+    },
+    "physical": {
+      "title": [
+        3,
+        25
+      ],
+      "summary": [
+        3,
+        26,
+        30,
+        38,
+        42,
+        46,
+        75,
+        99,
+        142
+      ]
+    },
+    "physics": {
+      "title": [
+        130,
+        132,
+        133
+      ],
+      "summary": [
+        7,
+        49,
+        50,
+        80,
+        97,
+        107,
+        130,
+        132,
+        137
+      ]
+    },
+    "places": {
+      "summary": [
+        51
+      ]
+    },
+    "plants": {
+      "title": [
+        63,
+        89
+      ],
+      "summary": [
+        63,
+        89,
+        93
+      ]
+    },
+    "plastic": {
+      "summary": [
+        30
+      ]
+    },
+    "plasticity": {
+      "summary": [
+        39,
+        41,
+        72,
+        117
+      ]
+    },
+    "platform": {
+      "summary": [
+        28,
+        32
+      ]
+    },
+    "platforms": {
+      "summary": [
+        29
+      ]
+    },
+    "plausible": {
+      "summary": [
+        28
+      ]
+    },
+    "plays": {
+      "summary": [
+        145
+      ]
+    },
+    "point": {
+      "summary": [
+        132,
+        133
+      ]
+    },
+    "ponty": {
+      "summary": [
+        65
+      ]
+    },
+    "pools": {
+      "title": [
+        111
+      ],
+      "summary": [
+        111
+      ]
+    },
+    "population": {
+      "summary": [
+        76
+      ]
+    },
+    "populations": {
+      "summary": [
+        101
+      ]
+    },
+    "portable": {
+      "summary": [
+        29
+      ]
+    },
+    "positions": {
+      "summary": [
+        135
+      ]
+    },
+    "positive": {
+      "summary": [
+        127
+      ]
+    },
+    "possible": {
+      "summary": [
+        27,
+        30,
+        40,
+        82,
+        113
+      ]
+    },
+    "potential": {
+      "summary": [
+        107,
+        113
+      ]
+    },
+    "potentials": {
+      "summary": [
+        41
+      ]
+    },
+    "power": {
+      "summary": [
+        32
+      ]
+    },
+    "practically": {
+      "summary": [
+        30,
+        39
+      ]
+    },
+    "practice": {
+      "summary": [
+        27,
+        30,
+        47
+      ]
+    },
+    "practices": {
+      "summary": [
+        44,
+        64,
+        76
+      ]
+    },
+    "precursors": {
+      "summary": [
+        65
+      ]
+    },
+    "prediction": {
+      "summary": [
+        20,
+        60,
+        139
+      ]
+    },
+    "prediction-error": {
+      "summary": [
+        60
+      ]
+    },
+    "predictions": {
+      "summary": [
+        139
+      ]
+    },
+    "predictive": {
+      "summary": [
+        42,
+        139
+      ]
+    },
+    "preferences": {
+      "summary": [
+        122
+      ]
+    },
+    "preparation": {
+      "summary": [
+        63
+      ]
+    },
+    "present": {
+      "summary": [
+        100,
+        144
+      ]
+    },
+    "preserve": {
+      "summary": [
+        13,
+        71
+      ]
+    },
+    "preserves": {
+      "summary": [
+        127
+      ]
+    },
+    "prevalence": {
+      "summary": [
+        61
+      ]
+    },
+    "prevent": {
+      "summary": [
+        101
+      ]
+    },
+    "previous": {
+      "summary": [
+        47,
+        81
+      ]
+    },
+    "priming": {
+      "summary": [
+        55
+      ]
+    },
+    "principle": {
+      "title": [
+        80,
+        131,
+        139,
+        140
+      ],
+      "summary": [
+        17,
+        80,
+        100,
+        140
+      ]
+    },
+    "principles": {
+      "summary": [
+        93,
+        101
+      ]
+    },
+    "prior": {
+      "summary": [
+        63
+      ]
+    },
+    "privacy": {
+      "summary": [
+        127
+      ]
+    },
+    "probabilistic": {
+      "summary": [
+        114
+      ]
+    },
+    "problem": {
+      "summary": [
+        38
+      ]
+    },
+    "problems": {
+      "title": [
+        32
+      ],
+      "summary": [
+        32
+      ]
+    },
+    "process": {
+      "summary": [
+        34
+      ]
+    },
+    "processes": {
+      "title": [
+        3
+      ],
+      "summary": [
+        3,
+        27,
+        29,
+        30,
+        47,
+        75,
+        76
+      ]
+    },
+    "processor": {
+      "summary": [
+        30
+      ]
+    },
+    "produces": {
+      "summary": [
+        118
+      ]
+    },
+    "products": {
+      "summary": [
+        76
+      ]
+    },
+    "prof": {
+      "summary": [
+        28
+      ]
+    },
+    "profound": {
+      "summary": [
+        88
+      ]
+    },
+    "proof": {
+      "summary": [
+        146
+      ]
+    },
+    "properties": {
+      "title": [
+        100
+      ],
+      "summary": [
+        98,
+        145
+      ]
+    },
+    "property": {
+      "summary": [
+        39,
+        100
+      ]
+    },
+    "proposed": {
+      "summary": [
+        140
+      ]
+    },
+    "proposes": {
+      "summary": [
+        53,
+        136
+      ]
+    },
+    "prosociality": {
+      "summary": [
+        43
+      ]
+    },
+    "prospective": {
+      "summary": [
+        144
+      ]
+    },
+    "protention": {
+      "summary": [
+        144
+      ]
+    },
+    "prototype": {
+      "summary": [
+        13,
+        43
+      ]
+    },
+    "provides": {
+      "summary": [
+        40
+      ]
+    },
+    "psychiatry": {
+      "title": [
+        101
+      ],
+      "summary": [
+        101
+      ]
+    },
+    "psychology": {
+      "title": [
+        6,
+        67,
+        85,
+        93,
+        121,
+        122
+      ],
+      "summary": [
+        65,
+        93,
+        122,
+        137
+      ]
+    },
+    "psychosis": {
+      "summary": [
+        101
+      ]
+    },
+    "pubbenivāsānussati": {
+      "summary": [
+        47
+      ]
+    },
+    "purely": {
+      "summary": [
+        122
+      ]
+    },
+    "pushes": {
+      "summary": [
+        56
+      ]
+    },
+    "py": {
+      "title": [
+        29
+      ],
+      "summary": [
+        29
+      ]
+    },
+    "pynn": {
+      "title": [
+        29
+      ],
+      "summary": [
+        29
+      ]
+    },
+    "python": {
+      "summary": [
+        29
+      ]
+    },
+    "qualia": {
+      "summary": [
+        20
+      ]
+    },
+    "quantum": {
+      "title": [
+        107,
+        113,
+        125,
+        145
+      ],
+      "summary": [
+        56,
+        71,
+        107,
+        113,
+        145
+      ]
+    },
+    "questions": {
+      "summary": [
+        65,
+        137
+      ]
+    },
+    "quick": {
+      "summary": [
+        51
+      ]
+    },
+    "quiet": {
+      "summary": [
+        73
+      ]
+    },
+    "radically": {
+      "summary": [
+        27
+      ]
+    },
+    "random": {
+      "summary": [
+        73,
+        122
+      ]
+    },
+    "range": {
+      "summary": [
+        61
+      ]
+    },
+    "rapid": {
+      "summary": [
+        41
+      ]
+    },
+    "rare": {
+      "summary": [
+        62
+      ]
+    },
+    "rather": {
+      "summary": [
+        28,
+        122,
+        136
+      ]
+    },
+    "re": {
+      "summary": [
+        27
+      ]
+    },
+    "read": {
+      "summary": [
+        33
+      ]
+    },
+    "readiness": {
+      "summary": [
+        63
+      ]
+    },
+    "reading": {
+      "summary": [
+        33
+      ]
+    },
+    "real": {
+      "summary": [
+        28,
+        32,
+        135
+      ]
+    },
+    "realism": {
+      "title": [
+        77
+      ],
+      "summary": [
+        56,
+        77
+      ]
+    },
+    "reality": {
+      "title": [
+        15,
+        56
+      ],
+      "summary": [
+        15,
+        56,
+        127
+      ]
+    },
+    "reality-for-us": {
+      "summary": [
+        56
+      ]
+    },
+    "reasoning": {
+      "title": [
+        5
+      ],
+      "summary": [
+        53
+      ]
+    },
+    "rebirth": {
+      "title": [
+        82
+      ],
+      "summary": [
+        82
+      ]
+    },
+    "recall": {
+      "summary": [
+        47,
+        55
+      ]
+    },
+    "recalling": {
+      "summary": [
+        104
+      ]
+    },
+    "recede": {
+      "summary": [
+        113
+      ]
+    },
+    "recollection": {
+      "summary": [
+        63
+      ]
+    },
+    "recombines": {
+      "summary": [
+        58
+      ]
+    },
+    "reconcile": {
+      "summary": [
+        59
+      ]
+    },
+    "reconstruct": {
+      "title": [
+        94,
+        105,
+        112
+      ],
+      "summary": [
+        41,
+        94,
+        105,
+        112
+      ]
+    },
+    "reconstruction": {
+      "summary": [
+        41,
+        55
+      ]
+    },
+    "reconstructive": {
+      "title": [
+        120
+      ],
+      "summary": [
+        120
+      ]
+    },
+    "record": {
+      "summary": [
+        78
+      ]
+    },
+    "recording": {
+      "summary": [
+        33,
+        60
+      ]
+    },
+    "records": {
+      "summary": [
+        78
+      ]
+    },
+    "recurrent": {
+      "summary": [
+        21,
+        22,
+        57
+      ]
+    },
+    "reducible": {
+      "summary": [
+        98
+      ]
+    },
+    "redundancy": {
+      "summary": [
+        118
+      ]
+    },
+    "reference": {
+      "summary": [
+        51
+      ]
+    },
+    "references": {
+      "summary": [
+        135
+      ]
+    },
+    "refinement": {
+      "title": [
+        129
+      ]
+    },
+    "reflecting": {
+      "summary": [
+        13
+      ]
+    },
+    "reflection": {
+      "title": [
+        14
+      ],
+      "summary": [
+        14
+      ]
+    },
+    "reflective": {
+      "title": [
+        147
+      ]
+    },
+    "reflects": {
+      "summary": [
+        9,
+        13
+      ]
+    },
+    "reframes": {
+      "summary": [
+        72,
+        73
+      ]
+    },
+    "reframing": {
+      "summary": [
+        39
+      ]
+    },
+    "regions": {
+      "summary": [
+        38
+      ]
+    },
+    "register": {
+      "summary": [
+        33
+      ]
+    },
+    "regularities": {
+      "summary": [
+        99,
+        136
+      ]
+    },
+    "regulated": {
+      "summary": [
+        127
+      ]
+    },
+    "reincarnation": {
+      "summary": [
+        59
+      ]
+    },
+    "relate": {
+      "summary": [
+        14,
+        17
+      ]
+    },
+    "related": {
+      "title": [
+        14
+      ],
+      "summary": [
+        20
+      ]
+    },
+    "relation": {
+      "summary": [
+        18
+      ]
+    },
+    "relations": {
+      "summary": [
+        75,
+        89
+      ]
+    },
+    "relative": {
+      "summary": [
+        57
+      ]
+    },
+    "relevance": {
+      "title": [
+        149
+      ]
+    },
+    "relevant": {
+      "summary": [
+        149
+      ]
+    },
+    "relies": {
+      "summary": [
+        55
+      ]
+    },
+    "rely": {
+      "summary": [
+        15,
+        77
+      ]
+    },
+    "remain": {
+      "summary": [
+        65
+      ]
+    },
+    "remains": {
+      "summary": [
+        117
+      ]
+    },
+    "remember": {
+      "summary": [
+        144
+      ]
+    },
+    "remembered": {
+      "summary": [
+        19
+      ]
+    },
+    "remembering": {
+      "title": [
+        72,
+        144
+      ],
+      "summary": [
+        13,
+        144
+      ]
+    },
+    "renews": {
+      "summary": [
+        50
+      ]
+    },
+    "replace": {
+      "summary": [
+        44
+      ]
+    },
+    "replicate": {
+      "summary": [
+        30
+      ]
+    },
+    "reports": {
+      "summary": [
+        47
+      ]
+    },
+    "representation": {
+      "summary": [
+        3
+      ]
+    },
+    "representationalism": {
+      "summary": [
+        77
+      ]
+    },
+    "representations": {
+      "summary": [
+        77
+      ]
+    },
+    "reproduce": {
+      "summary": [
+        87
+      ]
+    },
+    "reproductive": {
+      "summary": [
+        63,
+        122
+      ]
+    },
+    "require": {
+      "summary": [
+        57
+      ]
+    },
+    "requires": {
+      "summary": [
+        87,
+        126
+      ]
+    },
+    "research": {
+      "summary": [
+        32
+      ]
+    },
+    "researchers": {
+      "summary": [
+        73
+      ]
+    },
+    "resets": {
+      "summary": [
+        114
+      ]
+    },
+    "reshape": {
+      "summary": [
+        39
+      ]
+    },
+    "resilience": {
+      "title": [
+        23
+      ],
+      "summary": [
+        23,
+        89
+      ]
+    },
+    "resist": {
+      "summary": [
+        140
+      ]
+    },
+    "resonance": {
+      "summary": [
+        136
+      ]
+    },
+    "respects": {
+      "summary": [
+        126
+      ]
+    },
+    "response": {
+      "summary": [
+        18,
+        95
+      ]
+    },
+    "responsibility": {
+      "summary": [
+        65
+      ]
+    },
+    "rest": {
+      "summary": [
+        73
+      ]
+    },
+    "restricts": {
+      "summary": [
+        46
+      ]
+    },
+    "retention": {
+      "summary": [
+        144
+      ]
+    },
+    "retrieval": {
+      "summary": [
+        22
+      ]
+    },
+    "retrieves": {
+      "summary": [
+        23
+      ]
+    },
+    "reveals": {
+      "summary": [
+        113
+      ]
+    },
+    "revisable": {
+      "summary": [
+        78
+      ]
+    },
+    "revised": {
+      "summary": [
+        15
+      ]
+    },
+    "revises": {
+      "summary": [
+        60
+      ]
+    },
+    "rhythms": {
+      "summary": [
+        38,
+        126
+      ]
+    },
+    "rich": {
+      "summary": [
+        57
+      ]
+    },
+    "ride": {
+      "summary": [
+        99
+      ]
+    },
+    "rise": {
+      "summary": [
+        49
+      ]
+    },
+    "risks": {
+      "summary": [
+        101
+      ]
+    },
+    "ritual": {
+      "summary": [
+        126
+      ]
+    },
+    "river": {
+      "title": [
+        111
+      ],
+      "summary": [
+        111
+      ]
+    },
+    "robotics": {
+      "summary": [
+        32
+      ]
+    },
+    "robust": {
+      "summary": [
+        15,
+        118
+      ]
+    },
+    "rogers": {
+      "summary": [
+        76
+      ]
+    },
+    "role": {
+      "title": [
+        103
+      ],
+      "summary": [
+        103,
+        145
+      ]
+    },
+    "roles": {
+      "title": [
+        55
+      ]
+    },
+    "rules": {
+      "summary": [
+        49,
+        50,
+        80,
+        100
+      ]
+    },
+    "runaway": {
+      "summary": [
+        127
+      ]
+    },
+    "rupert": {
+      "summary": [
+        136
+      ]
+    },
+    "salience": {
+      "title": [
+        11
+      ],
+      "summary": [
+        55
+      ]
+    },
+    "same": {
+      "summary": [
+        19,
+        72
+      ]
+    },
+    "sand": {
+      "summary": [
+        78
+      ]
+    },
+    "sartre": {
+      "summary": [
+        65
+      ]
+    },
+    "saturate": {
+      "summary": [
+        50
+      ]
+    },
+    "saves": {
+      "summary": [
+        120
+      ]
+    },
+    "saving": {
+      "title": [
+        31
+      ]
+    },
+    "scalar": {
+      "summary": [
+        133
+      ]
+    },
+    "scale": {
+      "summary": [
+        28,
+        32,
+        57
+      ]
+    },
+    "scale-dependent": {
+      "summary": [
+        57
+      ]
+    },
+    "scales": {
+      "title": [
+        57
+      ],
+      "summary": [
+        41,
+        127
+      ]
+    },
+    "scene": {
+      "summary": [
+        47
+      ]
+    },
+    "schema": {
+      "summary": [
+        47
+      ]
+    },
+    "schemas": {
+      "summary": [
+        60
+      ]
+    },
+    "schemata": {
+      "summary": [
+        52
+      ]
+    },
+    "science": {
+      "title": [
+        45
+      ],
+      "summary": [
+        95
+      ]
+    },
+    "scientific": {
+      "summary": [
+        56
+      ]
+    },
+    "scrambled": {
+      "summary": [
+        71
+      ]
+    },
+    "script": {
+      "summary": [
+        13
+      ]
+    },
+    "scripts": {
+      "summary": [
+        13
+      ]
+    },
+    "seasons": {
+      "summary": [
+        126
+      ]
+    },
+    "secrecy": {
+      "summary": [
+        127
+      ]
+    },
+    "seeing": {
+      "summary": [
+        13
+      ]
+    },
+    "seeks": {
+      "summary": [
+        87
+      ]
+    },
+    "seems": {
+      "summary": [
+        52,
+        57
+      ]
+    },
+    "seen": {
+      "summary": [
+        122
+      ]
+    },
+    "segmented": {
+      "summary": [
+        38
+      ]
+    },
+    "select": {
+      "title": [
+        94,
+        105,
+        112
+      ],
+      "summary": [
+        41,
+        94,
+        105,
+        112
+      ]
+    },
+    "selection": {
+      "summary": [
+        39,
+        41,
+        101,
+        122
+      ]
+    },
+    "self": {
+      "title": [
+        79,
+        80
+      ],
+      "summary": [
+        9,
+        43,
+        57,
+        64,
+        73,
+        78,
+        97
+      ]
+    },
+    "self-construal": {
+      "summary": [
+        64
+      ]
+    },
+    "self-in-world": {
+      "summary": [
+        73
+      ]
+    },
+    "self-models": {
+      "summary": [
+        9,
+        57
+      ]
+    },
+    "self-organisation": {
+      "summary": [
+        97
+      ]
+    },
+    "self-organize": {
+      "summary": [
+        78
+      ]
+    },
+    "semantic": {
+      "title": [
+        110,
+        111,
+        112
+      ],
+      "summary": [
+        13,
+        111,
+        112
+      ]
+    },
+    "semantics": {
+      "summary": [
+        13
+      ]
+    },
+    "sense": {
+      "summary": [
+        63
+      ]
+    },
+    "sensory": {
+      "summary": [
+        139
+      ]
+    },
+    "separates": {
+      "summary": [
+        60
+      ]
+    },
+    "sequence": {
+      "summary": [
+        13
+      ]
+    },
+    "serves": {
+      "summary": [
+        29
+      ]
+    },
+    "set": {
+      "summary": [
+        49,
+        60
+      ]
+    },
+    "sets": {
+      "summary": [
+        50
+      ]
+    },
+    "settle": {
+      "summary": [
+        22
+      ]
+    },
+    "sexual": {
+      "title": [
+        122
+      ],
+      "summary": [
+        122
+      ]
+    },
+    "shape": {
+      "summary": [
+        19,
+        52,
+        55,
+        78
+      ]
+    },
+    "shaped": {
+      "summary": [
+        47,
+        122
+      ]
+    },
+    "shapes": {
+      "summary": [
+        42
+      ]
+    },
+    "shared": {
+      "summary": [
+        44
+      ]
+    },
+    "sheer": {
+      "summary": [
+        61
+      ]
+    },
+    "sheldrake": {
+      "title": [
+        136
+      ],
+      "summary": [
+        136
+      ]
+    },
+    "shift": {
+      "summary": [
+        60
+      ]
+    },
+    "shifted": {
+      "summary": [
+        41
+      ]
+    },
+    "show": {
+      "summary": [
+        25,
+        63
+      ]
+    },
+    "shows": {
+      "summary": [
+        51
+      ]
+    },
+    "signals": {
+      "title": [
+        34
+      ],
+      "summary": [
+        33,
+        34
+      ]
+    },
+    "similar": {
+      "summary": [
+        30,
+        136
+      ]
+    },
+    "simple": {
+      "summary": [
+        49,
+        50,
+        80
+      ]
+    },
+    "simpler": {
+      "summary": [
+        50
+      ]
+    },
+    "simplicity": {
+      "title": [
+        49,
+        50
+      ],
+      "summary": [
+        49,
+        50
+      ]
+    },
+    "simplified": {
+      "summary": [
+        9
+      ]
+    },
+    "simulates": {
+      "summary": [
+        28
+      ]
+    },
+    "simulating": {
+      "summary": [
+        73
+      ]
+    },
+    "simulation": {
+      "title": [
+        58
+      ],
+      "summary": [
+        32,
+        58,
+        83
+      ]
+    },
+    "simulator": {
+      "summary": [
+        29
+      ]
+    },
+    "simulator-specific": {
+      "summary": [
+        29
+      ]
+    },
+    "single": {
+      "summary": [
+        26,
+        38,
+        50,
+        51,
+        117
+      ]
+    },
+    "singularity": {
+      "title": [
+        71
+      ],
+      "summary": [
+        71
+      ]
+    },
+    "sit": {
+      "summary": [
+        144
+      ]
+    },
+    "sits": {
+      "summary": [
+        95
+      ]
+    },
+    "skills": {
+      "summary": [
+        55
+      ]
+    },
+    "sleep": {
+      "summary": [
+        83
+      ]
+    },
+    "sleep-dreaming": {
+      "summary": [
+        83
+      ]
+    },
+    "slow": {
+      "title": [
+        126
+      ],
+      "summary": [
+        57
+      ]
+    },
+    "slower": {
+      "summary": [
+        88,
+        126
+      ]
+    },
+    "small": {
+      "summary": [
+        43,
+        57
+      ]
+    },
+    "snapshots": {
+      "summary": [
+        60
+      ]
+    },
+    "so": {
+      "summary": [
+        27,
+        60
+      ]
+    },
+    "social": {
+      "summary": [
+        76,
+        94,
+        120
+      ]
+    },
+    "society": {
+      "summary": [
+        80
+      ]
+    },
+    "soils": {
+      "summary": [
+        89
+      ]
+    },
+    "solutions": {
+      "summary": [
+        118
+      ]
+    },
+    "solve": {
+      "title": [
+        32
+      ]
+    },
+    "some": {
+      "summary": [
+        62,
+        100
+      ]
+    },
+    "someone": {
+      "summary": [
+        81
+      ]
+    },
+    "something": {
+      "summary": [
+        132,
+        138
+      ]
+    },
+    "sorting": {
+      "summary": [
+        13
+      ]
+    },
+    "source": {
+      "summary": [
+        53,
+        87
+      ]
+    },
+    "sources": {
+      "summary": [
+        9
+      ]
+    },
+    "space": {
+      "title": [
+        7
+      ],
+      "summary": [
+        7,
+        53,
+        133
+      ]
+    },
+    "spaces": {
+      "summary": [
+        7
+      ]
+    },
+    "spacetime": {
+      "summary": [
+        7,
+        99,
+        132
+      ]
+    },
+    "sparse": {
+      "summary": [
+        57
+      ]
+    },
+    "spatial": {
+      "summary": [
+        52
+      ]
+    },
+    "specialised": {
+      "summary": [
+        38
+      ]
+    },
+    "specific": {
+      "summary": [
+        29,
+        62
+      ]
+    },
+    "spectrum": {
+      "summary": [
+        56
+      ]
+    },
+    "spi": {
+      "title": [
+        28,
+        32,
+        33
+      ],
+      "summary": [
+        28,
+        29,
+        32,
+        33
+      ]
+    },
+    "spikes": {
+      "summary": [
+        33
+      ]
+    },
+    "spiking": {
+      "summary": [
+        28,
+        29,
+        32
+      ]
+    },
+    "spinnaker": {
+      "title": [
+        28,
+        32,
+        33
+      ],
+      "summary": [
+        28,
+        29,
+        32,
+        33
+      ]
+    },
+    "spinor": {
+      "summary": [
+        133
+      ]
+    },
+    "spontaneously": {
+      "summary": [
+        108
+      ]
+    },
+    "spread": {
+      "summary": [
+        76
+      ]
+    },
+    "spreads": {
+      "summary": [
+        108
+      ]
+    },
+    "square": {
+      "title": [
+        134
+      ]
+    },
+    "stability": {
+      "summary": [
+        57
+      ]
+    },
+    "stable": {
+      "summary": [
+        22
+      ]
+    },
+    "stage": {
+      "summary": [
+        34,
+        105
+      ]
+    },
+    "state": {
+      "title": [
+        31,
+        33
+      ],
+      "summary": [
+        7,
+        33
+      ]
+    },
+    "states": {
+      "title": [
+        130
+      ]
+    },
+    "statistical": {
+      "summary": [
+        71
+      ]
+    },
+    "statistically": {
+      "summary": [
+        33
+      ]
+    },
+    "steady": {
+      "title": [
+        130
+      ]
+    },
+    "steve": {
+      "summary": [
+        28
+      ]
+    },
+    "still": {
+      "summary": [
+        23,
+        52
+      ]
+    },
+    "stitching": {
+      "summary": [
+        137
+      ]
+    },
+    "stopped": {
+      "summary": [
+        41
+      ]
+    },
+    "store": {
+      "summary": [
+        22
+      ]
+    },
+    "storing": {
+      "summary": [
+        136
+      ]
+    },
+    "story": {
+      "summary": [
+        55,
+        81
+      ]
+    },
+    "strategies": {
+      "summary": [
+        144
+      ]
+    },
+    "streams": {
+      "summary": [
+        8
+      ]
+    },
+    "strengthen": {
+      "summary": [
+        136
+      ]
+    },
+    "strict": {
+      "summary": [
+        15
+      ]
+    },
+    "strong": {
+      "summary": [
+        100
+      ]
+    },
+    "structural": {
+      "summary": [
+        9
+      ]
+    },
+    "structurally": {
+      "summary": [
+        65
+      ]
+    },
+    "structure": {
+      "title": [
+        35,
+        36
+      ],
+      "summary": [
+        19,
+        30,
+        42
+      ]
+    },
+    "structures": {
+      "title": [
+        78
+      ],
+      "summary": [
+        44,
+        50,
+        78,
+        108
+      ]
+    },
+    "styled": {
+      "summary": [
+        51
+      ]
+    },
+    "subconscious": {
+      "title": [
+        2,
+        54,
+        55
+      ],
+      "summary": [
+        55
+      ]
+    },
+    "subjective": {
+      "title": [
+        15
+      ]
+    },
+    "subset": {
+      "title": [
+        151
+      ]
+    },
+    "substrate": {
+      "summary": [
+        117
+      ]
+    },
+    "substrates": {
+      "summary": [
+        99
+      ]
+    },
+    "success": {
+      "summary": [
+        122
+      ]
+    },
+    "such": {
+      "summary": [
+        47,
+        101
+      ]
+    },
+    "sufficiently": {
+      "summary": [
+        8
+      ]
+    },
+    "suggests": {
+      "summary": [
+        57
+      ]
+    },
+    "summary": {
+      "title": [
+        147
+      ]
+    },
+    "supplied": {
+      "summary": [
+        108
+      ]
+    },
+    "support": {
+      "summary": [
+        53
+      ]
+    },
+    "supports": {
+      "summary": [
+        55,
+        120
+      ]
+    },
+    "surface": {
+      "summary": [
+        73
+      ]
+    },
+    "surfaces": {
+      "summary": [
+        114
+      ]
+    },
+    "surprise": {
+      "summary": [
+        20,
+        139
+      ]
+    },
+    "survival": {
+      "summary": [
+        118,
+        120
+      ]
+    },
+    "sustained": {
+      "summary": [
+        78
+      ]
+    },
+    "symbol": {
+      "summary": [
+        146
+      ]
+    },
+    "symbolic": {
+      "summary": [
+        44
+      ]
+    },
+    "symbolised": {
+      "summary": [
+        19
+      ]
+    },
+    "symbolism": {
+      "title": [
+        134
+      ]
+    },
+    "symmetries": {
+      "summary": [
+        99
+      ]
+    },
+    "symmetry": {
+      "title": [
+        99
+      ],
+      "summary": [
+        42
+      ]
+    },
+    "synapse": {
+      "title": [
+        104
+      ]
+    },
+    "synapses": {
+      "summary": [
+        104
+      ]
+    },
+    "synaptic": {
+      "summary": [
+        117
+      ]
+    },
+    "synchronicity": {
+      "summary": [
+        8,
+        19
+      ]
+    },
+    "synthesis": {
+      "summary": [
+        51
+      ]
+    },
+    "system": {
+      "title": [
+        111
+      ],
+      "summary": [
+        38,
+        49,
+        75,
+        89,
+        98,
+        100,
+        108,
+        111,
+        122,
+        146
+      ]
+    },
+    "systematic": {
+      "summary": [
+        53,
+        146
+      ]
+    },
+    "systems": {
+      "title": [
+        44
+      ],
+      "summary": [
+        29,
+        30,
+        44,
+        50,
+        55,
+        76,
+        78,
+        118,
+        126,
+        140
+      ]
+    },
+    "tackles": {
+      "summary": [
+        32
+      ]
+    },
+    "taken": {
+      "summary": [
+        100
+      ]
+    },
+    "taoist": {
+      "summary": [
+        50
+      ]
+    },
+    "target": {
+      "summary": [
+        87
+      ]
+    },
+    "task": {
+      "summary": [
+        73
+      ]
+    },
+    "task-negative": {
+      "summary": [
+        73
+      ]
+    },
+    "technical": {
+      "summary": [
+        44
+      ]
+    },
+    "technological": {
+      "summary": [
+        127
+      ]
+    },
+    "technology": {
+      "title": [
+        69
+      ],
+      "summary": [
+        41,
+        65
+      ]
+    },
+    "tells": {
+      "summary": [
+        132
+      ]
+    },
+    "temporal": {
+      "title": [
+        115,
+        126
+      ],
+      "summary": [
+        126,
+        144
+      ]
+    },
+    "tendencies": {
+      "summary": [
+        55
+      ]
+    },
+    "tendency": {
+      "summary": [
+        17,
+        108
+      ]
+    },
+    "tends": {
+      "summary": [
+        108
+      ]
+    },
+    "tensions": {
+      "summary": [
+        88
+      ]
+    },
+    "tensor": {
+      "summary": [
+        133
+      ]
+    },
+    "than": {
+      "summary": [
+        28,
+        33,
+        122,
+        136
+      ]
+    },
+    "their": {
+      "summary": [
+        8,
+        18,
+        33,
+        78,
+        81,
+        107,
+        139,
+        140
+      ]
+    },
+    "them": {
+      "summary": [
+        33,
+        38,
+        44,
+        53,
+        78,
+        108,
+        127
+      ]
+    },
+    "then": {
+      "summary": [
+        33,
+        50,
+        82
+      ]
+    },
+    "theorem": {
+      "title": [
+        148
+      ]
+    },
+    "theoretically": {
+      "summary": [
+        30
+      ]
+    },
+    "theories": {
+      "title": [
+        13
+      ],
+      "summary": [
+        13
+      ]
+    },
+    "theory": {
+      "title": [
+        53,
+        134,
+        149
+      ],
+      "summary": [
+        27,
+        30,
+        53,
+        137,
+        149
+      ]
+    },
+    "therapy": {
+      "title": [
+        67
+      ],
+      "summary": [
+        101
+      ]
+    },
+    "there": {
+      "title": [
+        61
+      ],
+      "summary": [
+        20,
+        27,
+        56,
+        81,
+        142
+      ]
+    },
+    "therefore": {
+      "summary": [
+        113
+      ]
+    },
+    "thermodynamics": {
+      "summary": [
+        42
+      ]
+    },
+    "these": {
+      "summary": [
+        20,
+        47,
+        53,
+        89,
+        127
+      ]
+    },
+    "they": {
+      "summary": [
+        3,
+        18,
+        38,
+        44,
+        77,
+        118,
+        142,
+        144
+      ]
+    },
+    "thinking": {
+      "title": [
+        52,
+        140
+      ],
+      "summary": [
+        52
+      ]
+    },
+    "this": {
+      "summary": [
+        17,
+        26,
+        49,
+        50,
+        51,
+        57,
+        59,
+        63,
+        78,
+        80,
+        88,
+        105,
+        112,
+        126,
+        136,
+        137,
+        139
+      ]
+    },
+    "those": {
+      "summary": [
+        8,
+        9,
+        73,
+        75,
+        99
+      ]
+    },
+    "though": {
+      "summary": [
+        145
+      ]
+    },
+    "thought": {
+      "title": [
+        3,
+        66
+      ],
+      "summary": [
+        49,
+        52
+      ]
+    },
+    "thoughts": {
+      "summary": [
+        3
+      ]
+    },
+    "three": {
+      "summary": [
+        60,
+        105
+      ]
+    },
+    "threshold": {
+      "summary": [
+        113
+      ]
+    },
+    "through": {
+      "summary": [
+        8,
+        39,
+        41,
+        49,
+        76,
+        77,
+        113,
+        126,
+        136
+      ]
+    },
+    "tidy": {
+      "summary": [
+        118
+      ]
+    },
+    "time": {
+      "summary": [
+        28,
+        32,
+        53,
+        62,
+        76,
+        133
+      ]
+    },
+    "timeline": {
+      "title": [
+        73,
+        85
+      ]
+    },
+    "timescales": {
+      "summary": [
+        88
+      ]
+    },
+    "timing": {
+      "summary": [
+        32
+      ]
+    },
+    "tinkered": {
+      "summary": [
+        118
+      ]
+    },
+    "tissue": {
+      "summary": [
+        25,
+        78
+      ]
+    },
+    "today": {
+      "summary": [
+        65,
+        87
+      ]
+    },
+    "together": {
+      "summary": [
+        137
+      ]
+    },
+    "tolerates": {
+      "summary": [
+        23
+      ]
+    },
+    "too": {
+      "summary": [
+        57
+      ]
+    },
+    "tools": {
+      "summary": [
+        3
+      ]
+    },
+    "top": {
+      "summary": [
+        139
+      ]
+    },
+    "top-down": {
+      "summary": [
+        139
+      ]
+    },
+    "toward": {
+      "summary": [
+        108,
+        122
+      ]
+    },
+    "trace": {
+      "summary": [
+        63
+      ]
+    },
+    "traces": {
+      "summary": [
+        47,
+        55,
+        71,
+        144
+      ]
+    },
+    "tracts": {
+      "summary": [
+        38
+      ]
+    },
+    "trade": {
+      "summary": [
+        120
+      ]
+    },
+    "tradition": {
+      "summary": [
+        62
+      ]
+    },
+    "trained": {
+      "summary": [
+        25,
+        47
+      ]
+    },
+    "training": {
+      "summary": [
+        39
+      ]
+    },
+    "traits": {
+      "title": [
+        123
+      ]
+    },
+    "trans": {
+      "summary": [
+        46
+      ]
+    },
+    "trans-lifetime": {
+      "summary": [
+        46
+      ]
+    },
+    "transcendent": {
+      "summary": [
+        43
+      ]
+    },
+    "translating": {
+      "summary": [
+        29
+      ]
+    },
+    "translation": {
+      "title": [
+        129
+      ],
+      "summary": [
+        87
+      ]
+    },
+    "transmission": {
+      "summary": [
+        34
+      ]
+    },
+    "transmitted": {
+      "summary": [
+        34
+      ]
+    },
+    "transparency": {
+      "summary": [
+        127
+      ]
+    },
+    "treat": {
+      "summary": [
+        101
+      ]
+    },
+    "treats": {
+      "summary": [
+        47
+      ]
+    },
+    "trillions": {
+      "summary": [
+        61
+      ]
+    },
+    "truth": {
+      "title": [
+        74
+      ]
+    },
+    "tune": {
+      "summary": [
+        136
+      ]
+    },
+    "turn": {
+      "summary": [
+        127
+      ]
+    },
+    "two": {
+      "title": [
+        1
+      ],
+      "summary": [
+        34
+      ]
+    },
+    "typically": {
+      "summary": [
+        126
+      ]
+    },
+    "ultimate": {
+      "summary": [
+        101
+      ]
+    },
+    "uncertainty": {
+      "summary": [
+        20,
+        65
+      ]
+    },
+    "under": {
+      "title": [
+        1
+      ],
+      "summary": [
+        26,
+        28,
+        118,
+        139
+      ]
+    },
+    "understand": {
+      "summary": [
+        53,
+        57,
+        101
+      ]
+    },
+    "understanding": {
+      "summary": [
+        13,
+        62
+      ]
+    },
+    "unfolds": {
+      "summary": [
+        49
+      ]
+    },
+    "unification": {
+      "summary": [
+        7
+      ]
+    },
+    "unifies": {
+      "summary": [
+        29
+      ]
+    },
+    "unifying": {
+      "summary": [
+        140
+      ]
+    },
+    "unique": {
+      "summary": [
+        146
+      ]
+    },
+    "unit": {
+      "summary": [
+        21
+      ]
+    },
+    "universal": {
+      "title": [
+        80
+      ],
+      "summary": [
+        108
+      ]
+    },
+    "universe": {
+      "title": [
+        42,
+        71
+      ],
+      "summary": [
+        17,
+        61,
+        71,
+        108,
+        145
+      ]
+    },
+    "university": {
+      "summary": [
+        28
+      ]
+    },
+    "unless": {
+      "summary": [
+        108
+      ]
+    },
+    "unprovable": {
+      "title": [
+        148
+      ]
+    },
+    "unquantifiable": {
+      "summary": [
+        145
+      ]
+    },
+    "up": {
+      "summary": [
+        38,
+        139
+      ]
+    },
+    "update": {
+      "title": [
+        60
+      ],
+      "summary": [
+        60,
+        126
+      ]
+    },
+    "upper": {
+      "summary": [
+        139
+      ]
+    },
+    "upward": {
+      "summary": [
+        41
+      ]
+    },
+    "us": {
+      "summary": [
+        56
+      ]
+    },
+    "use": {
+      "summary": [
+        7,
+        9,
+        33
+      ]
+    },
+    "used": {
+      "title": [
+        32
+      ]
+    },
+    "useful": {
+      "summary": [
+        114
+      ]
+    },
+    "uses": {
+      "summary": [
+        101
+      ]
+    },
+    "using": {
+      "summary": [
+        28,
+        30
+      ]
+    },
+    "value": {
+      "summary": [
+        133
+      ]
+    },
+    "variables": {
+      "summary": [
+        33
+      ]
+    },
+    "variational": {
+      "summary": [
+        139
+      ]
+    },
+    "vast": {
+      "summary": [
+        61
+      ]
+    },
+    "vastness": {
+      "summary": [
+        43
+      ]
+    },
+    "vector": {
+      "summary": [
+        133
+      ]
+    },
+    "via": {
+      "title": [
+        130
+      ],
+      "summary": [
+        13,
+        23,
+        30,
+        41,
+        43,
+        76
+      ]
+    },
+    "view": {
+      "summary": [
+        136
+      ]
+    },
+    "viewer": {
+      "summary": [
+        18
+      ]
+    },
+    "views": {
+      "summary": [
+        47,
+        56
+      ]
+    },
+    "visual": {
+      "summary": [
+        50
+      ]
+    },
+    "vivid": {
+      "summary": [
+        47
+      ]
+    },
+    "vs": {
+      "title": [
+        2,
+        17,
+        26,
+        31,
+        55,
+        110,
+        112,
+        114,
+        118,
+        128,
+        138
+      ]
+    },
+    "vu": {
+      "summary": [
+        144
+      ]
+    },
+    "vulnerable": {
+      "summary": [
+        101
+      ]
+    },
+    "waking": {
+      "summary": [
+        83
+      ]
+    },
+    "was": {
+      "summary": [
+        73
+      ]
+    },
+    "water": {
+      "summary": [
+        89,
+        111
+      ]
+    },
+    "way": {
+      "summary": [
+        114,
+        146
+      ]
+    },
+    "ways": {
+      "summary": [
+        78
+      ]
+    },
+    "we": {
+      "summary": [
+        13,
+        15,
+        27,
+        30,
+        53,
+        57,
+        59,
+        138,
+        144,
+        145
+      ]
+    },
+    "weak": {
+      "summary": [
+        98,
+        100
+      ]
+    },
+    "weave": {
+      "summary": [
+        55
+      ]
+    },
+    "wetland": {
+      "title": [
+        111
+      ],
+      "summary": [
+        111
+      ]
+    },
+    "what": {
+      "title": [
+        132
+      ],
+      "summary": [
+        15,
+        18,
+        40,
+        103,
+        135,
+        142,
+        144
+      ]
+    },
+    "when": {
+      "title": [
+        123
+      ],
+      "summary": [
+        8,
+        9,
+        18,
+        73,
+        100,
+        138
+      ]
+    },
+    "where": {
+      "summary": [
+        3,
+        21,
+        32
+      ]
+    },
+    "whereas": {
+      "summary": [
+        55
+      ]
+    },
+    "while": {
+      "summary": [
+        55,
+        71,
+        126
+      ]
+    },
+    "whilst": {
+      "summary": [
+        52
+      ]
+    },
+    "who": {
+      "summary": [
+        122
+      ]
+    },
+    "whole": {
+      "summary": [
+        89
+      ]
+    },
+    "whose": {
+      "summary": [
+        75
+      ]
+    },
+    "why": {
+      "title": [
+        120,
+        150
+      ],
+      "summary": [
+        7,
+        101,
+        142
+      ]
+    },
+    "window": {
+      "summary": [
+        57
+      ]
+    },
+    "windows": {
+      "title": [
+        57
+      ]
+    },
+    "wisdom": {
+      "summary": [
+        13
+      ]
+    },
+    "within": {
+      "title": [
+        83
+      ],
+      "summary": [
+        34,
+        77,
+        83
+      ]
+    },
+    "without": {
+      "title": [
+        59,
+        98
+      ],
+      "summary": [
+        19,
+        47,
+        75
+      ]
+    },
+    "word": {
+      "summary": [
+        87
+      ]
+    },
+    "words": {
+      "title": [
+        13,
+        14,
+        151
+      ],
+      "summary": [
+        14
+      ]
+    },
+    "work": {
+      "summary": [
+        73,
+        93
+      ]
+    },
+    "works": {
+      "title": [
+        9
+      ],
+      "summary": [
+        31,
+        34,
+        137
+      ]
+    },
+    "worksheet": {
+      "title": [
+        11
+      ]
+    },
+    "world": {
+      "summary": [
+        56,
+        73,
+        77,
+        140
+      ]
+    },
+    "would": {
+      "summary": [
+        30,
+        122
+      ]
+    },
+    "years": {
+      "summary": [
+        62
+      ]
+    },
+    "yes": {
+      "summary": [
+        30
+      ]
+    },
+    "yet": {
+      "summary": [
+        18,
+        65,
+        127
+      ]
+    },
+    "yield": {
+      "summary": [
+        49
+      ]
+    },
+    "you": {
+      "summary": [
+        33,
+        132
+      ]
+    },
+    "zones": {
+      "summary": [
+        111
+      ]
+    },
+    "ñāṇa": {
+      "summary": [
+        47
+      ]
+    }
+  }
+}

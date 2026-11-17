@@ -49,7 +49,7 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.GENERATED_RECENT_PATH:
         return docs_generated_reads.read_generated_recent(repo_root)
     if path == routes.GENERATED_SEARCH_PATH:
-        return docs_generated_reads.read_generated_search_index(repo_root)
+        return docs_generated_reads.read_generated_search_index(repo_root, docs_api_query_value(params, "search-scope") or "portfolio")
     if path == routes.GENERATED_WORKSPACE_LINKS_PATH:
         return docs_generated_reads.read_generated_workspace_links(repo_root)
     if path == routes.GENERATED_PAYLOAD_PATH:

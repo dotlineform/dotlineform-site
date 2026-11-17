@@ -96,16 +96,9 @@ export function catalogueDiscoveryMediaPresentation(rows) {
 }
 
 /** Project Gallery members in natural title order from one generated membership record. */
-export function catalogueGalleryMediaPresentation(payload, galleryId, mediaPolicy, thumbnailBaseUrl, contextDocs = []) {
+export function catalogueGalleryMediaPresentation(payload, galleryId, mediaPolicy, thumbnailBaseUrl) {
   var gallery = galleryRecord(payload, galleryId);
-  var presentation = groupMediaPresentation(payload, catalogueGalleryTarget(galleryId), gallery.title, [], mediaPolicy, thumbnailBaseUrl);
-  var memberIds = new Set(presentation.gallery.members.map(function (member) { return member.target.id; }));
-  presentation.gallery.context_documents = contextDocs.filter(function (doc) {
-    var targets = doc.catalogue_targets;
-    return targets && (targets.gallery_ids.includes(galleryId)
-      || targets.work_ids.some(function (id) { return memberIds.has(id); }));
-  }).map(function (doc) { return Object.freeze({ doc_id: doc.doc_id, title: doc.title }); });
-  return presentation;
+  return groupMediaPresentation(payload, catalogueGalleryTarget(galleryId), gallery.title, [], mediaPolicy, thumbnailBaseUrl);
 }
 
 function groupMediaPresentation(payload, target, title, metadata, mediaPolicy, thumbnailBaseUrl) {

@@ -57,6 +57,7 @@
   --docs-viewer-space-5: 1.375rem;
   --docs-viewer-toolbar-control-height: 2rem;
   --docs-viewer-toolbar-icon-size: 20px; /* standard 24px */
+  --docs-viewer-icon-button-color: var(--docs-viewer-text);
   --docs-viewer-toolbar-icon-hover-bg: color-mix(in srgb, var(--docs-viewer-panel) 92%, var(--docs-viewer-text));
   font-family: var(--docs-viewer-font-sans);
   color: var(--docs-viewer-text);
@@ -279,6 +280,10 @@ body.docs-viewer-service{
   margin: 0 0 0.32rem;
 }
 
+.docsViewer__navItem--groupStart{
+  margin-block-start: calc(var(--docs-viewer-toolbar-control-height) / 3);
+}
+
 .docsViewer__navRow{
   position: relative;
   display: flex;
@@ -304,12 +309,7 @@ body.docs-viewer-service{
   border: 0;
   padding: 0;
   background: transparent;
-  color: var(--docs-viewer-text);
   cursor: pointer;
-}
-
-.docsViewer__toggle:hover{
-  color: var(--docs-viewer-link-hover);
 }
 
 .docsViewer__toggle:focus-visible{
@@ -624,7 +624,6 @@ body.docs-viewer-service{
   border-radius: 999px;
   padding: 0;
   background: transparent;
-  color: var(--docs-viewer-text);
   font: inherit;
   font-size: 1rem;
   line-height: 1;
@@ -632,20 +631,6 @@ body.docs-viewer-service{
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-
-.docsViewer__recentButton:where(:not(:disabled, .is-active)),
-.docsViewer__tableDetailOpen:where(:not(:disabled)){
-  color: var(--docs-viewer-theme-text-placeholder);
-}
-
-.docsViewer__toolbarIconButton:hover:where(:not(:disabled)){
-  background: var(--docs-viewer-toolbar-icon-hover-bg);
-  color: var(--docs-viewer-text);
-}
-
-.docsViewer .sharedSearchField__clear:hover:not(:disabled){
-  color: var(--docs-viewer-text);
 }
 
 .docsViewer__toolbarIcon{
@@ -719,6 +704,10 @@ body.docs-viewer-service{
   mask-image: url("../icons/clock-9.svg");
 }
 
+.docsViewer__icon--portfolio-globe{
+  mask-image: url("../icons/globe.svg");
+}
+
 .docsViewer__icon--clock-3{
   mask-image: url("../icons/clock-3.svg");
 }
@@ -777,7 +766,6 @@ body.docs-viewer-service{
   border: 1px solid var(--docs-viewer-border);
   border-radius: 999px;
   background: var(--docs-viewer-panel);
-  color: var(--docs-viewer-text);
   font: inherit;
   font-size: 1rem;
   line-height: 1;
@@ -792,8 +780,23 @@ body.docs-viewer-service{
   display: none;
 }
 
-.docsViewer__documentActionButton:hover{
-  background: var(--docs-viewer-panel-2);
+.docsViewer__toolbarIconButton,
+.docsViewer__documentActionButton,
+.docsViewer__toggle,
+.docsViewer .sharedSearchField__clear{
+  color: var(--docs-viewer-icon-button-color);
+}
+
+.docsViewer__toggle,
+.docsViewer .sharedSearchField__clear{
+  border-radius: 999px;
+}
+
+.docsViewer__toolbarIconButton:hover:where(:not(:disabled)),
+.docsViewer__documentActionButton:hover:where(:not(:disabled)),
+.docsViewer__toggle:hover:where(:not(:disabled)),
+.docsViewer .sharedSearchField__clear:hover:where(:not(:disabled)){
+  background: var(--docs-viewer-toolbar-icon-hover-bg);
 }
 
 .docsViewer__documentActionButton:focus-visible,
@@ -806,11 +809,12 @@ body.docs-viewer-service{
 .docsViewer__toolbarIconButton.is-active{
   border-color: var(--docs-viewer-border-strong);
   background: var(--docs-viewer-selection-bg);
-  color: var(--docs-viewer-selection-text);
 }
 
-.docsViewer__documentActionButton[disabled],
-.docsViewer__toolbarIconButton[disabled]{
+.docsViewer__documentActionButton:disabled,
+.docsViewer__toolbarIconButton:disabled,
+.docsViewer__toggle:disabled,
+.docsViewer .sharedSearchField__clear:disabled{
   color: var(--docs-viewer-disabled);
   cursor: default;
   opacity: 1;
@@ -1486,10 +1490,6 @@ body.docs-viewer-service{
   margin: 0 0 var(--docs-viewer-space-3);
 }
 
-.docsViewer__content .docsViewer__mediaDetailRelatedLabel{
-  margin: var(--docs-viewer-space-3) 0 var(--docs-viewer-space-2);
-}
-
 .docsViewer__mediaDetailGroupLink{
   padding: 0;
   border: 0;
@@ -1510,6 +1510,10 @@ body.docs-viewer-service{
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.docsViewer__mediaDetailGalleryLinks + .docsViewer__mediaDetailGalleryLinks{
+  margin-block-start: var(--docs-viewer-space-2);
 }
 
 .docsViewer__contentDetail--media[data-docs-media-kind="catalogue-gallery"] .docsViewer__mediaDetailGalleryLinks{
@@ -2159,6 +2163,14 @@ body.docs-viewer-service{
 .docsViewer__resultTitle > .docsViewer__listIcon{
   /* Flex baseline alignment ignores the inline list icon's vertical-align. */
   transform: translateY(0.125em);
+}
+
+button.docsViewer__resultTitle{
+  width: 100%;
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
 }
 
 .docsViewer__resultTitle:visited{

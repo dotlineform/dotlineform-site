@@ -1,0 +1,4473 @@
+{
+  "header": {
+    "schema": "docs_viewer_search_index_v4",
+    "version": "blake2b-f275493d57a77e411e401c197d3fba49",
+    "generated_at_utc": "2026-11-17T10:44:02Z",
+    "count": 5
+  },
+  "fields": [
+    "title",
+    "heading",
+    "summary",
+    "body",
+    "code"
+  ],
+  "docs": [
+    {
+      "id": "d-20260801-212422-186a69",
+      "title": "a theory of happiness",
+      "last_updated": "2026-10-08",
+      "display_meta": "2026-10-08 • Context",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context"
+    },
+    {
+      "id": "d-20260801-212422-3a2da4",
+      "title": "a doll story",
+      "last_updated": "2026-10-19",
+      "display_meta": "2026-10-19 • Context",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context"
+    },
+    {
+      "id": "d-20260801-212422-43b47c",
+      "title": "10,000",
+      "last_updated": "2026-10-18",
+      "display_meta": "2026-10-18 • Context",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context"
+    },
+    {
+      "id": "d-20260801-212422-df11f3",
+      "title": "3 symbols",
+      "last_updated": "2026-11-09",
+      "display_meta": "2026-11-09 • Context",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context"
+    },
+    {
+      "id": "d-20261113-101744-c4dd8f",
+      "title": "catalogue randomness",
+      "last_updated": "2026-11-14",
+      "display_meta": "2026-11-14 • Context",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context"
+    }
+  ],
+  "terms": {
+    "01.bin": {
+      "heading": [
+        4
+      ],
+      "code": [
+        4
+      ]
+    },
+    "0x46985870": {
+      "code": [
+        4
+      ]
+    },
+    "10000": {
+      "title": [
+        2
+      ]
+    },
+    "3": {
+      "title": [
+        3
+      ]
+    },
+    "32-bit": {
+      "body": [
+        4
+      ]
+    },
+    "3rd": {
+      "body": [
+        3
+      ]
+    },
+    "64.bin": {
+      "code": [
+        4
+      ]
+    },
+    "about": {
+      "summary": [
+        2
+      ]
+    },
+    "above": {
+      "body": [
+        3
+      ]
+    },
+    "absolute": {
+      "body": [
+        3
+      ]
+    },
+    "abstract": {
+      "body": [
+        3
+      ]
+    },
+    "abstracted": {
+      "body": [
+        2
+      ]
+    },
+    "accepted": {
+      "body": [
+        4
+      ]
+    },
+    "across": {
+      "body": [
+        2
+      ]
+    },
+    "act": {
+      "body": [
+        3
+      ]
+    },
+    "acts": {
+      "body": [
+        3
+      ]
+    },
+    "actually": {
+      "body": [
+        3
+      ]
+    },
+    "add": {
+      "body": [
+        3
+      ]
+    },
+    "added": {
+      "body": [
+        0,
+        3
+      ]
+    },
+    "adding": {
+      "body": [
+        3
+      ]
+    },
+    "address": {
+      "body": [
+        4
+      ]
+    },
+    "addressed": {
+      "body": [
+        2
+      ]
+    },
+    "again": {
+      "body": [
+        4
+      ]
+    },
+    "alive": {
+      "body": [
+        3
+      ]
+    },
+    "all": {
+      "summary": [
+        2
+      ],
+      "body": [
+        2,
+        3
+      ]
+    },
+    "allows": {
+      "body": [
+        4
+      ]
+    },
+    "almost": {
+      "body": [
+        3
+      ]
+    },
+    "alone": {
+      "body": [
+        2
+      ]
+    },
+    "already": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "also": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "always": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "anatomy": {
+      "summary": [
+        2
+      ]
+    },
+    "ancestors": {
+      "body": [
+        2
+      ]
+    },
+    "animal": {
+      "body": [
+        3
+      ]
+    },
+    "another": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "answer": {
+      "body": [
+        3
+      ]
+    },
+    "answers": {
+      "body": [
+        2
+      ]
+    },
+    "any": {
+      "body": [
+        3
+      ]
+    },
+    "apart": {
+      "body": [
+        3
+      ]
+    },
+    "api": {
+      "body": [
+        4
+      ]
+    },
+    "apply": {
+      "body": [
+        3
+      ]
+    },
+    "appropriated": {
+      "body": [
+        3
+      ]
+    },
+    "arbitrary": {
+      "body": [
+        3
+      ]
+    },
+    "archetype": {
+      "body": [
+        2
+      ]
+    },
+    "arcs": {
+      "body": [
+        3
+      ]
+    },
+    "arises": {
+      "body": [
+        3
+      ]
+    },
+    "arrange": {
+      "body": [
+        3
+      ]
+    },
+    "arranged": {
+      "body": [
+        3
+      ]
+    },
+    "arrangements": {
+      "body": [
+        2
+      ]
+    },
+    "art": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "arthur": {
+      "body": [
+        3
+      ]
+    },
+    "artifact": {
+      "body": [
+        2
+      ]
+    },
+    "assertion": {
+      "body": [
+        3
+      ]
+    },
+    "attainment": {
+      "body": [
+        2
+      ]
+    },
+    "attempt": {
+      "body": [
+        3
+      ]
+    },
+    "attraction": {
+      "body": [
+        3
+      ]
+    },
+    "away": {
+      "body": [
+        2
+      ]
+    },
+    "back": {
+      "body": [
+        2
+      ]
+    },
+    "backward": {
+      "body": [
+        4
+      ]
+    },
+    "balanced": {
+      "body": [
+        3
+      ]
+    },
+    "bandage": {
+      "body": [
+        3
+      ]
+    },
+    "bar": {
+      "body": [
+        3
+      ]
+    },
+    "based": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "batch": {
+      "body": [
+        4
+      ]
+    },
+    "beauty": {
+      "body": [
+        3
+      ]
+    },
+    "because": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "become": {
+      "heading": [
+        2
+      ],
+      "body": [
+        3
+      ]
+    },
+    "been": {
+      "body": [
+        3
+      ]
+    },
+    "before": {
+      "body": [
+        3
+      ]
+    },
+    "beginning": {
+      "body": [
+        3
+      ]
+    },
+    "being": {
+      "body": [
+        3
+      ]
+    },
+    "beings": {
+      "body": [
+        3
+      ]
+    },
+    "belief": {
+      "body": [
+        2
+      ]
+    },
+    "believe": {
+      "body": [
+        2
+      ]
+    },
+    "below": {
+      "body": [
+        4
+      ]
+    },
+    "between": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "bin": {
+      "heading": [
+        4
+      ],
+      "code": [
+        4
+      ]
+    },
+    "birth": {
+      "body": [
+        3
+      ]
+    },
+    "bit": {
+      "body": [
+        4
+      ]
+    },
+    "bits": {
+      "body": [
+        4
+      ]
+    },
+    "black": {
+      "body": [
+        3
+      ]
+    },
+    "blended": {
+      "body": [
+        3
+      ]
+    },
+    "blessing": {
+      "body": [
+        3
+      ]
+    },
+    "blindness": {
+      "body": [
+        3
+      ]
+    },
+    "blur": {
+      "body": [
+        3
+      ]
+    },
+    "blurs": {
+      "body": [
+        3
+      ]
+    },
+    "both": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "boundaries": {
+      "body": [
+        3
+      ]
+    },
+    "brain": {
+      "summary": [
+        2
+      ]
+    },
+    "breaking": {
+      "body": [
+        3
+      ]
+    },
+    "bridge": {
+      "body": [
+        3
+      ]
+    },
+    "broken": {
+      "body": [
+        3
+      ]
+    },
+    "browser": {
+      "body": [
+        4
+      ]
+    },
+    "buddhism": {
+      "summary": [
+        2
+      ]
+    },
+    "built": {
+      "body": [
+        3
+      ]
+    },
+    "burma": {
+      "body": [
+        3
+      ]
+    },
+    "burn": {
+      "body": [
+        3
+      ]
+    },
+    "but": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "byte": {
+      "body": [
+        4
+      ]
+    },
+    "bytes": {
+      "heading": [
+        4
+      ],
+      "body": [
+        4
+      ]
+    },
+    "caching": {
+      "body": [
+        4
+      ]
+    },
+    "can": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "candidate": {
+      "body": [
+        4
+      ]
+    },
+    "cannot": {
+      "body": [
+        2
+      ]
+    },
+    "capacity": {
+      "heading": [
+        4
+      ]
+    },
+    "cards": {
+      "heading": [
+        3
+      ],
+      "body": [
+        3
+      ]
+    },
+    "catalogue": {
+      "title": [
+        4
+      ],
+      "body": [
+        4
+      ]
+    },
+    "catalogues": {
+      "body": [
+        3
+      ]
+    },
+    "catalyst": {
+      "body": [
+        3
+      ]
+    },
+    "cd": {
+      "code": [
+        4
+      ]
+    },
+    "ceasing": {
+      "body": [
+        3
+      ]
+    },
+    "cell": {
+      "body": [
+        3
+      ]
+    },
+    "cells": {
+      "body": [
+        3
+      ]
+    },
+    "centre": {
+      "body": [
+        3
+      ]
+    },
+    "change": {
+      "body": [
+        4
+      ]
+    },
+    "checked": {
+      "body": [
+        3
+      ]
+    },
+    "ching": {
+      "summary": [
+        2
+      ]
+    },
+    "choices": {
+      "body": [
+        4
+      ]
+    },
+    "choose": {
+      "body": [
+        4
+      ]
+    },
+    "chosen": {
+      "body": [
+        4
+      ]
+    },
+    "circumstance": {
+      "body": [
+        3
+      ]
+    },
+    "clicking": {
+      "body": [
+        4
+      ]
+    },
+    "clicks": {
+      "body": [
+        3
+      ]
+    },
+    "clock": {
+      "body": [
+        3
+      ]
+    },
+    "closed": {
+      "body": [
+        3
+      ]
+    },
+    "closer": {
+      "body": [
+        4
+      ]
+    },
+    "collected": {
+      "body": [
+        3
+      ]
+    },
+    "collection": {
+      "body": [
+        4
+      ]
+    },
+    "collective": {
+      "body": [
+        2
+      ]
+    },
+    "colour": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "colourless": {
+      "body": [
+        3
+      ]
+    },
+    "colours": {
+      "body": [
+        2
+      ]
+    },
+    "column": {
+      "body": [
+        3
+      ]
+    },
+    "columns": {
+      "body": [
+        3
+      ]
+    },
+    "combinations": {
+      "body": [
+        3
+      ]
+    },
+    "combining": {
+      "body": [
+        3
+      ]
+    },
+    "come": {
+      "body": [
+        2
+      ]
+    },
+    "comes": {
+      "body": [
+        3
+      ]
+    },
+    "coming": {
+      "body": [
+        3
+      ]
+    },
+    "common": {
+      "body": [
+        2
+      ]
+    },
+    "community": {
+      "body": [
+        2
+      ]
+    },
+    "compare": {
+      "body": [
+        3
+      ]
+    },
+    "compared": {
+      "body": [
+        3
+      ]
+    },
+    "compassion": {
+      "body": [
+        3
+      ]
+    },
+    "completely": {
+      "body": [
+        3
+      ]
+    },
+    "completeness": {
+      "body": [
+        2
+      ]
+    },
+    "composed": {
+      "body": [
+        2
+      ]
+    },
+    "composite": {
+      "body": [
+        0,
+        3
+      ]
+    },
+    "composited": {
+      "body": [
+        3
+      ]
+    },
+    "composites": {
+      "body": [
+        0
+      ]
+    },
+    "compressed": {
+      "body": [
+        2
+      ]
+    },
+    "concept": {
+      "body": [
+        3
+      ]
+    },
+    "connect": {
+      "summary": [
+        2
+      ]
+    },
+    "consecutive": {
+      "body": [
+        4
+      ]
+    },
+    "consequence": {
+      "body": [
+        3
+      ]
+    },
+    "constant": {
+      "body": [
+        3
+      ]
+    },
+    "constructed": {
+      "body": [
+        3
+      ]
+    },
+    "consumer": {
+      "body": [
+        4
+      ]
+    },
+    "contained": {
+      "body": [
+        3
+      ]
+    },
+    "contains": {
+      "body": [
+        4
+      ]
+    },
+    "continue": {
+      "body": [
+        2
+      ]
+    },
+    "contributed": {
+      "body": [
+        3
+      ]
+    },
+    "converts": {
+      "body": [
+        4
+      ]
+    },
+    "core": {
+      "body": [
+        3
+      ]
+    },
+    "could": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "create": {
+      "body": [
+        3
+      ]
+    },
+    "created": {
+      "body": [
+        3
+      ]
+    },
+    "creating": {
+      "body": [
+        3
+      ]
+    },
+    "d4": {
+      "code": [
+        4
+      ]
+    },
+    "davies": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "day": {
+      "body": [
+        2
+      ]
+    },
+    "death": {
+      "body": [
+        3
+      ]
+    },
+    "decaying": {
+      "body": [
+        3
+      ]
+    },
+    "decimal": {
+      "body": [
+        4
+      ]
+    },
+    "decisions": {
+      "body": [
+        3
+      ]
+    },
+    "decoded": {
+      "body": [
+        4
+      ]
+    },
+    "deconstructed": {
+      "body": [
+        3
+      ]
+    },
+    "default": {
+      "body": [
+        4
+      ]
+    },
+    "definition": {
+      "body": [
+        2
+      ]
+    },
+    "degree": {
+      "body": [
+        2
+      ]
+    },
+    "dependent": {
+      "body": [
+        3
+      ]
+    },
+    "depressing": {
+      "body": [
+        3
+      ]
+    },
+    "derived": {
+      "body": [
+        3
+      ]
+    },
+    "desaturated": {
+      "body": [
+        3
+      ]
+    },
+    "describe": {
+      "body": [
+        3
+      ]
+    },
+    "described": {
+      "body": [
+        2
+      ]
+    },
+    "describes": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "designed": {
+      "body": [
+        3
+      ]
+    },
+    "desired": {
+      "body": [
+        4
+      ]
+    },
+    "desktop": {
+      "body": [
+        3
+      ]
+    },
+    "dice": {
+      "body": [
+        4
+      ]
+    },
+    "dices": {
+      "body": [
+        4
+      ]
+    },
+    "different": {
+      "body": [
+        4
+      ]
+    },
+    "digital": {
+      "body": [
+        0
+      ]
+    },
+    "digits": {
+      "body": [
+        4
+      ]
+    },
+    "dimensions": {
+      "body": [
+        3
+      ]
+    },
+    "directly": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "disease": {
+      "body": [
+        3
+      ]
+    },
+    "displayed": {
+      "body": [
+        4
+      ]
+    },
+    "distinct": {
+      "body": [
+        4
+      ]
+    },
+    "divide": {
+      "body": [
+        4
+      ]
+    },
+    "divided": {
+      "body": [
+        4
+      ]
+    },
+    "division": {
+      "body": [
+        3
+      ]
+    },
+    "do": {
+      "body": [
+        3
+      ]
+    },
+    "document": {
+      "body": [
+        3
+      ]
+    },
+    "does": {
+      "body": [
+        4
+      ]
+    },
+    "doll": {
+      "title": [
+        1
+      ]
+    },
+    "dominant": {
+      "body": [
+        3
+      ]
+    },
+    "done": {
+      "body": [
+        2
+      ]
+    },
+    "dots": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "downloaded": {
+      "body": [
+        3
+      ]
+    },
+    "draw": {
+      "body": [
+        4
+      ]
+    },
+    "drawings": {
+      "body": [
+        3
+      ]
+    },
+    "draws": {
+      "heading": [
+        4
+      ],
+      "body": [
+        4
+      ]
+    },
+    "each": {
+      "summary": [
+        2
+      ],
+      "body": [
+        3,
+        4
+      ]
+    },
+    "eaten": {
+      "body": [
+        3
+      ]
+    },
+    "eating": {
+      "body": [
+        3
+      ]
+    },
+    "effect": {
+      "body": [
+        4
+      ]
+    },
+    "eight": {
+      "body": [
+        4
+      ]
+    },
+    "either": {
+      "body": [
+        3
+      ]
+    },
+    "elegance": {
+      "body": [
+        2
+      ]
+    },
+    "element": {
+      "body": [
+        3
+      ]
+    },
+    "elemental": {
+      "body": [
+        3
+      ]
+    },
+    "else": {
+      "body": [
+        3
+      ]
+    },
+    "embedded": {
+      "body": [
+        2
+      ]
+    },
+    "end": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "engaged": {
+      "body": [
+        3
+      ]
+    },
+    "enjoyment": {
+      "body": [
+        3
+      ]
+    },
+    "entry": {
+      "body": [
+        4
+      ]
+    },
+    "equally": {
+      "body": [
+        3
+      ]
+    },
+    "equivalence": {
+      "body": [
+        3
+      ]
+    },
+    "error": {
+      "body": [
+        4
+      ]
+    },
+    "estimated": {
+      "summary": [
+        2
+      ]
+    },
+    "even": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "evenly": {
+      "body": [
+        4
+      ]
+    },
+    "ever": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "every": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "everything": {
+      "body": [
+        3
+      ]
+    },
+    "example": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "existing": {
+      "body": [
+        3
+      ]
+    },
+    "exists": {
+      "body": [
+        3
+      ]
+    },
+    "experience": {
+      "body": [
+        3
+      ]
+    },
+    "experiment": {
+      "body": [
+        3
+      ]
+    },
+    "explaining": {
+      "body": [
+        3
+      ]
+    },
+    "explore": {
+      "body": [
+        4
+      ]
+    },
+    "exposed": {
+      "body": [
+        2
+      ]
+    },
+    "exposes": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "express": {
+      "body": [
+        2
+      ]
+    },
+    "eyes": {
+      "body": [
+        3
+      ]
+    },
+    "fact": {
+      "body": [
+        2
+      ]
+    },
+    "factors": {
+      "body": [
+        3
+      ]
+    },
+    "feb": {
+      "body": [
+        2
+      ]
+    },
+    "feelings": {
+      "body": [
+        3
+      ]
+    },
+    "fetched": {
+      "body": [
+        4
+      ]
+    },
+    "fetches": {
+      "body": [
+        4
+      ]
+    },
+    "few": {
+      "body": [
+        3
+      ]
+    },
+    "field": {
+      "body": [
+        4
+      ]
+    },
+    "file": {
+      "body": [
+        4
+      ]
+    },
+    "files": {
+      "heading": [
+        4
+      ],
+      "body": [
+        4
+      ]
+    },
+    "filled": {
+      "body": [
+        3
+      ]
+    },
+    "final": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "find": {
+      "body": [
+        2
+      ]
+    },
+    "first": {
+      "heading": [
+        4
+      ],
+      "body": [
+        3,
+        4
+      ]
+    },
+    "fisher": {
+      "body": [
+        4
+      ]
+    },
+    "fitted": {
+      "body": [
+        3
+      ]
+    },
+    "fixed": {
+      "body": [
+        4
+      ]
+    },
+    "flat": {
+      "body": [
+        2
+      ]
+    },
+    "fluid": {
+      "body": [
+        3
+      ]
+    },
+    "flux": {
+      "body": [
+        3
+      ]
+    },
+    "fold": {
+      "body": [
+        2
+      ]
+    },
+    "folders": {
+      "body": [
+        3
+      ]
+    },
+    "force": {
+      "body": [
+        3
+      ]
+    },
+    "forces": {
+      "body": [
+        3
+      ]
+    },
+    "form": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "format": {
+      "code": [
+        4
+      ]
+    },
+    "forming": {
+      "body": [
+        3
+      ]
+    },
+    "formless": {
+      "body": [
+        3
+      ]
+    },
+    "forms": {
+      "body": [
+        3
+      ]
+    },
+    "formulate": {
+      "body": [
+        2
+      ]
+    },
+    "formulating": {
+      "body": [
+        3
+      ]
+    },
+    "four": {
+      "body": [
+        4
+      ]
+    },
+    "fragmenting": {
+      "body": [
+        3
+      ]
+    },
+    "fragments": {
+      "body": [
+        3
+      ]
+    },
+    "fundamental": {
+      "body": [
+        3
+      ]
+    },
+    "future": {
+      "body": [
+        3
+      ]
+    },
+    "gain": {
+      "body": [
+        3
+      ]
+    },
+    "generating": {
+      "body": [
+        4
+      ]
+    },
+    "generation": {
+      "body": [
+        4
+      ]
+    },
+    "generator": {
+      "body": [
+        4
+      ]
+    },
+    "genocide": {
+      "body": [
+        3
+      ]
+    },
+    "gesture": {
+      "body": [
+        3
+      ]
+    },
+    "get": {
+      "body": [
+        4
+      ]
+    },
+    "ghostlike": {
+      "body": [
+        3
+      ]
+    },
+    "give": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "gives": {
+      "body": [
+        4
+      ]
+    },
+    "global": {
+      "body": [
+        3
+      ]
+    },
+    "golden": {
+      "body": [
+        3
+      ]
+    },
+    "google": {
+      "body": [
+        3
+      ]
+    },
+    "graphical": {
+      "body": [
+        3
+      ]
+    },
+    "graphically": {
+      "body": [
+        3
+      ]
+    },
+    "grave": {
+      "body": [
+        3
+      ]
+    },
+    "grid": {
+      "body": [
+        4
+      ]
+    },
+    "grids": {
+      "body": [
+        2
+      ]
+    },
+    "grieve": {
+      "body": [
+        3
+      ]
+    },
+    "group": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "grouping": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "groups": {
+      "body": [
+        4
+      ]
+    },
+    "grow": {
+      "body": [
+        3
+      ]
+    },
+    "growing": {
+      "body": [
+        3
+      ]
+    },
+    "grows": {
+      "body": [
+        2
+      ]
+    },
+    "guilt": {
+      "body": [
+        3
+      ]
+    },
+    "had": {
+      "body": [
+        3
+      ]
+    },
+    "happening": {
+      "body": [
+        3
+      ]
+    },
+    "happens": {
+      "body": [
+        3
+      ]
+    },
+    "happiness": {
+      "title": [
+        0
+      ]
+    },
+    "hardware": {
+      "body": [
+        4
+      ]
+    },
+    "has": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "have": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "healing": {
+      "body": [
+        3
+      ]
+    },
+    "help": {
+      "body": [
+        3
+      ]
+    },
+    "hence": {
+      "body": [
+        3
+      ]
+    },
+    "here": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "hex": {
+      "body": [
+        4
+      ],
+      "code": [
+        4
+      ]
+    },
+    "hexadecimal": {
+      "body": [
+        4
+      ]
+    },
+    "hidden": {
+      "heading": [
+        3
+      ],
+      "body": [
+        3
+      ]
+    },
+    "highest": {
+      "body": [
+        4
+      ]
+    },
+    "holiday": {
+      "body": [
+        3
+      ]
+    },
+    "hope": {
+      "body": [
+        3
+      ]
+    },
+    "horror": {
+      "body": [
+        3
+      ]
+    },
+    "how": {
+      "body": [
+        3
+      ]
+    },
+    "http": {
+      "body": [
+        4
+      ]
+    },
+    "human": {
+      "summary": [
+        2
+      ]
+    },
+    "humanity": {
+      "body": [
+        3
+      ]
+    },
+    "hundreds": {
+      "body": [
+        3
+      ]
+    },
+    "icon": {
+      "body": [
+        4
+      ]
+    },
+    "icons": {
+      "body": [
+        3
+      ]
+    },
+    "id": {
+      "body": [
+        4
+      ]
+    },
+    "idea": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "identifiable": {
+      "body": [
+        3
+      ]
+    },
+    "identified": {
+      "body": [
+        3
+      ]
+    },
+    "ie": {
+      "body": [
+        4
+      ]
+    },
+    "if": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "image": {
+      "body": [
+        3
+      ]
+    },
+    "images": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "imperfection": {
+      "body": [
+        2
+      ]
+    },
+    "imperfectly": {
+      "body": [
+        2
+      ]
+    },
+    "impermanence": {
+      "body": [
+        3
+      ]
+    },
+    "impermanent": {
+      "body": [
+        3
+      ]
+    },
+    "implied": {
+      "body": [
+        3
+      ]
+    },
+    "impossibility": {
+      "body": [
+        2
+      ]
+    },
+    "impossible": {
+      "body": [
+        3
+      ]
+    },
+    "impotent": {
+      "body": [
+        3
+      ]
+    },
+    "including": {
+      "body": [
+        4
+      ]
+    },
+    "index": {
+      "body": [
+        4
+      ]
+    },
+    "indirectly": {
+      "body": [
+        2
+      ]
+    },
+    "individual": {
+      "body": [
+        3
+      ]
+    },
+    "individuals": {
+      "body": [
+        2
+      ]
+    },
+    "inevitable": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "input": {
+      "body": [
+        4
+      ]
+    },
+    "intangible": {
+      "body": [
+        3
+      ]
+    },
+    "integer": {
+      "body": [
+        4
+      ]
+    },
+    "intention": {
+      "body": [
+        3
+      ]
+    },
+    "interaction": {
+      "body": [
+        3
+      ]
+    },
+    "interacts": {
+      "body": [
+        3
+      ]
+    },
+    "intermediate": {
+      "body": [
+        3
+      ]
+    },
+    "into": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "intrinsic": {
+      "body": [
+        2
+      ]
+    },
+    "introduces": {
+      "body": [
+        3
+      ]
+    },
+    "intuitively": {
+      "body": [
+        3
+      ]
+    },
+    "invisible": {
+      "body": [
+        3
+      ]
+    },
+    "irreducible": {
+      "body": [
+        2
+      ]
+    },
+    "isolate": {
+      "body": [
+        2
+      ]
+    },
+    "its": {
+      "body": [
+        4
+      ]
+    },
+    "itself": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "java": {
+      "body": [
+        4
+      ]
+    },
+    "javascript": {
+      "body": [
+        4
+      ]
+    },
+    "joining": {
+      "body": [
+        3
+      ]
+    },
+    "json": {
+      "body": [
+        4
+      ]
+    },
+    "just": {
+      "body": [
+        3
+      ]
+    },
+    "ki": {
+      "body": [
+        4
+      ]
+    },
+    "kib": {
+      "body": [
+        4
+      ]
+    },
+    "kindness": {
+      "body": [
+        3
+      ]
+    },
+    "laboratory": {
+      "body": [
+        4
+      ]
+    },
+    "lao": {
+      "summary": [
+        2
+      ]
+    },
+    "laptop": {
+      "body": [
+        3
+      ]
+    },
+    "last": {
+      "body": [
+        4
+      ]
+    },
+    "later": {
+      "body": [
+        4
+      ]
+    },
+    "layer": {
+      "body": [
+        3
+      ]
+    },
+    "layered": {
+      "body": [
+        3
+      ]
+    },
+    "layers": {
+      "body": [
+        3
+      ]
+    },
+    "lead": {
+      "body": [
+        2
+      ]
+    },
+    "leads": {
+      "body": [
+        2
+      ]
+    },
+    "leaves": {
+      "body": [
+        4
+      ]
+    },
+    "left": {
+      "body": [
+        4
+      ]
+    },
+    "length": {
+      "body": [
+        4
+      ]
+    },
+    "lens": {
+      "body": [
+        2
+      ]
+    },
+    "less": {
+      "body": [
+        3
+      ]
+    },
+    "letters": {
+      "body": [
+        3
+      ]
+    },
+    "lf": {
+      "body": [
+        4
+      ]
+    },
+    "lfd": {
+      "body": [
+        4
+      ]
+    },
+    "liberated": {
+      "body": [
+        3
+      ]
+    },
+    "lie": {
+      "body": [
+        3
+      ]
+    },
+    "life": {
+      "body": [
+        3
+      ]
+    },
+    "life-saving": {
+      "body": [
+        3
+      ]
+    },
+    "like": {
+      "body": [
+        3
+      ]
+    },
+    "line": {
+      "body": [
+        3
+      ]
+    },
+    "lines": {
+      "body": [
+        3
+      ]
+    },
+    "link": {
+      "body": [
+        3
+      ]
+    },
+    "links": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "list": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "lives": {
+      "body": [
+        3
+      ]
+    },
+    "loaded": {
+      "body": [
+        3
+      ]
+    },
+    "logic": {
+      "body": [
+        3
+      ]
+    },
+    "long": {
+      "body": [
+        3
+      ]
+    },
+    "loops": {
+      "body": [
+        3
+      ]
+    },
+    "loose": {
+      "body": [
+        3
+      ]
+    },
+    "lost": {
+      "body": [
+        3
+      ]
+    },
+    "made": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "magazines": {
+      "body": [
+        3
+      ]
+    },
+    "magnetic": {
+      "body": [
+        3
+      ]
+    },
+    "make": {
+      "body": [
+        4
+      ]
+    },
+    "many": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "math": {
+      "code": [
+        4
+      ]
+    },
+    "math.random": {
+      "code": [
+        4
+      ]
+    },
+    "matter": {
+      "body": [
+        3
+      ]
+    },
+    "may": {
+      "body": [
+        3
+      ]
+    },
+    "me": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "mean": {
+      "body": [
+        3
+      ]
+    },
+    "meaning": {
+      "summary": [
+        2
+      ],
+      "body": [
+        3
+      ]
+    },
+    "meanings": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "means": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "measure": {
+      "body": [
+        2
+      ]
+    },
+    "measurements": {
+      "heading": [
+        4
+      ],
+      "body": [
+        4
+      ]
+    },
+    "mechanical": {
+      "body": [
+        3
+      ]
+    },
+    "memories": {
+      "body": [
+        3
+      ]
+    },
+    "merge": {
+      "body": [
+        3
+      ]
+    },
+    "merged": {
+      "body": [
+        3
+      ]
+    },
+    "merging": {
+      "body": [
+        2
+      ]
+    },
+    "meta": {
+      "body": [
+        3
+      ]
+    },
+    "meta-symbols": {
+      "body": [
+        3
+      ]
+    },
+    "method": {
+      "body": [
+        4
+      ]
+    },
+    "methodology": {
+      "body": [
+        3
+      ]
+    },
+    "mi": {
+      "body": [
+        4
+      ]
+    },
+    "mib": {
+      "body": [
+        4
+      ]
+    },
+    "michael": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "might": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "mirror": {
+      "body": [
+        3
+      ]
+    },
+    "mist": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "mistaken": {
+      "body": [
+        2
+      ]
+    },
+    "model": {
+      "body": [
+        4
+      ]
+    },
+    "modulo": {
+      "body": [
+        4
+      ]
+    },
+    "momentary": {
+      "body": [
+        3
+      ]
+    },
+    "moments": {
+      "body": [
+        3
+      ]
+    },
+    "monotone": {
+      "body": [
+        3
+      ]
+    },
+    "more": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "most": {
+      "body": [
+        4
+      ]
+    },
+    "move": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "moved": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "murder": {
+      "body": [
+        3
+      ]
+    },
+    "my": {
+      "body": [
+        3
+      ]
+    },
+    "natural": {
+      "body": [
+        3
+      ]
+    },
+    "naturally": {
+      "body": [
+        3
+      ]
+    },
+    "nature": {
+      "heading": [
+        2
+      ],
+      "body": [
+        2,
+        3
+      ]
+    },
+    "need": {
+      "body": [
+        2
+      ]
+    },
+    "needed": {
+      "body": [
+        4
+      ]
+    },
+    "needs": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "negative": {
+      "body": [
+        3
+      ]
+    },
+    "neuron": {
+      "summary": [
+        2
+      ]
+    },
+    "new": {
+      "body": [
+        3
+      ]
+    },
+    "no": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "non": {
+      "body": [
+        3
+      ]
+    },
+    "non-self": {
+      "body": [
+        3
+      ]
+    },
+    "nonetheless": {
+      "body": [
+        3
+      ]
+    },
+    "not": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "number": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "numbers": {
+      "body": [
+        4
+      ]
+    },
+    "obvious": {
+      "body": [
+        3
+      ]
+    },
+    "obviously": {
+      "body": [
+        3
+      ]
+    },
+    "occupy": {
+      "body": [
+        3
+      ]
+    },
+    "often": {
+      "body": [
+        2
+      ]
+    },
+    "one": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "ones": {
+      "body": [
+        3
+      ]
+    },
+    "only": {
+      "body": [
+        2
+      ]
+    },
+    "onto": {
+      "body": [
+        3
+      ]
+    },
+    "open": {
+      "body": [
+        3
+      ]
+    },
+    "opening": {
+      "body": [
+        3
+      ]
+    },
+    "oppression": {
+      "body": [
+        3
+      ]
+    },
+    "option": {
+      "body": [
+        4
+      ]
+    },
+    "order": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "ordinary": {
+      "body": [
+        4
+      ]
+    },
+    "origin": {
+      "body": [
+        4
+      ]
+    },
+    "original": {
+      "body": [
+        0,
+        4
+      ]
+    },
+    "origination": {
+      "body": [
+        3
+      ]
+    },
+    "other": {
+      "body": [
+        3
+      ]
+    },
+    "others": {
+      "summary": [
+        2
+      ],
+      "body": [
+        3
+      ]
+    },
+    "our": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "out": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "output": {
+      "body": [
+        4
+      ]
+    },
+    "outside": {
+      "body": [
+        2
+      ]
+    },
+    "outweighs": {
+      "body": [
+        3
+      ]
+    },
+    "own": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "page": {
+      "body": [
+        4
+      ]
+    },
+    "pain": {
+      "body": [
+        3
+      ]
+    },
+    "painted": {
+      "body": [
+        3
+      ]
+    },
+    "painting": {
+      "body": [
+        3
+      ]
+    },
+    "paradoxically": {
+      "body": [
+        2
+      ]
+    },
+    "part": {
+      "body": [
+        2
+      ]
+    },
+    "partial": {
+      "body": [
+        2
+      ]
+    },
+    "particle": {
+      "body": [
+        2
+      ]
+    },
+    "particles": {
+      "heading": [
+        2
+      ],
+      "body": [
+        2
+      ]
+    },
+    "patterns": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "pc": {
+      "body": [
+        4
+      ]
+    },
+    "pcie": {
+      "body": [
+        4
+      ]
+    },
+    "peace": {
+      "body": [
+        2
+      ]
+    },
+    "people": {
+      "body": [
+        3
+      ]
+    },
+    "peoples": {
+      "body": [
+        3
+      ]
+    },
+    "perceive": {
+      "body": [
+        3
+      ]
+    },
+    "perceived": {
+      "body": [
+        2
+      ]
+    },
+    "perception": {
+      "body": [
+        3
+      ]
+    },
+    "perfect": {
+      "body": [
+        2
+      ]
+    },
+    "perfection": {
+      "body": [
+        2
+      ]
+    },
+    "perfectly": {
+      "body": [
+        2
+      ]
+    },
+    "perhaps": {
+      "body": [
+        2
+      ]
+    },
+    "permutations": {
+      "body": [
+        4
+      ]
+    },
+    "person": {
+      "body": [
+        3
+      ]
+    },
+    "personal": {
+      "body": [
+        3
+      ]
+    },
+    "phenomena": {
+      "body": [
+        3
+      ]
+    },
+    "phenomenal": {
+      "summary": [
+        2
+      ]
+    },
+    "philosophy": {
+      "summary": [
+        2
+      ]
+    },
+    "photographic": {
+      "body": [
+        3
+      ]
+    },
+    "photos": {
+      "body": [
+        3
+      ]
+    },
+    "pick": {
+      "body": [
+        4
+      ]
+    },
+    "picked": {
+      "body": [
+        4
+      ]
+    },
+    "picture": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "pictures": {
+      "body": [
+        2
+      ]
+    },
+    "pixels": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "place": {
+      "body": [
+        4
+      ]
+    },
+    "placement": {
+      "body": [
+        3
+      ]
+    },
+    "point": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "polarised": {
+      "body": [
+        3
+      ]
+    },
+    "poles": {
+      "body": [
+        3
+      ]
+    },
+    "political": {
+      "body": [
+        3
+      ]
+    },
+    "portray": {
+      "body": [
+        3
+      ]
+    },
+    "positive": {
+      "body": [
+        3
+      ]
+    },
+    "possesses": {
+      "body": [
+        3
+      ]
+    },
+    "possible": {
+      "body": [
+        3
+      ]
+    },
+    "potential": {
+      "body": [
+        2
+      ]
+    },
+    "powers": {
+      "body": [
+        3
+      ]
+    },
+    "pratītyasamutpāda": {
+      "body": [
+        3
+      ]
+    },
+    "prayer": {
+      "body": [
+        3
+      ]
+    },
+    "preserved": {
+      "body": [
+        3
+      ]
+    },
+    "prevent": {
+      "body": [
+        3
+      ]
+    },
+    "primary": {
+      "body": [
+        3
+      ]
+    },
+    "principle": {
+      "body": [
+        2
+      ]
+    },
+    "problem": {
+      "body": [
+        2
+      ]
+    },
+    "problems": {
+      "body": [
+        3
+      ]
+    },
+    "process": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "processes": {
+      "body": [
+        3
+      ]
+    },
+    "produce": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "products": {
+      "body": [
+        3
+      ]
+    },
+    "properties": {
+      "body": [
+        3
+      ]
+    },
+    "provides": {
+      "body": [
+        4
+      ]
+    },
+    "public": {
+      "body": [
+        4
+      ]
+    },
+    "pure": {
+      "body": [
+        2
+      ]
+    },
+    "purpose": {
+      "body": [
+        3
+      ]
+    },
+    "qrbg": {
+      "body": [
+        4
+      ]
+    },
+    "qrn": {
+      "code": [
+        4
+      ]
+    },
+    "qrng": {
+      "body": [
+        4
+      ]
+    },
+    "qrnt": {
+      "body": [
+        4
+      ]
+    },
+    "quantique": {
+      "body": [
+        4
+      ]
+    },
+    "quantis": {
+      "body": [
+        4
+      ]
+    },
+    "quantum": {
+      "heading": [
+        4
+      ],
+      "body": [
+        4
+      ]
+    },
+    "question": {
+      "body": [
+        3
+      ]
+    },
+    "quick": {
+      "body": [
+        3
+      ]
+    },
+    "quite": {
+      "body": [
+        3
+      ]
+    },
+    "r-g-b": {
+      "body": [
+        3
+      ]
+    },
+    "radiating": {
+      "body": [
+        3
+      ]
+    },
+    "radius": {
+      "body": [
+        3
+      ]
+    },
+    "ran": {
+      "body": [
+        4
+      ]
+    },
+    "random": {
+      "body": [
+        3,
+        4
+      ],
+      "code": [
+        4
+      ]
+    },
+    "randomly": {
+      "body": [
+        3
+      ]
+    },
+    "randomness": {
+      "title": [
+        4
+      ],
+      "body": [
+        2
+      ]
+    },
+    "range": {
+      "body": [
+        4
+      ]
+    },
+    "rarefied": {
+      "body": [
+        3
+      ]
+    },
+    "rate": {
+      "body": [
+        3
+      ]
+    },
+    "re": {
+      "body": [
+        3
+      ]
+    },
+    "re-arrange": {
+      "body": [
+        3
+      ]
+    },
+    "re-arranged": {
+      "body": [
+        3
+      ]
+    },
+    "reach": {
+      "body": [
+        2
+      ]
+    },
+    "reached": {
+      "body": [
+        4
+      ]
+    },
+    "read": {
+      "body": [
+        4
+      ]
+    },
+    "reads": {
+      "body": [
+        4
+      ]
+    },
+    "real": {
+      "body": [
+        3
+      ]
+    },
+    "realise": {
+      "body": [
+        3
+      ]
+    },
+    "realising": {
+      "body": [
+        2
+      ]
+    },
+    "realism": {
+      "body": [
+        3
+      ]
+    },
+    "reality": {
+      "summary": [
+        2
+      ],
+      "body": [
+        2,
+        3
+      ]
+    },
+    "really": {
+      "body": [
+        2
+      ]
+    },
+    "reconcile": {
+      "body": [
+        3
+      ]
+    },
+    "reconciled": {
+      "body": [
+        2
+      ]
+    },
+    "recreate": {
+      "body": [
+        4
+      ]
+    },
+    "rectangle": {
+      "body": [
+        3
+      ]
+    },
+    "rectangular": {
+      "body": [
+        3
+      ]
+    },
+    "recurring": {
+      "body": [
+        2
+      ]
+    },
+    "rediscovers": {
+      "body": [
+        2
+      ]
+    },
+    "reflection": {
+      "body": [
+        2
+      ]
+    },
+    "refresh": {
+      "body": [
+        4
+      ]
+    },
+    "reincarnation": {
+      "body": [
+        3
+      ]
+    },
+    "reinvents": {
+      "body": [
+        2
+      ]
+    },
+    "rejections": {
+      "body": [
+        4
+      ]
+    },
+    "related": {
+      "body": [
+        3
+      ]
+    },
+    "released": {
+      "body": [
+        3
+      ]
+    },
+    "relieve": {
+      "body": [
+        3
+      ]
+    },
+    "remainder": {
+      "body": [
+        4
+      ]
+    },
+    "remaining": {
+      "body": [
+        4
+      ]
+    },
+    "repeatability": {
+      "heading": [
+        4
+      ]
+    },
+    "repeating": {
+      "body": [
+        3
+      ]
+    },
+    "replenish": {
+      "body": [
+        3
+      ]
+    },
+    "repository": {
+      "body": [
+        4
+      ]
+    },
+    "represent": {
+      "body": [
+        3
+      ]
+    },
+    "represented": {
+      "body": [
+        3
+      ]
+    },
+    "representing": {
+      "body": [
+        3
+      ]
+    },
+    "represents": {
+      "body": [
+        4
+      ]
+    },
+    "reproduce": {
+      "body": [
+        4
+      ]
+    },
+    "reproductions": {
+      "body": [
+        3
+      ]
+    },
+    "request": {
+      "body": [
+        4
+      ]
+    },
+    "response": {
+      "body": [
+        4
+      ]
+    },
+    "restrict": {
+      "body": [
+        3
+      ]
+    },
+    "result": {
+      "body": [
+        4
+      ]
+    },
+    "resulting": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "return": {
+      "body": [
+        4
+      ]
+    },
+    "returns": {
+      "body": [
+        4
+      ]
+    },
+    "reversed": {
+      "body": [
+        3
+      ]
+    },
+    "row": {
+      "heading": [
+        4
+      ],
+      "body": [
+        3,
+        4
+      ]
+    },
+    "rows": {
+      "body": [
+        3
+      ]
+    },
+    "ruin": {
+      "body": [
+        3
+      ]
+    },
+    "run": {
+      "body": [
+        4
+      ]
+    },
+    "rwanda": {
+      "body": [
+        3
+      ]
+    },
+    "same": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "sameness": {
+      "body": [
+        3
+      ]
+    },
+    "saves": {
+      "body": [
+        4
+      ]
+    },
+    "saving": {
+      "body": [
+        3
+      ]
+    },
+    "scale": {
+      "body": [
+        3
+      ]
+    },
+    "scenes": {
+      "body": [
+        3
+      ]
+    },
+    "schopenhauer": {
+      "body": [
+        3
+      ]
+    },
+    "science": {
+      "body": [
+        3
+      ]
+    },
+    "screen": {
+      "body": [
+        3
+      ]
+    },
+    "script": {
+      "body": [
+        4
+      ]
+    },
+    "search": {
+      "body": [
+        3
+      ]
+    },
+    "second": {
+      "body": [
+        4
+      ]
+    },
+    "secondary": {
+      "body": [
+        3
+      ]
+    },
+    "see": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "seed": {
+      "body": [
+        3
+      ]
+    },
+    "seeded": {
+      "body": [
+        4
+      ]
+    },
+    "seem": {
+      "body": [
+        2
+      ]
+    },
+    "seems": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "select": {
+      "body": [
+        4
+      ]
+    },
+    "selected": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "selection": {
+      "body": [
+        3
+      ]
+    },
+    "selects": {
+      "body": [
+        4
+      ]
+    },
+    "self": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "sentient": {
+      "body": [
+        3
+      ]
+    },
+    "separate": {
+      "body": [
+        3
+      ]
+    },
+    "sequence": {
+      "body": [
+        3
+      ]
+    },
+    "series": {
+      "body": [
+        3
+      ]
+    },
+    "session": {
+      "body": [
+        4
+      ]
+    },
+    "set": {
+      "body": [
+        3
+      ]
+    },
+    "share": {
+      "body": [
+        2
+      ]
+    },
+    "shared": {
+      "body": [
+        2
+      ]
+    },
+    "shifting": {
+      "body": [
+        3
+      ]
+    },
+    "should": {
+      "body": [
+        4
+      ]
+    },
+    "show": {
+      "body": [
+        3
+      ]
+    },
+    "shows": {
+      "body": [
+        4
+      ]
+    },
+    "shuffle": {
+      "heading": [
+        4
+      ],
+      "body": [
+        4
+      ]
+    },
+    "significant": {
+      "body": [
+        4
+      ]
+    },
+    "signs": {
+      "body": [
+        3
+      ]
+    },
+    "simple": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "since": {
+      "body": [
+        3
+      ]
+    },
+    "single": {
+      "body": [
+        3
+      ]
+    },
+    "site": {
+      "body": [
+        4
+      ]
+    },
+    "six": {
+      "body": [
+        4
+      ]
+    },
+    "size": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "skips": {
+      "body": [
+        4
+      ]
+    },
+    "slot": {
+      "body": [
+        4
+      ]
+    },
+    "slots": {
+      "body": [
+        4
+      ]
+    },
+    "small": {
+      "body": [
+        4
+      ]
+    },
+    "smaller": {
+      "body": [
+        2
+      ]
+    },
+    "snapshot": {
+      "body": [
+        4
+      ]
+    },
+    "so": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "solidifies": {
+      "body": [
+        3
+      ]
+    },
+    "solve": {
+      "body": [
+        2
+      ]
+    },
+    "solving": {
+      "body": [
+        3
+      ]
+    },
+    "some": {
+      "body": [
+        3
+      ]
+    },
+    "something": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "somewhere": {
+      "body": [
+        3
+      ]
+    },
+    "souls": {
+      "body": [
+        2
+      ]
+    },
+    "sound": {
+      "body": [
+        3
+      ]
+    },
+    "space": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "spaces": {
+      "body": [
+        3
+      ]
+    },
+    "spare": {
+      "body": [
+        4
+      ]
+    },
+    "spirit": {
+      "body": [
+        4
+      ]
+    },
+    "split": {
+      "body": [
+        4
+      ]
+    },
+    "stacked": {
+      "body": [
+        3
+      ]
+    },
+    "stands": {
+      "body": [
+        3
+      ]
+    },
+    "start": {
+      "body": [
+        4
+      ]
+    },
+    "started": {
+      "body": [
+        3
+      ]
+    },
+    "starting": {
+      "body": [
+        4
+      ]
+    },
+    "starts": {
+      "body": [
+        4
+      ]
+    },
+    "state": {
+      "body": [
+        2
+      ]
+    },
+    "states": {
+      "body": [
+        3
+      ]
+    },
+    "static": {
+      "body": [
+        3
+      ]
+    },
+    "step": {
+      "body": [
+        2,
+        4
+      ]
+    },
+    "still": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "stock": {
+      "body": [
+        4
+      ]
+    },
+    "story": {
+      "title": [
+        1
+      ]
+    },
+    "stream": {
+      "body": [
+        4
+      ]
+    },
+    "strong": {
+      "body": [
+        3
+      ]
+    },
+    "structure": {
+      "body": [
+        3
+      ]
+    },
+    "subject": {
+      "body": [
+        3
+      ]
+    },
+    "substance": {
+      "body": [
+        3
+      ]
+    },
+    "suffering": {
+      "body": [
+        3
+      ]
+    },
+    "summed": {
+      "body": [
+        3
+      ]
+    },
+    "supplies": {
+      "body": [
+        4
+      ]
+    },
+    "surface": {
+      "body": [
+        3
+      ]
+    },
+    "swap": {
+      "body": [
+        4
+      ]
+    },
+    "swaps": {
+      "body": [
+        4
+      ]
+    },
+    "symbol": {
+      "body": [
+        3
+      ]
+    },
+    "symbolise": {
+      "body": [
+        3
+      ]
+    },
+    "symbolism": {
+      "body": [
+        3
+      ]
+    },
+    "symbols": {
+      "title": [
+        3
+      ],
+      "heading": [
+        3
+      ],
+      "body": [
+        2,
+        3
+      ]
+    },
+    "system": {
+      "body": [
+        3
+      ]
+    },
+    "systematic": {
+      "body": [
+        3
+      ]
+    },
+    "tab": {
+      "body": [
+        4
+      ]
+    },
+    "take": {
+      "body": [
+        3
+      ]
+    },
+    "takes": {
+      "body": [
+        4
+      ]
+    },
+    "tao": {
+      "summary": [
+        2
+      ]
+    },
+    "te": {
+      "summary": [
+        2
+      ]
+    },
+    "ten": {
+      "summary": [
+        2
+      ],
+      "body": [
+        4
+      ]
+    },
+    "term": {
+      "summary": [
+        2
+      ]
+    },
+    "terms": {
+      "body": [
+        3
+      ]
+    },
+    "test": {
+      "body": [
+        3
+      ]
+    },
+    "than": {
+      "body": [
+        3
+      ]
+    },
+    "their": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "them": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "theme": {
+      "body": [
+        2
+      ]
+    },
+    "themselves": {
+      "body": [
+        2
+      ]
+    },
+    "then": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "theories": {
+      "body": [
+        2
+      ]
+    },
+    "theory": {
+      "title": [
+        0
+      ],
+      "body": [
+        2
+      ]
+    },
+    "there": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "therefore": {
+      "body": [
+        3
+      ]
+    },
+    "these": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "they": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "things": {
+      "summary": [
+        2
+      ],
+      "body": [
+        2
+      ]
+    },
+    "think": {
+      "body": [
+        3
+      ]
+    },
+    "thinking": {
+      "body": [
+        2
+      ]
+    },
+    "third": {
+      "body": [
+        4
+      ]
+    },
+    "this": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "those": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "though": {
+      "body": [
+        2
+      ]
+    },
+    "thought": {
+      "body": [
+        3
+      ]
+    },
+    "thoughts": {
+      "body": [
+        3
+      ]
+    },
+    "thousand": {
+      "summary": [
+        2
+      ]
+    },
+    "through": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "tibetan": {
+      "body": [
+        3
+      ]
+    },
+    "time": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "tip": {
+      "body": [
+        3
+      ]
+    },
+    "today": {
+      "body": [
+        3
+      ]
+    },
+    "together": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "too": {
+      "body": [
+        4
+      ]
+    },
+    "torture": {
+      "body": [
+        3
+      ]
+    },
+    "touched": {
+      "body": [
+        3
+      ]
+    },
+    "touching": {
+      "body": [
+        3
+      ]
+    },
+    "towards": {
+      "body": [
+        3
+      ]
+    },
+    "transform": {
+      "body": [
+        3
+      ]
+    },
+    "transformations": {
+      "body": [
+        3
+      ]
+    },
+    "transforms": {
+      "body": [
+        3
+      ]
+    },
+    "transient": {
+      "body": [
+        3
+      ]
+    },
+    "transitory": {
+      "body": [
+        3
+      ]
+    },
+    "true": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "truth": {
+      "body": [
+        3
+      ]
+    },
+    "trying": {
+      "body": [
+        3
+      ]
+    },
+    "two": {
+      "body": [
+        4
+      ]
+    },
+    "typed": {
+      "body": [
+        3
+      ]
+    },
+    "ultimately": {
+      "body": [
+        2
+      ]
+    },
+    "uncertainty": {
+      "body": [
+        2
+      ]
+    },
+    "uncovering": {
+      "body": [
+        3
+      ]
+    },
+    "understand": {
+      "body": [
+        3
+      ]
+    },
+    "understood": {
+      "body": [
+        3
+      ]
+    },
+    "unending": {
+      "body": [
+        3
+      ]
+    },
+    "unformed": {
+      "body": [
+        3
+      ]
+    },
+    "universal": {
+      "body": [
+        3
+      ]
+    },
+    "unknowable": {
+      "body": [
+        2
+      ]
+    },
+    "unreal": {
+      "body": [
+        3
+      ]
+    },
+    "unsigned": {
+      "body": [
+        4
+      ]
+    },
+    "up": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "us": {
+      "body": [
+        2
+      ]
+    },
+    "use": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "used": {
+      "body": [
+        3
+      ]
+    },
+    "uses": {
+      "body": [
+        4
+      ]
+    },
+    "using": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "value": {
+      "body": [
+        4
+      ]
+    },
+    "values": {
+      "body": [
+        4
+      ]
+    },
+    "vertical": {
+      "body": [
+        3
+      ]
+    },
+    "victim": {
+      "body": [
+        3
+      ]
+    },
+    "victimiser": {
+      "body": [
+        3
+      ]
+    },
+    "victims": {
+      "heading": [
+        3
+      ],
+      "body": [
+        3
+      ]
+    },
+    "viewed": {
+      "body": [
+        2
+      ]
+    },
+    "violence": {
+      "body": [
+        3
+      ]
+    },
+    "war": {
+      "body": [
+        3
+      ]
+    },
+    "was": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "way": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "we": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "were": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "what": {
+      "heading": [
+        2
+      ],
+      "body": [
+        2,
+        3
+      ]
+    },
+    "when": {
+      "body": [
+        2,
+        3,
+        4
+      ]
+    },
+    "where": {
+      "body": [
+        3
+      ]
+    },
+    "which": {
+      "body": [
+        3
+      ]
+    },
+    "while": {
+      "body": [
+        4
+      ]
+    },
+    "whilst": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "white": {
+      "body": [
+        3
+      ]
+    },
+    "who": {
+      "body": [
+        3
+      ]
+    },
+    "whose": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "will": {
+      "heading": [
+        2
+      ],
+      "body": [
+        4
+      ]
+    },
+    "within": {
+      "body": [
+        2,
+        3
+      ]
+    },
+    "word": {
+      "body": [
+        3
+      ]
+    },
+    "words": {
+      "body": [
+        3
+      ]
+    },
+    "work": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "works": {
+      "body": [
+        4
+      ]
+    },
+    "world": {
+      "body": [
+        3
+      ]
+    },
+    "would": {
+      "body": [
+        3,
+        4
+      ]
+    },
+    "writes": {
+      "summary": [
+        2
+      ]
+    },
+    "yates": {
+      "body": [
+        4
+      ]
+    },
+    "you": {
+      "body": [
+        4
+      ]
+    },
+    "zen": {
+      "summary": [
+        2
+      ]
+    },
+    "zi": {
+      "summary": [
+        2
+      ]
+    }
+  }
+}

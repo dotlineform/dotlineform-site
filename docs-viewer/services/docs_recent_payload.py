@@ -22,6 +22,8 @@ def recent_candidates(discovery: DiscoverySelection, ordinary_updated: Mapping[s
             entry.update(parent_id=parent_id, parent_title=discovery.ordinary[parent_id]["title"])
         rows.append(entry)
     for owner, selected in discovery.collections:
+        if not owner.include_in_site_search:
+            continue
         rows.extend({
             "doc_id": doc_id, "title": row["title"], "last_updated": row["last_updated"],
             "collection": owner.collection, "report_doc_id": owner.report_host_doc_id, "collection_title": owner.title,

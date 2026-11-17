@@ -288,10 +288,6 @@
   justify-self: start;
 }
 
-.docsViewerReport__collectionSortButton:where(:not(:disabled)){
-  color: var(--docs-viewer-theme-text-placeholder);
-}
-
 .docsViewer__icon--search-check{
   mask-image: url("../icons/search-check.svg");
 }

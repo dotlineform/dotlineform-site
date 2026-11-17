@@ -105,7 +105,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       requestSettings.searchIndexUrl,
       "Failed to load search data",
-      managementReloadPath("/docs/search", {  }),
+      managementReloadPath("/docs/search", { "search-scope": requestSettings.searchScope }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: true
       }))

@@ -101,8 +101,8 @@ def read_catalogue_series_galleries_index(
     return _read_generated(repo_root, "series-galleries-index.json", workspace=workspace)
 
 
-def read_catalogue_gallery_report_search(repo_root: Path) -> dict[str, Any]:
-    return _read_generated(repo_root, GALLERY_REPORT_SEARCH)
+def read_catalogue_gallery_report_search(repo_root: Path, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:
+    return _read_generated(repo_root, GALLERY_REPORT_SEARCH, workspace=workspace)
 
 
 def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:

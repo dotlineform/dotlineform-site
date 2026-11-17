@@ -44,25 +44,25 @@ def refresh_search_and_recent(repo_root: Path) -> dict[str, Any]:
         config = select_workspace_stage(workspace, "working")
         selection = read_discovery_selection(repo_root, config, read_publication_ignore_ids(repo_root, config=config))
         pending = read_queue(workspace)
-        result["phase"] = "selected content"
         build_dir = str(repo_root / "docs-viewer/build")
         if build_dir not in sys.path:
             sys.path.insert(0, build_dir)
         from build_search import DocsViewerSearchDataBuilder
 
-        search = DocsViewerSearchDataBuilder(repo_root=repo_root, stage="working", config=config)
-        documents = search.load_discovery_documents(selection)
+        search = DocsViewerSearchDataBuilder(repo_root=repo_root, workspace=workspace, config=config)
         result["phase"] = "Recent"
-        recent = write_recent(workspace, config, selection, {doc.doc_id: doc.last_updated for doc in documents if not doc.collection})
+        recent = write_recent(workspace, config, selection, search.load_ordinary_recent_dates(selection.ordinary))
         result["diagnostics"]["recent"] = recent
         if recent["wrote"]:
             select_shared(pending, "workspace", "recent")
             save_queue(workspace, pending)
         result["phase"] = "Search"
-        result["diagnostics"]["search"] = search.run(write=True, force=False, documents=documents)["diagnostics"]
-        if result["diagnostics"]["search"]["wrote"]:
-            select_shared(pending, "workspace", "search")
+
+        def select_search(output: str) -> None:
+            select_shared(pending, "workspace", output)
             save_queue(workspace, pending)
+
+        result["diagnostics"]["search"] = search.run(selection, write=True, on_written=select_search)
         result.update(ok=True, phase="complete")
     except Exception as error:
         result["error"] = f"Search and Recent refresh failed during {result['phase']}: {error}. Completed effects were retained."
