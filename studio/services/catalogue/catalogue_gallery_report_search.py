@@ -13,8 +13,11 @@ SCHEMA = "catalogue_gallery_report_search_v1"
 def gallery_report_search_payload(galleries: CatalogueGalleries, *, timestamp: str) -> dict[str, Any]:
     titles = {}
     presentation = {}
+    added_dates = {}
     for gid, record in sorted(galleries.galleries.items()):
         titles[gid] = record["title"]
+        if "added_date" in record:
+            added_dates[gid] = record["added_date"]
         fields = gallery_presentation(record)
         if fields:
             presentation[gid] = fields
@@ -25,6 +28,8 @@ def gallery_report_search_payload(galleries: CatalogueGalleries, *, timestamp: s
     }
     if presentation:
         payload["presentation_by_gallery"] = presentation
+    if added_dates:
+        payload["added_dates_by_gallery"] = added_dates
     return payload
 
 
@@ -36,17 +41,27 @@ def merge_gallery_report_search(
     payload = json.loads(path.read_bytes())
     titles, memberships = payload["galleries"], payload["gallery_ids_by_work"]
     presentation = payload.get("presentation_by_gallery", {})
+    added_dates = payload.get("added_dates_by_gallery", {})
     changed = False
     for gid in deleted_gallery_ids:
         if titles.pop(gid, None) is not None:
             changed = True
         if presentation.pop(gid, None) is not None:
             changed = True
+        if added_dates.pop(gid, None) is not None:
+            changed = True
     for gid in current_gallery_ids:
         record = galleries.galleries[gid]
         title = record["title"]
         if titles.get(gid) != title:
             titles[gid] = title
+            changed = True
+        added_date = record.get("added_date")
+        if added_date != added_dates.get(gid):
+            if added_date is None:
+                added_dates.pop(gid)
+            else:
+                added_dates[gid] = added_date
             changed = True
         fields = gallery_presentation(record)
         if fields:
@@ -69,5 +84,9 @@ def merge_gallery_report_search(
         payload["presentation_by_gallery"] = presentation
     else:
         payload.pop("presentation_by_gallery", None)
+    if added_dates:
+        payload["added_dates_by_gallery"] = added_dates
+    else:
+        payload.pop("added_dates_by_gallery", None)
     payload["header"]["generated_at_utc"] = timestamp
     return payload

@@ -1,4 +1,4 @@
-import { createCollectionPresentation } from "../shared/docs-collection-browsing.js";
+import { COLLECTION_ADDED_SORT, createCollectionPresentation } from "../shared/docs-collection-browsing.js";
 import { requestUrl } from "../shared/docs-viewer-asset-url.js";
 
 /** Manage owns mutable inventory, indexed commits and thumbnail reload nonces. */
@@ -66,7 +66,7 @@ export function createManagedCollectionBrowsingData(options) {
         return { membershipChanged: true };
       }
       if (old.title !== next.title) presentation.clearOrders();
-      else if (old.updated !== next.updated) presentation.clearOrders("last-updated-desc");
+      else if (old.added !== next.added) presentation.clearOrders(COLLECTION_ADDED_SORT);
       thumbnailCount += Number(next.hasThumbnail) - Number(old.hasThumbnail);
       Object.assign(old, next);
       prepareThumbnail(old);

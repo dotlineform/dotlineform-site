@@ -5,14 +5,16 @@ never discovers sources or reads document content, and registration alone does
 not include a collection. Callers supply current ordinary metadata in memory.
 """
 
-from pathlib import Path
+from collections.abc import Collection
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 import json
 
 from docs_book_toc import edition_rows
+from docs_catalogue_media import read_catalogue_gallery_report_search
 from docs_search_scopes import COLLECTION_SEARCH_SCOPES
-from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generated_documents_path, is_curated_book, resolve_workspace_path
+from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, DocsWorkspaceConfig, generated_documents_path, is_curated_book, resolve_workspace_path
 
 
 @dataclass(frozen=True)
@@ -23,9 +25,13 @@ class DiscoverySelection:
     collections: list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]
 
 
-def discovery_collections(config: DocsStageConfig):
-    return [owner for owner in config.collections
-            if owner.include_in_site_search or owner.collection in COLLECTION_SEARCH_SCOPES]
+def read_discovery_galleries(
+    repo_root: Path, workspace: DocsWorkspaceConfig, config: DocsStageConfig, ordinary: dict[str, dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Read prepared Galleries once when the Catalogue host is eligible."""
+    if any(owner.collection == "catalogue" and owner.report_host_doc_id in ordinary for owner in config.collections):
+        return read_catalogue_gallery_report_search(repo_root, workspace=workspace.catalogue.working)
+    return None
 
 
 def read_discovery_metadata(path: Path) -> dict[str, Any]:
@@ -61,8 +67,7 @@ def _select_collection_rows(
     if is_curated_book(collection):
         return edition_rows(manifest, "web")
     return {
-        row["doc_id"]: row for row in manifest["docs"]
-        if collection.collection == "catalogue" or not row["draft"]
+        row["doc_id"]: row for row in manifest["docs"] if not row["draft"]
     }
 
 
@@ -78,19 +83,19 @@ def select_built_discovery_documents(
     ordinary = select_ordinary_documents(tree, ignored_ids)
     collections = [
         (collection, _select_collection_rows(manifests[collection.collection], collection))
-        for collection in discovery_collections(config)
-        if collection.report_host_doc_id in ordinary
+        for collection in config.collections
+        if collection.collection in COLLECTION_SEARCH_SCOPES and collection.report_host_doc_id in ordinary
     ]
     return DiscoverySelection(ordinary, collections)
 
 
 def select_collection_documents(
-    repo_root: Path, config: DocsStageConfig, ordinary_ids: set[str],
+    repo_root: Path, config: DocsStageConfig, ordinary: dict[str, dict[str, Any]], collection_ids: Collection[str],
 ) -> list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]:
-    """Select eligible-host collection rows; Catalogue has no draft state."""
+    """Read saved rows only for the supplied collection scopes with eligible hosts."""
     selections = []
-    for collection in discovery_collections(config):
-        if collection.report_host_doc_id not in ordinary_ids:
+    for collection in config.collections:
+        if collection.collection not in collection_ids or collection.report_host_doc_id not in ordinary:
             continue
         path = resolve_workspace_path(repo_root, generated_documents_path(collection)) / "manage-manifest.json"
         manifest = read_discovery_metadata(path)
@@ -103,4 +108,4 @@ def read_discovery_selection(repo_root: Path, config: DocsStageConfig, ignored_i
     """Read completed metadata once for an explicit discovery refresh."""
     tree = read_discovery_metadata(resolve_workspace_path(repo_root, generated_documents_path(config)) / "index-tree.json")
     ordinary = select_ordinary_documents(tree["docs"], ignored_ids)
-    return DiscoverySelection(ordinary, select_collection_documents(repo_root, config, set(ordinary)))
+    return DiscoverySelection(ordinary, select_collection_documents(repo_root, config, ordinary, COLLECTION_SEARCH_SCOPES))

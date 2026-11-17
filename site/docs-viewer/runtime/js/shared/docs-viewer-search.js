@@ -130,21 +130,3 @@ export function collectSearchMatches(index, rawQuery) {
     return left.entry.id.localeCompare(right.entry.id, undefined, { sensitivity: "base", numeric: true });
   });
 }
-
-export function compareRecentDocs(left, right) {
-  var leftDate = String(left.timestamp || "");
-  var rightDate = String(right.timestamp || "");
-  if (leftDate !== rightDate) return rightDate.localeCompare(leftDate);
-  var titleCmp = String(left.title || "").localeCompare(String(right.title || ""), undefined, { sensitivity: "base", numeric: true });
-  if (titleCmp !== 0) return titleCmp;
-  var idCmp = String(left.doc_id || "").localeCompare(String(right.doc_id || ""), undefined, { sensitivity: "base", numeric: true });
-  if (idCmp !== 0) return idCmp;
-  return String(left.collection || "").localeCompare(String(right.collection || ""));
-}
-
-export function collectRecentDocs(docs, recentLimit) {
-  return docs
-    .slice()
-    .sort(compareRecentDocs)
-    .slice(0, recentLimit);
-}

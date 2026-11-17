@@ -150,8 +150,6 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
-- [Portfolio Recents And Collection Sorting](deliveries/Portfolio_Recents_And_Collection_Sorting.md) — Show new portfolio additions in the main Index and share A–Z and Last added collection orders across Manage and Public.
-
 - [Export Book](deliveries/Book_Editions.md#follow-on-book-export) — Prepare a whole-Book PDF or EPUB from the saved Tree, including the authored TOC in reading order.
 
 - [Studio Gallery Browser](deliveries/Studio_Gallery_Browser.md) — Implemented and reviewed. Local Studio manual acceptance remains open for finding Galleries and editing their members in the Work Editor.
@@ -161,6 +159,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
+
+- [Portfolio Recents And Collection Sorting](deliveries/Portfolio_Recents_And_Collection_Sorting.md) — Complete and accepted in Manage and Public on 2026-11-17. The eight published data files are in the tracked site. Keep the delivery pending manual archive. [Collection browsing](Sub_Scope_Index_Architecture.md#public-and-manage-projections) and the [Recent contract](Generated_Data_Contracts.md#recent-contract) own the current behavior.
 
 - [Public Index Search Scopes](Public_Index_Search_Scopes.md) — Complete and accepted locally on 2026-11-17. Keep the delivery pending manual archive. The [Search guide](Docs_Viewer_Search.md) and [Search Index contract](Docs_Search_Index.md) own the current behaviour and files. Deploy Public remains a separate release action.
 

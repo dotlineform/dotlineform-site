@@ -90,10 +90,13 @@ export function createCatalogueGallerySearch(payload) {
   const presentation = payload.presentation_by_gallery;
   const galleries = Object.entries(payload.galleries).map(([galleryId, title]) => {
     const { description, marker } = presentation?.[galleryId] ?? {};
-    return { galleryId, title, description, marker, searchTitle: normalizeDocsCollectionFilterValue(title) };
-  }).sort((left, right) => compareText(left.searchTitle, right.searchTitle) || compareText(left.galleryId, right.galleryId));
+    return { galleryId, title, description, marker, added: payload.added_dates_by_gallery?.[galleryId] || "",
+      searchTitle: normalizeDocsCollectionFilterValue(title) };
+  }).sort((left, right) => compareText(left.searchTitle, right.searchTitle)
+    || compareText(left.title, right.title) || compareText(left.galleryId, right.galleryId));
   const memberships = payload.gallery_ids_by_work;
-  return function project(query, works) {
+  let addedOrder;
+  return function project(query, works, sortMode) {
     const counts = new Map();
     for (const work of works) {
       for (const galleryId of memberships[work.workId] || []) {
@@ -103,13 +106,21 @@ export function createCatalogueGallerySearch(payload) {
     const titlePattern = catalogueTitlePattern(query);
     const titleMatches = [];
     const memberMatches = [];
-    for (const gallery of galleries) {
+    const ordered = sortMode === COLLECTION_ADDED_SORT
+      ? (addedOrder ??= galleries.slice().sort(compareAdded)) : galleries;
+    for (const gallery of ordered) {
       if (titlePattern.test(gallery.searchTitle)) titleMatches.push(gallery);
       else if (counts.has(gallery.galleryId)) memberMatches.push({ ...gallery, matchCount: counts.get(gallery.galleryId) });
     }
-    memberMatches.sort((left, right) => right.matchCount - left.matchCount);
     return titleMatches.concat(memberMatches, works);
   };
+}
+
+export const COLLECTION_TITLE_SORT = "title-asc";
+export const COLLECTION_ADDED_SORT = "last-added-desc";
+
+function compareAdded(left, right) {
+  return compareText(right.added, left.added);
 }
 
 /**
@@ -137,7 +148,7 @@ export function createCollectionPresentation(options) {
     const row = {
       docId: record.doc_id, title: record.title, record,
       href: href === undefined ? options.documentHref(record.doc_id) : href,
-      searchTitle, workId, updated: record.last_updated || "",
+      searchTitle, workId, added: record.added_date || "",
       sortTitle: catalogue ? searchTitle : record.title.trim().normalize("NFKC").toLowerCase(),
       rawTitle: catalogue ? record.title : record.title.trim(),
       authoredThumbnail, thumbnailWorkId,
@@ -171,7 +182,7 @@ export function createCollectionPresentation(options) {
       let ordered = orders.get(sortMode);
       if (!ordered) {
         ordered = rows.slice().sort((left, right) =>
-          (sortMode === "last-updated-desc" ? compareText(right.updated, left.updated) : 0) || compareTitle(left, right));
+          (sortMode === COLLECTION_ADDED_SORT ? compareAdded(left, right) : 0) || compareTitle(left, right));
         orders.set(sortMode, ordered);
       }
       const normalized = normalizeDocsCollectionFilterValue(query);

@@ -6,19 +6,19 @@ import json
 from pathlib import Path
 import sys
 import time
-from typing import Any, Mapping
+from typing import Any
 
-from docs_discovery_selection import DiscoverySelection, read_discovery_selection
+from docs_discovery_selection import DiscoverySelection, read_discovery_galleries, read_discovery_selection
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_publication_paths import shared_path
 from docs_publication_queue import read_queue, save_queue, select_shared
 from docs_recent_exclusions import read_recent_exclusions
-from docs_recent_payload import build_recent_payload, recent_candidates
+from docs_recent_payload import build_recent_payload
 from docs_source_model import write_text_atomic
 from docs_workspace_config import load_docs_workspace_config, select_workspace_stage
 
 
-def write_recent(workspace: Any, config: Any, discovery: DiscoverySelection, ordinary_updated: Mapping[str, str]) -> dict[str, int]:
+def write_recent(workspace: Any, config: Any, discovery: DiscoverySelection, galleries: dict[str, Any] | None) -> dict[str, int]:
     """Write changed Recent output; return completed facts for the caller."""
     path = shared_path(workspace, "workspace", "recent")
     try:
@@ -26,7 +26,7 @@ def write_recent(workspace: Any, config: Any, discovery: DiscoverySelection, ord
     except FileNotFoundError:
         previous = None
     payload = build_recent_payload(
-        recent_candidates(discovery, ordinary_updated), limit=workspace.recent_limit,
+        discovery.collections, galleries, limit=workspace.recent_limit,
         generated_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), exclusions=read_recent_exclusions(config),
     )
     comparable = {key: value for key, value in payload.items() if key != "generated_at"}
@@ -43,6 +43,7 @@ def refresh_search_and_recent(repo_root: Path) -> dict[str, Any]:
         workspace = load_docs_workspace_config(repo_root)
         config = select_workspace_stage(workspace, "working")
         selection = read_discovery_selection(repo_root, config, read_publication_ignore_ids(repo_root, config=config))
+        galleries = read_discovery_galleries(repo_root, workspace, config, selection.ordinary)
         pending = read_queue(workspace)
         build_dir = str(repo_root / "docs-viewer/build")
         if build_dir not in sys.path:
@@ -51,7 +52,7 @@ def refresh_search_and_recent(repo_root: Path) -> dict[str, Any]:
 
         search = DocsViewerSearchDataBuilder(repo_root=repo_root, workspace=workspace, config=config)
         result["phase"] = "Recent"
-        recent = write_recent(workspace, config, selection, search.load_ordinary_recent_dates(selection.ordinary))
+        recent = write_recent(workspace, config, selection, galleries)
         result["diagnostics"]["recent"] = recent
         if recent["wrote"]:
             select_shared(pending, "workspace", "recent")
@@ -62,7 +63,7 @@ def refresh_search_and_recent(repo_root: Path) -> dict[str, Any]:
             select_shared(pending, "workspace", output)
             save_queue(workspace, pending)
 
-        result["diagnostics"]["search"] = search.run(selection, write=True, on_written=select_search)
+        result["diagnostics"]["search"] = search.run(selection, galleries, write=True, on_written=select_search)
         result.update(ok=True, phase="complete")
     except Exception as error:
         result["error"] = f"Search and Recent refresh failed during {result['phase']}: {error}. Completed effects were retained."

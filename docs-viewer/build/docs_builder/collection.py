@@ -72,8 +72,12 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return entry
 
     def manifest_row(self, doc: DocRecord) -> dict[str, Any]:
-        """Project supplied identity, title and update metadata for both readers."""
-        row = {"doc_id": doc.doc_id, "title": doc.title, "last_updated": doc_updated_date(doc.last_updated)}
+        """Project supplied identity, title and date metadata for both readers."""
+        row = {
+            "doc_id": doc.doc_id, "title": doc.title,
+            "added_date": doc_updated_date(doc.front_matter.get("added_date")),
+            "last_updated": doc_updated_date(doc.last_updated),
+        }
         if doc.has_thumbnail:
             row["has_thumbnail"] = True
         return row

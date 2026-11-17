@@ -63,7 +63,7 @@ Application writes pass exact changed/deleted document identities to the builder
 
 Working keeps eligible public `manifest.json` beside each management manifest. Authored collection rows emit `has_thumbnail: true` only when their stored document thumbnail exists; otherwise they omit it. No scalar `subject` or source Work relationship is emitted. An excluded ordinary host produces an empty public collection inventory, with exact withdrawals kept separately. Publish copies completed metadata without source reads, eligibility filtering or projection. [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) owns artwork authority and exact publication effects.
 
-Identity and date contracts remain unchanged. Targeted builds merge completed saved metadata; explicit complete collection builds own reconciliation when the generator contract changes. Diagnostics report the selected `manifest_filename` and one `manifest_changed` count.
+Targeted builds merge completed saved metadata. Complete collection builds reconcile every row when the generator contract changes. A complete Catalogue document build queues changed or newly eligible by-ID documents and independently queues a changed manifest. Diagnostics report the selected `manifest_filename` and one `manifest_changed` count.
 
 ## Route Payload Contract
 
@@ -73,14 +73,14 @@ Identity and date contracts remain unchanged. Targeted builds merge completed sa
 | Selected document render | by-id payload | by-id payload | By-id payloads remain in scope for selected documents. |
 | Info-panel metadata | selected by-id payload | selected by-id payload | Public reader metadata is limited to title, summary, and last updated. |
 | Search | search payload | search payload | Search runtime reads separate search payloads. |
-| Recent | unchanged copy of Working `recent.json` | Working generated `recent.json` | One stage-independent payload lists recently edited documents; readers own navigation. |
+| Recent | unchanged copy of Working `recent.json` | Working generated `recent.json` | One stage-independent payload lists recent portfolio additions and supplies exact targets for reader navigation. |
 | Management metadata/actions | not public route data | management services and manage payloads as needed | Public tree/by-id payloads should not carry management-only metadata. |
 
 ## List Date Projections
 
-All collection reader and management manifests, Search result metadata, Recents and Selected Documents use populated update dates in canonical `YYYY-MM-DD` form. The ordinary builder's in-memory flat rows use the same projection; no flat index file is written. List inventories omit `added_date`; source Markdown and by-ID document payloads retain their original `added_date` and `last_updated` precision for exact document metadata and source/output consistency checks. Collection reader manifests include `last_updated` alongside identity, title and optional thumbnail presence. Ordinary navigation trees retain their authored order and carry no update dates.
+Collection reader and management manifests carry day-level `added_date` and `last_updated` in `YYYY-MM-DD` form. Source Markdown and by-ID document payloads retain full precision. Search result metadata and Selected Documents use the update date. Ordinary navigation trees carry the authored order.
 
-Recency sorting uses the projected update date; entries updated on the same day use the owning report's deterministic title/identity ties. List dates derive from existing source timestamps or dates. Undated documents retain an empty update value, sort after dated report entries and are excluded from Recents; creation dates are never substituted. Catalogue, Works and Selected Documents continue to require populated update dates. Source-to-list date projection fails on an unprocessable selected value at its owning operation. Targeted collection builds consume saved management metadata in Working without auditing unselected dates; explicit full builds own baseline reconciliation. Standalone Search consumes selected saved metadata and required source content without source/manifest/by-ID agreement audits; required source-to-list date projection remains at its generation owner.
+**Last added** uses the recorded addition date. Same-day entries tie by title and identity, and undated entries follow dated ones. The builder projects an empty addition date when the source omits it and reports invalid supplied dates. Gallery dates come from Studio's prepared Gallery metadata. [Catalogue Gallery search metadata](Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections)
 
 ## `index-tree.json` Contract
 
@@ -132,13 +132,13 @@ The reader loads one Search scope at a time. Manage reads `/docs/search` with `s
 
 ## Recent Contract
 
-Recents uses one `docs_recent_v2` artifact with `schema`, `limit`, `generated_at` and `docs`. Explicit discovery refresh and Full Working Builds generate it and queue only changed content; unchanged content preserves saved bytes and timestamps. Publish only transfers queued bytes. The workspace's limit remains 20, update-based sorting remains authoritative, and no stage/public variants are generated.
+Recent uses one `docs_recent_v3` artifact with `schema`, `limit`, `generated_at` and `docs`. Generation selects the 20 newest eligible additions by day, with title and identity breaking ties. The browser renders the saved order.
 
-Each row carries exact `doc_id`, title, one date-only update `timestamp` (`YYYY-MM-DD`) and optional parent context. Collection rows additionally carry `collection`, `report_doc_id` and `collection_title`. Rows contain no stage, result URL or `content_url`. The active route resolves navigation from exact document/collection/host identity. Recents and Search share result navigation but load independent artifacts.
+Document rows carry `doc_id`, `title`, `timestamp`, `collection`, `report_doc_id` and `collection_title`. Gallery rows carry `kind: catalogue-gallery`, the exact Gallery `id`, `title` and `timestamp`. In both cases `timestamp` is the addition day. The reader uses the same target routing as Search.
 
-Recents retains Search's configured base coverage: ordinary documents plus explicitly included collections, with draft/subtree/host eligibility applied by [the metadata selector](../../docs-viewer/services/docs_discovery_selection.py). It removes exact [Recent exclusions](Source_Organisation.md#recent-exclusions), sorts dated candidates and takes the configured limit. Hosts have no automatic Recent exclusion. Search membership remains separately owned.
+Recent covers Context, Concepts, Moments and Catalogue Galleries with eligible hosts. It takes ready collection documents and dated Galleries, and applies exact [Recent exclusions](Source_Organisation.md#recent-exclusions) to document targets before taking the limit. [Shared discovery selection](../../docs-viewer/services/docs_discovery_selection.py)
 
-The [Recent payload owner](../../docs-viewer/services/docs_recent_payload.py) projects one eligible discovery selection and supplied ordinary update dates. Explicit discovery refresh carries dates from the sources already parsed for Search; full builds reuse loaded ordinary records. Included collections supply completed Working `manage-manifest.json` metadata: identity, title, date-only `last_updated` and draft state for non-Catalogue collections. Selection shares pruning without row/schema/identity/title/date/readiness audits. Recent excludes exact targets, sorts dated candidates and limits its constructed rows without additional body reads, a Search-index read or a source-scan fallback. Missing/unreadable required metadata fails at its owning read/use. Full maintenance supplies built collection metadata; standalone ordinary builds and discovery refresh consume saved collection metadata.
+The [Recent payload owner](../../docs-viewer/services/docs_recent_payload.py) consumes completed collection rows and the prepared Gallery report/search file. Discovery refresh uses saved manifests. Full Working Build passes the manifests it just built. Both pass one Gallery read to Search and Recent. Standalone ordinary Build uses saved portfolio collection and Gallery metadata.
 
 Manage **Refresh Search and Recent** and full Working maintenance own explicit generation. Targeted/collection-only generation, Save, Move, Delete and eligibility changes preserve saved Recent. External Recent-exclusion edits take effect on the next explicit discovery refresh or full Build. Opening Recent only reads saved JSON.
 

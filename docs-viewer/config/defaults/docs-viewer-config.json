@@ -1,8 +1,5 @@
 {
   "schema_version": "docs_viewer_config_v4",
-  "docs_viewer": {
-    "recent_limit": 20
-  },
   "public_viewer_base_url": "/",
   "workspace": {
     "viewer_base_url": "/docs/",

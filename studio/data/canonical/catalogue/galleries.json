@@ -5,507 +5,633 @@
   "galleries": {
     "001": {
       "gallery_id": "001",
-      "title": "10,000"
+      "title": "10,000",
+      "added_date": "2026-10-07"
     },
     "003": {
       "gallery_id": "003",
-      "title": "16 forms"
+      "title": "16 forms",
+      "added_date": "2026-09-23"
     },
     "004": {
       "gallery_id": "004",
-      "title": "body"
+      "title": "body",
+      "added_date": "2026-09-23"
     },
     "005": {
       "gallery_id": "005",
-      "title": "3 symbols"
+      "title": "3 symbols",
+      "added_date": "2026-09-23"
     },
     "006": {
       "gallery_id": "006",
-      "title": "a doll story"
+      "title": "a doll story",
+      "added_date": "2026-09-17"
     },
     "007": {
       "gallery_id": "007",
-      "title": "a feeling that we are part of a structure"
+      "title": "a feeling that we are part of a structure",
+      "added_date": "2026-09-17"
     },
     "008": {
       "gallery_id": "008",
-      "title": "a humid home full of light"
+      "title": "a humid home full of light",
+      "added_date": "2026-09-17"
     },
     "009": {
       "gallery_id": "009",
-      "title": "a poem divided into 4 parts"
+      "title": "a poem divided into 4 parts",
+      "added_date": "2026-09-23"
     },
     "010": {
       "gallery_id": "010",
-      "title": "a theory of happiness is a theory of everything"
+      "title": "a theory of happiness is a theory of everything",
+      "added_date": "2026-09-23"
     },
     "012": {
       "gallery_id": "012",
-      "title": "all the little cracks"
+      "title": "all the little cracks",
+      "added_date": "2026-09-23"
     },
     "013": {
       "gallery_id": "013",
-      "title": "an act of kindness"
+      "title": "an act of kindness",
+      "added_date": "2026-09-17"
     },
     "014": {
       "gallery_id": "014",
-      "title": "assembly codes"
+      "title": "assembly codes",
+      "added_date": "2026-09-23"
     },
     "015": {
       "gallery_id": "015",
-      "title": "base series"
+      "title": "base series",
+      "added_date": "2026-09-17"
     },
     "016": {
       "gallery_id": "016",
-      "title": "birds"
+      "title": "birds",
+      "added_date": "2026-09-17"
     },
     "017": {
       "gallery_id": "017",
-      "title": "birth of healing forms"
+      "title": "birth of healing forms",
+      "added_date": "2026-09-23"
     },
     "019": {
       "gallery_id": "019",
-      "title": "body space"
+      "title": "body space",
+      "added_date": "2026-09-17"
     },
     "020": {
       "gallery_id": "020",
-      "title": "body space (reclining state)"
+      "title": "body space (reclining state)",
+      "added_date": "2026-09-17"
     },
     "021": {
       "gallery_id": "021",
-      "title": "book dna"
+      "title": "book dna",
+      "added_date": "2026-09-17"
     },
     "022": {
       "gallery_id": "022",
-      "title": "book of curves"
+      "title": "book of curves",
+      "added_date": "2026-09-17"
     },
     "024": {
       "gallery_id": "024",
-      "title": "changed photos"
+      "title": "changed photos",
+      "added_date": "2026-09-17"
     },
     "027": {
       "gallery_id": "027",
-      "title": "collected digital c. 1998"
+      "title": "collected digital c. 1998",
+      "added_date": "2026-09-23"
     },
     "028": {
       "gallery_id": "028",
-      "title": "colouring book"
+      "title": "colouring book",
+      "added_date": "2026-09-17"
     },
     "029": {
       "gallery_id": "029",
-      "title": "colours"
+      "title": "colours",
+      "added_date": "2026-09-23"
     },
     "030": {
       "gallery_id": "030",
-      "title": "composite (blue red smoke)"
+      "title": "composite (blue red smoke)",
+      "added_date": "2026-09-17"
     },
     "031": {
       "gallery_id": "031",
-      "title": "concrete"
+      "title": "concrete",
+      "added_date": "2026-09-17"
     },
     "032": {
       "gallery_id": "032",
-      "title": "creases"
+      "title": "creases",
+      "added_date": "2026-09-17"
     },
     "033": {
       "gallery_id": "033",
-      "title": "cube structure"
+      "title": "cube structure",
+      "added_date": "2026-09-17"
     },
     "034": {
       "gallery_id": "034",
-      "title": "curl"
+      "title": "curl",
+      "added_date": "2026-09-17"
     },
     "035": {
       "gallery_id": "035",
-      "title": "curve machine"
+      "title": "curve machine",
+      "added_date": "2026-09-23"
     },
     "036": {
       "gallery_id": "036",
-      "title": "curve poems"
+      "title": "curve poems",
+      "added_date": "2026-10-25"
     },
     "037": {
       "gallery_id": "037",
-      "title": "doll"
+      "title": "doll",
+      "added_date": "2026-10-25"
     },
     "038": {
       "gallery_id": "038",
-      "title": "doll faces"
+      "title": "doll faces",
+      "added_date": "2026-09-17"
     },
     "039": {
       "gallery_id": "039",
-      "title": "doll sees everything"
+      "title": "doll sees everything",
+      "added_date": "2026-09-17"
     },
     "040": {
       "gallery_id": "040",
-      "title": "dot"
+      "title": "dot",
+      "added_date": "2026-09-17"
     },
     "041": {
       "gallery_id": "041",
-      "title": "dot theory"
+      "title": "dot theory",
+      "added_date": "2026-09-23"
     },
     "042": {
       "gallery_id": "042",
-      "title": "dotlineform (2021)"
+      "title": "dotlineform (2021)",
+      "added_date": "2026-09-23"
     },
     "043": {
       "gallery_id": "043",
-      "title": "dotlineform (2023)"
+      "title": "dotlineform (2023)",
+      "added_date": "2026-09-23"
     },
     "044": {
       "gallery_id": "044",
-      "title": "dots"
+      "title": "dots",
+      "added_date": "2026-09-23"
     },
     "045": {
       "gallery_id": "045",
-      "title": "droplets"
+      "title": "droplets",
+      "added_date": "2026-09-17"
     },
     "046": {
       "gallery_id": "046",
-      "title": "egg forms"
+      "title": "egg forms",
+      "added_date": "2026-09-23"
     },
     "047": {
       "gallery_id": "047",
-      "title": "egg prints"
+      "title": "egg prints",
+      "added_date": "2026-09-17"
     },
     "048": {
       "gallery_id": "048",
-      "title": "entangled form"
+      "title": "entangled form",
+      "added_date": "2026-09-23"
     },
     "049": {
       "gallery_id": "049",
-      "title": "espresso"
+      "title": "espresso",
+      "added_date": "2026-09-23"
     },
     "050": {
       "gallery_id": "050",
-      "title": "field"
+      "title": "field",
+      "added_date": "2026-09-23"
     },
     "051": {
       "gallery_id": "051",
-      "title": "fireworks form"
+      "title": "fireworks form",
+      "added_date": "2026-09-23"
     },
     "052": {
       "gallery_id": "052",
-      "title": "flowers"
+      "title": "flowers",
+      "added_date": "2026-09-23"
     },
     "053": {
       "gallery_id": "053",
-      "title": "fluid forms"
+      "title": "fluid forms",
+      "added_date": "2026-09-17"
     },
     "055": {
       "gallery_id": "055",
-      "title": "fog"
+      "title": "fog",
+      "added_date": "2026-09-17"
     },
     "056": {
       "gallery_id": "056",
-      "title": "folding forms"
+      "title": "folding forms",
+      "added_date": "2026-09-17"
     },
     "057": {
       "gallery_id": "057",
-      "title": "folding structure"
+      "title": "folding structure",
+      "added_date": "2026-09-17"
     },
     "059": {
       "gallery_id": "059",
-      "title": "forest"
+      "title": "forest",
+      "added_date": "2026-09-17"
     },
     "060": {
       "gallery_id": "060",
-      "title": "forest (2024)"
+      "title": "forest (2024)",
+      "added_date": "2026-09-23"
     },
     "061": {
       "gallery_id": "061",
-      "title": "forest memories 1-48"
+      "title": "forest memories 1-48",
+      "added_date": "2026-09-23"
     },
     "062": {
       "gallery_id": "062",
-      "title": "forests (2023)"
+      "title": "forests (2023)",
+      "added_date": "2026-09-23"
     },
     "063": {
       "gallery_id": "063",
-      "title": "form mobile"
+      "title": "form mobile",
+      "added_date": "2026-09-17"
     },
     "064": {
       "gallery_id": "064",
-      "title": "form space"
+      "title": "form space",
+      "added_date": "2026-09-17"
     },
     "065": {
       "gallery_id": "065",
-      "title": "forms"
+      "title": "forms",
+      "added_date": "2026-09-23"
     },
     "066": {
       "gallery_id": "066",
-      "title": "forms painting"
+      "title": "forms painting",
+      "added_date": "2026-09-23"
     },
     "067": {
       "gallery_id": "067",
-      "title": "found forms"
+      "title": "found forms",
+      "added_date": "2026-10-25"
     },
     "068": {
       "gallery_id": "068",
-      "title": "fragments"
+      "title": "fragments",
+      "added_date": "2026-09-17"
     },
     "070": {
       "gallery_id": "070",
-      "title": "glass forms"
+      "title": "glass forms",
+      "added_date": "2026-09-23"
     },
     "071": {
       "gallery_id": "071",
-      "title": "grey series"
+      "title": "grey series",
+      "added_date": "2026-09-17"
     },
     "072": {
       "gallery_id": "072",
-      "title": "grid cells"
+      "title": "grid cells",
+      "added_date": "2026-09-17"
     },
     "073": {
       "gallery_id": "073",
-      "title": "grid fields"
+      "title": "grid fields",
+      "added_date": "2026-09-17"
     },
     "074": {
       "gallery_id": "074",
-      "title": "grid theory"
+      "title": "grid theory",
+      "added_date": "2026-09-17"
     },
     "075": {
       "gallery_id": "075",
-      "title": "harmony"
+      "title": "harmony",
+      "added_date": "2026-09-23"
     },
     "076": {
       "gallery_id": "076",
-      "title": "heaven and earth"
+      "title": "heaven and earth",
+      "added_date": "2026-09-23"
     },
     "077": {
       "gallery_id": "077",
-      "title": "home"
+      "title": "home",
+      "added_date": "2026-09-23"
     },
     "078": {
       "gallery_id": "078",
-      "title": "home land loss"
+      "title": "home land loss",
+      "added_date": "2026-09-17"
     },
     "079": {
       "gallery_id": "079",
-      "title": "in the end we'll know"
+      "title": "in the end we'll know",
+      "added_date": "2026-09-17"
     },
     "080": {
       "gallery_id": "080",
-      "title": "interior design"
+      "title": "interior design",
+      "added_date": "2026-09-23"
     },
     "082": {
       "gallery_id": "082",
-      "title": "k crystals"
+      "title": "k crystals",
+      "added_date": "2026-09-23"
     },
     "083": {
       "gallery_id": "083",
-      "title": "k particles"
+      "title": "k particles",
+      "added_date": "2026-09-23"
     },
     "084": {
       "gallery_id": "084",
-      "title": "kylie structures"
+      "title": "kylie structures",
+      "added_date": "2026-09-23"
     },
     "085": {
       "gallery_id": "085",
-      "title": "kylie wax model"
+      "title": "kylie wax model",
+      "added_date": "2026-09-17"
     },
     "087": {
       "gallery_id": "087",
-      "title": "landscapes"
+      "title": "landscapes",
+      "added_date": "2026-09-23"
     },
     "089": {
       "gallery_id": "089",
-      "title": "learning to draw landscapes"
+      "title": "learning to draw landscapes",
+      "added_date": "2026-09-17"
     },
     "090": {
       "gallery_id": "090",
-      "title": "lights"
+      "title": "lights",
+      "added_date": "2026-09-17"
     },
     "092": {
       "gallery_id": "092",
-      "title": "living surface hand form"
+      "title": "living surface hand form",
+      "added_date": "2026-09-23"
     },
     "093": {
       "gallery_id": "093",
-      "title": "maps"
+      "title": "maps",
+      "added_date": "2026-09-17"
     },
     "094": {
       "gallery_id": "094",
-      "title": "matter"
+      "title": "matter",
+      "added_date": "2026-09-23"
     },
     "095": {
       "gallery_id": "095",
-      "title": "melancholy hope cell"
+      "title": "melancholy hope cell",
+      "added_date": "2026-09-17"
     },
     "096": {
       "gallery_id": "096",
-      "title": "memory loss hope"
+      "title": "memory loss hope",
+      "added_date": "2026-09-17"
     },
     "097": {
       "gallery_id": "097",
-      "title": "memory loss vessels"
+      "title": "memory loss vessels",
+      "added_date": "2026-09-17"
     },
     "098": {
       "gallery_id": "098",
-      "title": "mm"
+      "title": "mm",
+      "added_date": "2026-09-17"
     },
     "099": {
       "gallery_id": "099",
-      "title": "models"
+      "title": "models",
+      "added_date": "2026-10-25"
     },
     "101": {
       "gallery_id": "101",
-      "title": "molecules"
+      "title": "molecules",
+      "added_date": "2026-09-23"
     },
     "103": {
       "gallery_id": "103",
-      "title": "mother and child"
+      "title": "mother and child",
+      "added_date": "2026-10-25"
     },
     "104": {
       "gallery_id": "104",
-      "title": "mouse story"
+      "title": "mouse story",
+      "added_date": "2026-09-23"
     },
     "106": {
       "gallery_id": "106",
-      "title": "nerve forms"
+      "title": "nerve forms",
+      "added_date": "2026-09-17"
     },
     "107": {
       "gallery_id": "107",
-      "title": "nothing is missing"
+      "title": "nothing is missing",
+      "added_date": "2026-09-17"
     },
     "108": {
       "gallery_id": "108",
-      "title": "olive tree"
+      "title": "olive tree",
+      "added_date": "2026-09-23"
     },
     "109": {
       "gallery_id": "109",
-      "title": "particle machine"
+      "title": "particle machine",
+      "added_date": "2026-09-17"
     },
     "110": {
       "gallery_id": "110",
-      "title": "particle theory"
+      "title": "particle theory",
+      "added_date": "2026-09-17"
     },
     "111": {
       "gallery_id": "111",
-      "title": "particles"
+      "title": "particles",
+      "added_date": "2026-09-17"
     },
     "112": {
       "gallery_id": "112",
-      "title": "petri"
+      "title": "petri",
+      "added_date": "2026-09-17"
     },
     "113": {
       "gallery_id": "113",
-      "title": "pi particles"
+      "title": "pi particles",
+      "added_date": "2026-09-23"
     },
     "114": {
       "gallery_id": "114",
-      "title": "plant forms"
+      "title": "plant forms",
+      "added_date": "2026-09-17"
     },
     "115": {
       "gallery_id": "115",
-      "title": "poa"
+      "title": "poa",
+      "added_date": "2026-09-17"
     },
     "116": {
       "gallery_id": "116",
-      "title": "pole vault"
+      "title": "pole vault",
+      "added_date": "2026-09-17"
     },
     "117": {
       "gallery_id": "117",
-      "title": "porto santo"
+      "title": "porto santo",
+      "added_date": "2026-09-17"
     },
     "118": {
       "gallery_id": "118",
-      "title": "quantum random number theory"
+      "title": "quantum random number theory",
+      "added_date": "2026-09-23"
     },
     "119": {
       "gallery_id": "119",
-      "title": "r"
+      "title": "r",
+      "added_date": "2026-09-17"
     },
     "120": {
       "gallery_id": "120",
-      "title": "reduce and return"
+      "title": "reduce and return",
+      "added_date": "2026-09-17"
     },
     "121": {
       "gallery_id": "121",
-      "title": "residues"
+      "title": "residues",
+      "added_date": "2026-09-17"
     },
     "122": {
       "gallery_id": "122",
-      "title": "room"
+      "title": "room",
+      "added_date": "2026-09-23"
     },
     "123": {
       "gallery_id": "123",
-      "title": "snow"
+      "title": "snow",
+      "added_date": "2026-09-17"
     },
     "124": {
       "gallery_id": "124",
-      "title": "spider webs"
+      "title": "spider webs",
+      "added_date": "2026-09-17"
     },
     "125": {
       "gallery_id": "125",
-      "title": "spiders"
+      "title": "spiders",
+      "added_date": "2026-09-23"
     },
     "126": {
       "gallery_id": "126",
-      "title": "spine symbols"
+      "title": "spine symbols",
+      "added_date": "2026-09-23"
     },
     "127": {
       "gallery_id": "127",
-      "title": "state of mind"
+      "title": "state of mind",
+      "added_date": "2026-09-23"
     },
     "128": {
       "gallery_id": "128",
-      "title": "still life"
+      "title": "still life",
+      "added_date": "2026-09-17"
     },
     "129": {
       "gallery_id": "129",
-      "title": "string theory"
+      "title": "string theory",
+      "added_date": "2026-09-23"
     },
     "130": {
       "gallery_id": "130",
-      "title": "sunflower"
+      "title": "sunflower",
+      "added_date": "2026-09-17"
     },
     "131": {
       "gallery_id": "131",
-      "title": "surface history"
+      "title": "surface history",
+      "added_date": "2026-09-17"
     },
     "132": {
       "gallery_id": "132",
-      "title": "tabula rasa"
+      "title": "tabula rasa",
+      "added_date": "2026-09-23"
     },
     "133": {
       "gallery_id": "133",
-      "title": "thorns"
+      "title": "thorns",
+      "added_date": "2026-09-17"
     },
     "134": {
       "gallery_id": "134",
-      "title": "through a glass clearly"
+      "title": "through a glass clearly",
+      "added_date": "2026-09-17"
     },
     "135": {
       "gallery_id": "135",
-      "title": "train moments"
+      "title": "train moments",
+      "added_date": "2026-09-17"
     },
     "136": {
       "gallery_id": "136",
-      "title": "tree"
+      "title": "tree",
+      "added_date": "2026-09-17"
     },
     "137": {
       "gallery_id": "137",
-      "title": "tulips"
+      "title": "tulips",
+      "added_date": "2026-09-23"
     },
     "138": {
       "gallery_id": "138",
-      "title": "untitled composites"
+      "title": "untitled composites",
+      "added_date": "2026-10-24"
     },
     "139": {
       "gallery_id": "139",
-      "title": "untitled (destroyed)"
+      "title": "untitled (destroyed)",
+      "added_date": "2026-09-17"
     },
     "140": {
       "gallery_id": "140",
-      "title": "wa"
+      "title": "wa",
+      "added_date": "2026-10-25"
     },
     "141": {
       "gallery_id": "141",
-      "title": "water"
+      "title": "water",
+      "added_date": "2026-09-17"
     },
     "142": {
       "gallery_id": "142",
-      "title": "water sea pond"
+      "title": "water sea pond",
+      "added_date": "2026-11-09"
     },
     "143": {
       "gallery_id": "143",
@@ -513,59 +639,73 @@
     },
     "150": {
       "gallery_id": "150",
-      "title": "nerve (formaldehyde form)"
+      "title": "nerve (formaldehyde form)",
+      "added_date": "2026-09-23"
     },
     "154": {
       "gallery_id": "154",
-      "title": "certainty (photos)"
+      "title": "certainty (photos)",
+      "added_date": "2026-09-23"
     },
     "157": {
       "gallery_id": "157",
-      "title": "dotlineform (2023) [work in progress]"
+      "title": "dotlineform (2023) [work in progress]",
+      "added_date": "2026-09-23"
     },
     "159": {
       "gallery_id": "159",
-      "title": "molecule forms (molecules)"
+      "title": "molecule forms (molecules)",
+      "added_date": "2026-09-23"
     },
     "175": {
       "gallery_id": "175",
-      "title": "learning to draw landscapes (versions) (versions)"
+      "title": "learning to draw landscapes (versions) (versions)",
+      "added_date": "2026-09-23"
     },
     "183": {
       "gallery_id": "183",
-      "title": "body residue"
+      "title": "body residue",
+      "added_date": "2026-09-23"
     },
     "195": {
       "gallery_id": "195",
-      "title": "quantum random number theory (versions)"
+      "title": "quantum random number theory (versions)",
+      "added_date": "2026-09-23"
     },
     "212": {
       "gallery_id": "212",
-      "title": "a theory of happiness is a theory of everything (64°) (64 degrees)"
+      "title": "a theory of happiness is a theory of everything (64°) (64 degrees)",
+      "added_date": "2026-09-23"
     },
     "220": {
       "gallery_id": "220",
-      "title": "book dna sequence"
+      "title": "book dna sequence",
+      "added_date": "2026-09-23"
     },
     "227": {
       "gallery_id": "227",
-      "title": "curve machine holes"
+      "title": "curve machine holes",
+      "added_date": "2026-09-23"
     },
     "247": {
       "gallery_id": "247",
-      "title": "fireworks particles"
+      "title": "fireworks particles",
+      "added_date": "2026-09-23"
     },
     "253": {
       "gallery_id": "253",
-      "title": "form space 1 (noise particles)"
+      "title": "form space 1 (noise particles)",
+      "added_date": "2026-09-23"
     },
     "282": {
       "gallery_id": "282",
-      "title": "poa 1 (map 1-500) (selected source)"
+      "title": "poa 1 (map 1-500) (selected source)",
+      "added_date": "2026-09-23"
     },
     "290": {
       "gallery_id": "290",
-      "title": "state of mind (source)"
+      "title": "state of mind (source)",
+      "added_date": "2026-09-23"
     },
     "307": {
       "gallery_id": "307",
@@ -573,209 +713,260 @@
     },
     "308": {
       "gallery_id": "308",
-      "title": "moments"
+      "title": "moments",
+      "added_date": "2026-10-24"
     },
     "309": {
       "gallery_id": "309",
-      "title": "nerve abattoir"
+      "title": "nerve abattoir",
+      "added_date": "2026-09-23"
     },
     "310": {
       "gallery_id": "310",
-      "title": "particle signals"
+      "title": "particle signals",
+      "added_date": "2026-10-22"
     },
     "311": {
       "gallery_id": "311",
-      "title": "alkine symbols"
+      "title": "alkine symbols",
+      "added_date": "2026-10-22"
     },
     "312": {
       "gallery_id": "312",
-      "title": "abstract paintings (2024)"
+      "title": "abstract paintings (2024)",
+      "added_date": "2026-10-22"
     },
     "315": {
       "gallery_id": "315",
-      "title": "all the colours"
+      "title": "all the colours",
+      "added_date": "2026-10-22"
     },
     "316": {
       "gallery_id": "316",
-      "title": "architecture"
+      "title": "architecture",
+      "added_date": "2026-10-23"
     },
     "317": {
       "gallery_id": "317",
-      "title": "balance machine"
+      "title": "balance machine",
+      "added_date": "2026-10-23"
     },
     "318": {
       "gallery_id": "318",
-      "title": "balance machine - video stills"
+      "title": "balance machine - video stills",
+      "added_date": "2026-10-23"
     },
     "319": {
       "gallery_id": "319",
-      "title": "3 symbols - cards"
+      "title": "3 symbols - cards",
+      "added_date": "2026-10-23"
     },
     "320": {
       "gallery_id": "320",
-      "title": "all the little things"
+      "title": "all the little things",
+      "added_date": "2026-10-23"
     },
     "321": {
       "gallery_id": "321",
-      "title": "a world of non-linearity"
+      "title": "a world of non-linearity",
+      "added_date": "2026-10-23"
     },
     "323": {
       "gallery_id": "323",
-      "title": "boundary conditions (by the river)"
+      "title": "boundary conditions (by the river)",
+      "added_date": "2026-10-23"
     },
     "325": {
       "gallery_id": "325",
-      "title": "boundary conditions (by the river) - versions"
+      "title": "boundary conditions (by the river) - versions",
+      "added_date": "2026-10-23"
     },
     "326": {
       "gallery_id": "326",
-      "title": "bridge"
+      "title": "bridge",
+      "added_date": "2026-10-23"
     },
     "327": {
       "gallery_id": "327",
-      "title": "burma"
+      "title": "burma",
+      "added_date": "2026-10-23"
     },
     "328": {
       "gallery_id": "328",
-      "title": "by the river"
+      "title": "by the river",
+      "added_date": "2026-10-23"
     },
     "329": {
       "gallery_id": "329",
-      "title": "mm negative future versions"
+      "title": "mm negative future versions",
+      "added_date": "2026-10-23"
     },
     "330": {
       "gallery_id": "330",
-      "title": "mm negative future"
+      "title": "mm negative future",
+      "added_date": "2026-10-23"
     },
     "331": {
       "gallery_id": "331",
-      "title": "composites (book, 2023)"
+      "title": "composites (book, 2023)",
+      "added_date": "2026-10-24"
     },
     "332": {
       "gallery_id": "332",
-      "title": "Michelle Pfeiffer"
+      "title": "Michelle Pfeiffer",
+      "added_date": "2026-10-25"
     },
     "333": {
       "gallery_id": "333",
-      "title": "bits symbols"
+      "title": "bits symbols",
+      "added_date": "2026-09-23"
     },
     "334": {
       "gallery_id": "334",
-      "title": "body monoprint"
+      "title": "body monoprint",
+      "added_date": "2026-09-23"
     },
     "335": {
       "gallery_id": "335",
-      "title": "2 bodies"
+      "title": "2 bodies",
+      "added_date": "2026-09-23"
     },
     "336": {
       "gallery_id": "336",
-      "title": "body curves"
+      "title": "body curves",
+      "added_date": "2026-09-23"
     },
     "337": {
       "gallery_id": "337",
-      "title": "kylie wax model iterations"
+      "title": "kylie wax model iterations",
+      "added_date": "2026-09-23"
     },
     "338": {
       "gallery_id": "338",
-      "title": "grid dissection"
+      "title": "grid dissection",
+      "added_date": "2026-09-23"
     },
     "339": {
       "gallery_id": "339",
-      "title": "closeness"
+      "title": "closeness",
+      "added_date": "2026-09-17"
     },
     "340": {
       "gallery_id": "340",
-      "title": "all chemical"
+      "title": "all chemical",
+      "added_date": "2026-09-17"
     },
     "341": {
       "gallery_id": "341",
-      "title": "body cast"
+      "title": "body cast",
+      "added_date": "2026-09-17"
     },
     "342": {
       "gallery_id": "342",
-      "title": "body forms"
+      "title": "body forms",
+      "added_date": "2026-09-17"
     },
     "343": {
       "gallery_id": "343",
-      "title": "body series"
+      "title": "body series",
+      "added_date": "2026-09-17"
     },
     "344": {
       "gallery_id": "344",
-      "title": "cell"
+      "title": "cell",
+      "added_date": "2026-09-17"
     },
     "345": {
       "gallery_id": "345",
-      "title": "frames"
+      "title": "frames",
+      "added_date": "2026-09-17"
     },
     "346": {
       "gallery_id": "346",
-      "title": "slaughter"
+      "title": "slaughter",
+      "added_date": "2026-09-17"
     },
     "347": {
       "gallery_id": "347",
-      "title": "perspective"
+      "title": "perspective",
+      "added_date": "2026-09-17"
     },
     "348": {
       "gallery_id": "348",
-      "title": "internal forms"
+      "title": "internal forms",
+      "added_date": "2026-09-17"
     },
     "349": {
       "gallery_id": "349",
-      "title": "dissection"
+      "title": "dissection",
+      "added_date": "2026-10-25"
     },
     "350": {
       "gallery_id": "350",
-      "title": "form symbol"
+      "title": "form symbol",
+      "added_date": "2026-09-17"
     },
     "351": {
       "gallery_id": "351",
-      "title": "forms ink and water"
+      "title": "forms ink and water",
+      "added_date": "2026-09-17"
     },
     "352": {
       "gallery_id": "352",
-      "title": "hand life"
+      "title": "hand life",
+      "added_date": "2026-10-25"
     },
     "353": {
       "gallery_id": "353",
-      "title": "joining forms"
+      "title": "joining forms",
+      "added_date": "2026-09-17"
     },
     "354": {
       "gallery_id": "354",
-      "title": "healing symbols"
+      "title": "healing symbols",
+      "added_date": "2026-09-17"
     },
     "355": {
       "gallery_id": "355",
-      "title": "gesture in grey"
+      "title": "gesture in grey",
+      "added_date": "2026-10-25"
     },
     "356": {
       "gallery_id": "356",
-      "title": "life and death"
+      "title": "life and death",
+      "added_date": "2026-09-17"
     },
     "357": {
       "gallery_id": "357",
-      "title": "fly"
+      "title": "fly",
+      "added_date": "2026-09-17"
     },
     "358": {
       "gallery_id": "358",
-      "title": "mesh"
+      "title": "mesh",
+      "added_date": "2026-09-17"
     },
     "359": {
       "gallery_id": "359",
-      "title": "untitled drawings"
+      "title": "untitled drawings",
+      "added_date": "2026-09-17"
     },
     "360": {
       "gallery_id": "360",
-      "title": "mandala form"
+      "title": "mandala form",
+      "added_date": "2026-10-25"
     },
     "361": {
       "gallery_id": "361",
-      "title": "ink"
+      "title": "ink",
+      "added_date": "2026-09-17"
     },
     "362": {
       "gallery_id": "362",
       "title": "painting",
       "description": "paintings from across the catalogue",
-      "marker": "brush"
+      "marker": "brush",
+      "added_date": "2026-10-25"
     }
   }
 }

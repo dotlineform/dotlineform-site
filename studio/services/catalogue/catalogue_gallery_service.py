@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import date
 from typing import Any, Mapping
 
 from catalogue.catalogue_galleries import (
@@ -93,6 +94,10 @@ def mutate_gallery_payload(
         series_id, related = body["series_id"], body["related_to_series"]
         title = body["title"]
         definitions[gallery_id] = {"gallery_id": gallery_id, "title": title, **gallery_presentation(body)}
+        if operation == "create":
+            definitions[gallery_id]["added_date"] = date.today().isoformat()
+        elif "added_date" in previous_definition:
+            definitions[gallery_id]["added_date"] = previous_definition["added_date"]
         title_changed = operation == "create" or previous_definition["title"] != title
         previous_related_series = related_series_ids(pairs, gallery_id)
         relations_changed = series_id is not None and related != (series_id in previous_related_series)

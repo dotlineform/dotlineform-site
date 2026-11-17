@@ -50,7 +50,7 @@ from docs_workspace_config import (  # noqa: E402
     generated_search_path,
 )
 from docs_discovery_selection import (  # noqa: E402
-    DiscoverySelection, read_discovery_selection,
+    DiscoverySelection, read_discovery_galleries, read_discovery_selection,
 )
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_publication_paths import confined  # noqa: E402
@@ -252,6 +252,7 @@ class DocsViewerSearchDataBuilder:
     def run(
         self,
         selection: DiscoverySelection,
+        galleries: dict[str, Any] | None,
         *,
         write: bool,
         force: bool = False,
@@ -262,7 +263,7 @@ class DocsViewerSearchDataBuilder:
         root = generated_search_path(self.config).parent
         collection_rows = {owner.collection: (owner, rows) for owner, rows in selection.collections}
         results = {}
-        portfolio = self.portfolio_rows(selection)
+        portfolio = self.portfolio_rows(selection, galleries)
         for scope in ("portfolio", *COLLECTION_SEARCH_SCOPES):
             if scope == "portfolio":
                 rows, fields = portfolio, ("title",)
@@ -279,7 +280,7 @@ class DocsViewerSearchDataBuilder:
             results[scope] = result
         return {key: sum(result[key] for result in results.values()) for key in ("docs", "wrote", "skipped")} | {"scopes": results}
 
-    def portfolio_rows(self, selection: DiscoverySelection) -> list[dict[str, Any]]:
+    def portfolio_rows(self, selection: DiscoverySelection, galleries: dict[str, Any] | None) -> list[dict[str, Any]]:
         reference_hosts = {owner.report_host_doc_id for owner in self.config.collections
                            if owner.collection not in PORTFOLIO_COLLECTIONS}
         rows = [
@@ -287,13 +288,11 @@ class DocsViewerSearchDataBuilder:
             for doc_id, row in selection.ordinary.items() if doc_id not in reference_hosts
         ]
         for owner, selected in selection.collections:
-            if owner.collection in PORTFOLIO_COLLECTIONS and owner.collection != "catalogue":
+            if owner.collection in PORTFOLIO_COLLECTIONS:
                 rows.extend(self.collection_entry(owner, doc_id, row) for doc_id, row in selected.items())
-        catalogue = next(owner for owner in self.config.collections if owner.collection == "catalogue")
-        if catalogue.report_host_doc_id in selection.ordinary:
-            from docs_catalogue_media import read_catalogue_gallery_report_search
-            galleries = read_catalogue_gallery_report_search(self.repo_root, workspace=self.workspace.catalogue.working)["galleries"]
-            rows.extend({"id": gallery_id, "title": title, "kind": "catalogue-gallery"} for gallery_id, title in galleries.items())
+        if galleries is not None:
+            rows.extend({"id": gallery_id, "title": title, "kind": "catalogue-gallery"}
+                        for gallery_id, title in galleries["galleries"].items())
         return rows
 
     def collection_entry(self, owner: DocsCollectionConfig, doc_id: str, row: Mapping[str, Any]) -> dict[str, Any]:
@@ -313,11 +312,6 @@ class DocsViewerSearchDataBuilder:
         if fields["doc_id"] != doc_id:
             raise ValueError(f"Search source identity does not match its selected filename: {path.name}")
         return source, fields, source[header.end():]
-
-    def load_ordinary_recent_dates(self, selected: Mapping[str, Any]) -> dict[str, str]:
-        """Recent needs ordinary dates, which are absent from the saved tree."""
-        root = document_source_path(self.config).resolve()
-        return {doc_id: self.source_fields(root, doc_id)[1].get("last_updated", "") for doc_id in selected}
 
     def collection_rows(
         self,
@@ -424,6 +418,7 @@ def main(argv: list[str] | None = None) -> int:
         config = select_workspace_stage(workspace, args.stage)
         builder = DocsViewerSearchDataBuilder(repo_root=repo_root, workspace=workspace, config=config)
         selection = read_discovery_selection(repo_root, config, read_publication_ignore_ids(repo_root, config=config))
+        galleries = read_discovery_galleries(repo_root, workspace, config, selection.ordinary)
         if args.write:
             from docs_publication_queue import read_queue, select_shared, save_queue
             pending = read_queue(workspace)
@@ -433,7 +428,7 @@ def main(argv: list[str] | None = None) -> int:
                 save_queue(workspace, pending)
         else:
             on_written = None
-        builder.run(selection, write=args.write, force=args.force, on_written=on_written)
+        builder.run(selection, galleries, write=args.write, force=args.force, on_written=on_written)
     except (OSError, ValueError) as exc:
         raise SystemExit(f"Search build failed: {exc}") from exc
     return 0

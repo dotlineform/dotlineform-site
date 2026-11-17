@@ -63,7 +63,6 @@ function createStateDefaults(settings) {
     searchQuery: "",
     searchVisibleCount: options.searchBatchSize || 50,
     searchDebounceId: null,
-    recentLimit: options.defaultRecentLimit || 20,
     docsViewerConfigLoaded: false,
     docsViewerConfigRequestPromise: null,
     workspaceLoaded: false,
@@ -135,8 +134,7 @@ function createStateDomains(state, settings) {
       "viewerConfigLoaded",
       "viewerConfigRequestPromise",
       "uiStatuses",
-      "uiStatusByValue",
-      "recentLimit",
+      "uiStatusByValue"
     ]),
     documentIndex: stateDomain("documentIndex", "generated static data or local generated-read service", state, [
       "docs",
@@ -162,8 +160,7 @@ function createStateDomains(state, settings) {
       "recentRequestPromise",
       "searchQuery",
       "searchVisibleCount",
-      "searchDebounceId",
-      "recentLimit"
+      "searchDebounceId"
     ]),
     panelView: stateDomain("panelView", "browser-only UI state", state, [
       "viewState"

@@ -84,7 +84,7 @@ def browser_workspace_record(repo_root: Path, config: DocsStageConfig, *, public
 
 
 def browser_workspace_config_payload(repo_root: Path, workspace: DocsWorkspaceConfig, *, published: bool = False) -> dict[str, Any]:
-    payload = {"schema_version": DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION, "docs_viewer": {"recent_limit": workspace.recent_limit}}
+    payload = {"schema_version": DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION}
     if published:
         payload["workspace"] = browser_workspace_record(repo_root, select_workspace_stage(workspace, "preview"),
                                                     published=True, public_viewer_base_url=workspace.public_viewer_base_url)

@@ -34,7 +34,7 @@ Authoring changes reach Search at the next explicit refresh or Full Working Buil
 - **Context, Concepts and Moments** use `works.json`, `concepts.json` and `moments.json`. Each uses the workspace's full-text fields `title`, `heading`, `summary`, `body` and `code`.
 - **Library and Living Memory** use `library.json` and `book.json`. They search title and summary, with Living Memory limited to its web edition.
 
-The [shared selection owner](../../docs-viewer/services/docs_discovery_selection.py) excludes ordinary draft and unpublishable subtrees. Collection rows require eligible hosts and non-draft entries, with the Book's web edition derived from its management manifest. Portfolio takes Gallery titles from the prepared Catalogue Gallery search file when the Catalogue host is eligible. Recent selects its own collection coverage using `include_in_site_search`. [Recent contract](Generated_Data_Contracts.md#recent-contract)
+The [shared selection owner](../../docs-viewer/services/docs_discovery_selection.py) excludes ordinary draft and unpublishable subtrees. Collection rows require eligible hosts and non-draft entries, with the Book's web edition derived from its management manifest. Portfolio takes Gallery titles from the prepared Catalogue Gallery search file when the Catalogue host is eligible. Recent uses its own portfolio membership rules and the addition dates in the prepared collection and Gallery metadata. [Recent contract](Generated_Data_Contracts.md#recent-contract)
 
 Each scope is its own relevance corpus. Only its configured fields emit postings. Summary text contributes postings and stays out of the result rows. Collection IDs and display metadata support navigation and display.
 
@@ -54,6 +54,6 @@ For the active search fields, relevance orders exact title, title, heading, summ
 
 ## Build And Extension
 
-Manage **Refresh Search and Recent**, Full Working Build and `build_search.py --stage working --write` use one Search builder and queue each changed scope as it completes. Portfolio uses completed titles. Collection sources supply only the searchable metadata and body fields required by their scopes. Full Working Build carries its loaded sources forward. The explicit discovery refresh reads ordinary dates for Recent and performs no document or media generation. [Discovery refresh](../../docs-viewer/services/docs_discovery_refresh.py)
+Manage **Refresh Search and Recent**, Full Working Build and `build_search.py --stage working --write` use one Search builder and queue each changed scope as it completes. Portfolio uses completed titles. Collection sources supply the searchable text required by their scopes. Full Working Build carries its loaded sources forward. Search and Recent share the prepared Gallery read during discovery refresh and Full Working Build. [Discovery refresh](../../docs-viewer/services/docs_discovery_refresh.py)
 
 Working publishes `index.json` through `workspace/search` and each collection file through `workspace/search-<collection-id>`. Keep the scope contract with the [Search artifact names](../../docs-viewer/services/docs_search_scopes.py) and use the shared format, matcher and result list when extending it.

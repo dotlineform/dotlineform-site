@@ -165,8 +165,7 @@ def generate_documents(
                             manifest=manifest, media_changes=media_changes, media_writes=media_writes)
     recent = None
     if not collection and builder.config.stage == "working" and not builder.targeted_build and not builder.skip_recent:
-        candidates = builder.recent_candidates(docs, navigation["docs"], ignored_ids=publication.ignored)
-        recent = builder.recent_payload(candidates, output_path=builder.output_dir / "recent.json")
+        recent = builder.recent_payload(navigation["docs"], ignored_ids=publication.ignored, output_path=builder.output_dir / "recent.json")
 
     project_item = None
     if builder.config.stage == "working":

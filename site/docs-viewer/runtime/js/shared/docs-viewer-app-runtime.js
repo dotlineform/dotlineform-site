@@ -2,7 +2,6 @@ import {
   normalizeSearchText
 } from "./docs-viewer-search.js";
 import {
-  getConfigValue,
   initDocsViewerConfigController
 } from "./docs-viewer-config-controller.js";
 import {
@@ -95,7 +94,6 @@ export function startDocsViewerRuntime(options) {
   var runtimeDefaults = DOCS_VIEWER_RUNTIME_DEFAULTS;
   var SEARCH_BATCH_SIZE = runtimeDefaults.searchBatchSize;
   var SEARCH_DEBOUNCE_MS = runtimeDefaults.searchDebounceMs;
-  var DEFAULT_RECENT_LIMIT = runtimeDefaults.defaultRecentLimit;
   var MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS = runtimeDefaults.managementCapabilityRetryAttempts;
   var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = runtimeDefaults.managementCapabilityRetryDelayMs;
   var latestIndexProjection = null;
@@ -135,7 +133,6 @@ export function startDocsViewerRuntime(options) {
   var documentIndex = null;
   var documentViewCoordinator = null;
   var activeSourceEditorContextAdapter = null;
-  var recentControlLabel = "Recent";
   var latestCollectionReportState = {
     state: "inactive",
     reason: "startup",
@@ -541,14 +538,9 @@ export function startDocsViewerRuntime(options) {
     activeIndexViewId: function () { return panelLayout.projectViewState().index.activeViewId; },
     configService: composition.configService,
     featurePolicy: featurePolicy,
-    defaultRecentLimit: DEFAULT_RECENT_LIMIT,
     documentIndex: appSession.domains.documentIndex,
     managementController: function () {
       return managementRuntime ? managementRuntime.controller() : null;
-    },
-    setRecentControlLabel: function (label) {
-      recentControlLabel = String(label || "Recent");
-      renderIndexListControls();
     },
     renderRecentMode: renderRecentMode,
     renderSidebar: renderSidebar,
@@ -559,7 +551,6 @@ export function startDocsViewerRuntime(options) {
     routeViewerBaseUrl: routeViewerBaseUrl,
     routeSession: appSession.domains.routeSession,
     workspaceConfig: appSession.domains.workspaceConfig,
-    searchRecent: appSession.domains.searchRecent,
     viewerBaseUrl: function () { return viewerBaseUrl; },
   });
 
@@ -584,7 +575,6 @@ export function startDocsViewerRuntime(options) {
       defaultRouteDocId: function () { return defaultRouteDocId; },
       docsViewerConfigUrl: docsViewerConfigUrl,
       escapeHtml: escapeHtml,
-      getConfigValue: getConfigValue,
       isManagementContext: function () { return routeWorkflow.managementUiEnabled(); },
       serviceClient: {
         docsViewerConfigUrl: docsViewerConfigUrl,
@@ -683,7 +673,6 @@ export function startDocsViewerRuntime(options) {
     return indexListControlHost.render({
       controlStateById: {
         "recent": {
-          label: recentControlLabel,
           pressed: latestIndexProjection && latestIndexProjection.activeViewId === "recent-results"
         },
         "portfolio-search": scope?.scopeButton || { hidden: true },

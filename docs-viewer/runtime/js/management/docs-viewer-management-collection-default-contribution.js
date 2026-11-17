@@ -194,7 +194,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       if (disabledReason) action.button.dataset.docsViewerDisabledReason = disabledReason;
       else delete action.button.dataset.docsViewerDisabledReason;
     });
-    if (listToolbar.sortButton) listToolbar.sortButton.disabled = active;
     listToolbar.selectionChanged(active);
     return snapshot;
   }
@@ -350,27 +349,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     var documentRef = host.ownerDocument;
 
-    var sortButton = null;
-    if (settings.sort && typeof settings.sort.setMode === "function") {
-      sortButton = documentRef.createElement("button");
-      sortButton.className = "docsViewer__toolbarIconButton docsViewerReport__collectionSortButton";
-      sortButton.type = "button";
-      sortButton.dataset.docsCollectionSort = cleanString(settings.sort.mode);
-      var titleMode = cleanString(settings.sort.mode) !== "last-updated-desc";
-      sortButton.appendChild(createDocsViewerToolbarIcon(documentRef,
-        titleMode ? "docsViewer__icon--clock-3" : "docsViewer__icon--arrow-down-a-z"));
-      sortButton.setAttribute(
-        "aria-label",
-        titleMode
-          ? "Sorted by title. Switch to recently updated."
-          : "Sorted by recently updated. Switch to title."
-      );
-      sortButton.title = sortButton.getAttribute("aria-label");
-      sortButton.addEventListener("click", function () {
-        settings.sort.setMode(titleMode ? "last-updated-desc" : "title-asc");
-      });
-    }
-
     var regenerateButton = null;
     if (managementContext && onRegenerateCatalogue) {
       regenerateButton = documentRef.createElement("button");
@@ -450,12 +428,10 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     settings.actionHost.replaceChildren(...(regenerateButton ? [regenerateButton] : []));
     if (bookRowSelection) {
       bookRowSelection.prepare(openBookRow);
-      if (sortButton) host.appendChild(sortButton);
       bookTools.mountListActions(selectButton, selectionControl, actionsHost);
     } else {
       var root = documentRef.createElement("div");
       root.className = "docsViewerReport__collectionSelectionToolbar";
-      if (sortButton) root.appendChild(sortButton);
       root.append(selectButton, selectionControl, actionsHost);
       host.appendChild(root);
     }
@@ -486,8 +462,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       selectButton: selectButton,
       selectionChanged: settings.selectionChanged,
       selectionControl: selectionControl,
-      selectionReady: settings.selectionReady,
-      sortButton: sortButton
+      selectionReady: settings.selectionReady
     };
     documentRef.addEventListener("click", handleDocumentClick);
     documentRef.addEventListener("keydown", handleDocumentKeydown);

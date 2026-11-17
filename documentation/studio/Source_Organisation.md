@@ -9,7 +9,7 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Source Organisation
 
-`docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v9`. The loader resolves the existing root selected by `DOTLINEFORM_DOCS_BASE_DIR` without inferred or fallback storage. Document and Work media resolve beneath configured Working and Preview asset roots.
+`docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v10`. The loader resolves the existing root selected by `DOTLINEFORM_DOCS_BASE_DIR` without inferred or fallback storage. Document and Work media resolve beneath configured Working and Preview asset roots.
 
 `DOTLINEFORM_DOCS_BASE_DIR` selects the Docs Viewer folder directly. It is independent of `DOTLINEFORM_PROJECTS_BASE_DIR`, which owns Catalogue, Processing, Data Sharing and other project workspaces. Both settings live in `.env.local`; neither is an alias or fallback for the other. To relocate Docs storage, stop services, move the complete Working and Preview trees to the explicitly selected root, change the setting, verify the resolved locations, and restart.
 
@@ -153,7 +153,7 @@ Normal Source Save processes only supplied pending media, and exact-document Reb
 
 `working/source/recent-exclusions.json` controls every Recent-specific exclusion. It is an editable JSON array of exact targets: ordinary pages use `{ "doc_id": "d-20260426-164043-e14f49" }`; collection documents also name their owner, for example `{ "collection": "works", "doc_id": "d-20260801-212422-df11f3" }`. Use exact configured collection IDs, omit `collection` for ordinary pages, and use `[]` for no exclusions. Duplicate targets collapse into one exact exclusion. Extra fields, invalid identities, missing files and invalid JSON fail visibly. The list may retain valid targets for documents that no longer exist.
 
-Exclusions affect only the named document's Recent membership; descendants, Search, navigation and publication eligibility retain their existing rules. Collection hosts have no automatic exclusion. The initial list contains dotlineform and the Context, Concepts, Moments and Catalogue landing pages. Local Recent exposes **Open Recent exclusions in VS Code**, using an empty-body `/docs/open-recent-exclusions` action that opens only this configured file, including malformed JSON for repair. The file and control are local-only.
+Exclusions apply to named document targets in Recent. The current feed takes its document entries from Context, Concepts and Moments. Manage Recent exposes **Open Recent exclusions in VS Code** through `/docs/open-recent-exclusions` and opens the configured file, including malformed JSON for repair.
 
 Save the file, then choose Manage **Refresh Search and Recent** to apply the exclusions; full Working maintenance also updates Recent. Only changed content joins the queue. Publish transfers queued bytes without Recent generation. Ordinary document operations preserve saved Recent. [Generated Data Contracts](Generated_Data_Contracts.md#recent-contract) owns its row fields.
 

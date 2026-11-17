@@ -1,7 +1,7 @@
 import { renderResultEntry } from "./docs-viewer-render.js";
 import {
   COLLECTION_SEARCH_SCOPES, PORTFOLIO_SEARCH_SCOPE, REFERENCE_SEARCH_SCOPES,
-  collectRecentDocs, collectSearchMatches, normalizeSearchText
+  collectSearchMatches, normalizeSearchText
 } from "./docs-viewer-search.js";
 
 /** Give Index lists history and URL commands without document-opening or list-reset authority. */
@@ -28,7 +28,6 @@ export function initDocsViewerSearchController(context) {
   var renderedCount = 0;
   var searchMatches = [];
   var renderedRecent = null;
-  var renderedRecentLimit = 0;
   var renderedView = "";
   var scopeIndexes = new Map();
   var portfolioSelected = false;
@@ -176,8 +175,7 @@ export function initDocsViewerSearchController(context) {
       });
       return;
     }
-    if (renderedView === "recent-results" && renderedRecent === searchRecent.recentEntries
-      && renderedRecentLimit === searchRecent.recentLimit) { syncSelection(); return; }
+    if (renderedView === "recent-results" && renderedRecent === searchRecent.recentEntries) { syncSelection(); return; }
     try {
       renderRecentRows();
     } catch (error) {
@@ -217,13 +215,12 @@ export function initDocsViewerSearchController(context) {
   }
 
   function renderRecentRows() {
-    var docs = collectRecentDocs(searchRecent.recentEntries, searchRecent.recentLimit);
-    setResultsStatus(docs.length ? "" : "No recently edited docs.", false);
+    var docs = searchRecent.recentEntries;
+    setResultsStatus(docs.length ? "" : "No recent additions.", false);
     results.innerHTML = docs.map(function (doc) { return resultEntry(doc, doc.doc_id); }).join("");
     more.replaceChildren();
     more.hidden = true;
     renderedRecent = searchRecent.recentEntries;
-    renderedRecentLimit = searchRecent.recentLimit;
     renderedView = "recent-results";
     resultsView.scrollTop = 0;
     syncSelection();
@@ -273,20 +270,20 @@ export function initDocsViewerSearchController(context) {
   }
 
   function commitDocumentChange(change) {
+    if (!change.deleted) return;
     var target = change.target;
-    var matches = function (entry) { return (entry.collection || "") === (target.collection || "") && entry.doc_id === target.doc_id; };
     var scroll = resultsView.scrollTop;
-    if (change.deleted) {
-      deletedResults.add((target.collection || "") + ":" + target.doc_id);
-      renderedIndex = null;
-      if (context.activeIndexViewId() === "search-results") renderSearchMode();
+    deletedResults.add((target.collection || "") + ":" + target.doc_id);
+    renderedIndex = null;
+    if (context.activeIndexViewId() === "search-results") renderSearchMode();
+    var entries = searchRecent.recentEntries;
+    var remaining = entries.filter(function (entry) {
+      return entry.doc_id !== target.doc_id || (entry.collection || "") !== (target.collection || "");
+    });
+    if (remaining.length !== entries.length) {
+      searchRecent.recentEntries = remaining;
+      if (recentActive()) renderRecentMode();
     }
-    if (searchRecent.recentLoaded) {
-      var existing = searchRecent.recentEntries.find(matches);
-      searchRecent.recentEntries = searchRecent.recentEntries.filter(function (entry) { return !matches(entry); });
-      if (!change.deleted && existing) searchRecent.recentEntries.push(Object.assign({}, existing, change.record, { timestamp: change.record.last_updated }));
-    }
-    if (recentActive()) renderRecentMode();
     resultsView.scrollTop = scroll;
   }
   var deletedResults = new Set();

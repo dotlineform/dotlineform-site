@@ -114,7 +114,10 @@ class PublicMetadata:
             else:
                 eligible = (row for row in manifest["docs"] if collection == "catalogue" or not row["draft"])
             for row in eligible:
-                public = {key: row[key] for key in ("doc_id", "title", "last_updated", "has_thumbnail", "catalogue_targets") if key in row}
+                public = {
+                    key: row[key] for key in ("doc_id", "title", "added_date", "last_updated", "has_thumbnail", "catalogue_targets")
+                    if key in row
+                }
                 rows.append(public)
         self._complete(collection, {"docs": rows}, {row["doc_id"] for row in rows})
 

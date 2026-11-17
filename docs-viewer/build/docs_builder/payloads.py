@@ -13,9 +13,9 @@ from .source import DocRecord, DocumentIdentity
 from .ordinary_metadata import OrdinaryDocumentSummary
 from .related_links import render_related_links
 from .summary_formatting import render_summary_paragraphs
-from docs_discovery_selection import DiscoverySelection, select_collection_documents, select_ordinary_documents
+from docs_discovery_selection import read_discovery_galleries, select_collection_documents, select_ordinary_documents
 from docs_recent_exclusions import read_recent_exclusions
-from docs_recent_payload import build_recent_payload, recent_candidates as discovery_recent_candidates
+from docs_recent_payload import RECENT_COLLECTIONS, build_recent_payload
 from docs_report_source import project_report_markdown
 
 
@@ -158,32 +158,15 @@ class PayloadBuilderMixin:
             **comparable,
         }
 
-    def recent_limit(self) -> int:
-        return self.workspace.recent_limit
-
-    def recent_candidates(
-        self, docs: list[DocRecord], tree: list[dict[str, Any]], *, ignored_ids: frozenset[str],
-    ) -> list[dict[str, Any]]:
-        """Use current in-memory ordinary metadata and saved flat collection metadata.
-
-        Only full Working builds call this. Collection bodies and the Search
-        index are never opened; missing metadata must be rebuilt by its owner.
-        """
-        if self.config.stage != "working":
-            raise ValueError("Recents generation requires Working; Preview copies the prepared payload")
-        selected = select_ordinary_documents(tree, ignored_ids)
-        collections = select_collection_documents(self.repo_root, self.config, set(selected))
-        return discovery_recent_candidates(DiscoverySelection(selected, collections), {doc.doc_id: doc.last_updated for doc in docs})
-
     def recent_payload(
-        self,
-        candidates: list[dict[str, Any]],
-        *,
-        output_path: Path,
+        self, tree: list[dict[str, Any]], *, ignored_ids: frozenset[str], output_path: Path,
     ) -> dict[str, Any]:
-        """Sort the complete candidate set before limiting a reader projection."""
+        """Build Recent from saved portfolio metadata during a standalone ordinary build."""
+        ordinary = select_ordinary_documents(tree, ignored_ids)
+        collections = select_collection_documents(self.repo_root, self.config, ordinary, RECENT_COLLECTIONS)
+        galleries = read_discovery_galleries(self.repo_root, self.workspace, self.config, ordinary)
         payload = build_recent_payload(
-            candidates, limit=self.recent_limit(), generated_at=utc_timestamp(),
+            collections, galleries, limit=self.workspace.recent_limit, generated_at=utc_timestamp(),
             exclusions=read_recent_exclusions(self.config),
         )
         comparable = {key: value for key, value in payload.items() if key != "generated_at"}

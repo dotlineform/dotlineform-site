@@ -36,6 +36,8 @@ A multi-term query requires a match for each term. Text prefix matching begins a
 
 Search renders and announces no numeric result counts or shown/total summaries. Loading, searching, empty-result and error messages remain, and More continues to reveal the next batch of results. Recent likewise shows no count.
 
+**Recent** shows the 20 newest additions across Context, Concepts, Moments and Catalogue Galleries. It uses the recorded addition date, with title and identity breaking same-day ties. Manage uses the latest completed Working list and Public uses the published snapshot. [Recent contract](Generated_Data_Contracts.md#recent-contract)
+
 Search and Recent controls occupy the first Index row in Public and Manage. Their results replace the visible tree while the document remains in the main pane. Manage keeps Index Actions and Position in a second row, disabled while results are active; displayed-document controls retain their normal capabilities. Expanded main views can hide the whole Index panel and retain its active view for return. Public narrow screens bound the list height so the document below remains reachable.
 
 Down from the Index search field focuses the first displayed result and applies any pending query immediately. While results load or the list is empty, focus stays in the field. Up and Down move between displayed results. Enter opens the focused document or Gallery. Escape or Up from the first result returns focus to search. More reveals the next batch.

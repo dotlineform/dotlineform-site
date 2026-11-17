@@ -5,27 +5,9 @@ import {
   DOCS_VIEWER_CODE_CONFIG
 } from "./docs-viewer-code-config.js";
 
-export function positiveInteger(value, fallback) {
-  var parsed = parseInt(value, 10);
-  return parsed > 0 ? parsed : fallback;
-}
-
-export function getConfigValue(config, path) {
-  var current = config;
-  String(path || "").split(".").filter(Boolean).forEach(function (key) {
-    if (current && Object.prototype.hasOwnProperty.call(current, key)) {
-      current = current[key];
-    } else {
-      current = undefined;
-    }
-  });
-  return current;
-}
-
 export function initDocsViewerConfigController(context) {
   var workspaceConfig = context.workspaceConfig || {};
   var documentIndex = context.documentIndex || {};
-  var searchRecent = context.searchRecent || {};
   var configService = context.configService || {};
   var routeCommands = context.routeCommands || {};
   var root = context.root;
@@ -196,13 +178,10 @@ export function initDocsViewerConfigController(context) {
   function applyViewerConfig(config) {
     workspaceConfig.viewerConfig = config || {};
     workspaceConfig.viewerConfigLoaded = true;
-    workspaceConfig.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recent_limit"), context.defaultRecentLimit);
-    searchRecent.recentLimit = workspaceConfig.recentLimit;
     workspaceConfig.uiStatuses = normalizeUiStatuses();
     workspaceConfig.uiStatusByValue = new Map(workspaceConfig.uiStatuses.map(function (status) {
       return [status.ui_status, status];
     }));
-    if (typeof context.setRecentControlLabel === "function") context.setRecentControlLabel("Recent");
     if (context.managementController()) {
       context.managementController().applyConfig(config);
     }

@@ -1,53 +1,33 @@
-"""Build the shared, stage-independent Recents artifact from completed metadata."""
+"""Build the portfolio Recent artifact from completed collection and Gallery metadata."""
 
-from typing import Any, Mapping
+from typing import Any
 
-from docs_discovery_selection import DiscoverySelection
-from docs_document_identity import doc_updated_date
+from docs_workspace_config import DocsCollectionConfig
 
-DOCS_RECENT_SCHEMA_VERSION = "docs_recent_v2"
-RECENT_FIELDS = frozenset({
-    "doc_id", "title", "timestamp", "parent_id", "parent_title",
-    "collection", "report_doc_id", "collection_title",
-})
-
-
-def recent_candidates(discovery: DiscoverySelection, ordinary_updated: Mapping[str, str]) -> list[dict[str, Any]]:
-    """Project completed discovery metadata without reading document bodies."""
-    rows = []
-    for doc_id, row in discovery.ordinary.items():
-        entry = {"doc_id": doc_id, "title": row["title"], "last_updated": doc_updated_date(ordinary_updated[doc_id])}
-        parent_id = row["parent_id"]
-        if parent_id:
-            entry.update(parent_id=parent_id, parent_title=discovery.ordinary[parent_id]["title"])
-        rows.append(entry)
-    for owner, selected in discovery.collections:
-        if not owner.include_in_site_search:
-            continue
-        rows.extend({
-            "doc_id": doc_id, "title": row["title"], "last_updated": row["last_updated"],
-            "collection": owner.collection, "report_doc_id": owner.report_host_doc_id, "collection_title": owner.title,
-        } for doc_id, row in selected.items())
-    return rows
+DOCS_RECENT_SCHEMA_VERSION = "docs_recent_v3"
+RECENT_COLLECTIONS = frozenset({"works", "concepts", "moments"})
 
 
 def build_recent_payload(
-    candidates: list[dict[str, Any]], *, limit: int, generated_at: str,
+    collections: list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]],
+    galleries: dict[str, Any] | None, *, limit: int, generated_at: str,
     exclusions: frozenset[tuple[str, str]],
 ) -> dict[str, Any]:
-    """Exclude exact targets, then sort the complete dated set before limiting."""
-    ordered = sorted(
-        (row for row in candidates if row["last_updated"] and (row.get("collection", ""), row["doc_id"]) not in exclusions),
-        key=lambda row: (row["title"].lower(), row["doc_id"], row.get("collection", "")),
-    )
-    ordered.sort(key=lambda row: row["last_updated"], reverse=True)
-    fields = RECENT_FIELDS - {"timestamp"}
-    return {
-        "schema": DOCS_RECENT_SCHEMA_VERSION,
-        "limit": limit,
-        "generated_at": generated_at,
-        "docs": [
-            {**{key: row[key] for key in sorted(fields) if key in row}, "timestamp": row["last_updated"]}
-            for row in ordered[:limit]
-        ],
-    }
+    """Filter eligible dated additions before sorting and limiting the feed."""
+    entries = []
+    for owner, selected in collections:
+        if owner.collection not in RECENT_COLLECTIONS:
+            continue
+        entries.extend({
+            "doc_id": doc_id, "title": row["title"], "timestamp": row["added_date"],
+            "collection": owner.collection, "report_doc_id": owner.report_host_doc_id, "collection_title": owner.title,
+        } for doc_id, row in selected.items() if row["added_date"] and (owner.collection, doc_id) not in exclusions)
+    if galleries is not None:
+        entries.extend({
+            "kind": "catalogue-gallery", "id": gallery_id,
+            "title": galleries["galleries"][gallery_id], "timestamp": added_date,
+        } for gallery_id, added_date in galleries.get("added_dates_by_gallery", {}).items())
+
+    entries.sort(key=lambda row: (row["title"].lower(), row.get("doc_id") or row["id"], row.get("collection", "")))
+    entries.sort(key=lambda row: row["timestamp"], reverse=True)
+    return {"schema": DOCS_RECENT_SCHEMA_VERSION, "limit": limit, "generated_at": generated_at, "docs": entries[:limit]}

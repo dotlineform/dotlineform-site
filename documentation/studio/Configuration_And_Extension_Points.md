@@ -45,7 +45,7 @@ Generated browser config sits between source-side workspace config and the runti
 
 ### Workspace And Target Contracts
 
-`docs-viewer/config/workspace/docs-workspace.json`, schema `docs_workspace_v9`, defines the existing external Docs root. Working owns source/generated output and local document/Work media; Preview owns the prepared snapshot and its document/Work media. Retired scope/stage storage and fallback roots remain prohibited.
+`docs-viewer/config/workspace/docs-workspace.json`, schema `docs_workspace_v10`, defines the existing external Docs root. Working owns source/generated output and local document/Work media; Preview owns the prepared snapshot and its document/Work media. Retired scope/stage storage and fallback roots remain prohibited.
 
 The top-level `default_doc_id` is one design-time setting shared by local and public readers. It remains `d-20260426-164043-e14f49`. There are no Working/Preview overrides, Settings UI or settings API writes. Document deletion does not rewrite this setting. Maintainers choose a document available to both readers; blank retains the existing first-Index-root behavior. Configuration loading checks identifier syntax without scanning document membership or publication eligibility.
 

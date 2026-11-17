@@ -9,14 +9,14 @@ from typing import Any, Callable
 
 from docs_build_manifest import remove_build_manifest, write_working_build_completion
 from docs_book_tree import book_order_path, read_book_order
-from docs_discovery_selection import DiscoverySelection, read_discovery_metadata, select_built_discovery_documents
+from docs_discovery_selection import read_discovery_galleries, select_built_discovery_documents
 from docs_discovery_refresh import write_recent
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_selected_documents import read_selected, refresh_workspace_selected
 from docs_publication_preparation import load_preparation
 from docs_generation import generate_documents, prepare_dependencies, prepare_restored
-from docs_workspace_config import generated_documents_path, is_curated_book, load_docs_workspace_config, require_document_authoring, select_workspace_stage
+from docs_workspace_config import is_curated_book, load_docs_workspace_config, require_document_authoring, select_workspace_stage
 
 
 def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
@@ -128,19 +128,12 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             perform("Selected publication handoff", publication.save)
 
         tree = results[""]["index_tree_payload"]["docs"]
-
-        def select_discovery() -> DiscoverySelection:
-            manifests = {name: result["manifest_payload"] for name, result in results.items() if name}
-            eligible = publication.metadata.membership("")
-            for owner in config.site_search_collections:
-                if owner.collection not in builders and owner.report_host_doc_id in eligible:
-                    manifests[owner.collection] = read_discovery_metadata(generated_documents_path(owner) / "manage-manifest.json")
-            return select_built_discovery_documents(config, tree, manifests, publication.ignored)
-
-        discovery = perform("discovery-selection", select_discovery)
+        manifests = {name: result["manifest_payload"] for name, result in results.items() if name}
+        discovery = perform("discovery-selection", lambda: select_built_discovery_documents(config, tree, manifests, publication.ignored))
+        galleries = perform("discovery-galleries", lambda: read_discovery_galleries(repo_root, workspace, config, discovery.ordinary))
 
         payload["diagnostics"]["recent"] = perform("recent", lambda: write_recent(
-            workspace, config, discovery, {doc.doc_id: doc.last_updated for doc in documents[""]},
+            workspace, config, discovery, galleries,
         ))
         if payload["diagnostics"]["recent"]["wrote"]:
             publication.shared("workspace", "recent")
@@ -152,7 +145,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             publication.save()
 
         payload["diagnostics"]["search"] = perform("search", lambda: search_builder.run(
-            discovery, write=True, documents=documents, on_written=select_search,
+            discovery, galleries, write=True, documents=documents, on_written=select_search,
         ))
         perform("browser-configuration", lambda: write_browser_config(
             repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config",

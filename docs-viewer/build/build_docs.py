@@ -21,7 +21,6 @@ from docs_builder.browser_config import (
 from docs_builder.cli import main, parse_args
 from docs_builder.common import (
     CONFIG_REL_PATH,
-    DEFAULT_RECENT_LIMIT,
     DOCS_INDEX_TREE_SCHEMA_VERSION,
     DOCS_VIEWER_BROWSER_CONFIG_PATH,
     DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,

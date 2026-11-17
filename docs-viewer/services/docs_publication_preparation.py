@@ -107,7 +107,10 @@ class PublicationPreparation:
         collection = getattr(document_owner, "collection", "")
         eligible = self.metadata.membership(collection)
         if collection == "catalogue" and catalogue_work_selection:
-            self.catalogue_documents.update(doc_ids & eligible)
+            selected = doc_ids & eligible
+            if self.changes_only:
+                selected &= changed_ids | self.restored_documents
+            self.catalogue_documents.update(selected)
         targets = {doc_id: collection for doc_id in doc_ids | set(deleted)}
         targets.update(self.metadata.withdrawn)
         for doc_id, owner in targets.items():

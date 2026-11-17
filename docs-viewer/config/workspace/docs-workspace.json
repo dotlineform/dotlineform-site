@@ -1,5 +1,5 @@
 {
-  "schema_version": "docs_workspace_v9",
+  "schema_version": "docs_workspace_v10",
   "media_report_metadata": "working/generated/reports/docs-media/metadata.json",
   "r2_media_report": "working/generated/reports/r2-media/report.json",
   "projects_report_metadata": "working/generated/reports/projects/metadata.json",
@@ -106,7 +106,6 @@
           "collection_type": "book-collection",
           "document_media": true,
           "icon": "library",
-          "include_in_site_search": true,
           "title": "Library",
           "report_host_doc_id": "d-20260809-130120-870cc2"
         },
@@ -115,7 +114,6 @@
           "collection_type": "curated-book",
           "document_media": true,
           "icon": "dlf-doc",
-          "include_in_site_search": true,
           "title": "Living Memory",
           "report_host_doc_id": "d-20261111-120000-5af14d"
         },
@@ -123,7 +121,6 @@
           "collection": "works",
           "document_media": true,
           "icon": "dlf-context",
-          "include_in_site_search": true,
           "pin_starred_documents": true,
           "title": "Context",
           "report_host_doc_id": "d-20260801-073826-8865a8"
@@ -132,7 +129,6 @@
           "collection": "concepts",
           "document_media": true,
           "icon": "dlf-concept",
-          "include_in_site_search": false,
           "title": "Concepts",
           "report_host_doc_id": "d-20260624-213316-478639",
           "supports_return_import": true
@@ -141,7 +137,6 @@
           "collection": "moments",
           "document_media": true,
           "icon": "dlf-moment",
-          "include_in_site_search": false,
           "title": "Moments",
           "report_host_doc_id": "d-20260907-180859-c425b2"
         },
@@ -149,7 +144,6 @@
           "collection": "catalogue",
           "document_media": false,
           "icon": "dlf-catalogue",
-          "include_in_site_search": false,
           "title": "catalogue",
           "report_host_doc_id": "d-20260916-161504-f8c947"
         }

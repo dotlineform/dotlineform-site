@@ -6,8 +6,10 @@ import { fetchDocsCollectionManifest, fetchSelectedDocumentRows } from "./docs-v
 import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-filter.js";
 import {
   CATALOGUE_DISCOVERY_SIZE,
+  COLLECTION_ADDED_SORT,
   COLLECTION_PAGE_SIZE,
   COLLECTION_SEARCH_DELAY_MS,
+  COLLECTION_TITLE_SORT,
   appendCollectionThumbnail,
   catalogueDiscoveryRows,
   catalogueRandomIndex,
@@ -21,7 +23,6 @@ import {
 } from "./docs-collection-browsing.js";
 import { catalogueDiscoveryMediaPresentation } from "./docs-viewer-catalogue-media.js";
 
-const CATALOGUE_DEFAULT_SORT = "last-updated-desc";
 const CATALOGUE_LIST_SIZE = 64;
 const CATALOGUE_DISCOVERY_COLUMNS = 8;
 const CATALOGUE_GALLERY_WIDTH = CATALOGUE_DISCOVERY_COLUMNS * 64 + (CATALOGUE_DISCOVERY_COLUMNS - 1) * 8;
@@ -75,7 +76,7 @@ function collectionTitle(record) {
 function collectionBrowsingFeatures(collection) {
   var boundedBrowsing = ["catalogue", "works"].includes(collection.collection)
     || collection.collectionType === "book-collection";
-  return { pagination: boundedBrowsing, filterToolbarSort: boundedBrowsing };
+  return { pagination: boundedBrowsing };
 }
 
 function collectionItemsLabel(collection) {
@@ -287,7 +288,7 @@ function renderFilterShell(collection) {
   };
 }
 
-function renderShell(context, collection, features) {
+function renderShell(context, collection) {
   var root = context.reportRoot;
   clearNode(root);
   root.dataset.reportColumns = "1";
@@ -363,13 +364,10 @@ function renderShell(context, collection, features) {
       filters.toolbarNode.appendChild(discoveryMedia);
     }
   }
-  var collectionSort = null;
-  if (context.managementContext && features.filterToolbarSort) {
-    collectionSort = document.createElement("button");
-    collectionSort.type = "button";
-    collectionSort.className = "docsViewer__toolbarIconButton docsViewerReport__collectionSortButton";
-    filters.toolbarNode.appendChild(collectionSort);
-  }
+  var collectionSort = document.createElement("button");
+  collectionSort.type = "button";
+  collectionSort.className = "docsViewer__toolbarIconButton docsViewerReport__collectionSortButton";
+  filters.toolbarNode.appendChild(collectionSort);
 
   return {
     shuffleNode: shuffle,
@@ -405,7 +403,7 @@ function catalogueGalleryActive(state) {
 function visibleDocuments(state, discoveryActive) {
   if (discoveryActive) {
     if (catalogueGalleryActive(state)) return [];
-    return state.listDiscovery.selection ??= state.browsingData.project("", CATALOGUE_DEFAULT_SORT).slice(0, CATALOGUE_LIST_SIZE);
+    return state.listDiscovery.selection ??= state.browsingData.project("", COLLECTION_ADDED_SORT).slice(0, CATALOGUE_LIST_SIZE);
   }
   var rows = state.browsingData.project(state.query, state.sortMode);
   return state.sectionNavigation ? state.sectionNavigation.project(rows) : rows;
@@ -415,7 +413,7 @@ async function loadCataloguePass(state, discovery, controls) {
   state.shufflePending = controls;
   updateCollectionControls(state);
   try {
-    var source = state.browsingData.project("", CATALOGUE_DEFAULT_SORT);
+    var source = state.browsingData.project("", COLLECTION_ADDED_SORT);
     var rows = await shuffleCatalogueWorks(source, controls.files[controls.fileIndex]);
     if (!state.mounted || state.shufflePending !== controls) return;
     var start = controls.start ?? catalogueRandomIndex(rows.length);
@@ -552,6 +550,7 @@ function bindFilterControls(state) {
     cancelCollectionSearch(state);
     state.listNeedsRender = true;
     if (!normalizeDocsCollectionFilterValue(state.query)) {
+      state.sortMode = COLLECTION_TITLE_SORT;
       state.pageIndex = 0;
       renderListProjectionContained(state, "collection-search-clear");
       return;
@@ -674,40 +673,21 @@ function updateCollectionControls(state, pageIndex = state.pageIndex) {
     state.discoveryMediaNode.disabled = gallery || pending || state.shufflePending || !state.documentMatches.length;
   }
   var button = state.collectionSortNode;
-  if (button) {
-    button.hidden = discoveryActive && !gallery;
-    button.disabled = discoveryActive || locked || pending || state.shufflePending;
-    if (button.dataset.docsCollectionSort !== state.sortMode) {
-      var recentMode = state.sortMode === "last-updated-desc";
-      button.dataset.docsCollectionSort = state.sortMode;
-      button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument,
-        recentMode ? "docsViewer__icon--arrow-down-a-z" : "docsViewer__icon--clock-3"));
-      button.title = recentMode ? "Sorted by recently updated. Switch to title A–Z."
-        : "Sorted by title A–Z. Switch to recently updated.";
-      button.setAttribute("aria-label", button.title);
-    }
+  button.hidden = discoveryActive || Boolean(state.sectionNavigation?.usesTreeRows());
+  button.disabled = button.hidden || locked || pending || Boolean(state.shufflePending);
+  if (button.dataset.docsCollectionSort !== state.sortMode) {
+    var addedMode = state.sortMode === COLLECTION_ADDED_SORT;
+    button.dataset.docsCollectionSort = state.sortMode;
+    button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument,
+      addedMode ? "docsViewer__icon--arrow-down-a-z" : "docsViewer__icon--clock-3"));
+    button.title = addedMode ? "Sorted by last added. Switch to title A–Z."
+      : "Sorted by title A–Z. Switch to Last added.";
+    button.setAttribute("aria-label", button.title);
   }
   if (state.pager) {
     state.pager.update(state.matches.length, pageIndex, locked || pending || gallerySearchPending(state),
       state.pagedBrowsing && !discoveryActive);
   }
-}
-
-function listSortContext(state) {
-  return {
-    mode: state.sortMode,
-    setMode: function (mode) {
-      if (!state.mounted || state.selectionActive || state.searchTimer !== null || !state.manifestLoaded) return state.sortMode;
-      var nextMode = cleanString(mode);
-      if (!["title-asc", "last-updated-desc"].includes(nextMode)) {
-        throw new Error("Docs collection sort mode is invalid: " + nextMode);
-      }
-      state.sortMode = nextMode;
-      state.pageIndex = 0;
-      renderListProjectionContained(state, "sort-change", { reusePinnedRows: true });
-      return nextMode;
-    }
-  };
 }
 
 function renderListToolbar(state, docIds, retainedRows) {
@@ -751,8 +731,7 @@ function renderListToolbar(state, docIds, retainedRows) {
     },
     renderList: function () {
       if (state.mounted) renderListProjectionContained(state, "collection-controls-changed");
-    },
-    sort: state.features.filterToolbarSort ? null : listSortContext(state)
+    }
   });
   if (!host.childNodes.length) return;
   state.filterToolbarNode.appendChild(host);
@@ -856,7 +835,7 @@ function renderListProjection(state, reusePinnedRows) {
   var query = state.shuffleNode ? normalizeDocsCollectionFilterValue(state.query) : "";
   var documents = visibleDocuments(state, catalogueDiscoveryActive(state));
   if (query && gallerySearch) loadGallerySearch(state, gallerySearch);
-  var matches = query && gallerySearch?.project ? gallerySearch.project(query, documents) : documents;
+  var matches = query && gallerySearch?.project ? gallerySearch.project(query, documents, state.sortMode) : documents;
   state.pinnedMatches = null;
   if (state.pinnedDocIds?.size) {
     var pinned = [];
@@ -985,7 +964,7 @@ function restoreListControls(state, saved) {
   if (JSON.stringify(current) === JSON.stringify(saved)) return;
   cancelCollectionSearch(state);
   if (state.filterInputNode && typeof saved.query === "string") state.query = saved.query;
-  if (["title-asc", "last-updated-desc"].includes(saved.sort)) state.sortMode = saved.sort;
+  state.sortMode = saved.sort === COLLECTION_ADDED_SORT ? COLLECTION_ADDED_SORT : COLLECTION_TITLE_SORT;
   if (typeof state.contribution?.paginationDefault === "boolean" && typeof saved.pagination === "boolean") {
     state.pagedBrowsing = saved.pagination;
   }
@@ -1079,7 +1058,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   }
 
   var features = collectionBrowsingFeatures(collection);
-  var refs = renderShell(context, collection, features);
+  var refs = renderShell(context, collection);
   var readGallerySearch = collectionIdValue === "catalogue" && typeof context.openMediaTarget === "function"
     && context.collectionProvider.readCatalogueGalleryReportSearch;
   var readCollectionManifest = contributionCallback(contribution, "readManifest")
@@ -1100,7 +1079,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     collectionId: collectionIdValue,
     manifestLoaded: false,
     query: "",
-    sortMode: collectionIdValue === "catalogue" ? "last-updated-desc" : "title-asc",
+    sortMode: COLLECTION_TITLE_SORT,
     features: features,
     pagedBrowsing: contribution?.paginationDefault ?? features.pagination,
     paginationControl: null,
@@ -1185,11 +1164,12 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     });
     root.appendChild(state.pager.root);
   }
-  if (state.collectionSortNode) {
-    state.collectionSortNode.addEventListener("click", function () {
-      listSortContext(state).setMode(state.sortMode === "last-updated-desc" ? "title-asc" : "last-updated-desc");
-    });
-  }
+  state.collectionSortNode.addEventListener("click", function () {
+    if (!state.mounted || state.collectionSortNode.disabled) return;
+    state.sortMode = state.sortMode === COLLECTION_ADDED_SORT ? COLLECTION_TITLE_SORT : COLLECTION_ADDED_SORT;
+    state.pageIndex = 0;
+    renderListProjectionContained(state, "sort-change", { reusePinnedRows: true });
+  });
   var mountPaginationControl = contributionCallback(contribution, "mountPaginationControl");
   if (mountPaginationControl) {
     state.paginationControl = mountPaginationControl({
@@ -1296,7 +1276,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     if (!state.mounted) return;
     cancelCollectionSearch(state);
     state.query = "";
-    state.sortMode = CATALOGUE_DEFAULT_SORT;
+    state.sortMode = COLLECTION_TITLE_SORT;
     state.pageIndex = 0;
     state.listDiscovery = {};
     state.galleryDiscovery = { columns: [] };
@@ -1335,8 +1315,9 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     if (catalogueSearch !== undefined) {
       lifetime.catalogueSearch = undefined;
       cancelCollectionSearch(state);
-      if (catalogueSearch !== state.query && state.selectionActive) {
-        contributionCallback(state.contribution, "restoreListState")?.(null);
+      if (catalogueSearch !== state.query) {
+        if (state.selectionActive) contributionCallback(state.contribution, "restoreListState")?.(null);
+        state.sortMode = COLLECTION_TITLE_SORT;
       }
       state.query = catalogueSearch;
       state.pageIndex = 0;

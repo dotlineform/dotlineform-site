@@ -78,7 +78,6 @@ import {
 export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchBatchSize: 50,
   searchDebounceMs: 140,
-  defaultRecentLimit: 20,
   managementCapabilityRetryAttempts: 60,
   managementCapabilityRetryDelayMs: 500,
   reloadRetryAttempts: 12,
@@ -256,7 +255,6 @@ export function createDocsViewerAppComposition(options) {
     onTreeVisible: settings.onTreeVisible
   });
   var appSession = createDocsViewerAppSession({
-    defaultRecentLimit: constants.defaultRecentLimit,
     panelLayout: panelLayout,
     routeContext: routeContext,
     searchBatchSize: constants.searchBatchSize

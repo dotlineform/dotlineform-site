@@ -40,7 +40,6 @@ DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-
 SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("site/docs-viewer/config/defaults/docs-viewer-public-config.json")
 DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v4"
 DOCS_INDEX_TREE_SCHEMA_VERSION = "docs_index_tree_v1"
-DEFAULT_RECENT_LIMIT = 20
 MEDIA_TOKEN_PATTERN = re.compile(r"\[\[media:(.+?)\]\]")
 MEDIA_IMAGE_TOKEN_PATTERN = re.compile(r"!\[(?P<alt>(?:\\.|[^\]\\])*)\]\(\s*\[\[media:(?P<body>.+?)\]\]\s*\)")
 HTML_MEDIA_TOKEN_PATTERN = re.compile(r"\[\[html-media:(.+?)\]\]")

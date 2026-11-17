@@ -30,7 +30,7 @@ from docs_collection_customisations import (
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v9"
+SCHEMA_VERSION = "docs_workspace_v10"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 STAGES = ("working", "preview")
@@ -106,7 +106,6 @@ class DocsCollectionConfig:
     title: str
     icon: str
     report_host_doc_id: str
-    include_in_site_search: bool
     public_title: str
     supports_return_import: bool
     collection_customisation: DocsCollectionCustomisationConfig | None
@@ -142,15 +141,6 @@ class DocsStageConfig:
     def media_collections(self) -> tuple[DocsCollectionConfig, ...]:
         """Select configured document-media owners independently of document membership."""
         return tuple(collection for collection in self.collections if collection.media is not None)
-
-    @property
-    def site_search_collections(self) -> tuple[DocsCollectionConfig, ...]:
-        """Select explicit collection coverage, also owned here for Recents reuse.
-
-        Ordinary documents are always candidates. Callers apply document and
-        host eligibility separately; collection registration never opts in.
-        """
-        return tuple(collection for collection in self.collections if collection.include_in_site_search)
 
     @property
     def stage_root(self) -> ArtifactLocation:
@@ -469,7 +459,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
     seen = set()
     for index, raw_item in enumerate(raw):
         field = f"stages.{stage}.collections[{index}]"
-        item = _object(raw_item, field=field, required={"collection", "document_media", "title", "icon", "report_host_doc_id", "include_in_site_search"}, optional={
+        item = _object(raw_item, field=field, required={"collection", "document_media", "title", "icon", "report_host_doc_id"}, optional={
             "public_title", "supports_return_import", "collection_customisation", "collection_type", "pin_starred_documents",
         })
         if stage == "preview":
@@ -507,7 +497,6 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
         result.append(DocsCollectionConfig(
             collection=child, title=item["title"], icon=item["icon"], public_title=item.get("public_title", item["title"]),
             report_host_doc_id=_doc_id(item["report_host_doc_id"], field=f"{field}.report_host_doc_id"),
-            include_in_site_search=_boolean(item["include_in_site_search"], field=f"{field}.include_in_site_search"),
             supports_return_import=_boolean(item.get("supports_return_import", False), field=f"{field}.supports_return_import"),
             collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
             stage=stage,

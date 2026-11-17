@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -66,13 +67,21 @@ def validate_galleries(data: CatalogueGalleries, works: Mapping[str, Any]) -> No
     for gid, gallery in data.galleries.items():
         validate_gallery_id(gid)
         if (not isinstance(gallery, dict) or not {"gallery_id", "title"} <= gallery.keys()
-                or gallery.keys() - {"gallery_id", "title", *GALLERY_PRESENTATION_FIELDS}):
-            raise ValueError(f"Gallery {gid} requires gallery_id/title and optional description/marker")
+                or gallery.keys() - {"gallery_id", "title", "added_date", *GALLERY_PRESENTATION_FIELDS}):
+            raise ValueError(f"Gallery {gid} requires gallery_id/title with optional date and presentation")
         if gallery["gallery_id"] != gid:
             raise ValueError(f"Gallery {gid} has a different gallery_id")
         title = gallery["title"]
         if not isinstance(title, str) or not title.strip() or title != title.strip():
             raise ValueError(f"Gallery {gid} needs a non-empty trimmed title")
+        if "added_date" in gallery:
+            added_date = gallery["added_date"]
+            try:
+                valid_date = date.fromisoformat(added_date).isoformat() == added_date
+            except (TypeError, ValueError):
+                valid_date = False
+            if not valid_date:
+                raise ValueError(f"Gallery {gid} added_date must be a YYYY-MM-DD calendar date")
         if "description" in gallery:
             description = gallery["description"]
             if (not isinstance(description, str) or not description or description != description.strip()
