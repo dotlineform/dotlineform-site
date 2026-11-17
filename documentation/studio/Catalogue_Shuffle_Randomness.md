@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261112-214201-1a6913
 title: Catalogue Shuffle Randomness
 added_date: "2026-11-12 21:42:01"
-last_updated: "2026-11-12"
+last_updated: "2026-11-17"
 summary: Where the Catalogue shuffle bytes come from, how the browser uses them, and how far one file can go.
 parent_id: d-20260728-113139-763354
 ---
@@ -14,6 +14,18 @@ parent_id: d-20260728-113139-763354
 A quantum random bit generator (QRBG) converts measurements of a quantum process into a stream of random bits. The LfD laboratory exposes the output of its ID Quantique Quantis PCIe hardware through an API that takes a length in bytes. Each byte contains eight bits. With `format=HEX`, the API returns a JSON response whose `qrn` field represents each byte as two hexadecimal digits. For example, `46` represents the byte `01000110`. [LfD QRNG API](https://www.lfdr.de/QRNG/)
 
 On 2026-11-12, we fetched 2,097,152 bytes (2 MiB) in one request. We decoded the hex and split the resulting stream in order into 64 consecutive files of 32,768 bytes (32 KiB) each. The files run from `01.bin` through `64.bin` under `site/assets/data/catalogue-shuffle/`. Each file starts directly with the random bytes. The file size and the grouping of bytes into numbers are choices made by Catalogue. Another consumer could read the same bytes in groups of a different size.
+
+## Why Catalogue Prefetches The Stock
+
+Working and Public serve the same repository files from their own origin. A shuffle pass can start with a single file read, and visitors can reuse the stock through ordinary HTTP caching. This keeps browsing independent of an external service's response time, availability and quota.
+
+In the November 2026 comparison, LfD and Padova returned full batches, but their cross-origin policies prevented the site from reading them directly in the browser. Free Universe Splitter returned one value suitable as a seed. Qrypt could supply a batch, but its bearer token would have required a server relay. Prefetching provides batches of quantum draws using the existing static file delivery.
+
+## Replace The Stock
+
+1. When a replacement is wanted, make an HTTPS GET request to `https://lfdr.de/qrng_api/qrng?length=2097152&format=HEX`. Check that the JSON response declares `length` as 2,097,152 and that decoding its `qrn` hex string produces exactly that many bytes. [LfD QRNG API](https://www.lfdr.de/QRNG/)
+2. Split the decoded byte stream in order into 64 consecutive files of 32,768 bytes each. Replace `01.bin` through `64.bin` under `site/assets/data/catalogue-shuffle/` with those raw files.
+3. Review the 64 replacements in Git. Working serves the repository files, and the next Pages deployment of the committed site snapshot distributes them to Public. Replacing the bytes can change a saved pass when the reader reconstructs it.
 
 ## From bytes to shuffle draws
 
@@ -38,4 +50,4 @@ Each draw selects a slot, and the entry at that slot supplies the Work ID. The f
 
 The error **The shuffle batch ran out of draws for this Catalogue** means the browser reached the end of the file while it still needed another accepted draw. At 5,196 Works, a shuffle needs 5,195 accepted draws and can spare up to 2,997 rejections. At 8,193 Works, every draw has to be accepted. At 8,194 Works or more, the file is always too small.
 
-The same file and starting Work order reproduce the same shuffle. For a fixed starting order and stock, the 64 files can produce up to 64 distinct permutations. List and Gallery each use the files once per cycle in a randomly chosen order and independently choose where to start each pass. List rolls reveal up to 64 Works. Gallery rolls reveal eight Works and skip a remainder of fewer than eight. The tab saves each mode's displayed Works and active pass controls. A later roll can reconstruct the active permutation with one file read through the ordinary HTTP cache. A change to the file or the default Work order can produce a different result. [Catalogue browsing](Sub_Scope_Index_Architecture.md#catalogue-collection-browsing) · [Stock origin and replacement](deliveries/Catalogue_Shuffle.md#stock-and-operation)
+The same file and starting Work order reproduce the same shuffle. For a fixed starting order and stock, the 64 files can produce up to 64 distinct permutations. List and Gallery each use the files once per cycle in a randomly chosen order and independently choose where to start each pass. List rolls reveal up to 64 Works. Gallery rolls reveal eight Works and skip a remainder of fewer than eight. The tab saves each mode's displayed Works and active pass controls. A later roll can reconstruct the active permutation with one file read through the ordinary HTTP cache. A change to the file or the default Work order can produce a different result. [Catalogue browsing](Sub_Scope_Index_Architecture.md#catalogue-collection-browsing)

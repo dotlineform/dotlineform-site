@@ -3,20 +3,24 @@ draft: false
 doc_id: d-20261026-212105-3df12a
 title: Docs Viewer Gallery Ownership
 added_date: "2026-10-26 21:21:05"
-last_updated: "2026-10-26"
-summary: Proposed move of Gallery authoring, membership and presentation data from Studio into Docs Viewer.
-ui_status: proposed
+last_updated: "2026-11-17"
+summary: Retired proposal to move Gallery ownership from Studio into Docs Viewer.
+ui_status: retired
 parent_id: d-20260428-000000-f5ff18
 ---
 # Docs Viewer Gallery Ownership
 
-## Resume Here
+## Ownership Decision
 
-Gallery implementation remains proposed. [Catalogue Work By-ID Separation](Catalogue_Work_By_ID_Separation.md) delivered queue-driven Work adoption, portable document readers, downstream preparation and raw Work copy retirement separately. Studio still owns Gallery authoring and production. GO.2 starts from the adopted Catalogue document contract and moves ownership of its Gallery fields. The earlier live reader and public layout options below record the planning baseline.
+On 2026-11-17 the user confirmed that Studio retains Gallery ownership. Use Galleries for Medium groupings. The migration plan below is retained as history. The single date text idea remains a separate, parked question. [Catalogue Work Editor](../Catalogue_Work_Editor.md#gallery-and-series-definitions)
 
-The ownership proposal is deferred. [Catalogue Index Gallery Results](Catalogue_Index_Gallery_Results.md) uses Studio-generated Gallery data. The parked [Studio Gallery Browser](Studio_Gallery_Browser.md) addresses membership inspection in the Work Editor. If ownership migration resumes, first revisit the need for the GO.1 editing freeze and obtain implementation approval.
+## Historical Planning Handoff
 
-Decisions to carry forward:
+Queue-driven Work adoption, portable document readers, downstream preparation and raw Work copy retirement were delivered separately. The proposed GO.2 stage would have started from the adopted Catalogue document contract and moved ownership of its Gallery fields. The earlier live reader and public layout options below record the planning baseline. [Catalogue reference and presentation](../Generated_Data_Contracts.md#catalogue-reference-and-presentation)
+
+Catalogue discovery and search uses Studio-generated Gallery data. Local Studio provides membership browsing in the Work Editor. [Catalogue browsing](../Sub_Scope_Index_Architecture.md#catalogue-collection-browsing) · [Browse Galleries](../Catalogue_Work_Editor.md#browse-galleries)
+
+The original plan assumed the following:
 
 - Studio retains Works, Series and media preparation; all Gallery source, authoring and generation moves into Docs Viewer.
 - Immediately after Studio Refresh, Catalogue Regenerate adopts only Studio's queue-selected Work facts into baked Catalogue document JSON. It is the only Docs consumer of raw Studio Work by-ID JSON.
@@ -28,9 +32,9 @@ Decisions to carry forward:
 
 Planning handoff: changed repository documents are this delivery, `documentation/studio/Planned_Features.md` and `documentation/studio/Development_Checklist.md`. Targeted source/configuration inspection and selected read-only payload inspection informed the current/target tables; scoped `git diff --check` passed. This planning work performed no production edits, test changes/runs, migration, generation, Publish, commit, push or deployment. Current production still has the live Work reads and Studio Gallery ownership inventoried below. Before stage 2, agree the baked field/schema contract, shared document writer, Gallery source location, initial queue-selected snapshot conversion and selected public cleanup.
 
-## Current And Next State
+## Original Proposal
 
-Status: proposed. The owner has agreed the ownership direction and a three-stage sequence: freeze Gallery editing in Studio, move Gallery sources and production into independent Docs Viewer workflows, then add the Gallery management report UI. Studio Refresh must cease all Gallery work. This document records the target; no production UI change, source migration, generated write or publication has been performed. Resolve each stage's bounded readiness decisions and obtain its implementation approval before starting it.
+The original plan was to freeze Gallery editing in Studio, move Gallery sources and production into Docs Viewer, then add a Gallery management report there. Studio Refresh would have stopped generating Galleries. The migration remained at the proposal stage.
 
 Outcome: Studio owns Work/Series authoring, generated inputs and media preparation. Catalogue Regenerate, run immediately after Studio Refresh, is the sole ordinary owner that adopts queued Studio Work records into baked Working Catalogue document data. That adopted snapshot defines the latest Work known to Docs Viewer. Downstream Work presentation/preparation and Gallery workflows use that document data rather than rereading Studio Work by-ID JSON. Docs independently owns Gallery source, editing, joins and generation; Studio Refresh performs no Gallery work, directly or through a callback.
 
@@ -229,7 +233,7 @@ Gallery links also enter prepared document media presentations through the share
 
 ### Work-Record Readers Before Work By-ID Separation
 
-This table records the readers before [Catalogue Work By-ID Separation](Catalogue_Work_By_ID_Separation.md). Use the adopted Catalogue document contract for GO.2.
+This table records the readers before Catalogue Work by-ID adoption. Use the current [adopted Catalogue document contract](../Generated_Data_Contracts.md#catalogue-reference-and-presentation) for GO.2.
 
 | Identified current reader | Purpose and owning boundary |
 | --- | --- |
@@ -391,12 +395,12 @@ Gate: the complete Gallery ownership move is accepted and its durable owner is c
 
 Record: not started.
 
-## Follow-on
+## Historical Follow-ons
 
-Catalogue report improvements are separate from the ownership stages. Gallery discovery can proceed first against the existing Studio-generated data.
+Catalogue Gallery discovery now uses the existing Studio-generated data.
 
-- **Medium groups:** local Docs Viewer report assignment of distinct descriptive medium values to search/report groups such as Drawings, Paintings, Digital and Video. Groups support icon filters and remain separate from canonical Work metadata. Preserve exact authored medium descriptions; agree assignment cardinality and how unassigned media appear before implementation.
+- **Medium groups:** resolved by using Studio Galleries for the editorial groupings.
 - **Single date text:** retain the current `year_display` content as the single authoritative free-text Work date and retire separately maintained numeric `year` through its Studio authoring/import/generated consumers. Derive ordering and year/range search interpretation in the browser, preserving the display text. Agree start/end ordering, abbreviated ranges, separate dates and suggestion semantics; ascending start-year ordering is a proposal, not an implemented rule.
-- [Catalogue Index Gallery Results](Catalogue_Index_Gallery_Results.md) owns Gallery discovery and its paginated display. Medium and date filtering are separate proposals.
+- [Catalogue browsing](../Sub_Scope_Index_Architecture.md#catalogue-collection-browsing) describes Gallery discovery and its paginated display.
 
-The current Catalogue document manifest is already Docs-generated and can be enriched or accompanied by a narrow report projection when that follow-on is specified. Medium mapping can be resolved in loaded browser data instead of duplicated into every row. Lightweight title/ID/description matching, structured filtering and derived date ordering are the agreed direction; these requirements do not justify a new full-text index, runtime search service, automatic site Search rebuild or changes to site-search collection coverage.
+The earlier search proposal considered matching title, ID and description, structured filtering and derived date ordering from the loaded Catalogue data. The date work remains separate from Gallery ownership.

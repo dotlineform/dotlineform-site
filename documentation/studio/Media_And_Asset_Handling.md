@@ -218,7 +218,7 @@ Artifact `list()` returns sorted identities without file contents or unused size
 
 R2 `list_stats()` remains an explicit metadata-list API for maintenance owners. Normal Publish never calls it or lists remote families; it uses exact selected-object `stat()` size/ETag comparisons and verifies changed transfers. Upload limits and publication verification retain their own boundaries.
 
-The distinct review for [Artifact Listing And Export Cleanup](deliveries/Artifact_Listing_And_Export_Cleanup.md) removed unused local size reads and redundant discovery work. Shared directory discovery retains file-type and symlink-confinement checks; selected remote comparison and transfer verification retain their operational purposes. Focused lint, compilation, whitespace and source/diff review passed. Actual Publish, Export and browser behavior were not exercised, and remaining scope-era tests are unreviewed.
+The 2026-10-14 artifact listing review removed unused local size reads and redundant discovery work. Shared directory discovery retains file-type and symlink-confinement checks; selected remote comparison and transfer verification retain their operational purposes. Focused lint, compilation, whitespace and source/diff review passed. Actual Publish, Export and browser behavior were not exercised, and remaining scope-era tests are unreviewed.
 
 ### R2 Namespace And Historical Cleanup
 

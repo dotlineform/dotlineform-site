@@ -276,7 +276,7 @@ Closeout documentation: retain this delivery for its accepted metadata decisions
 
 ## Follow-on
 
-**Edit doc → Rebuild** is implemented in [Rebuild Displayed Document Delivery](deliveries/Rebuild_Displayed_Document_Delivery.md), with local menu/reload acceptance pending. It rebuilds and reloads the exact displayed ordinary or collection document, preserving source bytes/dates and leaving Search unchanged. This refreshes embedded Related links and rendered image tokens/captions/metadata/dimensions from current generated inputs. Catalogue Refresh and actual media generation retain their existing owners. [Runtime](Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) owns the lasting action contract.
+**Edit doc → Rebuild** rebuilds and reloads the exact displayed ordinary or collection document, preserving source bytes and dates. It refreshes embedded Related Links and renders image tokens, captions, metadata and dimensions from current generated inputs. Catalogue Refresh, media generation and Search retain their separate owners. [Runtime](Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) owns the action contract.
 
 ## Inspection Basis
 

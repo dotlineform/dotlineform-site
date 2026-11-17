@@ -41,4 +41,4 @@ SVG and raster image detail center Back, the title and Open in new tab as one gr
 
 ## Evidence And Limits
 
-[Image Detail Directive](deliveries/Image_Detail_Directive.md) records implementation, static checks, projection and code-review evidence. New behavior tests and browser automation require separately approved test work. Normal-use confirmation covers insertion, the control's placement, ordinary/collection opening, Back, new-tab opening and optional SVG behavior.
+Implementation review covered Source insertion, association with the following standalone image, and shared SVG and raster viewer behavior. Changed-file lint and public projection checks passed. New behavior tests and browser automation require separately approved test work.

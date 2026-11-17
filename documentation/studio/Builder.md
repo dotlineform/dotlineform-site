@@ -256,7 +256,7 @@ The shared ordinary/collection payload builder uses `summary_formatting.py` to p
 
 Source retains the token and front matter. Working generation expands Summary and prepares the same public content upstream; readers need no runtime lookup. Static Export consumes expanded by-ID content. [Package Prepare](Package_Prepare.md) retains its separate flattened Summary policy. Search remains explicitly rebuilt, and ordinary Summary edits follow awaited Source Save without rebuilding Search.
 
-The emphasis extension requires regeneration of existing Working summaries before reloading the updated Info reader, followed by the separate Publish operation for public document data. Source Save or an exact Rebuild prepares the new representation for later edits. [Summary Emphasis](deliveries/Summary_Emphasis.md) records implementation evidence and manual acceptance limits.
+The emphasis extension requires regeneration of existing Working summaries before reloading the updated Info reader, followed by the separate Publish operation for public document data. Source Save or an exact Rebuild prepares the new representation for later edits.
 
 The multiline extension on 2026-10-07 has focused Python/JavaScript lint, Python syntax/import diagnostics, shared runtime projection/site validation, Working docs-only reconciliation and bounded source-review evidence. The user accepted the delivery on 2026-10-07 after spaces-based authoring guidance. No behavior tests, browser checks, real package preparation/Import or Export actions were run by Codex, and detailed manual outcomes were not recorded; acceptance does not add behavioral evidence. Public document data awaits separately authorized Publish.
 

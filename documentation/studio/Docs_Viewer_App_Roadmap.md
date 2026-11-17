@@ -82,7 +82,7 @@ Saved Recent/Selected presentation, additional media/collections, New, Draft, Po
 
 Native document preparation is a substantive boundary. Markdown/front matter, custom tokens, reports, Links, dates, media references and public projection need an explicit implementation strategy for the declared supported inputs. Choose Swift or reusable portable JavaScript by responsibility; Python's current implementation is a behavior reference, not a reason to embed it in the app. Establish a semantic owner and extension method for each transferred responsibility so web and native implementations do not silently drift.
 
-[Incremental Document Publish](deliveries/Incremental_Document_Publish.md) supplies the proposed completed-artifact/selected-effects boundary for later native generation and publication. It is not a prerequisite for ordinary native reading. A management release that needs its queued handoff waits for that specific owner/contract or agrees a separately scoped prerequisite. Native Publish remains a later capability with explicit destination/access decisions; Git and public deployment retain their separate ownership.
+Working generation hands completed files and selected effects to Publish. A later native management release that uses this handoff must agree its ownership, access and destinations. Git and public deployment retain separate ownership. [Publish preparation](Builder.md#publish-preparation)
 
 ## Retrospective Changes To The Existing Apps
 
