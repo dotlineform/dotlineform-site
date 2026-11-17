@@ -3,13 +3,13 @@ draft: false
 doc_id: d-20261116-203803-742848
 title: Public Index Search Scopes
 added_date: "2026-11-16 20:38:03"
-last_updated: "2026-11-16"
-summary: Current and proposed public search coverage for the main Index and each collection, with an Index scope selector for Library and Living Memory.
+last_updated: "2026-11-17"
+summary: Shared Manage and Public search coverage, with a globe button in the main Index to switch between the current collection and portfolio title search.
 parent_id: d-20260924-135214-baa9ec
 ---
 # Public Index Search Scopes
 
-Public search serves two purposes. Site search helps readers find a document or collection by title. Collection search can match the fields most useful to readers of that collection. The proposed Index scope selector uses the existing Index search field and results list for Whole site, Library and Living Memory. Living Memory keeps its table of contents in the reading pane. [Collection Search And Site Search](Collection_Search_And_Site_Search.md)
+Portfolio search helps readers find work and writing by title across Catalogue, Context, Concepts and Moments. Library and Living Memory are reference collections with their own search scopes. Manage and Public share the main Index search field, results list and scope rules. [Collection Search And Site Search](Collection_Search_And_Site_Search.md)
 
 ## Current Search Behaviour
 
@@ -35,11 +35,11 @@ In the prepared site snapshot on 16 November 2026, Library accounted for 152 of 
 - **Library** has about 300 documents queued for import.
 - **Living Memory** is still to be written, with a target of about 50 substantial pages.
 
-## Target Search Behaviour
+## Target Search Coverage
 
 | Search scope | Fields to match | Coverage |
 | --- | --- | --- |
-| **Whole site** | Titles only | Eligible ordinary documents and collection landing pages, plus Context documents, Concepts, Moments and Catalogue Galleries. Exclude Catalogue Works and all Library and Living Memory pages, including their landing pages. |
+| **Portfolio** | Titles only | Eligible ordinary documents, the four portfolio collection landing pages, Context documents, Concepts, Moments and Catalogue Galleries. Catalogue Works and both reference collections, including their landing pages, are excluded. |
 | **Catalogue** | Work titles, partial Work IDs and Gallery titles | Works and Galleries. A Gallery also appears when one of its direct member Works matches. |
 | **Context** | Full text | Context documents. |
 | **Concepts** | Full text | Concept documents. |
@@ -47,30 +47,33 @@ In the prepared site snapshot on 16 November 2026, Library accounted for 152 of 
 | **Library** | Titles and summaries | Library entries. |
 | **Living Memory** | Titles and summaries | Web-edition pages, with results linking directly to each page. |
 
-Context, Concepts and Moments run full-text queries from the search field in each collection report and display results in that report's list. The matcher returns document IDs from the collection's own index, and the report renders the matching rows from its loaded manifest. Clearing the query restores the full collection list. The field label names the collection, for example **Search Context**.
+Context, Concepts, Moments, Library and Living Memory use the main Index field and results. Catalogue alone keeps search controls within its collection view. The other collection reports serve as browsing lists.
 
-Readers reach Library and Living Memory through the Index tree. Both collections use the main Index search field and results panel. **Search Library** replaces the title filter in the Library report.
+Drafts are excluded when the indexes are built. Living Memory search uses eligible web-edition pages. Its public table of contents stays in the reading pane. The Manage Book Index panel keeps List and Tree for authoring, using its existing Book management data. Remove its search field. The panel requires no additional manifest or search index.
 
 ## Gallery Results
 
-Whole site matches a Catalogue Gallery by the Gallery's own title only. Each Gallery result carries its exact `gallery_id` for navigation. Selecting the result opens the existing Catalogue Gallery Media View in the main pane using that ID as a `catalogue-gallery` target. The Index retains the search query and results while the Gallery is open. [Catalogue Media View](Catalogue_Media_View.md)
+Portfolio search matches a Catalogue Gallery by the Gallery's own title only. Each Gallery result carries its exact `gallery_id` for navigation. Selecting the result opens the existing Catalogue Gallery Media View in the main pane using that ID as a `catalogue-gallery` target. The Index retains the search query and results while the Gallery is open. [Catalogue Media View](Catalogue_Media_View.md)
 
-## Selecting A Scope
+## Behaviour
 
-A new search defaults to the current document's context. On the Library landing page or an entry, the label reads **Search Library**. On the Living Memory table of contents or a book page, it reads **Search Living Memory**. Opening an Index item outside either collection sets the next search to **Whole site**. Following a result keeps the active query and scope so readers can browse several results from the same search.
+When the current collection has its own main Index search, show a `globe.svg` toggle button beside the search field. Give it the tooltip and accessible name **Search portfolio**. Use Recent's active fill and expose the selection with `aria-pressed`. The button starts unpressed and search uses the current collection's index. Pressing it switches to the portfolio title index. The field label shows the active scope, such as **Search Living Memory** or **Search portfolio**. Toggling reruns any active query in the main Index and leaves the current page open. [Recent button renderer](../../docs-viewer/runtime/js/shared/docs-viewer-app-control-renderers.js#L10)
 
-The scope label is a dropdown directly below the Index search field and stays visible while the reader types.
+On an ordinary page such as **dotlineform** or **About**, and in Catalogue, the main Index offers portfolio search. In Catalogue, the collection's own controls search Works and Galleries.
 
 ```text
-[ hippocampus                 × ]
-  Search Living Memory ▾
+[ Search Living Memory          ] [ 🌐 ]
 ```
 
-In Living Memory, the menu offers **Living Memory** and **Whole site**, with a checkmark beside the active scope. Selecting **Whole site** changes the label to **Search whole site** and reruns the same query in the Index panel while keeping the current page open. Library follows the same pattern.
+The globe keeps its pressed state when moving among portfolio collections, clearing the query or closing search. Deliberately selecting **Library** or **Living Memory** in the Index clears the fill and activates that collection's search. Readers can press the globe again from either collection.
+
+Opening a result keeps the active query, scope and results. Closing search returns the Index to the collection or document the reader has reached. For example, if a portfolio search opens a Context result, closing search shows Context in the Index. The next search still uses the portfolio while the globe is filled. Pressing it again switches to **Search Context**.
+
+Use spacing alone to group the Index items. Keep Context, Concepts, Catalogue and Moments together, followed by a small gap before **Library** and **Living Memory**, and another before **about**. Start with about a third of a row's height of extra space at each break.
 
 ## Separate Search Indexes
 
-Whole site has its own title-only index. Context, Concepts, Moments, Library and Living Memory each have a separate search index with the fields listed above. Catalogue search uses its existing Work manifest and Gallery search file. In the public Index panel, the selected scope determines which file the search field loads. The same Docs Viewer matcher uses the fields and postings in that file to determine what can match. For example, a term that appears only in a summary can match in Library or Living Memory because their indexes include summaries.
+Portfolio has its own title-only index. Context, Concepts, Moments, Library and Living Memory each have a search index with the fields listed above. The main Index loads the file for the active scope and uses the same Docs Viewer matcher for all six indexes. Manage reads the latest completed Working indexes. Public reads the published copies of those same files. Catalogue search uses its existing Work manifest and Gallery search file.
 
 The current `include_in_site_search` setting controls which collections supply records to the shared Search index and also affects Recent. The proposed search indexes have their own coverage and field policies, independent of Recent. [Current Search index contract](Docs_Search_Index.md)
 
@@ -80,11 +83,11 @@ Current paths are public URLs under the site root. The target column describes e
 
 | Scope | Files used today | Files needed for the target |
 | --- | --- | --- |
-| **Whole site** | `/assets/data/search/analysis/index.json` is the shared full-text index. | A site-wide title index with the coverage in the target table. Gallery rows carry titles and exact Gallery IDs for Media View. |
-| **Catalogue** | `/assets/data/docs/catalogue/manifest.json` supplies Work titles and IDs. `/assets/data/catalogue/galleries/report-search.json` supplies Gallery titles and Work-to-Gallery memberships. | Reuse both files for the existing Catalogue search. The site index uses Gallery titles for matching and exact Gallery IDs for Media View navigation. |
-| **Context** | `/assets/data/docs/works/manifest.json` supplies titles for the report filter. | A Context full-text index. Context titles also go in the site index. |
-| **Concepts** | `/assets/data/docs/concepts/manifest.json` supplies titles for the report filter. | A Concepts full-text index. Concept titles also go in the site index. |
-| **Moments** | `/assets/data/docs/moments/manifest.json` supplies titles for the report filter. | A Moments full-text index. Moment titles also go in the site index. |
+| **Portfolio** | `/assets/data/search/analysis/index.json` is the shared full-text index. | A portfolio title index with the coverage in the target table. Gallery rows carry titles and exact Gallery IDs for Media View. |
+| **Catalogue** | `/assets/data/docs/catalogue/manifest.json` supplies Work titles and IDs. `/assets/data/catalogue/galleries/report-search.json` supplies Gallery titles and Work-to-Gallery memberships. | Reuse both files for the existing Catalogue search. The portfolio index uses Gallery titles for matching and exact Gallery IDs for Media View navigation. |
+| **Context** | `/assets/data/docs/works/manifest.json` supplies titles for the report filter. | A Context full-text index. Context titles also go in the portfolio index. |
+| **Concepts** | `/assets/data/docs/concepts/manifest.json` supplies titles for the report filter. | A Concepts full-text index. Concept titles also go in the portfolio index. |
+| **Moments** | `/assets/data/docs/moments/manifest.json` supplies titles for the report filter. | A Moments full-text index. Moment titles also go in the portfolio index. |
 | **Library** | `/assets/data/docs/library/manifest.json` supplies titles for the report filter. | A Library title-and-summary index, loaded by **Search Library** in the main Index in place of the report filter. |
 | **Living Memory** | `/assets/data/docs/by-id/d-20261111-120000-5af14d.json` supplies the table of contents for browsing. The configured Book manifest is `/assets/data/docs/book/manifest.json`. | A Living Memory title-and-summary index of web-edition pages, loaded by **Search Living Memory** in the main Index. |
 
@@ -95,7 +98,7 @@ The baseline is the prepared site snapshot on 16 November 2026. Sizes are in dec
 | Search index | Entries | JSON size | Gzipped |
 | --- | ---: | ---: | ---: |
 | Current site search | 168 | 1,316 kB | 142.2 kB |
-| **Target site search** | **511** | **157 kB** | **11.4 kB** |
+| **Portfolio titles** | **511** | **157 kB** | **11.4 kB** |
 | Context full text | 5 | 52.6 kB | 4.7 kB |
 | Concepts full text | 246 | 198.4 kB | 15.2 kB |
 | Moments full text | 61 | 163.0 kB | 16.4 kB |
@@ -103,28 +106,48 @@ The baseline is the prepared site snapshot on 16 November 2026. Sizes are in dec
 | Living Memory titles and summaries | 3 | 1.4 kB | 0.4 kB |
 | **All target indexes combined** | | **737 kB** | **66.3 kB** |
 
-The 193 Gallery titles add about 4.1 kB gzipped to the target site index. The total covers the listed indexes. Context, Concepts and Moments also load their report manifests to render result rows, and Catalogue uses its existing search files.
+The 193 Gallery titles add about 4.1 kB gzipped to the portfolio index. Catalogue's existing search files are outside this total.
 
-The target estimates use the current Docs Viewer index format with a typed Gallery target. The site estimate draws titles from the prepared public tree, collection manifests and Gallery search file. Context, Library and Living Memory reuse postings from the prepared Search index. Concepts and Moments use current Working text for the documents listed in the prepared public manifests. The figures cover the current corpus, before the queued imports and planned writing described above.
+The target estimates use the current Docs Viewer index format with a typed Gallery target. The portfolio estimate draws titles from the prepared public tree, collection manifests and Gallery search file. Context, Library and Living Memory reuse postings from the prepared Search index. Concepts and Moments use current Working text for the documents listed in the prepared public manifests. The figures cover the current corpus, before the queued imports and planned writing described above.
 
 ## Building And Publishing Search Indexes
 
-1. **Studio Refresh prepares Gallery data.** After adding, renaming or deleting a Gallery, run Studio Refresh before refreshing Docs Viewer search. Studio Refresh produces the Catalogue Gallery search file. The site index uses the prepared Gallery titles and exact IDs from that file. [Catalogue Gallery search publication](deliveries/Catalogue_Index_Gallery_Results.md#studio-refresh-and-publication)
-2. **Refresh Search and Recent builds all six Search indexes in Working.** The action builds Whole site, Context, Concepts, Moments, Library and Living Memory. Whole site uses saved document titles and prepared Gallery data. The collection indexes reuse the eligible document metadata and read the fields specified in the target table. Recent follows its own selection rules within the same action. The refresh writes and queues each changed index as a separate publication artifact. The full Working Build uses the same index builder with the document data it already loaded. [Current refresh owner](../../docs-viewer/services/docs_discovery_refresh.py) · [Full Working Build owner](../../docs-viewer/services/docs_working_rebuild.py)
+1. **Studio Refresh prepares Gallery data.** After adding, renaming or deleting a Gallery, run Studio Refresh before refreshing Docs Viewer search. Studio Refresh produces the Catalogue Gallery search file. The portfolio index uses the prepared Gallery titles and exact IDs from that file. [Catalogue Gallery search publication](deliveries/Catalogue_Index_Gallery_Results.md#studio-refresh-and-publication)
+2. **Refresh Search and Recent builds all six Search indexes in Working.** The action builds Portfolio, Context, Concepts, Moments, Library and Living Memory. Portfolio uses saved document titles and prepared Gallery data. The collection indexes reuse the eligible document metadata and read the fields specified in the target table. Recent follows its own selection rules within the same action. The refresh writes and queues each changed index as a separate publication artifact. The full Working Build uses the same index builder with the document data it already loaded. [Current refresh owner](../../docs-viewer/services/docs_discovery_refresh.py) · [Full Working Build owner](../../docs-viewer/services/docs_working_rebuild.py)
 3. **Publish transfers the queued files.** Publish copies the exact completed index files through Preview into the tracked `site/` tree. **Deploy Public** serves the indexes from the committed site snapshot. [Publication workflow](Builder.md#publish-preparation)
 
 ## Recent Coverage
 
 Site Recent keeps its current coverage. It selects eligible ordinary documents, including eligible collection landing pages, plus individual entries from Context, Library and Living Memory's web edition. Individual Concepts, Moments and Catalogue entries are outside this coverage. Recent applies its exact exclusions, sorts by update date and shows up to 20 entries. [Recent contract](Generated_Data_Contracts.md#recent-contract)
 
-Adding Gallery titles to Whole site makes Galleries searchable there. Galleries stay outside site Recent for this delivery.
+Gallery titles are searchable in Portfolio. Galleries stay outside site Recent for this delivery.
 
 A follow-on can decide whether to show recent Galleries in site Recent or in a Catalogue-specific recent view. The current Catalogue default Work list is ordered by last update, most recent first. [Catalogue default sort](../../docs-viewer/runtime/js/shared/docs-collection-report.js#L24)
 
-## Open Issues
+## Delivery Steps
 
-1. **What should Manage search?** The recommendation is to use the six public-eligible indexes for reader search and keep Manage's manifest filters available for finding drafts. Full-text search of drafts is a separate decision. [Current local search configuration](../../docs-viewer/config/defaults/docs-viewer-config.json#L15)
-2. **When should a selected scope reset?** The recommendation is to keep the reader's explicit scope when they clear the query. Deliberate navigation in the Index tree can set the default from the destination. Store the active scope alongside `q` so a reload, browser Back or a shared link can restore the same search. [Current URL handling](../../docs-viewer/runtime/js/shared/docs-viewer-router.js#L19)
-3. **How should collection reports order full-text matches?** The recommendation is to use the matcher's relevance order in Context, Concepts and Moments while a query is active. Keep matching starred entries pinned in Context and restore the normal report order when the query clears. [Current report ordering](../../docs-viewer/runtime/js/shared/docs-collection-report.js#L859)
+Status **Proposed**. The delivery covers the six Search indexes, the shared Index controls and the publication handoff. The browser owns scope and navigation state. Working owns eligibility, index generation and queue entries. Publish transfers the completed bytes. Catalogue search, Book authoring and Recent retain their existing workflows.
 
-Choose the exact index paths and the Gallery result record format during implementation planning.
+### 0. Confirm readiness
+
+- [ ] Trace the current Search builder and queue, the shared Index and the collection controls. Agree the six artifact paths and queue identities, the exact Gallery result target and how scope travels with `q` through reload, Back and shared links. Confirm that the changes fit the existing document and Gallery routes and queue workflow. Raise any required change to those contracts before implementation. [Current URL handling](../../docs-viewer/runtime/js/shared/docs-viewer-router.js#L19)
+
+### 1. Generate and queue the indexes
+
+- [ ] Build the six indexes from the coverage table through one Working builder used by Refresh Search and Recent, Full Working Build and the standalone Search command. Reuse completed metadata and any loaded sources. Portfolio uses saved titles and prepared Gallery data. Read searchable source fields only for eligible collection entries that need them. Keep Recent selection independent.
+- [ ] Register each changed index as its own publication artifact. Inspect one representative Working refresh for correct scope membership and fields, draft and export-only exclusions, exact Gallery IDs and the queued files. Confirm the Publish path consumes the selected artifacts as completed bytes.
+
+### 2. Wire the shared Index search
+
+- [ ] Connect Manage and Public to their respective copies of the six indexes. Load the active scope on demand and reuse the existing matcher and result list. Add the **Search portfolio** globe button with Recent's active fill. Keep its pressed state through result navigation and search close, and clear it on deliberate selection of Library or Living Memory. Route Gallery results to the existing Media View.
+- [ ] Group the Index with small gaps before Library and about. Remove the other collection search fields with the shared control in place. Retain Catalogue's dedicated search, the public Book TOC and the Manage Book List and Tree using their existing data.
+
+### 3. Verify the cutover locally
+
+- [ ] Project the shared runtime with `bin/site-code-update`, inspect the tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`. Use the existing Publish workflow for the authorized repository transfer. Verify that the projected reader and all six published indexes work together in `bin/site-preview`.
+- [ ] In the manual walkthrough, open a portfolio Gallery result, then open a Context result and close search. Confirm that the globe stays filled and that deliberately selecting Library or Living Memory clears it. Review the spacing of the Index groups, restore scope with one shared search URL, and try Catalogue's own search. Compare the representative results in Manage and public preview. Allow one Working refresh and one Publish, with about 20 minutes for manual review once the artifacts are ready.
+
+### 4. Review and close
+
+- [ ] Complete the [Redundancy And Defensive Behavior Review](Development_Checklist.md#redundancy-and-defensive-behavior-review) and record findings and resolutions. Check for repeated source or manifest reads, unused search paths after cutover, repeated eligibility checks and extra work during Publish.
+- [ ] Record the local acceptance evidence and update the maintained [Search contract](Docs_Search_Index.md). Commit, push and Deploy Public are separate release actions.
