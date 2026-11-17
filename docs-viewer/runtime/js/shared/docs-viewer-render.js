@@ -9,6 +9,7 @@ export function escapeHtml(value) {
 
 /**
  * @typedef {Object} DocsViewerResultRow
+ * @property {string} [galleryId] Exact Gallery ID for a Media View result.
  * @property {string} docId Exact document ID within the ordinary or named collection.
  * @property {string} collection Empty for an ordinary document.
  * @property {string} title Link label; titles are not identity.
@@ -21,19 +22,20 @@ export function escapeHtml(value) {
  * @param {DocsViewerResultRow} options Row presentation from already loaded inputs.
  */
 export function renderResultEntry(options) {
+  var title = '<span>' + escapeHtml(options.title) + '</span>';
+  if (options.galleryId) {
+    var galleryIcon = '<span class="docsViewer__listIcon docsViewer__icon--images" aria-hidden="true"></span>';
+    return '<li class="docsViewer__resultItem"><button type="button" class="docsViewer__resultTitle" data-result-gallery-id="'
+      + escapeHtml(options.galleryId) + '">' + galleryIcon + title + '</button></li>';
+  }
   var icon = options.iconUrl
     ? '<span class="docsViewer__listIcon" aria-hidden="true" style="mask-image:url(&quot;' + escapeHtml(options.iconUrl) + '&quot;)"></span>'
     : '<span class="docsViewer__listIcon docsViewer__icon--dlf-doc" aria-hidden="true"></span>';
-  var title = icon + '<span>' + escapeHtml(options.title) + '</span>';
-  if (options.galleryId) {
-    return '<li class="docsViewer__resultItem"><button type="button" class="docsViewer__resultTitle" data-result-gallery-id="'
-      + escapeHtml(options.galleryId) + '">' + title + '</button></li>';
-  }
   return (
     '<li class="docsViewer__resultItem">' +
       '<a class="docsViewer__resultTitle" data-result-doc-id="' + escapeHtml(options.docId) +
       '" data-result-collection="' + escapeHtml(options.collection) + '" href="' + escapeHtml(options.href) + '">' +
-      title + '</a>' +
+      icon + title + '</a>' +
     '</li>'
   );
 }

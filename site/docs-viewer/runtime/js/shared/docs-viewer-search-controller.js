@@ -122,8 +122,7 @@ export function initDocsViewerSearchController(context) {
 
   function resultEntry(entry, docId) {
     if (entry.kind === "catalogue-gallery") {
-      return renderResultEntry({ title: entry.title, galleryId: entry.id,
-        iconUrl: context.workspaceConfig.activeConfig.collectionsById.get("catalogue")?.iconUrl });
+      return renderResultEntry({ title: entry.title, galleryId: entry.id });
     }
     var config = context.workspaceConfig.activeConfig;
     var collectionId = entry.collection || "";
