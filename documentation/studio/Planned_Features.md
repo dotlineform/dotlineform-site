@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-26"
+last_updated: "2026-11-17"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -149,6 +149,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - [R2 Orphan Report](deliveries/R2_Orphan_Report.md) — Implemented with a saved all-collection scan and a Manage filter. Manual acceptance remains open.
 
 ## Proposed Features
+
+- [Portfolio Recents And Collection Sorting](deliveries/Portfolio_Recents_And_Collection_Sorting.md) — Show new portfolio additions in the main Index and share A–Z and Last added collection orders across Manage and Public.
 
 - [Export Book](deliveries/Book_Editions.md#follow-on-book-export) — Prepare a whole-Book PDF or EPUB from the saved Tree, including the authored TOC in reading order.
 
