@@ -144,6 +144,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
+- [Site Workflow Guide](deliveries/Site_Workflow_Guide.md) — Build a concise guide to the site's important workflows and decisions, and reduce the supporting documentation to the references it needs.
+
 - [Export Book](Export_Book.md) — Compare PDF and EPUB for whole-Book export from the saved Tree and for reading downloaded editions.
 
 - [Portfolio Books](Portfolio_Books.md) — Curate downloadable books from Catalogue, Context, Concepts and Moments, starting with Moments.
