@@ -240,7 +240,7 @@ The filesystem watcher and browser refresh timer are retired. Application comple
 
 The [Info Panel](Info_Panel.md) is an intentional detached capture of a pinned document, independent of the main pane and its updates. Navigation or content refresh does not retarget or reopen it. Source entry closes it. Draft changes affect operational metadata absent from the capture. These owners require no polling-based Info update.
 
-For a deliberate external Markdown change, rebuild the exact document and refresh/reopen the relevant view. A targeted CLI build changes generated files without notifying existing browser models. Reload the browser to start a fresh view after a CLI build or a change in another tab. Use the explicit full Working rebuild command for persistent-media edits. [External edits and rebuilds](Source_Organisation.md#explicit-external-edit-and-media-rebuilds)
+For a deliberate external Markdown change, rebuild the exact document and refresh/reopen the relevant view. A targeted CLI build changes generated files without notifying existing browser models. Reload the browser to start a fresh view after a CLI build or a change in another tab. Use the explicit full Working rebuild command for persistent-media edits. [External edits and rebuilds](../reference/Source_Organisation.md#explicit-external-edit-and-media-rebuilds)
 
 ## Review Execution Path
 

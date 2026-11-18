@@ -9,7 +9,7 @@ parent_id: d-20260720-161656-1357d0
 ---
 # Catalogue Archive
 
-The legacy Catalogue was frozen on 4 September 2026 in [UAC 1](archive/UAC_1_Freeze_Legacy_Catalogue.md). The active Catalogue is part of the public Docs Viewer at `/`. [Browse the Catalogue](../guide/Find_And_Read_Things.md#browse-the-catalogue)
+The legacy Catalogue was frozen on 4 September 2026 in [UAC 1](../deliveries/UAC_1_Freeze_Legacy_Catalogue.md). The active Catalogue is part of the public Docs Viewer at `/`. [Browse the Catalogue](../guide/Find_And_Read_Things.md#browse-the-catalogue)
 
 ## Site Snapshot
 
@@ -21,9 +21,9 @@ On 8 October 2026, `/about/` and every site footer were removed, including the a
 
 ## Historical Reader References
 
-The frozen Search route is `/archive/search/`. Its [policy](../../site/archive/assets/data/search/policy.json) and [Work and Series index](../../site/archive/assets/data/search/catalogue/index.json) were retained with the snapshot. [Catalogue Search](archive/Catalogue_Search.md) records the former builder and ranking design. [Catalogue Search Policy](archive/Catalogue_Search_Policy.md) records the browser controls.
+The frozen Search route is `/archive/search/`. Its [policy](../../site/archive/assets/data/search/policy.json) and [Work and Series index](../../site/archive/assets/data/search/catalogue/index.json) were retained with the snapshot. [Catalogue Search](../deliveries/Catalogue_Search.md) records the former builder and ranking design. [Catalogue Search Policy](../deliveries/Catalogue_Search_Policy.md) records the browser controls.
 
-The [design](archive/Public_Catalogue_Design.md), [route model](archive/Public_Route_Model.md) and [data flow](archive/Public_Catalogue_Data_Flow.md) describe the site before relocation. Their original route and code paths identify the pre-archive revision above.
+The [design](../deliveries/Public_Catalogue_Design.md), [route model](../deliveries/Public_Route_Model.md) and [data flow](../deliveries/Public_Catalogue_Data_Flow.md) describe the site before relocation. Their original route and code paths identify the pre-archive revision above.
 
 ## R2 Copy
 

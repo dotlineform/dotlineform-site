@@ -8,7 +8,7 @@ parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Create And Import Endpoints
 
-These local Manage routes use the configured Working workspace. An ordinary target supplies no collection; a named target supplies its exact collection ID. [Document and collection identity](Source_Organisation.md#document-and-collection-identity)
+These local Manage routes use the configured Working workspace. An ordinary target supplies no collection; a named target supplies its exact collection ID. [Document and collection identity](../reference/Source_Organisation.md#document-and-collection-identity)
 
 | Route | Current purpose |
 | --- | --- |

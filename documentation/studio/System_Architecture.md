@@ -20,10 +20,10 @@ Use this section for:
 
 ## References
 
-- **[How the site fits together](../guide/How_The_Site_Fits_Together.md)** for the active site and app boundaries, with earlier design goals in the **[Knowledge System Vision](archive/Knowledge_System_Vision.md)**
+- **[How the site fits together](../guide/How_The_Site_Fits_Together.md)** for the active site and app boundaries, with earlier design goals in the **[Knowledge System Vision](../deliveries/Knowledge_System_Vision.md)**
 - **[Source Tree Ownership](Source_Tree_Ownership.md)** for the maintained boundary between Studio source, Docs Viewer source, public source, generated output, and local working output
 - **[Projection Contract](Projection_Contract.md)** for canonical source, local projection, and public projection boundaries
-- **[Projection Contract Validation](archive/Projection_Contract_Validation.md)** for the older cross-boundary audit and its review boundary
+- **[Projection Contract Validation](../deliveries/Projection_Contract_Validation.md)** for the older cross-boundary audit and its review boundary
 - **[Local Runners](Local_Runners.md)** for Studio and Docs Viewer service composition and **[Publish and deploy](../guide/Publish_And_Deploy.md)** for the current publication sequence
 - **[Shared Artifact Patterns](Shared_Artifact_Patterns.md)** for reuse that crosses app ownership
 - **[Data Models Diagrams](Data_Models_Diagrams.md)** for bounded logical and projection maps plus the shared method for producing them

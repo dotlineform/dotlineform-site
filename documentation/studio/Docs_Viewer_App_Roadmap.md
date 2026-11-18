@@ -24,7 +24,7 @@ The existing browser apps remain in normal development. Their design is close to
 
 Docs Viewer has canonical reader JavaScript/styles, separate compositions and an injectable collection-provider seam, described in [Runtime Architecture](Docs_Viewer_Runtime.md). Its public reader consumes generated assets independently of local management services. Current management still calls HTTP/Python operations. Reusing that management composition unchanged would carry those dependencies into the app.
 
-Current Docs storage is the single configured Working source/generated workspace and read-only Preview publication artifact. Ordinary and named-collection targets retain exact identities. Older scope/sub-scope selectors, local Published storage and Preview browsing are retired. [Source Organisation](Source_Organisation.md) and [Generated Data Contracts](Generated_Data_Contracts.md) describe the current owners; inspect the selected capability's code/configuration when preparing its release.
+Current Docs storage is the single configured Working source/generated workspace and read-only Preview publication artifact. Ordinary and named-collection targets retain exact identities. Older scope/sub-scope selectors, local Published storage and Preview browsing are retired. [Source Organisation](../reference/Source_Organisation.md) and [Generated Data Contracts](Generated_Data_Contracts.md) describe the current owners; inspect the selected capability's code/configuration when preparing its release.
 
 ## Direction And Boundaries
 

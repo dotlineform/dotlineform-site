@@ -22,7 +22,7 @@ parent_id: d-20260419-000000-d2e47b
 | Public-site validation and shared settings | `site-tools/config/site-tools.json` | source file and consumers |
 | Working Search scopes and public discovery destinations | `docs-viewer/config/workspace/docs-workspace.json` and the [Search builder](../../docs-viewer/build/build_search.py) | [Docs Search Index](Docs_Search_Index.md) |
 | Public runtime projection | `site-tools/config/site-code-update.json` | [Projection Contract](Projection_Contract.md) |
-| Older projection audit | `tests/contracts/projection_contract.json` | [Projection Contract Audit](archive/Projection_Contract_Validation.md) |
+| Older projection audit | `tests/contracts/projection_contract.json` | [Projection Contract Audit](../deliveries/Projection_Contract_Validation.md) |
 
 ## Classification
 

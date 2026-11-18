@@ -133,7 +133,7 @@ Working builds `public-index-tree.json` beside its complete `index-tree.json` an
 
 Source Save compares the already loaded document and prepared candidate in memory and carries current/new references, exact owned removals and completed selected-media results into explicit generation. An eligible Save contributes newly referenced identities and actual changed byte writes, including thumbnails; unchanged prepared bytes add no media write. A heading-only Save adds no unchanged media. The queue owner retains earlier selected writes still referenced by the current eligible document, merges new effects, drops superseded writes and cancels only exact ready restorations. Newly eligible/created documents select complete current media. Dependency-only rendering adds no media writes unless eligibility is restored. Save performs no Preview/public media lookup or byte comparison.
 
-Replacement Import carries its prepared records and loaded target/candidate differences through the same workflow and queue handoff. Import and explicit exact Rebuild/CLI Build retain deliberate complete-reference selection; complete maintenance retains its changes-only output selection and exact local Preview comparison. No media baseline or by-ID media field is persisted. Queue persistence precedes the workflow's explicit selected Working unlink. `publication-media.json` is retired. [Publication Media](data_model/Publication_Media.md) explains the current handoff; [Media And Asset Handling](Media_And_Asset_Handling.md#saved-ownership-and-exact-removals) owns lifecycle and manual cleanup.
+Replacement Import carries its prepared records and loaded target/candidate differences through the same workflow and queue handoff. Import and explicit exact Rebuild/CLI Build retain deliberate complete-reference selection; complete maintenance retains its changes-only output selection and exact local Preview comparison. No media baseline or by-ID media field is persisted. Queue persistence precedes the workflow's explicit selected Working unlink. `publication-media.json` is retired. [Publication Media](../_working/data_model/Publication_Media.md) explains the current handoff; [Media And Asset Handling](Media_And_Asset_Handling.md#saved-ownership-and-exact-removals) owns lifecycle and manual cleanup.
 
 `working/source/unpublishable.json` is the single exclusion-policy file. Index generation reads it once per operation and carries the set through ordinary/collection projection and any required dependent generation. Exact operations use the current file just as complete builds do; policy edits take effect at the next index generation. There is no policy copy in `index-tree.json` and no saved policy-change tracking. A collection build first derives current ordinary host eligibility from saved management metadata; changed hosts update their collection manifests through the same owner. Required loaded management/public metadata and the prior index text are carried forward. Draft/exclusion retains owned media and does not limit reference extraction. Search/Recent retain their existing explicit refresh owners and coverage; Publish consumes completed selections.
 
@@ -190,7 +190,7 @@ The common front matter is `doc_id`, `title`, `added_date`, `last_updated`, and 
 - Recent uses the recorded addition date. [Recent contract](Generated_Data_Contracts.md#recent-contract)
 - Ordinary ignore roots, draft state and inherited descendant exclusions select document bodies for Preview; they do not filter Working relationships, picker targets or captured related-list destinations.
 - `draft: true` records temporary authoring readiness. An omitted destination's title/link remains visible without adding its body or a publication warning/gate.
-- Authored Markdown is flat beneath each owner's document folder. [Source organisation](Source_Organisation.md#document-and-collection-identity)
+- Authored Markdown is flat beneath each owner's document folder. [Source organisation](../reference/Source_Organisation.md#document-and-collection-identity)
 
 Authoring extensions supported by the renderer include:
 
@@ -289,7 +289,7 @@ Manage exposes one awaited Publish action with phase/target error reporting and 
 - rendered document behaviour: renderer/token modules and acceptance fixtures
 - search fields: `build_search.py` and Docs Viewer search runtime
 - public preparation and selected publication: `docs_publication_preparation.py`, `docs_publication_queue.py`, `docs_selected_publication.py`, `docs_catalogue_publication.py` and workspace configuration
-- external-edit and media regeneration workflow: [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds)
+- external-edit and media regeneration workflow: [Source Organisation](../reference/Source_Organisation.md#explicit-external-edit-and-media-rebuilds)
 - new media processing: agree its authoritative producer, explicit configuration, storage and reference contract before introducing it; Docs Viewer currently accepts finished media without a build-source registry
 
 Keep exhaustive output filenames, diagnostics fields, and CLI flags in code. This page should change when the build boundary changes.

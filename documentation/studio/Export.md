@@ -176,7 +176,7 @@ docs-viewer/tests/python/test_docs_management_capabilities.py
 docs-viewer/tests/python/test_docs_management_routes.py
 ```
 
-These selections include retired ordinary/scope/capability/request contracts and are unreviewed for the current collection-only boundary. Review/migration and execution require separately agreed test work; the list is not current coverage evidence. [User Facing Rules](data/User_Facing_Rules.md) M.05 records earlier cleanup evidence. The focused implementation checks covered static analysis, service imports and source review.
+These selections include retired ordinary/scope/capability/request contracts and are unreviewed for the current collection-only boundary. Review/migration and execution require separately agreed test work; the list is not current coverage evidence. [User Facing Rules](../_working/data_model/User_Facing_Rules.md) M.05 records earlier cleanup evidence. The focused implementation checks covered static analysis, service imports and source review.
 
 The user approved removal of the export byte count on 2026-10-14. Focused lint/compilation and distinct source/diff review confirmed removal of the formatter, total property, payload/provenance/summary fields, per-media size bookkeeping and associated size/sum checks. Media digest identity and final output file-set/byte verification remain independent of those fields. No tests or live Export ran; existing tests asserting media totals and per-item sizes require separately agreed migration. Reload the local service and browser before manually reviewing Export confirmation and creation/replacement.
 

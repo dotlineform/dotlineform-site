@@ -12,7 +12,7 @@ These local endpoints operate on the configured Working workspace. [Management r
 
 | Action | Request | Completed effect |
 | --- | --- | --- |
-| Exact document Rebuild | `POST /docs/rebuild-document` with `{doc_id}` or `{collection, doc_id}` | Read the saved source, generate the selected document and its Links effects, and prepare eligible publication changes. [External edits and rebuilds](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) |
+| Exact document Rebuild | `POST /docs/rebuild-document` with `{doc_id}` or `{collection, doc_id}` | Read the saved source, generate the selected document and its Links effects, and prepare eligible publication changes. [External edits and rebuilds](../reference/Source_Organisation.md#explicit-external-edit-and-media-rebuilds) |
 | Refresh Search and Recent | `POST /docs/refresh-discovery` with `{}` | Build and save Working Search and Recent and queue changed discovery files. [Working rebuild](Builder.md#working-rebuild) |
 | Broken Links Refresh | `POST /docs/broken-links` with `{}` | Scan current Working inputs and save the private audit. `GET /docs/broken-links` reads that saved result. [Saved local report](Broken_Links_Script.md#saved-local-report) |
 

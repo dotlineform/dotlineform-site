@@ -63,4 +63,4 @@ $HOME/miniconda3/bin/python3 tests/audits/route_ready_state.py --strict
 
 The audit checks active Studio and Docs Viewer templates for missing or duplicate roots and invalid initial attributes. The quick check profile includes it.
 
-Use [Testing](Testing.md) for verification selection and [Route Ready-State Audit](archive/Route_Ready_State_Audit.md) for the focused audit command. Route docs may name their root and meaningful busy operations but should not redefine this contract.
+Use [Testing](Testing.md) for verification selection and [Route Ready-State Audit](../deliveries/Route_Ready_State_Audit.md) for the focused audit command. Route docs may name their root and meaningful busy operations but should not redefine this contract.

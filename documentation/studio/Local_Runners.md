@@ -42,7 +42,7 @@ Each app owns its own pages and APIs. `bin/local-all` supervises siblings; it do
 4. starts `studio/app/server/studio/studio_app_server.py` when enabled;
 5. stops its child on interrupt, termination, or runner exit.
 
-Docs application writes complete their required generation through the Docs Viewer service. External Markdown edits require exact-document Rebuild. Persistent media edits use the explicit full Working rebuild command. [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) owns those workflows. Studio Catalogue Save and Refresh are explicit operations, as are document rebuilds.
+Docs application writes complete their required generation through the Docs Viewer service. External Markdown edits require exact-document Rebuild. Persistent media edits use the explicit full Working rebuild command. [Source Organisation](../reference/Source_Organisation.md#explicit-external-edit-and-media-rebuilds) owns those workflows. Studio Catalogue Save and Refresh are explicit operations, as are document rebuilds.
 
 ## All-Services Runner
 

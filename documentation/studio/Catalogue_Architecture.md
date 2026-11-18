@@ -39,9 +39,9 @@ Normal Refresh reads the authorities needed by the supplied queue. Explicit cano
 
 ## Design History
 
-The unification work kept the old public Catalogue frozen while testing a shared reader over independently owned Catalogue records and authored documents. The consumer studies separated exact media presentation from document links and held off on schema changes until a reader needed one. [Unification record](archive/Analysis_And_Catalogue_Presentation.md) · [Consumer study findings](archive/UAC_3_Findings.md)
+The unification work kept the old public Catalogue frozen while testing a shared reader over independently owned Catalogue records and authored documents. The consumer studies separated exact media presentation from document links and held off on schema changes until a reader needed one. [Unification record](../deliveries/Analysis_And_Catalogue_Presentation.md) · [Consumer study findings](../deliveries/UAC_3_Findings.md)
 
-The first document regeneration proved Work-backed documents in a bounded pilot and then across the collection. The next delivery made exact pending IDs the normal input so routine changes could carry their completed effects forward without rebuilding the whole Catalogue. [Initial regeneration](archive/Catalogue_Work_Regeneration.md) · [Targeted regeneration delivery](archive/Catalogue_Changed_Regeneration_Delivery.md)
+The first document regeneration proved Work-backed documents in a bounded pilot and then across the collection. The next delivery made exact pending IDs the normal input so routine changes could carry their completed effects forward without rebuilding the whole Catalogue. [Initial regeneration](../deliveries/Catalogue_Work_Regeneration.md) · [Targeted regeneration delivery](../deliveries/Catalogue_Changed_Regeneration_Delivery.md)
 
 ## Approved Persisted Lookup Test Cleanup
 

@@ -68,7 +68,7 @@ The complete independently gated contract lives in [Docs Review Endpoints](Docs_
 | `POST /docs/delete` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Delete a confirmed ordinary subtree or singular flat collection target and await exact generated/Links removal. |
 | `POST /docs/publish` | [Publish transfer boundary](Builder.md#preview-and-deployment-boundary) | Apply completed Docs and Catalogue queue selections to Preview and configured destinations. |
 
-Draft and the ordinary exclusion policy feed eligibility during Working generation. Publish consumes the completed selections. [Source Organisation](Source_Organisation.md#operations)
+Draft and the ordinary exclusion policy feed eligibility during Working generation. Publish consumes the completed selections. [Source Organisation](../reference/Source_Organisation.md#operations)
 
 ## Document Package POST Endpoints
 

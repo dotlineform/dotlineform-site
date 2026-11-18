@@ -128,4 +128,4 @@ Mark a delivery done only when its whole outcome works, durable docs describe sh
 
 Closing metadata is a bookkeeping change, not a second implementation delivery. Reuse the implementation evidence already gathered; add only the check needed to show that the closeout edit itself landed correctly.
 
-At feature closeout, copy useful durable concepts and implementation details into durable documentation. The feature and delivery documents will be manually archived.
+At closeout, put current behaviour and ownership in `documentation/reference/`. Compile reusable reasoning and design tradeoffs in `documentation/design/`. Move a completed record from `documentation/_working/` to `documentation/deliveries/` when its evidence or history needs to remain directly available.

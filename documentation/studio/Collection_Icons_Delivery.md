@@ -47,6 +47,6 @@ Gate: no blocking review findings. Record: review confirmed one checked filename
 ### CI-3 — Closeout
 
 - [ ] Record user manual acceptance of the four collection markers in the Index panel.
-- [x] Transfer durable ownership to [Source Organisation](Source_Organisation.md#collection-icons) and update [Shared Icons](Shared_Icons.md) and the parent [Related Links](Related_Links.md).
+- [x] Transfer durable ownership to [Source Organisation](../reference/Source_Organisation.md#collection-icons) and update [Shared Icons](Shared_Icons.md) and the parent [Related Links](Related_Links.md).
 
 Gate: manual visual acceptance. Retain this delivery through review; recommend archiving it after acceptance. No document is deleted automatically. The related-links directive remains proposed, and Publish, deployment, commit and push remain separate actions.

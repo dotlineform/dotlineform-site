@@ -26,4 +26,4 @@ Place `<!-- dotlineform:image-detail -->` immediately before the SVG image or it
 
 Maintained Studio Markdown lives in repository `documentation/studio/`, outside Docs Viewer. Existing fenced diagrams can be interpreted by an external Markdown viewer. Render a diagram externally and import its finished SVG when it is needed in a published document.
 
-[Publication Media](data_model/Publication_Media.md) explains the single saved reference list. [Media And Asset Handling](Media_And_Asset_Handling.md) owns Save, exact removal and publication behavior.
+[Publication Media](../_working/data_model/Publication_Media.md) explains the single saved reference list. [Media And Asset Handling](Media_And_Asset_Handling.md) owns Save, exact removal and publication behavior.

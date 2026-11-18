@@ -29,7 +29,7 @@ The discussion identified the same motivation as the earlier website move from Y
 | Document body | Markdown authored content. |
 | Common document metadata | Canonical JSON describing the document, including its immutable identity and agreed shared descriptive fields such as title and summary. |
 | Collection-specific metadata | Explicit JSON schemas owned by the configured collection. Discussion examples are `date` and `date_display` for Analysis Moments, and `work_id` for Analysis Works. Exact current field forms and consumers need checking before schema design. |
-| Parent placement | Canonical organisation. For ordinary documents, [Reorder docs](Reorder_Docs.md) now owns the agreed nested `index-order.json` approach: nesting supplies parentage and arrays supply order, replacing authored `parent_id` in its bounded delivery. |
+| Parent placement | Canonical organisation. For ordinary documents, [Source Organisation](../reference/Source_Organisation.md#document-and-collection-identity) owns the nested `index-order.json` with parentage from nesting and sibling order from the arrays. |
 | Visual status | Persisted presentation metadata. `ui_status` is only a visual cue and has no document-management or lifecycle role. |
 | Relationship records | Explicitly owned, persistently maintained Links data, with authored references distinguished from derived relationship information. |
 | Viewer payloads | Generated renderings and indexes assembled from the authoritative inputs. |
@@ -40,7 +40,7 @@ Ordinary reparenting within a collection should update organisation and affected
 
 ## Canonical Structure And Generated Views
 
-The current `index-tree.json` is generated and contains viewer-ready information. [Source Organisation](Source_Organisation.md) owns ordinary organisation as nested `index-order.json`, with hierarchy and order owned together. Build joins that structure with document metadata to produce the viewer tree. Reorder docs is complete and accepted through site-preview: authored ordinary `parent_id` is removed, while remaining descriptive metadata and visual status stay in Markdown. This does not complete the wider metadata migration proposed here.
+The current `index-tree.json` is generated and contains viewer-ready information. [Source Organisation](../reference/Source_Organisation.md) owns ordinary organisation as nested `index-order.json`, with hierarchy and order owned together. Build joins that structure with document metadata to produce the viewer tree. Reorder docs is complete and accepted through site-preview: authored ordinary `parent_id` is removed, while remaining descriptive metadata and visual status stay in Markdown. This does not complete the wider metadata migration proposed here.
 
 Moving only `parent_id` and `ui_status` would address those fields, but a complete navigation index also needs identity, titles and other display metadata. To build it without opening Markdown bodies, all required structured inputs must be available from their JSON owners. Generated values such as rendered HTML and viewer URLs must remain distinguishable from authored facts.
 
@@ -69,4 +69,4 @@ Continue refining these choices before creating an implementation delivery. Effi
 
 ## Existing Context
 
-[Source Organisation](Source_Organisation.md) describes current storage and document-placement boundaries. [Document Build](Builder.md) describes current generated output and Links maintenance. [Save/Build optimisations](archive/Save_Build_Optimisations.md) records earlier performance opportunities; use it as investigation context and recheck current code before selecting optimisation work. These documents remain current-state or investigation references; this feature proposes a future structure.
+[Source Organisation](../reference/Source_Organisation.md) describes current storage and document-placement boundaries. [Document Build](Builder.md) describes current generated output and Links maintenance. [Save/Build optimisations](../deliveries/Save_Build_Optimisations.md) records earlier performance opportunities; use it as investigation context and recheck current code before selecting optimisation work. These documents remain current-state or investigation references; this feature proposes a future structure.

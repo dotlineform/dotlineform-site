@@ -39,4 +39,4 @@ Start with the [Site Workflow Guide](../guide/README.md) for how the site fits t
 
 ## Documentation Shape
 
-Maintain Studio development and maintenance references under `documentation/studio/`. Keep each document's `doc_id` stable and use `parent_id` for its place in the documentation tree. Use the owning code and configuration for exact behaviour and the references here to find the relevant owner.
+Use [Reference](../reference/Source_Organisation.md) for current behaviour and its code owners, [Design](../design/Reorder_Docs.md) for rationale and alternatives, and [Deliveries](../deliveries/Site_Workflow_Guide.md) for completed work records. Keep active or proposed deliveries and writing in progress under `documentation/_working/`. During migration, the remaining Studio references keep their current locations. Preserve each `doc_id` and keep relative links current as files move.

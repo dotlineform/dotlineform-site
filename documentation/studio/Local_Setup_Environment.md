@@ -24,7 +24,7 @@ Precedence belongs to each entry point. The common builder bootstrap loads `.env
 
 ### External Workspaces
 
-`DOTLINEFORM_DOCS_BASE_DIR` selects the existing Docs workspace containing Working and Preview. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects the existing Projects workspace for Catalogue staging, configured original Work media and project-owned files. Point each variable at its own configured root. [Workspace roles](Source_Organisation.md#storage-and-roles) · [Catalogue media authoring](Catalogue_Save_And_Refresh.md#work-media-authoring)
+`DOTLINEFORM_DOCS_BASE_DIR` selects the existing Docs workspace containing Working and Preview. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects the existing Projects workspace for Catalogue staging, configured original Work media and project-owned files. Point each variable at its own configured root. [Workspace roles](../reference/Source_Organisation.md#storage-and-roles) · [Catalogue media authoring](Catalogue_Save_And_Refresh.md#work-media-authoring)
 
 A Processing application launched from the GUI does not read `.env.local`. Its ignored project-local output configuration receives the same external base plus one exact project identity; Studio and Catalogue continue to resolve their roots from the server environment and checked media configuration.
 

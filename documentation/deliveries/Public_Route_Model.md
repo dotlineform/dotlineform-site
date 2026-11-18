@@ -1,0 +1,114 @@
+---
+draft: false
+doc_id: d-20260602-192905-260208
+title: Public Route Model
+added_date: "2026-06-02 19:29:05"
+last_updated: "2026-10-15 18:09:30"
+summary: Stable public catalogue shells, URLs, query state, URL ownership, and extension rules.
+ui_status: stable
+parent_id: d-20260720-161656-1357d0
+
+---
+# Public Route Model
+
+Historical route contract for the public Catalogue before relocation beneath `/archive/`. [Catalogue Archive](../studio/Catalogue_Archive.md) maps the frozen site. [Public Docs Route Shell](../studio/Public_Docs_Route_Shell.md) covers the active route at `/`.
+
+## Route Principles
+
+- keep stable tracked shells for `/series/`, `/works/`, `/work-details/`, `/recent/`, and `/catalogue/search/`
+- prefer query/state-driven catalogue record views where this preserves user workflows with fewer generated HTML files
+- avoid generating per-record route stubs solely to keep URLs readable
+- do not add broad compatibility redirect tables for old per-record URLs
+- provide a clean `404.html` with simple "page unavailable" copy and a link back to `/`, the current public Docs Viewer home
+- keep URL/state contracts as small as possible; use query parameters when they are the simplest way to restore the intended view
+- dynamically derive public URLs in runtime helpers from record id plus route state
+- avoid persistent generated URL fields unless a documented non-derivable exception is required
+- centralize public URL construction and route-state parsing in `site/assets/js/catalogue/shared/catalogue-urls.js`
+- route strings should not be assembled independently across page scripts, catalogue search rendering, generated payloads, semantic-token projections, or Studio public-link helpers
+
+## Canonical Routes
+
+```text
+/                                  public Docs Viewer, loaded directly
+/recent/                           recent public catalogue updates
+
+/series/                           Works home grouped by Series
+/series/?series=009                ordered Works in one selected Series
+
+/works/                            redirect to `/series/` when no Work is selected
+/works/?work=00001                 selected work view
+/works/?work=00001&series=009      selected work with series navigation context
+
+/work-details/                     selected Work-detail shell with empty state
+/work-details/?detail=00001-001    selected work detail view
+
+/catalogue/search/                 public catalogue search shell
+/404.html                          clean recovery page for unknown or retired routes
+```
+
+These shells are tracked directly beneath `site/`. There is no deploy-time site builder or generated page per Work, Series, or detail.
+
+## Retired Routes
+
+Old inbound URL compatibility is intentionally unsupported.
+Do not add compatibility redirects, aliases, or broad fallback tables for retired path-style routes.
+
+Retired first-party public routes include:
+
+- `/about/`
+- `/analysis/`
+- `/works/<work_id>/`
+- `/series/<series_id>/`
+- `/work_details/<detail_uid>/`
+
+`/work-details/` is the canonical spelling for the work-detail shell.
+`/work_details/` is legacy and should not be restored.
+
+`/palette/` is not part of the public-site route model.
+
+## Route-State Semantics
+
+Query parameters are route state, not compatibility shims for old paths.
+
+- `series` on `/series/` selects or filters a series in the catalogue index shell.
+- `work` on `/works/` selects a work in the works shell.
+- `series` on `/works/` preserves visible series navigation context for a selected work.
+- `detail` on `/work-details/` selects a work detail in the work-detail shell.
+- `from`, `series_page`, `details_section`, and `details_page` may preserve useful return or pagination context between catalogue views.
+
+Important return paths should be represented by explicit in-page links.
+Browser history is useful but should not be the primary mechanism for required navigation context.
+
+## Docs Viewer Boundary
+
+`/` is the sole public Docs Viewer route. Ordinary document URLs use `/?doc=<doc_id>`; collection document URLs add `collection=<collection>`. The tracked shell is `site/index.html`. The former `/analysis/` route is removed without a redirect or alias. Its document query state, payloads and reader runtime belong to Docs Viewer.
+
+Deprecated `/series/?mode=moments` input is ignored by the catalogue route. It is not a supported route state or compatibility alias.
+
+## URL Ownership
+
+Public route construction and route-state parsing are owned by `site/assets/js/catalogue/shared/catalogue-urls.js`.
+
+Consumers should derive public routes through that contract or its Studio equivalent:
+
+- public catalogue shells
+- recent links
+- catalogue search rendering
+- semantic reference output for public links
+- Studio preview/public-link helpers
+
+Generated public Catalogue payloads should not serialize derivable route URLs without an owned need. Recent is the documented exception: each publication snapshot owns its resolved `href` because a Series snapshot may route to its sole surviving published Work or to the selected Series. Catalogue Search also owns result destinations inside its independent flat search projection.
+
+## Change Method
+
+When changing the route model:
+
+1. update `catalogue-urls.js` and the consuming route modules;
+2. update static shells only when their boot or stable markup changes;
+3. update generated payloads only when a URL cannot be derived from identity and route state;
+4. update Studio public-link helpers and semantic link consumers that share the contract;
+5. run focused route/module coverage and `bin/site-validate`.
+
+## Known Weak Spot
+
+Work/detail links can carry `series_page` back to `/series/`, while the current Series route initializes its page from local storage rather than that query value. Treat this as an unresolved restoration-contract gap rather than documenting the query as effective.

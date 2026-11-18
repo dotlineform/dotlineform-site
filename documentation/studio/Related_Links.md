@@ -68,7 +68,7 @@ The user selected the following artwork in [Insert Icon](/docs/?doc=d-20260930-2
 | Moments (`moments`) | `dlf-moment` |
 | Ordinary document | `dlf-doc` |
 
-An extensionless `icon` value belongs to each collection record in the existing workspace configuration, such as `"icon": "dlf-context"` for Works. The Catalogue report host uses the Catalogue icon from that same configuration. [Source Organisation](Source_Organisation.md#collection-icons) owns this contract, and the [Icon Tokens](Icon_Tokens.md) renderer embeds the decorative artwork.
+An extensionless `icon` value belongs to each collection record in the existing workspace configuration, such as `"icon": "dlf-context"` for Works. The Catalogue report host uses the Catalogue icon from that same configuration. [Source Organisation](../reference/Source_Organisation.md#collection-icons) owns this contract, and the [Icon Tokens](Icon_Tokens.md) renderer embeds the decorative artwork.
 
 ## Generated Data And Freshness
 

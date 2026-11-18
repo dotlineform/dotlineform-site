@@ -69,7 +69,7 @@ The modal shows the current Projects-relative source. **Choose folder…** brows
 
 Ordinary document sources may be direct children of any accepted nested source folder. A Markdown package is a direct-child folder containing one Markdown file plus its local images or attachments. Returned packages and complete edited Docs Review `source/` folders are trusted collection formats and remain importable only from staging. Recognizers inspect each untouched direct child before generic format handling; a recognized trusted source outside staging stays visible but blocked rather than falling through as an ordinary document.
 
-The candidate list shows only formats the server currently accepts. Standalone raster, SVG and download sources belong to the source editor's **Add image…** and **Add file…** actions. [Docs Import Architecture](archive/Docs_Import_Architecture.md) owns the source, format-adapter, and staging-gate boundaries, while [HTML Import Mapping](HTML_Import_Mapping.md) documents the current semantic conversion rules.
+The candidate list shows only formats the server currently accepts. Standalone raster, SVG and download sources belong to the source editor's **Add image…** and **Add file…** actions. [Docs Import Architecture](../deliveries/Docs_Import_Architecture.md) owns the source, format-adapter, and staging-gate boundaries, while [HTML Import Mapping](HTML_Import_Mapping.md) documents the current semantic conversion rules.
 
 Docs Import always creates the target document front matter. For an ordinary Markdown source, a well-formed leading front-matter block is stripped after trusted collection recognition. Its scalar `title` may be used only when the body has no H1; every other field is ignored with a warning. Malformed or unterminated apparent front matter blocks the import instead of becoming body text.
 
@@ -87,7 +87,7 @@ Opening either action freezes the menu's exact `{collection}` destination. Sourc
 
 HTML can supply the title; Markdown uses its first H1 when present. Word uses the mapped `Title` style and falls back to the humanized source filename without promoting its first section heading. [Word Import Style Mapping](Word_Import_Style_Mapping.md) owns the exact Word heading rules. The source name remains conversion context. A genuinely new document receives an immutable local `doc_id` and matching Markdown filename when the service plans the write.
 
-Every ordinary source import creates a new document with a fresh immutable identity, including repeat imports of the same file. New authored documents start as drafts. Mark a document ready and complete its Working generation before publishing eligible output. [Document eligibility](Source_Organisation.md#operations)
+Every ordinary source import creates a new document with a fresh immutable identity, including repeat imports of the same file. New authored documents start as drafts. Mark a document ready and complete its Working generation before publishing eligible output. [Document eligibility](../reference/Source_Organisation.md#operations)
 
 ### Create-Only Document Imports
 
@@ -156,7 +156,7 @@ canonical timestamps.
 
 ## Media And Companion Assets
 
-Media uses the configured Working document owner. The import plan supplies the exact media family and logical identity. Materialisation completes the selected Working writes before canonical source is committed. Eligible output later uses the separate Publish workflow. [Document media ownership](Source_Organisation.md#media-ownership)
+Media uses the configured Working document owner. The import plan supplies the exact media family and logical identity. Materialisation completes the selected Working writes before canonical source is committed. Eligible output later uses the separate Publish workflow. [Document media ownership](../reference/Source_Organisation.md#media-ownership)
 
 Markdown packages convert supported images to readable, 800px-maximum WebP outputs and copy supported attachments unchanged. HTML and Markdown can extract inline raster data URLs, and HTML-inline SVG is sanitized and published as deterministic image media. Word imports pass embedded PNG, JPEG, GIF, and WebP through the same inline-raster publication path; missing alt text receives a deterministic `Word image NN` label, while unsupported, unreadable, or empty images are omitted with warnings. Exact paths, location providers, collision rules, and media limitations belong to [Media Handling](Media_And_Asset_Handling.md).
 
@@ -198,4 +198,4 @@ The management dispatcher passes native-file and staged-source requests to their
 
 Resolve the destination media owner and final create/overwrite identity before converting embedded media. The operation constructs filenames, document-owned identities and Markdown references together. Decode inline raster data and sanitize inline SVG once per operation. Keep prepared bytes outside JSON preview metadata and carry them in the internal plan to materialisation. The confirmed request owns its own preparation. These boundaries keep the same identity through conversion, parsing, storage and generation. [Import materialization](Media_And_Asset_Handling.md#import-materialization) · [Import media owner](../../docs-viewer/services/docs_import_media.py)
 
-Use the [historical architecture](archive/Docs_Import_Architecture.md) for the original design and verification record.
+Use the [historical architecture](../deliveries/Docs_Import_Architecture.md) for the original design and verification record.

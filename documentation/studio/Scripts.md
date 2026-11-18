@@ -37,7 +37,7 @@ Use [Site preview and validation](Local_Setup_Public_Site_Preview.md#preview-ver
 ## Docs Viewer
 
 - [Docs Viewer Builder](Builder.md) covers Working document generation and explicit discovery refresh.
-- [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) covers explicit external-edit and persistent-media rebuilds; the filesystem watcher is retired.
+- [Source Organisation](../reference/Source_Organisation.md#explicit-external-edit-and-media-rebuilds) covers explicit external-edit and persistent-media rebuilds; the filesystem watcher is retired.
 - [Docs Viewer script owners](Scripts_Overview.md) maps the active service, reads, writes and completion paths.
 - [Docs Broken Links Audit](Broken_Links_Script.md) covers docs link checks.
 - [Documents Package Preparation Script](Package_Prepare_Script.md) and [Documents Returned Package Script](Package_Return_Parser.md) cover documents Data Sharing package export/import flows.

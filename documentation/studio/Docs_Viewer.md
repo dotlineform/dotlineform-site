@@ -23,7 +23,7 @@ Docs Viewer provides the shared reader for the public site at `/`, local authori
 
 ## Maintain Working Documents
 
-- [Source Organisation](Source_Organisation.md) — source roots, front matter, hierarchy, and generated ordering.
+- [Source Organisation](../reference/Source_Organisation.md) — source roots, front matter, hierarchy, and generated ordering.
 - [Document Identity](Document_Identity.md) — immutable document codes, date provenance, and create-versus-update rules.
 - [Builder](Builder.md) — document generation, discovery refresh and the publication handoff.
 - [Document Diagrams](Document_Diagrams.md) — create diagrams externally and import finished SVG images.

@@ -28,7 +28,7 @@ Do not treat repository co-location as shared runtime ownership. Processing shou
 
 ## Current Integration
 
-- [Processing Project Setup](archive/Processing_Project_Setup.md) records the current environment, adopted repository shape, recovery boundary, generated-material policy, and integration decisions.
+- [Processing Project Setup](../deliveries/Processing_Project_Setup.md) records the current environment, adopted repository shape, recovery boundary, generated-material policy, and integration decisions.
 - [Source Tree Ownership](Source_Tree_Ownership.md) places `processing/` alongside the repository's other independently owned roots.
 - Processing work media belongs under the explicit external `$DOTLINEFORM_PROJECTS_BASE_DIR/processing/<project-id>/` boundary. GUI-launched sketches receive the external base and exact project identity through ignored portable local configuration rather than `.env.local` or inherited shell state.
 - `dotlineform/processing` owns Working commentary with exact Folder, Work or Series subjects and copies through its fixed **Copy to Analysis** workflow into `analysis/works`. The main `processing` documentation scope remains technical and does not acquire this Working behaviour.

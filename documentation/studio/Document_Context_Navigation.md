@@ -11,7 +11,7 @@ parent_id: d-20260903-220300-694ee5
 
 ## Purpose
 
-This proposal would add previous/next navigation through the ordinary Index hierarchy. The [Reorder docs](Reorder_Docs.md) delivery supplies its authored order. Book and collection sequences already have their own shipped owners. [Current collection navigation](Docs_Viewer_Runtime.md#collection-previous-and-next)
+This proposal would add previous/next navigation through the ordinary Index hierarchy. It uses the [authored Index order](../reference/Source_Organisation.md#document-and-collection-identity). Book and collection sequences have their own owners. [Current collection navigation](Docs_Viewer_Runtime.md#collection-previous-and-next)
 
 The remaining proposal concerns ordinary Index documents. It leaves Catalogue, named collection and Book reading order with their existing owners.
 
@@ -25,7 +25,7 @@ Search, [Related Links](Related_Links.md) and authored links remain independent 
 
 ## Ordering And Traversal
 
-[Reorder docs](Reorder_Docs.md) owns canonical ordinary hierarchy and literal array order in nested `index-order.json`, edited through one Position modal with Before/After/Inside and Save/Cancel. Authored ordinary `parent_id` is removed by that delivery. Context Navigation consumes the generated tree and must not introduce another curation surface or hierarchy/order authority.
+[Source Organisation](../reference/Source_Organisation.md#position-ordinary-documents) explains how Position edits the canonical nested `index-order.json`. Context Navigation consumes the generated tree as its sequence, preserving the authored order.
 
 The upstream generation/loading path supplies the tree in its resolved, saved order. Both the ordinary index panel and previous/next consume that same tree. Neither re-sorts titles or treats expanded/collapsed branches as editorial ordering data. Working organisation retains draft and unpublishable records; Prepare Preview omits excluded branches and preserves the relative order of survivors for downstream readers.
 

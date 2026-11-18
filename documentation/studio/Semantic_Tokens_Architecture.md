@@ -72,7 +72,7 @@ Catalogue owns canonical Work/Gallery identities and media. Tokens record exact 
 
 The shared checked definition registry is `docs-viewer/config/semantic-tokens/registry.json`. Python builders/audits and the browser Source editor consume its Catalogue family, labels, Work/Gallery target definitions and identity policy. Authored occurrence fields and executable Info/presentation behavior belong to the token parser and Source code; the registry's unused occurrence-metadata and UI-contribution slots are retired. Target-store URLs and lookup-generator adapter/field declarations are retired, together with the old text action and modal contributions.
 
-The registry does not control which Source buttons a scope exposes. That proposed layer belongs to [Scope-configured Authoring Controls](archive/Scope_Configured_Authoring_Controls.md). Parser, resolver and presentation implementations remain code-owned.
+The registry does not control which Source buttons a scope exposes. That proposed layer belongs to [Scope-configured Authoring Controls](../deliveries/Scope_Configured_Authoring_Controls.md). Parser, resolver and presentation implementations remain code-owned.
 
 The private generated `docs-viewer/data/generated/semantic-tokens/target-lookup.json`, its standalone builder/CLI and browser file loader are retired. Authoring, Thumb selection, Info, Build and Broken Links use generated Catalogue data through their existing owners, with no persisted lookup fallback or separate refresh operation. The current `/docs/catalogue-media-targets` response retains `docs_semantic_token_target_lookup_v2`; its browser normalization and matching helpers remain active. [Target Lookup](Target_Lookup.md) records the current discovery boundary and approved test cleanup.
 

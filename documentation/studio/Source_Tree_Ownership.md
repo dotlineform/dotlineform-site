@@ -25,7 +25,7 @@ The repository contains several local apps, shared domain services and one track
 | `tooling/lint/` | repository development-tool pins, shared lint rules, and checked maintained Python/JavaScript boundaries |
 | `var/` | ignored reports, logs, caches, staging, and other local working output |
 
-`DOTLINEFORM_DOCS_BASE_DIR` selects external Working and Preview storage. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects external project inputs, Catalogue media staging and document packages under `data-sharing/`. [Working storage and roles](Source_Organisation.md#storage-and-roles)
+`DOTLINEFORM_DOCS_BASE_DIR` selects external Working and Preview storage. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects external project inputs, Catalogue media staging and document packages under `data-sharing/`. [Working storage and roles](../reference/Source_Organisation.md#storage-and-roles)
 
 ## Studio Boundary
 

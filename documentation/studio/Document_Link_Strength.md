@@ -39,7 +39,7 @@ A visualisation that fully expresses the reciprocal relationship must show both 
 
 For example, Doc A could have a stronger association with Concept B than with Concept C. Its Related pills could make that difference visible using the same blue-to-red mapping as the insertion control. Another document's association with B, and B's own outgoing association with A, remain independent.
 
-The [Info Panel Related Links And Pinning delivery](archive/Info_Panel_Links_And_Pinning_Delivery.md) is the first intended presentation consumer, but its current scope remains unchanged. Strength authoring, persistence and weighted styling are a separate follow-on. The Related list still sorts A–Z and deduplicates by `doc_id`; this proposal does not change ordering or add a minimum-strength filter. While Info is pinned, any future strength styling must describe the pinned document's associations.
+The [Info Panel Related Links And Pinning delivery](../deliveries/Info_Panel_Links_And_Pinning_Delivery.md) is the first intended presentation consumer, but its current scope remains unchanged. Strength authoring, persistence and weighted styling are a separate follow-on. The Related list still sorts A–Z and deduplicates by `doc_id`; this proposal does not change ordering or add a minimum-strength filter. While Info is pinned, any future strength styling must describe the pinned document's associations.
 
 ## Ownership
 
