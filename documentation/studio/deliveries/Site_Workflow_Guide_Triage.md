@@ -74,8 +74,8 @@ The **First pass** markers in Delete candidates identify the 13 clear retirement
 | [GitHub_Actions.md](../GitHub_Actions.md) | 3 / 0 | Public workflow entry point. YAML remains authoritative. |
 | [HTML_Import_Mapping.md](../HTML_Import_Mapping.md) | 3 / 0 | Keep as the focused reference for html import mapping. |
 | [Icon_Tokens.md](../Icon_Tokens.md) | 5 / 0 | Keep as the focused reference for icon tokens. |
-| [Local_Runners.md](../Local_Runners.md) | 3 / 0 | Local runner ownership and explicit workflow. |
-| [Local_Setup_Public_Site_Preview.md](../Local_Setup_Public_Site_Preview.md) | 2 / 0 | Static site preview command. |
+| [Local_Runners.md](../Local_Runners.md) | 3 / 0 | Retain for choosing a runner, default URLs and service supervision. Chapter 6 uses this reference for local and public checks. |
+| [Local_Setup_Public_Site_Preview.md](../Local_Setup_Public_Site_Preview.md) | 2 / 0 | Retain for the static preview wrapper, options and deploy-root checks. |
 | [Media_And_Asset_Handling.md](../Media_And_Asset_Handling.md) | 38 / 0 | Media ownership, attachment procedures and R2 report. |
 | [Package_Export_Metadata.md](../Package_Export_Metadata.md) | 2 / 0 | Prepare/return provenance contract. |
 | [Package_Prepare.md](../Package_Prepare.md) | 12 / 0 | Collection package procedure. |
@@ -87,7 +87,7 @@ The **First pass** markers in Delete candidates identify the 13 clear retirement
 | [Record_List_And_Actions.md](../Record_List_And_Actions.md) | 3 / 0 | Keep as the focused reference for record list and actions. |
 | [Related_Links.md](../Related_Links.md) | 28 / 2 | Authored Related Links representation and generation. |
 | [Reports.md](../Reports.md) | 25 / 1 | Current report inventory and procedures. Review individual report evidence separately. |
-| [Run_Checks.md](../Run_Checks.md) | 6 / 0 | Profile runner guidance. Check the selected profile before treating it as coverage. |
+| [Run_Checks.md](../Run_Checks.md) | 6 / 0 | Retain exact lint, profile runner and projection commands. Chapter 6 explains why the example uses the projection and route checks. |
 | [Search_Fields.md](../Search_Fields.md) | 3 / 0 | Keep as the focused reference for search fields. |
 | [Search_List.md](../Search_List.md) | 2 / 0 | Keep as the focused reference for search list. |
 | [Selectable_List.md](../Selectable_List.md) | 2 / 0 | Keep as the focused reference for selectable list. |
@@ -109,7 +109,7 @@ Repair the reader’s route to maintained owners. Check all scope, storage, depl
 
 | File | Links / ID refs | Recommendation |
 | --- | ---: | --- |
-| [Dev_Home.md](../Dev_Home.md) | 0 / 9 | Retained and updated. Routes readers to the workflow guide, names the current Studio documentation root and keeps the development references. |
+| [Dev_Home.md](../Dev_Home.md) | 0 / 9 | Retained and updated. Routes readers to the workflow guide and chapter 6, names the current Studio documentation root and keeps the development references. |
 | [Docs_Viewer.md](../Docs_Viewer.md) | 5 / 49 | Retained and updated as the task and reference entry point. Its opening now carries the three-surface overview and links to the guide and Runtime. |
 | `Docs_Viewer_Overview.md` | 2 / 0 | Retired after checking repository and Working source paths, document IDs and parent references. [Docs Viewer](../Docs_Viewer.md) covers orientation, [Runtime](../Docs_Viewer_Runtime.md) covers route authority and [Docs Review](../Docs_Review.md) covers the package workflow. |
 | [Docs_Viewer_Runtime.md](../Docs_Viewer_Runtime.md) | 40 / 5 | Retained. Corrected the explicit discovery and Publish completion rows and removed the retired full-rebuild and Settings guidance from that section. |
@@ -232,7 +232,7 @@ Check whether the proposal is still wanted, superseded or already planned elsewh
 | [Public_Mobile_Experience.md](../Public_Mobile_Experience.md) | 1 / 0 | Older mobile plan. Transfer any unique reader journeys to the linked Mobile Layouts delivery before archiving. |
 | [R2_Workspace_Backups.md](../R2_Workspace_Backups.md) | 1 / 0 | Check the r2 workspace backups guidance against the owning implementation or current plan. |
 | [Search.md](../Search.md) | 0 / 3 | Retained as the Search entry point and parent. Replaced the retired scope and Catalogue routes with links to the chapter, current Search owners and the frozen archive. |
-| [Search_Build_Pipeline.md](../Search_Build_Pipeline.md) | 3 / 0 | Both command blocks describe retired paths or flags. [Builder](../Builder.md#working-rebuild) and [Docs Search Index](../Docs_Search_Index.md) own the active build. Reconcile remaining links before retiring this page. |
+| [Search_Build_Pipeline.md](../Search_Build_Pipeline.md) | 3 / 0 | Removed retired commands and routed to [Builder](../Builder.md#working-rebuild), [Docs Search Index](../Docs_Search_Index.md) and the Catalogue Archive. Reconcile the legacy Projection Contract and Docs Data links in their respective batches before retiring this page. |
 
 ## Archive candidates (94)
 

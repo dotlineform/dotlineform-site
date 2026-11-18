@@ -9,4 +9,4 @@ This guide explains how the Dotlineform site is edited, built and released. It i
 3. [Maintain the Catalogue](Maintain_The_Catalogue.md) — Works, Series, Galleries, and Save → Refresh → Regenerate.
 4. [Publish and deploy](Publish_And_Deploy.md) — prepare changes, publish them to the configured destinations and release the static site.
 5. [Find and read things](Find_And_Read_Things.md) — the Index, Search, Recent, Catalogue browsing and Media View.
-6. **Change the system safely** *(planned)* — where to make a change, how to check it and how to handle failures.
+6. [Change the system safely](Change_The_System_Safely.md) — where to make a change, how to check it and how to handle failures.

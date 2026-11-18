@@ -21,6 +21,7 @@ Start with the [Site Workflow Guide](../guide/README.md) for how the site fits t
 
 ## Work Lifecycle
 
+- [Change the system safely](../guide/Change_The_System_Safely.md) — trace a change from its owner through verification and recovery.
 - [Development Workflow](Development_Workflow.md) — concept, architecture, feature delivery, verification, documentation, closeout.
 - [Development Checklist](Development_Checklist.md) — cross-cutting implementation guardrails.
 - [Planned Features](Planned_Features.md) — short-term feature direction and bounded deliveries.

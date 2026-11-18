@@ -14,9 +14,9 @@ Create a short, definitive guide in `documentation/guide/` with one entry page a
 
 ## Where To Resume
 
-**Completed this batch.** Wrote and reviewed chapter 5, [Find and read things](../../guide/Find_And_Read_Things.md). Traced Index and Catalogue navigation, browser Back and Media View return against the shared runtime. Linked the reader entry points and updated the Search overview to point to its current owners.
+**Completed this batch.** Wrote and reviewed chapter 6, [Change the system safely](../../guide/Change_The_System_Safely.md). Used a default-document change to trace configuration ownership, projection, verification and recovery. Linked the chapter from Dev Home and routed Search build instructions to the maintained owners.
 
-**Next visit.** Draft chapter 6 from the current development, setup, tooling and verification owners. Follow a change through choosing its owner, checking the result and recovering from a failure. Use the guide to identify duplicate or stale operating instructions, including the old Search build commands.
+**Next visit.** Walk the complete guide as a new reader and as someone changing a workflow. Use the working inventory to settle the remaining supporting-library dispositions, starting with the marked early retirements and their references. Close the delivery after that review and consolidation are complete.
 
 ## Contents And Progress
 
@@ -27,7 +27,7 @@ Create a short, definitive guide in `documentation/guide/` with one entry page a
 | 3. [Maintain the Catalogue](../../guide/Maintain_The_Catalogue.md) | Works, Series, Galleries and Save → Refresh → Regenerate. | Done | Studio and Catalogue Architecture updated. Retain specialist editor, queue and distribution references. Review the remaining historical operating guides. |
 | 4. [Publish and deploy](../../guide/Publish_And_Deploy.md) | What Working prepares, what Publish transfers, and when GitHub Pages changes. | Done | Runtime guidance corrected. Review the older publication references for consolidation. |
 | 5. [Find and read things](../../guide/Find_And_Read_Things.md) | Index, Search, Recent, Catalogue browsing and Media View. | Done | Search overview and reader entry points updated. Older Search commands and navigation records remain in triage. |
-| 6. Change the system safely | Where to make a change, how to check it, and how to recover when a workflow fails. | Queued | Review setup, tooling and verification guides for overlapping procedures. |
+| 6. [Change the system safely](../../guide/Change_The_System_Safely.md) | Where to make a change, how to check it, and how to recover when a workflow fails. | Done | Linked setup and verification owners. Retired commands removed from Search Build Pipeline. Remaining reference consolidation stays in triage. |
 
 At the end of each visit, update the relevant rows and leave the next concrete action and any decision it depends on under **Where To Resume**. Link each chapter here when its draft exists. Mark a chapter **Done** once its workflow, rationale and links have been reviewed. Record individual file dispositions in the [working triage inventory](Site_Workflow_Guide_Triage.md) and summarise any outstanding cleanup in the table.
 
@@ -51,6 +51,6 @@ Use workflow batches. Draft the affected chapters, then update, consolidate, arc
 - [x] **Choose the cleanup order.** Work by workflow, starting with the entry page and chapters 1 and 4.
 - [x] **Check the first batch.** Identify the current owners and decision records for chapters 1 and 4 before writing.
 - [x] **Draft the first batch.** Add the guide entry page and draft chapters 1 and 4.
-- [ ] **Write and link the guide.** Give readers a clear path from the repository and Studio entry points to each workflow. Check each chapter's instructions and rationale against its sources.
+- [x] **Write and link the guide.** Give readers a clear path from the repository and Studio entry points to each workflow. Check each chapter's instructions and rationale against its sources.
 - [ ] **Consolidate the supporting library.** Carry forward unique current procedures and significant reasoning before retiring old copies. Check relative links, document ID references and parent references for each move or deletion. Preserve the title and ID of any retained or moved Studio document.
 - [ ] **Review and close.** Walk the guide as a new reader and as someone changing a workflow. Confirm that each chapter points to its maintained authority, settle the remaining review queue and retire the working inventory.
