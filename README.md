@@ -5,11 +5,11 @@ This repository is the source for [dotlineform.com](https://www.dotlineform.com)
 The repo also contains locally run web-apps:
 
 - **Studio**: manage the portfolio's catalogue data.
-- **Docs Viewer**: edit, manage and publish documents to the site.
+- **Docs Viewer**: edit, manage and publish documents to the site. The site is essentially the public runtime for this app, minus the editing capabilities.
 
-Start with the [Site Workflow Guide](documentation/guide/README.md) to see how these apps prepare and release the public site.
+These apps are tightly connected and designed to support my personal workflows. An independent, generic Docs Viewer could be a useful app, especially if it was untangled from a local Python server.
 
-Use [Development](documentation/development/README.md) for implementation, review and verification guidance, and review [Working](documentation/_working/README.md) when choosing or resuming work.
+[Site Workflow Guide](documentation/guide/README.md) describes how these apps prepare and release the public site.
 
 ## External Libraries And Resources
 
