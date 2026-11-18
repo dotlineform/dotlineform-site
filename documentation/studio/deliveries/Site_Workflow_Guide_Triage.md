@@ -50,7 +50,7 @@ The **First pass** markers in Delete candidates identify the 13 clear retirement
 | [Catalogue_Field_Registry.md](../Catalogue_Field_Registry.md) | 4 / 0 | Catalogue field and output families. |
 | [Catalogue_Indexes_And_Payloads.md](../Catalogue_Indexes_And_Payloads.md) | 14 / 0 | Current generated Work and Gallery payloads. |
 | [Catalogue_Media_Pipeline_Config.md](../Catalogue_Media_Pipeline_Config.md) | 7 / 0 | Keep as the focused reference for catalogue media pipeline config. |
-| [Catalogue_Media_View.md](../Catalogue_Media_View.md) | 27 / 0 | Work/Gallery viewer and Context links. |
+| [Catalogue_Media_View.md](../Catalogue_Media_View.md) | 27 / 0 | Retain the Work/Gallery adapter, Context links and exact grid return rules. Chapter 5 carries the reader workflow. |
 | [Catalogue_Save_And_Refresh.md](../Catalogue_Save_And_Refresh.md) | 37 / 0 | Retain as the exact reference for queue state, selection, media handoff and Regenerate completion. Chapter 3 carries the walkthroughs. |
 | [Catalogue_Services.md](../Catalogue_Services.md) | 3 / 0 | Keep as the focused reference for catalogue services. |
 | [Catalogue_Shuffle_Randomness.md](../Catalogue_Shuffle_Randomness.md) | 2 / 0 | Shuffle stock origin, replacement and reader behavior. |
@@ -62,7 +62,7 @@ The **First pass** markers in Delete candidates identify the 13 clear retirement
 | [Docs_Import.md](../Docs_Import.md) | 7 / 2 | Retain collection import and the return handoff. Reconcile the older `publishable` discussion with the current Draft and Working eligibility rules. |
 | [Docs_Search_Index.md](../Docs_Search_Index.md) | 8 / 0 | Search artifact format and eligibility. |
 | [Docs_Search_Tokenizer.md](../Docs_Search_Tokenizer.md) | 2 / 0 | Search term normalization. |
-| [Docs_Viewer_Search.md](../Docs_Viewer_Search.md) | 8 / 2 | Current Search and Recent behavior. |
+| [Docs_Viewer_Search.md](../Docs_Viewer_Search.md) | 8 / 2 | Retain for exact Search scope switching, query and result controls. Chapter 5 routes readers to it. |
 | [Document_Diagrams.md](../Document_Diagrams.md) | 9 / 0 | Keep as the focused reference for document diagrams. |
 | [Document_Identity.md](../Document_Identity.md) | 2 / 0 | Stable document identity. |
 | [Document_Image_Detail.md](../Document_Image_Detail.md) | 3 / 0 | Current opt-in image detail procedure. |
@@ -169,7 +169,7 @@ Check the current Working, collection-aware API and UI. Consolidate overlapping 
 | [Audit_Scripts.md](../Audit_Scripts.md) | 1 / 0 | Check the audit scripts guidance against the owning implementation or current plan. |
 | [Broken_Links.md](../Broken_Links.md) | 5 / 0 | Check the broken links guidance against the owning implementation or current plan. |
 | [Create_And_Import_Endpoints.md](../Create_And_Import_Endpoints.md) | 3 / 0 | Check the create and import endpoints guidance against the owning implementation or current plan. |
-| [Doc_Navigation.md](../Doc_Navigation.md) | 5 / 3 | Check the doc navigation guidance against the owning implementation or current plan. |
+| [Doc_Navigation.md](../Doc_Navigation.md) | 5 / 3 | Retain the hierarchy feature and its child proposal for review. [Runtime](../Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns current reader navigation and sequence behaviour. |
 | [Docs_Import_Architecture.md](../Docs_Import_Architecture.md) | 6 / 0 | Sub-scope/stage import examples coexist with useful conversion and persistence design. Compare them with current collection import and Review. |
 | [Docs_Review.md](../Docs_Review.md) | 8 / 0 | The main Review workflow is useful. Reconcile residual scope/stage terms and the current return-import boundary with Docs Import before relying on exact payload examples. |
 | [Docs_Review_Endpoints.md](../Docs_Review_Endpoints.md) | 3 / 0 | Check the docs review endpoints guidance against the owning implementation or current plan. |
@@ -231,8 +231,8 @@ Check whether the proposal is still wanted, superseded or already planned elsewh
 | [Public_Docs_Source_Repository.md](../Public_Docs_Source_Repository.md) | 0 / 0 | Prior public-source repository proposal carries an urgent flag. Decide explicitly whether it is still wanted before retaining or archiving. |
 | [Public_Mobile_Experience.md](../Public_Mobile_Experience.md) | 1 / 0 | Older mobile plan. Transfer any unique reader journeys to the linked Mobile Layouts delivery before archiving. |
 | [R2_Workspace_Backups.md](../R2_Workspace_Backups.md) | 1 / 0 | Check the r2 workspace backups guidance against the owning implementation or current plan. |
-| [Search.md](../Search.md) | 0 / 3 | Review the claimed two-system model against current Docs Search and the frozen Catalogue site. |
-| [Search_Build_Pipeline.md](../Search_Build_Pipeline.md) | 3 / 0 | Check which steps remain active and which belong to the frozen Catalogue pipeline. |
+| [Search.md](../Search.md) | 0 / 3 | Retained as the Search entry point and parent. Replaced the retired scope and Catalogue routes with links to the chapter, current Search owners and the frozen archive. |
+| [Search_Build_Pipeline.md](../Search_Build_Pipeline.md) | 3 / 0 | Both command blocks describe retired paths or flags. [Builder](../Builder.md#working-rebuild) and [Docs Search Index](../Docs_Search_Index.md) own the active build. Reconcile remaining links before retiring this page. |
 
 ## Archive candidates (94)
 

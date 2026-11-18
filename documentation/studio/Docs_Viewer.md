@@ -14,6 +14,7 @@ Docs Viewer provides the shared reader for the public site at `/`, local authori
 
 ## Use Docs Viewer
 
+- [Find and read things](../guide/Find_And_Read_Things.md) — browse and search, open Works and Galleries, and return to the previous page or list.
 - [Author and organise documents](../guide/Author_And_Organise_Documents.md) — create, edit and arrange Working documents and Book pages.
 - [Docs Import](Docs_Import.md) — turn staged HTML, Markdown, documents, images, and reviewed collections into source docs.
 - [Docs Review](Docs_Review.md) — inspect a validated returned package before choosing whether to import it.

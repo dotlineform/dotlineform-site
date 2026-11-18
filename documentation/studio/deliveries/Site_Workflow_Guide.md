@@ -14,9 +14,9 @@ Create a short, definitive guide in `documentation/guide/` with one entry page a
 
 ## Where To Resume
 
-**Completed this batch.** Wrote and reviewed chapter 3, [Maintain the Catalogue](../../guide/Maintain_The_Catalogue.md), using a Work image replacement and a Gallery rename to trace both branches of the publication queue. Updated the Studio entry point and Catalogue Architecture, and recorded which specialist references to retain in the [working triage inventory](Site_Workflow_Guide_Triage.md#catalogue-and-cross-domain-ownership).
+**Completed this batch.** Wrote and reviewed chapter 5, [Find and read things](../../guide/Find_And_Read_Things.md). Traced Index and Catalogue navigation, browser Back and Media View return against the shared runtime. Linked the reader entry points and updated the Search overview to point to its current owners.
 
-**Next visit.** Draft chapter 5 from the current Index, Search, Recent, Catalogue browsing and Media View owners. Check where readers start and how they return from a result or opened Work. Identify older discovery and navigation references that can be consolidated.
+**Next visit.** Draft chapter 6 from the current development, setup, tooling and verification owners. Follow a change through choosing its owner, checking the result and recovering from a failure. Use the guide to identify duplicate or stale operating instructions, including the old Search build commands.
 
 ## Contents And Progress
 
@@ -26,7 +26,7 @@ Create a short, definitive guide in `documentation/guide/` with one entry page a
 | 2. [Author and organise documents](../../guide/Author_And_Organise_Documents.md) | Working, collections, Books, media, links and exact document generation. | Done | Linked specialist references and corrected the media guide's Delete instruction. Older authoring references still need triage. |
 | 3. [Maintain the Catalogue](../../guide/Maintain_The_Catalogue.md) | Works, Series, Galleries and Save → Refresh → Regenerate. | Done | Studio and Catalogue Architecture updated. Retain specialist editor, queue and distribution references. Review the remaining historical operating guides. |
 | 4. [Publish and deploy](../../guide/Publish_And_Deploy.md) | What Working prepares, what Publish transfers, and when GitHub Pages changes. | Done | Runtime guidance corrected. Review the older publication references for consolidation. |
-| 5. Find and read things | Index, Search, Recent, Catalogue browsing and Media View. | Queued | Review old scope, search and navigation guidance against current reader workflows. |
+| 5. [Find and read things](../../guide/Find_And_Read_Things.md) | Index, Search, Recent, Catalogue browsing and Media View. | Done | Search overview and reader entry points updated. Older Search commands and navigation records remain in triage. |
 | 6. Change the system safely | Where to make a change, how to check it, and how to recover when a workflow fails. | Queued | Review setup, tooling and verification guides for overlapping procedures. |
 
 At the end of each visit, update the relevant rows and leave the next concrete action and any decision it depends on under **Where To Resume**. Link each chapter here when its draft exists. Mark a chapter **Done** once its workflow, rationale and links have been reviewed. Record individual file dispositions in the [working triage inventory](Site_Workflow_Guide_Triage.md) and summarise any outstanding cleanup in the table.

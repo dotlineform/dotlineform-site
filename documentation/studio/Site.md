@@ -16,6 +16,7 @@ Start with [How the site fits together](../guide/How_The_Site_Fits_Together.md).
 
 ## Understand The Site
 
+- [Find and read things](../guide/Find_And_Read_Things.md) — use the Index, Search, Recent, Catalogue and Media View.
 - [Public Docs Route Shell](Public_Docs_Route_Shell.md) — the active public entry point and its boot path.
 - [Site Shell Runtime](Site_Shell_Runtime.md) — page shell, theme and asset loading.
 
