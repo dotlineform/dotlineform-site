@@ -10,13 +10,13 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Scope Links - Delivery
 
-Accepted scope-wide Links aggregation delivery. It records the reporting approach before the workspace and relationship graph changed. [Current reference](../studio/Related_Links.md)
+Accepted scope-wide Links aggregation delivery. It records the reporting approach before the workspace and relationship graph changed. [Current reference](../reference/Related_Links.md)
 
 ## Requirements
 
 Provide one complete outcome: after the user runs **Rebuild docs and Search** for Analysis Working, a local **Links** report lists its recorded document-to-document links in two sortable columns, **from** and **to**. Each cell displays the document title and opens that exact document, including child documents in configured sub-scopes.
 
-This delivery follows the completed [Doc Relationships](Doc_Relationships.md) implementation. It is complete, accepted and closed on 2026-09-10. The Links report (`/docs/?scope=analysis&stage=working&doc=d-20260910-214604-f9e841`), sortable columns and final 🔄 Refresh placement are accepted; code review found no material issues. [Builder](../studio/Builder.md) and [Reports](../studio/Reports.md) own shipped behavior. This delivery is ready for manual archive; document-type icons remain a separate exercise.
+This delivery follows the completed [Doc Relationships](Doc_Relationships.md) implementation. It is complete, accepted and closed on 2026-09-10. The Links report (`/docs/?scope=analysis&stage=working&doc=d-20260910-214604-f9e841`), sortable columns and final 🔄 Refresh placement are accepted; code review found no material issues. [Builder](../reference/Builder.md) and [Reports](../reference/Reports.md) own shipped behavior. This delivery is ready for manual archive; document-type icons remain a separate exercise.
 
 The aggregate is `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/generated/documents/links.json`. Its only relationship inputs are the prepared `<doc_id>.json` files in the sibling `links-by-id/` directory. That directory already covers scope-level documents and the configured `concepts`, `moments`, `processing` and `works` collections; aggregation does not traverse their source trees or create separate collection indexes.
 
@@ -60,7 +60,7 @@ SL.1 enables the existing **Rebuild docs and Search** control for Working and pa
 - An awaited aggregation step within the Working scope rebuild and the bounded stage-aware support needed by the existing **Rebuild docs and Search** action.
 - A local generated-data read and report loader using existing report/service owners.
 - An Analysis Working **Links** report document with linked document titles in sortable **from** and **to** columns, allowing a future icon prefix independently of title sorting.
-- Focused generator/service evidence, manual report review and current documentation in [Builder](../studio/Builder.md) and [Reports](../studio/Reports.md), covering their respective changed responsibilities.
+- Focused generator/service evidence, manual report review and current documentation in [Builder](../reference/Builder.md) and [Reports](../reference/Reports.md), covering their respective changed responsibilities.
 
 ## Process
 
@@ -119,7 +119,7 @@ Verification budget: focused Python checks for the exact Working generated read,
 
 Verification budget: bounded source review and expected documentation watcher output; reuse accepted implementation evidence.
 
-**Gate:** passed under the user's explicit closeout approval on 2026-09-10. **Record:** [Builder](../studio/Builder.md) now owns the shipped Working rebuild, aggregate and refresh boundary; [Reports](../studio/Reports.md) owns the local read, rows, sorting, title navigation and Refresh presentation. The feature parent records this completed slice while retaining its broader active work. This delivery is done and ready for manual archive; its report host remains in Working. The completed DR delivery is unchanged. No required implementation work remains, and the follow-on outcomes below remain separate.
+**Gate:** passed under the user's explicit closeout approval on 2026-09-10. **Record:** [Builder](../reference/Builder.md) now owns the shipped Working rebuild, aggregate and refresh boundary; [Reports](../reference/Reports.md) owns the local read, rows, sorting, title navigation and Refresh presentation. The feature parent records this completed slice while retaining its broader active work. This delivery is done and ready for manual archive; its report host remains in Working. The completed DR delivery is unchanged. No required implementation work remains, and the follow-on outcomes below remain separate.
 
 ## Follow-on
 

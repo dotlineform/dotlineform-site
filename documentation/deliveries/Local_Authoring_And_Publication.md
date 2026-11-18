@@ -6,12 +6,12 @@ added_date: "2026-08-08 21:53:38"
 last_updated: "2026-08-14 21:18:02"
 summary: record why Studio and Docs Viewer remain separate local services, why their publication timing differs, the shared vocabulary, and evidence that would justify reconsideration
 ui_status: stable
-parent_id: d-20260331-000000-4a16b0
+parent_id: d-20260524-214228-7247ef
 
 ---
 # Local Authoring Service And Publication Boundaries
 
-Archived record. Preserves the decision to run Studio and Docs Viewer as sibling services and the rationale for earlier publication timing. For current operation, see [Local Runners](../studio/Local_Runners.md) and [Publish and deploy](../guide/Publish_And_Deploy.md).
+Archived record. Preserves the decision to run Studio and Docs Viewer as sibling services and the rationale for earlier publication timing. For current operation, see [Local Runners](../reference/Local_Runners.md) and [Publish and deploy](../guide/Publish_And_Deploy.md).
 
 ## Decision
 
@@ -40,7 +40,7 @@ iCloud Drive is synchronization transport for `DOTLINEFORM_PROJECTS_BASE_DIR`, n
 | Docs Viewer | `/docs/`, `/docs-review/`, document and package APIs, repository and external-local scope resolution, canonical document mutations, private document/search builds, and configured public Docs projection | canonical Catalogue or Tag mutation, Studio route hosting, or the deployed public-site server |
 | local launcher | process composition, ports, environment, startup reporting, and coordinated shutdown | domain validation, data mutation, projection planning, or recovery semantics |
 
-[Local Studio App](../studio/Local_Studio_App.md) owns the Studio server boundary. [Studio Runtime](../studio/Studio_Runtime.md) owns its browser composition. [Source Organisation](../reference/Source_Organisation.md) and the Docs Viewer service own the document-side topology and capabilities.
+[Local Studio App](../reference/Studio.md#server-responsibility) owns the Studio server boundary. [Studio Runtime](../reference/Studio.md#browser-boot) owns its browser composition. [Source Organisation](../reference/Source_Organisation.md) and the Docs Viewer service own the document-side topology and capabilities.
 
 ### Why Separate Services Remain Justified
 
@@ -96,7 +96,7 @@ Use these meanings across Studio and Docs Viewer:
 
 Remote media publication remains an additional provider-specific operation. A local public build and an R2 upload are separate failure and confirmation boundaries even when one UI action composes them.
 
-The shared vocabulary does not require identical buttons, endpoints, metadata, or timing. [Projection Contract](../studio/Projection_Contract.md) remains the cross-system source/projection owner.
+The shared vocabulary does not require identical buttons, endpoints, metadata, or timing. [Projection Contract](../reference/Projection_Contract.md) remains the cross-system source/projection owner.
 
 ## Current Publication Models
 
@@ -112,7 +112,7 @@ This table records the earlier status-field and scope-wide publication model. Th
 | negative removal | Unpublish or Delete performs owned public cleanup | canonical Delete immediately removes its exact public projection; `publishable: false` waits for the next scope Publish |
 | deployment | later tracked-site deployment; remote media has its own confirmed R2 path | later tracked-site deployment |
 
-[Catalogue Architecture](../studio/Catalogue_Architecture.md) owns Catalogue source and projection shape. [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md#current-workflow) owns the current Catalogue workflow. [Publication Ignore List](Publication_Ignore_List.md#original-delivery-direction) preserves the transition from `publishable` to Draft and ordinary exclusions. [Source Organisation](../reference/Source_Organisation.md#operations) owns current document eligibility.
+[Catalogue Architecture](../reference/Catalogue_Source_Model.md#output-boundary) owns Catalogue source and projection shape. [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md#current-workflow) owns the current Catalogue workflow. [Publication Ignore List](Publication_Ignore_List.md#original-delivery-direction) preserves the transition from `publishable` to Draft and ordinary exclusions. [Source Organisation](../reference/Source_Organisation.md#operations) owns current document eligibility.
 
 ## Why The Timing Differs
 

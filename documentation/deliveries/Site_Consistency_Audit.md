@@ -8,7 +8,7 @@ parent_id: d-20260501-174746-efd581
 ---
 # Site Consistency Audit
 
-Audit of the former standalone Catalogue site. The commands below are historical, including scope-era series, Detail and tag checks. [Current reference](../studio/Run_Checks.md)
+Audit of the former standalone Catalogue site. The commands below are historical, including scope-era series, Detail and tag checks. [Current reference](../development/Verification.md)
 
 ## Question It Answers
 

@@ -12,3 +12,9 @@ To use the public reader, start with [Find and read things](Find_And_Read_Things
 4. [Publish and deploy](Publish_And_Deploy.md) — prepare changes, publish them to the configured destinations and release the static site.
 5. [Find and read things](Find_And_Read_Things.md) — the Index, Search, Recent, Catalogue browsing and Media View.
 6. [Change the system safely](Change_The_System_Safely.md) — where to make a change, how to check it and how to handle failures.
+
+## Using The Documentation
+
+Use `documentation/reference/` for how the system works today and its code/configuration owners; `design/` for rationale and alternatives; `deliveries/` for useful completed evidence and deferred outcomes. [Development](../development/README.md) owns current development practice. Review [Working](../_working/README.md) for active/proposed work and writing in progress; there is no separate feature register. [Processing](../Processing/README.md) has its own project documentation.
+
+A missing related link can be a behaviour problem, an intentional design choice or unfinished work. Follow the relevant Reference, Design and delivery record to distinguish them. Keep evidence links purposeful and preserve current explanations without copying historical logs. Repository Markdown is maintained directly; these edits need no Docs or Search rebuild.

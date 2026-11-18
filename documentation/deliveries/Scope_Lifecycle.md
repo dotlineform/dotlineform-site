@@ -158,7 +158,7 @@ Public route shells set public app context and load the public entrypoint. Their
 
 Server authorization remains the final boundary even in management mode. UI visibility and capability projection are not write authority.
 
-[Public Scopes](Public_Scopes.md) records the former scope-based publication design. [Builder](../studio/Builder.md#preview-and-deployment-boundary) owns the current publication handoff and [Docs Viewer Runtime](../studio/Docs_Viewer_Runtime.md#three-surfaces) owns reader isolation.
+[Public Scopes](Public_Scopes.md) records the former scope-based publication design. [Builder](../reference/Builder.md#preview-and-deployment-boundary) owns the current publication handoff and [Docs Viewer Runtime](../reference/Docs_Viewer_Runtime.md#three-surfaces) owns reader isolation.
 
 ## Configuration And Capability Owners
 

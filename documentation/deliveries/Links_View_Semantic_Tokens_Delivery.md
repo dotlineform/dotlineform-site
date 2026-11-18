@@ -10,7 +10,7 @@ parent_id: d-20260902-102745-8379ea
 ---
 # Semantic Tokens In Links View - Delivery
 
-Stopped proposal for media entries in the former Links View. It preserves why media and document connection displays took different paths. [Current reference](../studio/Related_Links.md)
+Stopped proposal for media entries in the former Links View. It preserves why media and document connection displays took different paths. [Current reference](../reference/Related_Links.md)
 
 ## Superseded
 
@@ -40,12 +40,12 @@ For example, Doc A contains a token for Work 00523, and Doc B has Work Subject 0
 - Deduplicate media entries by exact typed Catalogue target. Repeated occurrences, image/text forms and matches from both selection paths share one media entry. Individual occurrences remain intact in the Semantic Tokens report and usage index.
 - Keep document and media identities separate. A document link and media link with the same displayed title both remain visible; different Catalogue targets with the same title also remain distinct.
 - Use Catalogue titles for consolidated media entries rather than choosing among authored occurrence labels. Include the selected Detail identifier in a Detail label. Authored token labels remain unchanged in source and usage data.
-- Prefix document entries with a document icon and media entries with an image/media icon. Expose the destination meaning in accessible link names as well. Reuse current icon primitives where suitable; this delivery does not require completion of the separate [Shared Icons](../studio/Shared_Icons.md) feature.
+- Prefix document entries with a document icon and media entries with an image/media icon. Expose the destination meaning in accessible link names as well. Reuse current icon primitives where suitable; this delivery does not require completion of the separate [Shared Icons](../_working/Shared_Icons.md) feature.
 - Sort the combined entries A–Z by displayed title with a deterministic identity tie-break; icons and destination kinds do not create separate priority groups. Hide a section only when its combined result is empty.
 
 ### Data Ownership And Read Boundary
 
-The semantic-token owner retains one scope/stage `semantic-tokens/index.json`, as described in [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md). Add a focused read path that selects the current document's targets and exact Subject matches from that index. Links View consumes those results alongside its existing document-link response; filtering belongs to the reader/presentation owners rather than the route shell.
+The semantic-token owner retains one scope/stage `semantic-tokens/index.json`, as described in [Document and Catalogue references](../reference/Document_And_Catalogue_References.md). Add a focused read path that selects the current document's targets and exact Subject matches from that index. Links View consumes those results alongside its existing document-link response; filtering belongs to the reader/presentation owners rather than the route shell.
 
 Keep `links-by-id/<doc_id>.json`, aggregate `links.json` and their builders unchanged. Add no stored Work/Series/Detail lookup files, per-document token store, source scan, refresh operation or token-to-document relationship maintenance. The focused token read does not need the report reader's source-title and source-navigation enrichment. Resolve Catalogue labels and media through the current Catalogue provider without loading every referenced full image or every Series member's Work record merely to list links.
 
@@ -59,7 +59,7 @@ Selecting a media entry replaces Links View with the exact Work, Detail or Serie
 
 The outer action is **Back to Links** for this entry path. Restore the same Links presentation, scroll position and invoking entry focus without an intermediate document display. Links View's own **Back to document** then restores the original document or exact child and its original position. Existing navigation within a Series gallery keeps its current behavior and does not replace the outer Links return destination. Direct Media entry from document content continues to return to that document.
 
-Keep this return context within the existing hosted-view lifecycle and clear it when the owning document/child context is released. Failed or superseded media reads must not replace the selected Links presentation or restore a stale document context. This bounded nested return does not implement page-session data caching, browser Back/Forward, shareable URLs or a general navigation stack; [Runtime](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns current shared browser-history restoration. The superseded View Caching and History delivery is retired; any future resource reuse or shareable URL work needs its own scope.
+Keep this return context within the existing hosted-view lifecycle and clear it when the owning document/child context is released. Failed or superseded media reads must not replace the selected Links presentation or restore a stale document context. This bounded nested return does not implement page-session data caching, browser Back/Forward, shareable URLs or a general navigation stack; [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns current shared browser-history restoration. The superseded View Caching and History delivery is retired; any future resource reuse or shareable URL work needs its own scope.
 
 ## Deliverables
 

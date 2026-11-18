@@ -11,7 +11,7 @@ parent_id: d-20260802-123451-d0e52e
 ---
 # Cross-System Relationship Map
 
-Earlier relationship map. It keeps the distinction between aboutness, mentions, project state and lineage before later relationship retirements. [Current reference](../studio/Generated_Data_Contracts.md)
+Earlier relationship map. It keeps the distinction between aboutness, mentions, project state and lineage before later relationship retirements. [Current reference](../reference/Generated_Data_Contracts.md)
 
 ## Purpose And Reading Guide
 

@@ -6,13 +6,13 @@ added_date: "2026-09-27 19:19:38"
 last_updated: "2026-10-03 17:35:06"
 summary: Retire subject-associations.json from all collections and derive existing report associations and navigation from management manifests without changing front matter or collection ownership.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Subject Associations To Manifests - Delivery
 
-Completed removal of a duplicate Subject association projection. It preserves why existing management manifests were sufficient at that stage. [Current reference](../studio/Related_Links.md)
+Completed removal of a duplicate Subject association projection. It preserves why existing management manifests were sufficient at that stage. [Current reference](../reference/Related_Links.md)
 
-Complete under [Planned Features](../studio/Planned_Features.md). SM-0 through SM-3 passed, including user confirmation of all three manual interactions. Subject Associations (`documentation/studio/data/subject-associations.md`) records maintained behavior. This delivery is retained pending a separately authorized archival or deletion decision. The superseded Catalogue retirement proposal was retired on 2026-10-03; Catalogue stays and future Subject work is separate.
+Complete under [Planned Features](../_working/README.md). SM-0 through SM-3 passed, including user confirmation of all three manual interactions. Subject Associations (`documentation/studio/data/subject-associations.md`) records maintained behavior. This delivery is retained pending a separately authorized archival or deletion decision. The superseded Catalogue retirement proposal was retired on 2026-10-03; Catalogue stays and future Subject work is separate.
 
 ## Requirements
 
@@ -57,7 +57,7 @@ Evidence: read-only owner/configuration and saved-manifest inspection on 2026-09
 
 - [x] Migrate readers, retire association code/artifacts and update the durable inventory.
 
-Evidence budget: changed-file lint and focused module/service/output diagnostics, selected before non-trivial runs. Rebuild affected document owners only when reconciliation is required; no automatic Search rebuild or Publish. Test changes require separate approval under [Test Contract Discipline](../studio/Test_Contract_Discipline.md).
+Evidence budget: changed-file lint and focused module/service/output diagnostics, selected before non-trivial runs. Rebuild affected document owners only when reconciliation is required; no automatic Search rebuild or Publish. Test changes require separate approval under [Test Contract Discipline](../development/Verification.md).
 
 Record: implemented without association fallbacks. The shared Catalogue navigation reader uses private manifest rows; Project State groups Works rows directly. Required subject projection and targeted merges retain manifest generation. The local browser projection now supplies the existing configured report host; public configuration is unchanged. Association helpers, writes, read allowance, Preview validation and distribution branches are removed. Durable inventory and directly affected Catalogue/customisation guidance are updated. Cleanup removed three Working files (Works, Moments, Catalogue) and two Preview files (Works, Catalogue); all configured association files are absent. Preview's completion receipt was already absent and remains absent. No document-source or manifest-schema changes were made.
 
@@ -74,7 +74,7 @@ Evidence: bounded production/configuration/documentation/projection diff and cal
 
 - [x] Record acceptance, durable transfer, artifact state and separate test/publication work; recommend retaining or retiring this document.
 
-Evidence: reuse accepted SM-1 and SM-2 results; the closeout edit requires only `git diff --check`. Record: accepted. Consumers work without association files, with user-confirmed navigation and Project State behavior. Maintained behavior is transferred to Subject Associations (`documentation/studio/data/subject-associations.md`), [Catalogue Works](../studio/Catalogue_Works.md) and the directly affected subject section of [Sub-Scope Customisation Architecture](Sub_Scope_Customisation_Architecture.md). No document-source or manifest reconciliation was required; only the local browser configuration and one tracked shared-runtime projection were refreshed. The five obsolete external artifacts are removed and Preview has no completion receipt. Existing tests that depend on retired association products or Project State path inputs need separately specified and authorized review; this is separate from the accepted product cutover. Publish and its live distribution evidence remain separate, as do Search rebuilds and Git/public deployment. Recommend manually archiving this completed delivery after closeout review; retain it until that action or deletion is explicitly authorized. Gate: passed; Publish, commit, push and document deletion were not performed.
+Evidence: reuse accepted SM-1 and SM-2 results; the closeout edit requires only `git diff --check`. Record: accepted. Consumers work without association files, with user-confirmed navigation and Project State behavior. Maintained behavior is transferred to Subject Associations (`documentation/studio/data/subject-associations.md`), [Catalogue Works](../reference/Catalogue_Works.md) and the directly affected subject section of [Sub-Scope Customisation Architecture](Sub_Scope_Customisation_Architecture.md). No document-source or manifest reconciliation was required; only the local browser configuration and one tracked shared-runtime projection were refreshed. The five obsolete external artifacts are removed and Preview has no completion receipt. Existing tests that depend on retired association products or Project State path inputs need separately specified and authorized review; this is separate from the accepted product cutover. Publish and its live distribution evidence remain separate, as do Search rebuilds and Git/public deployment. Recommend manually archiving this completed delivery after closeout review; retain it until that action or deletion is explicitly authorized. Gate: passed; Publish, commit, push and document deletion were not performed.
 
 ## Follow-on
 

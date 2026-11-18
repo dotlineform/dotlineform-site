@@ -10,13 +10,13 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Analysis Broken Links Report
 
-Accepted Analysis Working audit delivery. It records why Broken Links operates independently of relationship generation and the original local evidence. [Current reference](../studio/Broken_Links_Script.md#saved-local-report)
+Accepted Analysis Working audit delivery. It records why Broken Links operates independently of relationship generation and the original local evidence. [Current reference](../reference/Broken_Links.md#saved-local-report)
 
-Complete, accepted and closed on 2026-09-09. [Broken Links Script](../studio/Broken_Links_Script.md) owns the implemented behavior. Retain this completed delivery for manual archive; no implementation or closeout step remains open.
+Complete, accepted and closed on 2026-09-09. [Broken Links Script](../reference/Broken_Links.md) owns the implemented behavior. Retain this completed delivery for manual archive; no implementation or closeout step remains open.
 
 ## Requirements
 
-Provide a local Broken Links report in `analysis` Working so the author can find and repair broken references there. The existing [Studio Broken Links report](../studio/Broken_Links.md) must no longer offer or include Analysis as a source scope. The complete outcome is that Analysis findings are inspected in Analysis and cannot appear through the Studio report's source-scope selection, while the shared audit remains reusable.
+Provide a local Broken Links report in `analysis` Working so the author can find and repair broken references there. The existing [Studio Broken Links report](../reference/Broken_Links.md#saved-local-report) must no longer offer or include Analysis as a source scope. The complete outcome is that Analysis findings are inspected in Analysis and cannot appear through the Studio report's source-scope selection, while the shared audit remains reusable.
 
 [Doc Relationships](Doc_Relationships.md) owns the relationship principle: generated records describe existing eligible documents. Document Build silently skips a linked target whose by-ID JSON does not exist. Broken Links supplies the separate authoring diagnosis; the relationship system does not retain missing-target placeholders or report those omissions.
 
@@ -34,7 +34,7 @@ Provide a local Broken Links report in `analysis` Working so the author can find
 - A report request and audit path that preserves the selected Analysis Working context and includes its configured collections.
 - An updated Studio report scope boundary that excludes Analysis source documents while retaining valid cross-scope target lookup.
 - Findings that identify missing document by-ID targets independently of relationship output, and source links that open the exact document for manual correction.
-- Focused verification, user review and an updated [Broken Links Script](../studio/Broken_Links_Script.md) as the durable audit-operation owner, covering current storage, source partition, request context and diagnostics.
+- Focused verification, user review and an updated [Broken Links Script](../reference/Broken_Links.md) as the durable audit-operation owner, covering current storage, source partition, request context and diagnostics.
 
 The implementation reuses the shared broken-links audit, its Docs management service adapter and the `docs_broken_links` report module/registration. Report requests now preserve the owning report context and explicit Analysis stage, and the audit covers all configured Analysis collections.
 
@@ -90,7 +90,7 @@ Gate: present the complete result for user acceptance. Record: BLR-2 completed o
 
 Verification: reused the recorded 18 passing audit/service cases, existing backlinks case, JavaScript module contract, production lint and live endpoint evidence. The test-only cleanup passed `bin/lint-python docs-viewer/tests/python/test_docs_broken_links.py`; `git diff --check` passed. No production behavior changed during review, so no broader rerun or server restart was warranted. The changed report modules remain outside the canonical-to-site projection inventory.
 
-Durable documentation: [Broken Links Script](../studio/Broken_Links_Script.md) now describes configured external storage, Analysis Working collection coverage, Studio source exclusion, exact by-ID and child-host resolution, request/result fields, retained token diagnostics and unscanned sources. The Studio report instructions match that behavior and no longer describe retired Tag-token diagnosis. Watcher-generated output was inspected for both documents.
+Durable documentation: [Broken Links Script](../reference/Broken_Links.md) now describes configured external storage, Analysis Working collection coverage, Studio source exclusion, exact by-ID and child-host resolution, request/result fields, retained token diagnostics and unscanned sources. The Studio report instructions match that behavior and no longer describe retired Tag-token diagnosis. Watcher-generated output was inspected for both documents.
 
 User review: the user ran Studio Broken Links and confirmed that the questioned findings came from references written before the Working-stage implementation. The user owns correction of those authored links. The completed report and source correction workflow were accepted for closeout with “great ok to continue” after the BLR-2 result was presented.
 
@@ -104,7 +104,7 @@ Gate: explicit user closeout. Record: accepted and closed on 2026-09-09 followin
 
 Retention recommendation:
 
-- Retain [Broken Links Script](../studio/Broken_Links_Script.md) and both live report hosts as maintained documentation and product entry points.
+- Retain [Broken Links Script](../reference/Broken_Links.md) and both live report hosts as maintained documentation and product entry points.
 - Retain this completed delivery pending user-controlled manual archive. Its stable behavior and operating details are transferred to Broken Links Script; it is no longer the behavior authority.
 - Retain the parent feature and Doc Relationships for their continuing, separately owned outcomes. This delivery created no separate concept, architecture or temporary verification documents to retire.
 

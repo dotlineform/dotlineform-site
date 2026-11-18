@@ -9,11 +9,11 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Core Definition Baseline v1
 
-Accepted initial reader extraction baseline. It preserves the shared-core and composition boundary and the evidence required before moving code. [Current reference](../studio/Generated_Data_Contracts.md)
+Accepted initial reader extraction baseline. It preserves the shared-core and composition boundary and the evidence required before moving code. [Current reference](../reference/Generated_Data_Contracts.md)
 
 ## Status And Authority
 
-Accepted on 2026-07-24 as the initial boundary for Transition Architecture. Current source-documentation conventions and maintained lint commands are owned by the [Development Checklist](../studio/Development_Checklist.md) and [Run Checks](../studio/Run_Checks.md).
+Accepted on 2026-07-24 as the initial boundary for Transition Architecture. Current source-documentation conventions and maintained lint commands are owned by the [Development Checklist](../development/Development_Checklist.md) and [Run Checks](../development/Verification.md).
 
 This is an adjustable architectural baseline, not a module manifest or implementation approval. Current code and canonical configuration remain the exact behavior authority. Any implementation evidence that changes a classification must update this document and record the consequence before the boundary drifts in code.
 

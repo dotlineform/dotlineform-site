@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Restore Moments In Analysis
 
-Accepted restoration of the original Moments documents and media. It preserves source identity and reader presentation evidence. [Current reference](../studio/Media_And_Asset_Handling.md)
+Accepted restoration of the original Moments documents and media. It preserves source identity and reader presentation evidence. [Current reference](../reference/Media_And_Asset_Handling.md)
 
 ## Outcome
 

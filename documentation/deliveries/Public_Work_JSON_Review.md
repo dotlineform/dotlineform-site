@@ -6,11 +6,11 @@ added_date: "2026-10-07 22:14:14"
 last_updated: "2026-10-19"
 summary: Complete and user-accepted; live Manage Work resolution and shared static preparation for Publish, Export and Prepare package.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Public Work JSON Review
 
-Accepted Work JSON and reader-preparation delivery. It preserves the rationale for runtime Manage resolution and selected static preparation in Publish, Export and packages. [Current reference](../studio/Generated_Data_Contracts.md)
+Accepted Work JSON and reader-preparation delivery. It preserves the rationale for runtime Manage resolution and selected static preparation in Publish, Export and packages. [Current reference](../reference/Generated_Data_Contracts.md)
 
 ## Purpose And Status
 
@@ -22,13 +22,13 @@ Manage and public retain shared browser rendering components with separate live 
 
 Status: complete and user-accepted on 2026-10-19. Implementation, distinct source review, Working payload conversion, normal Publish, Export creation/replacement and the approved Prepare package adapter are complete. The user accepted the 800px Export correction, confirmed the restored compact Catalogue Related Links styling and requested closeout, with remaining checks continuing through normal use. Commit, push and deployment remain separate explicit actions and were not performed.
 
-Current contracts are maintained in [Generated Data Contracts](../studio/Generated_Data_Contracts.md#catalogue-reference-and-presentation), [Catalogue Media View](../studio/Catalogue_Media_View.md), [Builder](../studio/Builder.md#publish-preparation), [Catalogue Deployment](../studio/Catalogue_Deployment.md), [Export](../studio/Export.md), [Package Prepare](../studio/Package_Prepare.md) and [Related Links](../studio/Related_Links.md). The [archived handoff](Public_Work_JSON_Handoff.md) preserves the implementation and acceptance evidence.
+Current contracts are maintained in [Generated Data Contracts](../reference/Generated_Data_Contracts.md#catalogue-reference-and-presentation), [Catalogue Media View](../reference/Catalogue_Media_View.md), [Builder](../reference/Builder.md#publish-preparation), [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish), [Export](../reference/Export.md), [Package Prepare](../reference/Document_Packages.md) and [Related Links](../reference/Related_Links.md). The [archived handoff](Public_Work_JSON_Handoff.md) preserves the implementation and acceptance evidence.
 
 ## Operating Model And Fixed Boundaries
 
 | Owner | Responsibility |
 | --- | --- |
-| Studio Save / Refresh | Save canonical records and staged media, then explicitly hand selected ready inputs to Working through Refresh. Preserve the implemented [Save/Refresh boundary](../studio/Catalogue_Save_And_Refresh.md). |
+| Studio Save / Refresh | Save canonical records and staged media, then explicitly hand selected ready inputs to Working through Refresh. Preserve the implemented [Save/Refresh boundary](../reference/Catalogue_Save_And_Refresh.md). |
 | Working Build / Catalogue Regenerate | Build document-authored structure and Catalogue reference slots. Preserve required source generation, normal queue-only Regenerate and existing generation-to-queue handoffs. |
 | Manage live provider | Resolve all Work-derived fields from available Working inputs on document activation or Media View activation; supply presentation to shared components. |
 | Shared browser components | Display Entry, image, caption and Media View presentation; own responsive image behavior, interaction, navigation and disposal. |

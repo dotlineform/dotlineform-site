@@ -4,11 +4,11 @@ doc_id: d-20260607-222033-71d1be
 title: Route Dispatch Scripts
 added_date: "2026-06-07 22:20:33"
 last_updated: "2026-10-15"
-parent_id: d-20260607-222033-2a494e
+parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Route Dispatch Scripts
 
-Earlier route and adapter inventory. It records the boundary between HTTP framing and command execution. [Current reference](../studio/Scripts_Overview.md)
+Earlier route and adapter inventory. It records the boundary between HTTP framing and command execution. [Current reference](../reference/Endpoint_Overview.md#service-and-dispatch)
 
 ## `docs-viewer/services/docs_management_routes.py`
 

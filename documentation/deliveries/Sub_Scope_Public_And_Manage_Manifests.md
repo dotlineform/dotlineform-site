@@ -9,9 +9,9 @@ parent_id: d-20260801-084127-752d7e
 ---
 # Sub-Scope Public And Manage Manifests
 
-Former collection manifest and Concepts contribution delivery. It records why public browsing and private Manage metadata have distinct owners. [Current reference](../studio/Generated_Data_Contracts.md)
+Former collection manifest and Concepts contribution delivery. It records why public browsing and private Manage metadata have distinct owners. [Current reference](../reference/Generated_Data_Contracts.md)
 
-Historical design: the dual-manifest generation, scope paths and publication workflows below have been retired. [Generated Data Contracts](../studio/Generated_Data_Contracts.md#collection-manifest-ownership) owns the current lifecycle: Working builds only the management manifest, and temporary publication builds only the public manifest. This document remains available as context for the earlier copy-based model.
+Historical design: the dual-manifest generation, scope paths and publication workflows below have been retired. [Generated Data Contracts](../reference/Generated_Data_Contracts.md#collection-manifest-ownership) owns the current lifecycle: Working builds only the management manifest, and temporary publication builds only the public manifest. This document remains available as context for the earlier copy-based model.
 
 ## Purpose
 
@@ -28,7 +28,7 @@ shared `docs_subscope` report uses the same manifest-loading mechanism.
 
 The active Analysis Working and Pre-publish collection is `concepts`, presented as Concepts and using the `concepts` customisation. A document optionally defines one `concept_id`; nonempty IDs must be unique within that stage. The document owns its title, group and content. Studio Tag registry, assignments, aliases, groups and editors are retired.
 
-Semantic tokens use `concept:concept:`; existing authored references were migrated without a compatibility alias. Their destination comes from the exact Concept document, without a Studio lookup or primary-document choice. See [Semantic Tokens](../studio/Semantic_Tokens.md) for the current stage boundary.
+Semantic tokens use `concept:concept:`; existing authored references were migrated without a compatibility alias. Their destination comes from the exact Concept document, without a Studio lookup or primary-document choice. See [Document and Catalogue references](../reference/Document_And_Catalogue_References.md) for the current stage boundary.
 
 ## Projection Flow
 

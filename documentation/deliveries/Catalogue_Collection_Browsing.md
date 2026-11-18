@@ -5,11 +5,11 @@ title: Catalogue Collection Browsing
 added_date: "2026-09-26 17:15:12"
 last_updated: "2026-09-26 17:52:20"
 summary: Make the public Catalogue collection usable with browser-owned search, a short typing delay, latest-edited ordering, 20-document pages and Work thumbnails over generated static files.
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Catalogue Collection Browsing
 
-Historical delivery record for the first browser-owned Catalogue collection list. Its opening order, Work-identity fields and stage references describe the September 2026 delivery. [Current browsing](../guide/Find_And_Read_Things.md#browse-the-catalogue) · [Collection browsing architecture](../studio/Sub_Scope_Index_Architecture.md#catalogue-collection-browsing)
+Historical delivery record for the first browser-owned Catalogue collection list. Its opening order, Work-identity fields and stage references describe the September 2026 delivery. [Current browsing](../guide/Find_And_Read_Things.md#browse-the-catalogue) · [Catalogue browsing](../reference/Reader_Discovery_And_Return.md#catalogue-collection-browsing)
 
 Status: implementation and static code review are complete; the user confirmed review through Site Preview on 2026-09-26. Requested count/placeholder copy, rounded-thumbnail adjustments and a subsequently reported public sort-icon fix are implemented, with final visual confirmation and CCB.3 closeout pending. General reports review remains paused.
 
@@ -41,7 +41,7 @@ Keep the existing collection membership, draft/publication eligibility and stage
 
 Search uses normalized, case-insensitive substring matching across document title and the explicit five-digit Work ID, preserving leading zeroes. Matching covers every document in the selected stage's Catalogue collection. It requires no document-body reads, rendered-HTML scraping, Series expansion or private fields.
 
-Prepare normalized search values once when the manifest loads or is replaced. Match the [Catalogue Works](../studio/Catalogue_Works.md) typing behavior: wait for a **180 ms pause** after the latest input before applying search, sorting and rendering. Cancel the previous timer when typing continues. Clearing search cancels any pending search and applies immediately. Pagination and sort controls must not act on stale results while the new query is pending. Cancel pending work when the report unmounts or changes context.
+Prepare normalized search values once when the manifest loads or is replaced. Match the [Catalogue Works](../reference/Catalogue_Works.md) typing behavior: wait for a **180 ms pause** after the latest input before applying search, sorting and rendering. Cancel the previous timer when typing continues. Clearing search cancels any pending search and applies immediately. Pagination and sort controls must not act on stale results while the new query is pending. Cancel pending work when the report unmounts or changes context.
 
 Use the existing manifest and in-memory prepared values for this delivery. A persistent search index is not justified by the inspected requirements. Pagination reduces DOM and image work; it does not reduce the initial metadata transfer. Consider a smaller generated projection or an index only if a remaining measured loading/search problem warrants separate work.
 
@@ -58,7 +58,7 @@ Read-only inspection on 2026-09-26 found 4,616 collection documents, a public ma
 - Offline Catalogue public-reader manifest generation includes required `last_updated` and `work_id` fields, removes the redundant `subject` object and preserves the new row shape through the owning full/targeted build paths. The public reader requires that shape without compatibility reads; other collections' generic subjects remain unchanged.
 - Shared public-safe browser code supplies the Catalogue opening order, prepared search values, 180 ms delay, 20-row pagination, counts and retained list state.
 - Catalogue rows use existing Work thumbnails and exact document navigation, with the corresponding shared styles and public runtime projection.
-- Focused verification and user presentation review establish the bounded outcome. The durable [collection architecture](../studio/Sub_Scope_Index_Architecture.md) receives the current behavior, ownership and remaining limitations at closeout; broader historical terminology cleanup is separate.
+- Focused verification and user presentation review establish the bounded outcome. The durable [collection architecture](../reference/Collections_And_Books.md) receives the current behavior, ownership and remaining limitations at closeout; broader historical terminology cleanup is separate.
 
 No runtime server changes, Catalogue Works changes, canonical data edits, Regenerate behavior changes, image regeneration, dynamic document captions, site Search/Recents changes, test authoring or automatic publication are included.
 
@@ -94,7 +94,7 @@ Record: complete. The offline collection builder owns the public row change; a f
 - [x] Obtain user review of initial ordering, search delay/clear behavior, pager, thumbnails and document return in local and public presentation.
 - [ ] Confirm the requested follow-up presentation: count uses `works`, search placeholder is `work`, and thumbnails have 6px rounded corners.
 
-Verification budget: explicit-path JavaScript/Python lint for changed sources and `git diff --check`; focused existing builder diagnostics and generated-manifest inspection for date/identity/public-field correctness; `bin/site-code-update`, exact projection review, `bin/site-code-update --check` and `bin/site-validate` for changed public runtime files. Static checks are expected to be low-cost local work. Confirm the smallest justified docs-only collection build and its write boundary before running it; generation cost remains unmeasured. Existing valid outputs should not be rebuilt repeatedly for idempotence evidence. Browser behavior and visual fit receive user manual review. Automated browser probes, new/changed tests, fixtures and temporary regression scripts require a separate approved specification under [Test Contract Discipline](../studio/Test_Contract_Discipline.md).
+Verification budget: explicit-path JavaScript/Python lint for changed sources and `git diff --check`; focused existing builder diagnostics and generated-manifest inspection for date/identity/public-field correctness; `bin/site-code-update`, exact projection review, `bin/site-code-update --check` and `bin/site-validate` for changed public runtime files. Static checks are expected to be low-cost local work. Confirm the smallest justified docs-only collection build and its write boundary before running it; generation cost remains unmeasured. Existing valid outputs should not be rebuilt repeatedly for idempotence evidence. Browser behavior and visual fit receive user manual review. Automated browser probes, new/changed tests, fixtures and temporary regression scripts require a separate approved specification under [Test Contract Discipline](../development/Verification.md).
 
 Gate: implementation is reviewable when the bounded code/generated changes and selected checks are complete. Record manual acceptance and any remaining evidence limits explicitly. Prepare Preview, Publish, public deployment, commit and push retain their separate authorization gates; do not perform them merely to finish this step.
 

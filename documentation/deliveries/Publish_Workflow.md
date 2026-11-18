@@ -16,7 +16,7 @@ Archived record. Preserves the decision to keep Catalogue authority independent 
 
 Docs Publish owns the accepted Analysis document set and its document-owned output. Catalogue owns current Works, Series, Details and media; its records have no draft/published state and no separate Publish action. Their identity and availability do not depend on a document about them.
 
-The current-Catalogue policy in [Publishing workflow concept](Publishing_Workflow_Concept.md) supersedes this note's earlier proposal to accept and freeze Catalogue dependencies inside the Analysis Published snapshot. [Catalogue Deployment](../studio/Catalogue_Deployment.md) owns the reconciled deployment boundary, implemented reader paths and remaining distribution design.
+The current-Catalogue policy in [Publishing workflow concept](Publishing_Workflow_Concept.md) supersedes this note's earlier proposal to accept and freeze Catalogue dependencies inside the Analysis Published snapshot. [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) owns the reconciled deployment boundary, implemented reader paths and remaining distribution design.
 
 ## Which Data A Reader Uses
 

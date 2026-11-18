@@ -6,13 +6,13 @@ added_date: "2026-09-23 20:23:07"
 last_updated: "2026-09-24 11:16:11"
 summary: Completed Work-list multi-selection, expanded Galleries column and bulk membership replacement with current Save completion retained.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Work List And Bulk Gallery Editing
 
-Accepted bulk membership editing delivery. It records why explicit Gallery changes and existing local completion belong together. [Current reference](../studio/Catalogue_Media_View.md)
+Accepted bulk membership editing delivery. It records why explicit Gallery changes and existing local completion belong together. [Current reference](../reference/Catalogue_Media_View.md)
 
-Completed on 2026-09-24 with user acceptance after implementation, refinements and code review. The [Work editor](../studio/Catalogue_Work_Editor.md) owns the shipped interaction; [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) owns Save completion and the bulk membership boundary. Current combined Save completion is retained.
+Completed on 2026-09-24 with user acceptance after implementation, refinements and code review. The [Work editor](../reference/Catalogue_Work_Editor.md) owns the shipped interaction; [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) owns Save completion and the bulk membership boundary. Current combined Save completion is retained.
 
 ## Requirements
 
@@ -27,9 +27,9 @@ Completed on 2026-09-24 with user acceptance after implementation, refinements a
 
 ## Retained Save Completion
 
-[Save completes canonical persistence, Catalogue output, required media and private Studio lookup refresh](../studio/Catalogue_Save_And_Refresh.md). Retain that completion boundary for this delivery, including its busy state and distinction between canonical data saved and later output/lookup failure. Bulk membership replacement uses one bulk request and one existing completion pass, rather than a sequence of single-Work Saves.
+[Save completes canonical persistence, Catalogue output, required media and private Studio lookup refresh](../reference/Catalogue_Save_And_Refresh.md). Retain that completion boundary for this delivery, including its busy state and distinction between canonical data saved and later output/lookup failure. Bulk membership replacement uses one bulk request and one existing completion pass, rather than a sequence of single-Work Saves.
 
-At this delivery's closeout, the older targeted-Publish proposal was deferred and was not a prerequisite. It is now superseded by the proposed [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) boundary and the existing single Docs Publish lifecycle. Existing Save latency and media/output side effects remained in this delivery; it did not promise faster Save.
+At this delivery's closeout, the older targeted-Publish proposal was deferred and was not a prerequisite. It is now superseded by the proposed [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) boundary and the existing single Docs Publish lifecycle. Existing Save latency and media/output side effects remained in this delivery; it did not promise faster Save.
 
 Deploy remains separate. The proposed changes affect local Studio and its shared list component; they do not change Docs Viewer readers, the public site or native hosting.
 
@@ -87,9 +87,9 @@ Review partial-write prevention, stale membership rejection, returned membership
 
 ### Closeout Record
 
-The user accepted the result and approved closeout after the review fixes. Durable interaction, selection, saved-cell updates, bulk replacement and Save feedback are recorded in [Catalogue Work Editor](../studio/Catalogue_Work_Editor.md); the necessary bulk service/response details are recorded in [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md). Closeout changes documentation only and reuses the accepted lint, source-review and user-acceptance evidence. Live conflict/failure-path verification remains unclaimed. No tests or rebuilds were added, and no publication, deployment, commit or push was performed.
+The user accepted the result and approved closeout after the review fixes. Durable interaction, selection, saved-cell updates, bulk replacement and Save feedback are recorded in [Catalogue Work Editor](../reference/Catalogue_Work_Editor.md); the necessary bulk service/response details are recorded in [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md). Closeout changes documentation only and reuses the accepted lint, source-review and user-acceptance evidence. Live conflict/failure-path verification remains unclaimed. No tests or rebuilds were added, and no publication, deployment, commit or push was performed.
 
-Recommend retiring this completed delivery through the normal manual archive process; it remains in place pending that action. Retain [Planned Features](../studio/Planned_Features.md) as the workflow authority; the older targeted-Publish proposal was subsequently retired during documentation consolidation. No concept, architecture or temporary verification siblings were created for this delivery.
+Recommend retiring this completed delivery through the normal manual archive process; it remains in place pending that action. Retain [Planned Features](../_working/README.md) as the workflow authority; the older targeted-Publish proposal was subsequently retired during documentation consolidation. No concept, architecture or temporary verification siblings were created for this delivery.
 
 ## Follow-on
 

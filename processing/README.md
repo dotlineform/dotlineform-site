@@ -19,9 +19,7 @@ Processing application must receive that base through its explicit ignored
 project-local configuration; it must not rely on shell environment inheritance
 or fall back to the repository.
 
-Docs Viewer source and its managed attachments are separate from this
-sketchbook. They live under
-`$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/source/`.
+Project documentation lives under [documentation/Processing](../documentation/Processing/README.md). Docs Viewer source and managed attachments are separate from this sketchbook and use the explicit Docs workspace/collection configuration. The former Projects-root `docs-viewer/scopes/processing/source/` layout is retired.
 
 ## Projects
 

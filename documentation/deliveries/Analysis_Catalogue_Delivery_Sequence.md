@@ -32,7 +32,7 @@ The Studio Catalogue production pause is lifted. Ordinary Save completes affecte
 
 ### 1 — Freeze The Legacy Catalogue — Complete
 
-[UAC 1 - Freeze The Legacy Catalogue](UAC_1_Freeze_Legacy_Catalogue.md) completed the self-contained `site/archive/` presentation and full R2 Catalogue media copies beneath `media.dotlineform.com/archive/catalogue/`. Search and Recent retain their frozen indexes. The local site homepage uses Analysis and the footer links to the archive.
+[UAC 1 - Freeze The Legacy Catalogue](Catalogue_Archive.md#acceptance-and-supersession) completed the self-contained `site/archive/` presentation and full R2 Catalogue media copies beneath `media.dotlineform.com/archive/catalogue/`. Search and Recent retain their frozen indexes. The local site homepage uses Analysis and the footer links to the archive.
 
 The delivery paused Catalogue builds and Docs Catalogue write follow-through while retaining the machinery. Acceptance was manual local preview. No canonical archive snapshot, file manifest, checksum audit, old-route redirects or public GitHub Actions deployment was required or performed.
 
@@ -84,7 +84,7 @@ Docs Viewer changes are excluded. Reader switching, tokens, reports, Gallery Lis
 
 ### Next — Resolve The Catalogue Schema Decision And Complete Token Work In Working
 
-After the possible Catalogue schema change is resolved, resume [UAC 3](UAC_3_Tokens_Reports_And_Data_Model.md) in Working to define tokens, reports, destinations and specialised editing tools. Pre-publish is not the continuing investigation surface. Retain the accepted Media View and list evidence. [Publishing workflow concept](Publishing_Workflow_Concept.md) defines the deliberate current-Catalogue policy; [Catalogue Deployment](../studio/Catalogue_Deployment.md) records its deployment boundary and remaining design. The draft-Series and pinned-Catalogue publication proposals are superseded.
+After the possible Catalogue schema change is resolved, resume [UAC 3](UAC_3_Tokens_Reports_And_Data_Model.md) in Working to define tokens, reports, destinations and specialised editing tools. Pre-publish is not the continuing investigation surface. Retain the accepted Media View and list evidence. [Publishing workflow concept](Publishing_Workflow_Concept.md) defines the deliberate current-Catalogue policy; [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) records its deployment boundary and remaining design. The draft-Series and pinned-Catalogue publication proposals are superseded.
 
 Complete token and presentation work before reviewing and implementing the publishing actions. Token work may reveal additional requirements for document links, Catalogue dependencies, generated content and publication checks. Carry those findings into the later Pre-publish/Publish delivery, then review Deploy separately against its accepted result.
 
@@ -113,7 +113,7 @@ Review the documents chosen for public presentation, including existing authored
 
 ### 8 — Review And Implement Deploy, Then Cut Over
 
-Once Publish is accepted, review and implement deployment of the complete accepted Analysis document snapshot alongside the independent current Catalogue projection described in [Catalogue Deployment](../studio/Catalogue_Deployment.md). Document distribution reads Analysis Published; Catalogue distribution reads current generated consumer output and must support later Catalogue refresh without rebuilding or republishing unchanged documents. The exact Catalogue inventory, media consistency and removal rules remain deployment design work.
+Once Publish is accepted, review and implement deployment of the complete accepted Analysis document snapshot alongside the independent current Catalogue projection described in [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish). Document distribution reads Analysis Published; Catalogue distribution reads current generated consumer output and must support later Catalogue refresh without rebuilding or republishing unchanged documents. The exact Catalogue inventory, media consistency and removal rules remain deployment design work.
 
 Verify destination ownership, public URLs, media reconciliation, Search, deep links and ordinary public links in tracked `site/` and the owned R2 destinations. The homepage and footer archive link already exist in the local artifact; include them in public presentation review. GitHub Pages has no deploy-time build and receives the prepared tracked artifact.
 

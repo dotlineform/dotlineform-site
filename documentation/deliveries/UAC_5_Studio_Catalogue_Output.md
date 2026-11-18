@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # UAC 5 - Complete Studio Catalogue Output
 
-Completed full-data handoff. It records why consumers used generated Catalogue records and the sample-to-full validation evidence. [Current reference](../studio/Catalogue_Indexes_And_Payloads.md)
+Completed full-data handoff. It records why consumers used generated Catalogue records and the sample-to-full validation evidence. [Current reference](../reference/Catalogue_Indexes_And_Payloads.md)
 
 ## Outcome
 
@@ -68,13 +68,13 @@ Closeout is documentation-only. Source/ownership review, 32 distinct local docum
 
 | Responsibility | Current owner |
 | --- | --- |
-| Source identity, membership and architecture | [Catalogue Source Model](../studio/Catalogue_Source_Model.md), [Catalogue Architecture](../studio/Catalogue_Architecture.md) |
-| Save, maintenance, output failure and private lookups | [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) |
-| Consumer JSON, indexes and media references | [Catalogue Indexes And Payloads](../studio/Catalogue_Indexes_And_Payloads.md) |
-| Work and Series workflows | [Catalogue Work Editor](../studio/Catalogue_Work_Editor.md), [Catalogue Series Editor](../studio/Catalogue_Series_Management.md) |
-| Mutation/completion services and API surface | [Catalogue Services](../studio/Catalogue_Services.md), [Local Studio APIs](../studio/Local_Studio_APIs.md) |
-| Derivatives, remote transport and confirmed versions | [Catalogue Media Pipeline Config](../studio/Catalogue_Media_Pipeline_Config.md), [Publish Media To R2](../studio/Publish_Media_To_R2.md) |
-| Field/output inventory | [Catalogue Field Registry](../studio/Catalogue_Field_Registry.md) |
+| Source identity, membership and architecture | [Catalogue Source Model](../reference/Catalogue_Source_Model.md), [Catalogue Architecture](../reference/Catalogue_Source_Model.md#output-boundary) |
+| Save, maintenance, output failure and private lookups | [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) |
+| Consumer JSON, indexes and media references | [Catalogue Indexes And Payloads](../reference/Catalogue_Indexes_And_Payloads.md) |
+| Work and Series workflows | [Catalogue Work Editor](../reference/Catalogue_Work_Editor.md), [Catalogue Series Editor](../reference/Studio.md#browser-responsibility) |
+| Mutation/completion services and API surface | [Catalogue Services](../reference/Catalogue_Services.md), [Local Studio APIs](../reference/Catalogue_Services.md#api-surface) |
+| Derivatives, remote transport and confirmed versions | [Catalogue Media Pipeline Config](../reference/Catalogue_Media_Pipeline_Config.md), [Publish Media To R2](../reference/Publish_Media_To_R2.md) |
+| Field/output inventory | [Catalogue Field Registry](../reference/Catalogue_Source_Model.md#field-changes) |
 
 Manual evidence is the confirmed new-Work Save and preview acceptance, not exhaustive manual use of every editor action. Large-collection Save latency has not been measured. These limits are retained in the durable workflow guidance and `var/uac-5/code-review.md`; current coverage is in `var/uac-5/current-coverage.json`.
 

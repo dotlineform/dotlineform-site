@@ -10,7 +10,7 @@ parent_id: d-20260904-204816-0f31be
 ---
 # UAC 3A - Implement A Simple Catalogue Media View
 
-Media View proof. It records the accepted single-Work presentation, the small gallery extension and the interaction decisions tested before the full Catalogue cutover. [Current reference](../studio/Catalogue_Media_View.md)
+Media View proof. It records the accepted single-Work presentation, the small gallery extension and the interaction decisions tested before the full Catalogue cutover. [Current reference](../reference/Catalogue_Media_View.md)
 
 The original single-Work proof is accepted. Sections 3A.0–3A.3 retain that baseline; 3A.4 records the separately approved small gallery extension and its review gate.
 
@@ -57,7 +57,7 @@ Do not add Series title, associated-document links, Detail thumbnails, downloads
 - integration with the final external Catalogue Build, Analysis Build, Publish or Deploy Repo flow; and
 - public cutover or changes to the frozen archive.
 
-This deliberately narrows the earlier [Catalogue Media View](../studio/Catalogue_Media_View.md) proposal, which required sequence navigation from its first delivery and still contains assumptions from the earlier one-Work-document model. Sequence behavior belongs with the later gallery delivery. This proof establishes the single-item view first.
+This deliberately narrows the earlier [Catalogue Media View](../reference/Catalogue_Media_View.md) proposal, which required sequence navigation from its first delivery and still contains assumptions from the earlier one-Work-document model. Sequence behavior belongs with the later gallery delivery. This proof establishes the single-item view first.
 
 ## Readiness Decisions
 

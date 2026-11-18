@@ -9,9 +9,9 @@ parent_id: d-20260519-000000-a0da45
 ---
 # Catalogue Per-Work Detail Source
 
-Historical Detail migration source and transaction-check record. It preserves why the converter used exact entity identities and how the Gallery conversion retired the old source. [Current reference](../studio/Catalogue_Source_Model.md#one-time-gallery-conversion)
+Historical Detail migration source and transaction-check record. It preserves why the converter used exact entity identities and how the Gallery conversion retired the old source. [Current reference](Studio_And_Catalogue_Ownership_Review.md#source-migrations)
 
-Retired by the Gallery conversion on 2026-09-23. Converted images are independent Works; Gallery identity and membership belong to the sources described in [Catalogue Source Model](../studio/Catalogue_Source_Model.md).
+Retired by the Gallery conversion on 2026-09-23. Converted images are independent Works; Gallery identity and membership belong to the sources described in [Catalogue Source Model](../reference/Catalogue_Source_Model.md).
 
 ## Historical Migration Input
 

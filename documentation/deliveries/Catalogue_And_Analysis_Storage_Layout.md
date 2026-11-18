@@ -10,7 +10,7 @@ parent_id: d-20260902-102745-8379ea
 ---
 # Catalogue And Analysis Storage Layout
 
-Early storage design. It records why canonical Catalogue records, authored documents, replaceable output and the frozen archive had separate owners. [Current reference](../studio/Catalogue_Data_Model_Map.md)
+Early storage design. It records why canonical Catalogue records, authored documents, replaceable output and the frozen archive had separate owners. [Current reference](../reference/Catalogue_Source_Model.md#relationships-and-identity)
 
 ## Purpose
 

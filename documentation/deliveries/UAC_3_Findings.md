@@ -10,7 +10,7 @@ parent_id: d-20260904-204816-0f31be
 ---
 # UAC 3 - Findings
 
-Evidence from the consumer studies. It records the distinction between author-selected links, inline images and Media View, and why schema changes waited for a demonstrated consumer need. [Current reference](../studio/Semantic_Tokens_Architecture.md)
+Evidence from the consumer studies. It records the distinction between author-selected links, inline images and Media View, and why schema changes waited for a demonstrated consumer need. [Current reference](../reference/Document_And_Catalogue_References.md)
 
 ## Purpose
 
@@ -50,7 +50,7 @@ The current semantic-token occurrence index is also incomplete for a future Anal
 
 Current Catalogue Work and Series semantic text tokens resolve entity identity through the private target lookup, then render links such as /works/?work=00523 and /series/?series=001. Add Catalogue Token (`/docs/?scope=analysis&stage=working&doc=d-20260906-164429-4236e7`) and Insert Subject Link (`/docs/?scope=analysis&stage=working&doc=d-20260906-164429-be8979`) demonstrate these destinations. They belonged to the previous Catalogue site and are not the new document presentation.
 
-**Finding:** existing tokens remain worthwhile. They must stop producing old-site links; the user's current direction is most likely documents whose exact subject matches the entity. The final destination and selection UI remain open for full-data review. [Catalogue Media View](../studio/Catalogue_Media_View.md) remains the accepted image presentation, and token responsibilities may differ by entity and presentation.
+**Finding:** existing tokens remain worthwhile. They must stop producing old-site links; the user's current direction is most likely documents whose exact subject matches the entity. The final destination and selection UI remain open for full-data review. [Catalogue Media View](../reference/Catalogue_Media_View.md) remains the accepted image presentation, and token responsibilities may differ by entity and presentation.
 
 **Separate authoring decision:** the experience provided by a token does not determine how the author selects that experience. One model uses a general Catalogue token whose editing modal includes destination options such as `Go to document` and `Open Media View`, alongside presentation fields such as link text. The other model provides distinct document-link and Media View token types whose destination behavior is intrinsic. Both could produce the same reader-facing result, but they create different token grammar, editing, discovery and validation requirements.
 

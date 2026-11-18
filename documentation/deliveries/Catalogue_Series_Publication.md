@@ -10,11 +10,11 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Catalogue Series Draft Preview And Publication
 
-Superseded per-Series draft and publication proposal. It preserves the design considered before Catalogue publication adopted queued completed output and dropped record-level publication state. [Current reference](../studio/Catalogue_Deployment.md)
+Superseded per-Series draft and publication proposal. It preserves the design considered before Catalogue publication adopted queued completed output and dropped record-level publication state. [Current reference](../reference/Catalogue_Save_And_Refresh.md#per-work-publish)
 
 ## Superseded
 
-This proposal is superseded by [Catalogue Deployment](../studio/Catalogue_Deployment.md) and the current-Catalogue policy in [Publishing workflow concept](Publishing_Workflow_Concept.md). Works and Series have no draft/published state or per-Series Publish action. [UAC 4](UAC_4_Catalogue_Data_And_Editors.md) removed those fields and controls and established optional singular Work-to-Series membership.
+This proposal is superseded by [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) and the current-Catalogue policy in [Publishing workflow concept](Publishing_Workflow_Concept.md). Works and Series have no draft/published state or per-Series Publish action. [UAC 4](UAC_4_Catalogue_Data_And_Editors.md) removed those fields and controls and established optional singular Work-to-Series membership.
 
 The text below is retained as the historical proposal. Its draft states, publication gates, many-to-many membership assumptions and open questions are not current requirements or implementation authority. Current generated Catalogue data is deployed independently of document republication.
 
@@ -106,5 +106,5 @@ There is no delivery document or implementation authority yet. Add bounded deliv
 ## Current Owners
 
 - [Local Authoring Service And Publication Boundaries](Local_Authoring_And_Publication.md) owns the current save, public-refresh and deployment distinctions and already names a real Catalogue staging interval as a reason to reassess them.
-- [Catalogue Source Model](../studio/Catalogue_Source_Model.md) owns canonical Series, Work and Work Detail identity and relationships.
-- [Catalogue Indexes And Payloads](../studio/Catalogue_Indexes_And_Payloads.md) owns the current public and Studio projection families.
+- [Catalogue Source Model](../reference/Catalogue_Source_Model.md) owns canonical Series, Work and Work Detail identity and relationships.
+- [Catalogue Indexes And Payloads](../reference/Catalogue_Indexes_And_Payloads.md) owns the current public and Studio projection families.

@@ -6,13 +6,13 @@ added_date: "2026-09-24 14:48:40"
 last_updated: "2026-09-24 17:24:26"
 summary: Completed shared document and collection action context, top-row Back alignment and action spacing, and collection Sort placement; durable behavior is maintained in Docs Viewer Runtime.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Document Action Context And Toolbar Placement
 
-Accepted toolbar placement delivery. It preserves the layout and action-context decisions that informed the current controls. [Current reference](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return)
+Accepted toolbar placement delivery. It preserves the layout and action-context decisions that informed the current controls. [Current reference](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
-One bounded delivery under [Planned Features](../studio/Planned_Features.md). Status: **complete; closeout accepted on 2026-09-24**. Controls consume consistent action context through the existing document/report integration, with the accepted top-row placement, Back spacing and collection Sort placement. Code review and the bounded implementation checks are complete. [Docs Viewer Runtime](../studio/Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) owns the shipped behavior and evidence limits.
+One bounded delivery under [Planned Features](../_working/README.md). Status: **complete; closeout accepted on 2026-09-24**. Controls consume consistent action context through the existing document/report integration, with the accepted top-row placement, Back spacing and collection Sort placement. Code review and the bounded implementation checks are complete. [Docs Viewer Runtime](../reference/Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) owns the shipped behavior and evidence limits.
 
 This delivery supersedes [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md). The current single workspace needs a consistent way for existing controls to receive the displayed document, containing collection and applicable navigation context. The older proposal's per-scope availability configuration and Search/Find copy changes are not part of this delivery. Its completed breadcrumb removal remains in place.
 
@@ -62,7 +62,7 @@ The table specifies placement, not new capabilities. Existing route, stage and a
 - Removal of the superseded duplicate target plumbing and per-control view-resolution branches within this boundary, while retaining operation-specific validation and capability checks.
 - Consistent top-row placement for the existing collection list/detail action buttons and subdocument Back in local and public readers, retaining search, filters and sorting beside the collection list.
 - Removal of the replaced inline action mounts and their placement-only styling where no longer used.
-- The required tracked public runtime projection and a concise update to the durable [Docs Viewer Runtime](../studio/Docs_Viewer_Runtime.md) description when implementation ships.
+- The required tracked public runtime projection and a concise update to the durable [Docs Viewer Runtime](../reference/Docs_Viewer_Runtime.md) description when implementation ships.
 
 ### Refactor Boundary
 
@@ -137,9 +137,9 @@ Verification budget: documentation/source review and whitespace checks only. Rec
 
 | Document | Closeout recommendation | Durable destination |
 | --- | --- | --- |
-| This completed delivery | Retire through manual archiving; retained in the repository for now | [Docs Viewer Runtime](../studio/Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) |
+| This completed delivery | Retire through manual archiving; retained in the repository for now | [Docs Viewer Runtime](../reference/Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) |
 | [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md) | Retire the superseded proposal through manual archiving; retained for now | Shipped toolbar and breadcrumb behavior is in Docs Viewer Runtime; the obsolete scope-policy and copy proposals are not carried forward |
-| [Planned Features](../studio/Planned_Features.md) | Retain as the workflow authority | Existing durable parent; no feature-specific parent or temporary verification siblings were created |
+| [Planned Features](../_working/README.md) | Retain as the workflow authority | Existing durable parent; no feature-specific parent or temporary verification siblings were created |
 
 ## Follow-on
 

@@ -10,11 +10,11 @@ parent_id: d-20260904-204816-0f31be
 ---
 # Gallery Design
 
-Accepted Series gallery experiment. It records the decisions on ordered input, per-selection loading and returning to the invoking page that informed the later Work and Gallery views. [Current reference](../studio/Catalogue_Media_View.md#gallery-presentations)
+Accepted Series gallery experiment. It records the decisions on ordered input, per-selection loading and returning to the invoking page that informed the later Work and Gallery views. [Current reference](../reference/Catalogue_Media_View.md#gallery-presentations)
 
 ## Resolved Outcome
 
-The gallery design and ordinary Catalogue-backed implementation were accepted on 2026-09-12. The Series Media View and token behavior described below was retired on 2026-09-28; these decisions remain as historical context. [Catalogue Media View](../studio/Catalogue_Media_View.md) owns current authoring, data, presentation and navigation behavior. [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md) owns exact source forms, occurrence identity, Build, usage and audit behavior. This note is ready for manual archive.
+The gallery design and ordinary Catalogue-backed implementation were accepted on 2026-09-12. The Series Media View and token behavior described below was retired on 2026-09-28; these decisions remain as historical context. [Catalogue Media View](../reference/Catalogue_Media_View.md) owns current authoring, data, presentation and navigation behavior. [Document and Catalogue references](../reference/Document_And_Catalogue_References.md) owns exact source forms, occurrence identity, Build, usage and audit behavior. This note is ready for manual archive.
 
 A Series gallery has its own exact identity and ordered Work membership, distinct from an individual Work or Detail presentation. A gallery containing one Work remains a gallery; an empty Series remains valid. Catalogue ownership is independent of whether any corresponding document exists.
 
@@ -43,8 +43,8 @@ The frozen archive established useful responsibilities: a compact ordered Series
 
 The September 2026 inspections found 167 Works in the archived Series 026 record (21,725 bytes), compared with 165 Works in the current generated record (21,296 bytes). These are input-size observations, not network-performance budgets. Focused checks prove page membership, selected-record reads and stale-response handling. Cold/warm loading and constrained-network performance have not been benchmarked; neighbouring-image prefetch remains outside the implemented result.
 
-[Catalogue Deployment](../studio/Catalogue_Deployment.md) owns distribution of current Catalogue output, independently of document Publish. Public readers are configured for Work and Series by-ID records and existing 96px Work thumbnails under `/assets/data/catalogue/`; reader wiring does not establish deployment. The earlier proposal to pin Catalogue data to an accepted document snapshot is superseded.
+[Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) owns distribution of current Catalogue output, independently of document Publish. Public readers are configured for Work and Series by-ID records and existing 96px Work thumbnails under `/assets/data/catalogue/`; reader wiring does not establish deployment. The earlier proposal to pin Catalogue data to an accepted document snapshot is superseded.
 
-[Runtime](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns implemented browser Back/Forward and caller restoration. The older View Caching and History delivery is retired; wider resource reuse, associated-document actions and shareable Media View URLs remain separate choices.
+[Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns implemented browser Back/Forward and caller restoration. The older View Caching and History delivery is retired; wider resource reuse, associated-document actions and shareable Media View URLs remain separate choices.
 
 [Gallery List Design](Gallery_List_Design.md) was retired on 28 September 2026 with the Works in a Series report. Gallery Media View supplies gallery membership browsing; no large insertable Works list is planned for ordinary documents.

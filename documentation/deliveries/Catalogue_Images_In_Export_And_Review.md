@@ -10,7 +10,7 @@ parent_id: d-20260902-102745-8379ea
 ---
 # Catalogue Images In Export And Review
 
-Earlier proposal for Work and Detail presentation in static consumers. It keeps the proposed export/Review tradeoffs before the shared adopted-Work contract shipped. [Current reference](../studio/Catalogue_Media_View.md)
+Earlier proposal for Work and Detail presentation in static consumers. It keeps the proposed export/Review tradeoffs before the shared adopted-Work contract shipped. [Current reference](../reference/Catalogue_Media_View.md)
 
 ## Requirements
 
@@ -25,11 +25,11 @@ The proposed policies deliberately serve different uses:
 | HTML Export | Download the selected image rendition from R2 into the existing export folder and emit package-relative image paths. | The exported Catalogue images remain available with the snapshot when R2 or the network is unavailable. |
 | Docs Review preview | Resolve references while preparing or explicitly rebuilding the retained preview and emit ordinary images with the supplied R2 URLs. | The browser loads image bytes directly from R2; the preview package does not need downloaded Catalogue image copies. |
 
-Here, preview means the [Docs Review](../studio/Docs_Review.md) package preview. Export's own confirmation/preview step remains part of the export workflow. Confirm the two policies, rendition choice and failure behavior at readiness; this proposed delivery does not authorize implementation.
+Here, preview means the [Docs Review](../reference/Docs_Review.md) package preview. Export's own confirmation/preview step remains part of the export workflow. Confirm the two policies, rendition choice and failure behavior at readiness; this proposed delivery does not authorize implementation.
 
-Retain the exact checked document set, generated-document input, destination ownership and replacement behavior of [Export](../studio/Export.md). Retain Docs Review's validated package identity, package-local source, explicit Build and read-only authority. Finish required lookups, downloads and generated writes before reporting the corresponding operation complete.
+Retain the exact checked document set, generated-document input, destination ownership and replacement behavior of [Export](../reference/Export.md). Retain Docs Review's validated package identity, package-local source, explicit Build and read-only authority. Finish required lookups, downloads and generated writes before reporting the corresponding operation complete.
 
-Interactive local/public Docs retains current-data Media View loading. [Catalogue Deployment](../studio/Catalogue_Deployment.md) separately owns distributing public Catalogue JSON and media. This delivery does not add public deployment, change document publication, generalize external-image downloading, add Series/gallery authoring, alter document relationships, or provide interactive Media View parity in exported HTML and Docs Review. Existing text-first portable export remains text-first.
+Interactive local/public Docs retains current-data Media View loading. [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) separately owns distributing public Catalogue JSON and media. This delivery does not add public deployment, change document publication, generalize external-image downloading, add Series/gallery authoring, alter document relationships, or provide interactive Media View parity in exported HTML and Docs Review. Existing text-first portable export remains text-first.
 
 ## Deliverables
 

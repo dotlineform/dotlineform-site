@@ -4,21 +4,21 @@ doc_id: d-20260911-232134-ec1ba8
 title: Save/Build optimisations
 added_date: "2026-09-11 23:21:34"
 last_updated: "2026-10-14 21:01:50"
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Save/Build optimisations
 
-Completed performance work. It preserves the evidence for carrying parsed inputs through generation, removing duplicated operations and retaining explicit maintenance. [Current reference](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return)
+Completed performance work. It preserves the evidence for carrying parsed inputs through generation, removing duplicated operations and retaining explicit maintenance. [Current reference](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
-Status: **complete**. Steps 1–5 are delivered and reviewed. On 2026-10-07 the user retired Documents Linking Here and backlinks in favour of [Related Links](../studio/Related_Links.md), closing step 5 by removing the unused report and its whole rendered-payload scan. Bounded ordinary dry-runs confirm selected source reads; their small timings are not a general performance benchmark.
+Status: **complete**. Steps 1–5 are delivered and reviewed. On 2026-10-07 the user retired Documents Linking Here and backlinks in favour of [Related Links](../reference/Related_Links.md), closing step 5 by removing the unused report and its whole rendered-payload scan. Bounded ordinary dry-runs confirm selected source reads; their small timings are not a general performance benchmark.
 
 ## Requirements
 
 - Reduce ordinary-document Build work by removing unused computation, repeated source reads and unnecessary rendering.
-- Use the current Source Save boundary: validated persistence, exact document/Links generation and fresh display. The later watcher retirement supersedes this delivery's original persistence-only Save boundary. [Runtime](../studio/Docs_Viewer_Runtime.md#source-editing-and-save) owns the current contract.
+- Use the current Source Save boundary: validated persistence, exact document/Links generation and fresh display. The later watcher retirement supersedes this delivery's original persistence-only Save boundary. [Runtime](../reference/Docs_Viewer_Runtime.md#source-editing-and-save) owns the current contract.
 - Keep exact document identity, canonical membership and hierarchy, selected-source validation, path confinement, and required generated-output checks at their owning boundaries.
 - Keep full Build as complete reconciliation. Targeted work should use the selected documents and the metadata needed by their outputs; aggregate JSON files may remain complete files when their processing cost is proportionate.
-- Preserve the separately owned Search, Recent, Links, media and publication workflows described by [Builder](../studio/Builder.md) and [Source Organisation](../reference/Source_Organisation.md).
+- Preserve the separately owned Search, Recent, Links, media and publication workflows described by [Builder](../reference/Builder.md) and [Source Organisation](../reference/Source_Organisation.md).
 
 ## Current Implementation
 
@@ -33,19 +33,19 @@ Source Save now awaits exact Build and fresh display. The selected-source reduct
 | Exact rendering selection | Source Save selects its exact document; other writes carry before/after IDs. Parent-title changes do not add unchanged children. Tree projection and direct-neighbour relationship maintenance retain their own owners. | Step 2 complete. Unselected Related Links sections retain their existing document/full-Build snapshot refresh boundary. |
 | Documents Linking Here and `backlinks.json` | Retired, including generation, whole rendered-payload scanning, write planning, diagnostics, report loading, browser configuration and the local API. Related Links remains the relationship presentation. | Step 5 complete. No replacement reverse-link payload or compatibility alias. |
 
-The relevant owners are the [ordinary pipeline](../../docs-viewer/build/docs_builder/pipeline.py), [source and metadata loader](../../docs-viewer/build/docs_builder/source.py), [write/rebuild service](../../docs-viewer/services/docs_write_rebuild.py), and [Related Links](../studio/Related_Links.md).
+The relevant owners are the [ordinary pipeline](../../docs-viewer/build/docs_builder/pipeline.py), [source and metadata loader](../../docs-viewer/build/docs_builder/source.py), [write/rebuild service](../../docs-viewer/services/docs_write_rebuild.py), and [Related Links](../reference/Related_Links.md).
 
 Named collections already have targeted builds: [CollectionDocsBuilder](../../docs-viewer/build/docs_builder/collection.py) reads selected sources, merges their metadata into the saved management manifest and preserves unselected by-ID payloads. Working writes `manage-manifest.json`; temporary publication builds write the public manifest. Collection host associations come from configuration, and exact document routes do not require a parent Markdown scan. Targeted deletion already checks exact generated IDs instead of listing all by-ID files.
 
-Targeted and collection-only builds preserve saved Recent. Full Working Build and Publish own its refresh. Source Save omits Search; complete docs-and-Search Build maintains required per-document relationships and records completion, but no Build aggregates or writes the separate Links report. That private snapshot now belongs to the report's explicit Refresh under configured `working/generated/reports/links/report.json`; opening reads the last saved result. [Reports](../studio/Reports.md#current-reports) owns that boundary. Registered media work depends on the actual invocation; Source Save, exact-document Rebuild and targeted collection rebuilds skip media producers. The inspected pipeline does not produce the previously described semantic-token usage index, so usage-index maintenance is not included in this performance baseline.
+Targeted and collection-only builds preserve saved Recent. Full Working Build and Publish own its refresh. Source Save omits Search; complete docs-and-Search Build maintains required per-document relationships and records completion, but no Build aggregates or writes the separate Links report. That private snapshot now belongs to the report's explicit Refresh under configured `working/generated/reports/links/report.json`; opening reads the last saved result. [Reports](../reference/Reports.md#current-reports) owns that boundary. Registered media work depends on the actual invocation; Source Save, exact-document Rebuild and targeted collection rebuilds skip media producers. The inspected pipeline does not produce the previously described semantic-token usage index, so usage-index maintenance is not included in this performance baseline.
 
 ## Deliverables And Process
 
-Deliver independently complete reductions in ordinary Build work, followed by updated durable owner documentation and bounded verification evidence. Keep this document to current state, decisions and completion gates. [Development Checklist](../studio/Development_Checklist.md) and [Development Workflow](../studio/Development_Workflow.md) govern implementation and closeout.
+Deliver independently complete reductions in ordinary Build work, followed by updated durable owner documentation and bounded verification evidence. Keep this document to current state, decisions and completion gates. [Development Checklist](../development/Development_Checklist.md) and [Development Workflow](../development/Development_Workflow.md) govern implementation and closeout.
 
 Each implementation step is a separate finishable slice, reviewed and closed through steps 6 and 7. Source Save and explicit Build are awaited through their current required outcomes. Earlier watcher evidence below records the historical delivery; it does not imply a retained watcher mode.
 
-Test creation or changes require a separately agreed specification under [Test Contract Discipline](../studio/Test_Contract_Discipline.md). Delivery approval does not authorize changing tests, fixtures or temporary regression scripts. Record maintained coverage outside this plan and select only relevant existing checks after reviewing their actual coverage and cost.
+Test creation or changes require a separately agreed specification under [Test Contract Discipline](../development/Verification.md). Delivery approval does not authorize changing tests, fixtures or temporary regression scripts. Record maintained coverage outside this plan and select only relevant existing checks after reviewing their actual coverage and cost.
 
 ## Delivery Steps
 
@@ -66,7 +66,7 @@ Record: steps 1–5 readiness complete. Saved tree rows contain the required unc
 
 - [x] Remove flat `index_payload` row construction and its whole-collection rendered-file reads and plain-text extraction.
 - [x] Use the actual document count directly for summaries and diagnostics; retain required tree, by-ID and Recent outputs. The backlinks output retained at this slice is retired in step 5.
-- [x] Identify affected legacy test consumers and record their separately scoped modernisation need in [Builder](../studio/Builder.md#commands). The production path retains no compatibility return value; test work requires its own agreed specification.
+- [x] Identify affected legacy test consumers and record their separately scoped modernisation need in [Builder](../reference/Builder.md#commands). The production path retains no compatibility return value; test work requires its own agreed specification.
 
 Verification budget: focused source/call-site review, changed Python lint/syntax and whitespace checks. Select existing output/count evidence only if its reviewed coverage addresses a remaining risk.
 
@@ -123,7 +123,7 @@ Verification budget: source/call-site and scoped diff review, changed Python/Jav
 
 Gate: production has no backlinks report, payload, scan, setting or route consumer; Related Links remains the maintained relationship presentation. Old authored report blocks fail normal unknown-report validation and must be converted to the directive.
 
-Record: complete. Production source inspection found no remaining backlinks references. The targeted builder completed with the obsolete file absent, reading 1 source for 33 canonical documents and rendering 1 payload, with no proposed payload/tree/Recent changes or warnings. Diagnostic time was 0.003s for this single small run; the performance claim is removal of the scan, not a representative speedup. Python and JavaScript lint, Python syntax, JSON parsing, `git diff --check`, `bin/site-code-update --check` and `bin/site-validate` passed. Public projection changed only the shared browser config controller. Obsolete dedicated report tests and mixed output/route assertions remain unchanged and unrun; [Reports](../studio/Reports.md#current-reports) records their separately scoped cleanup. No live Save/watcher/API/browser or Publish behavior was exercised.
+Record: complete. Production source inspection found no remaining backlinks references. The targeted builder completed with the obsolete file absent, reading 1 source for 33 canonical documents and rendering 1 payload, with no proposed payload/tree/Recent changes or warnings. Diagnostic time was 0.003s for this single small run; the performance claim is removal of the scan, not a representative speedup. Python and JavaScript lint, Python syntax, JSON parsing, `git diff --check`, `bin/site-code-update --check` and `bin/site-validate` passed. Public projection changed only the shared browser config controller. Obsolete dedicated report tests and mixed output/route assertions remain unchanged and unrun; [Reports](../reference/Reports.md#current-reports) records their separately scoped cleanup. No live Save/watcher/API/browser or Publish behavior was exercised.
 
 ### 6 — Code Review For The Delivered Slice
 

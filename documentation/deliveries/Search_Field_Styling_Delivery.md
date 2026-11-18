@@ -4,11 +4,11 @@ doc_id: d-20261001-192157-245f84
 title: Search Field Styling Delivery
 added_date: "2026-10-01 19:21:57"
 last_updated: "2026-10-01 19:31:53"
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Search Field Styling Delivery
 
-Completed Search Field styling delivery. It preserves the visual acceptance and chosen shared interaction roles. [Current reference](../studio/Search_Fields.md)
+Completed Search Field styling delivery. It preserves the visual acceptance and chosen shared interaction roles. [Current reference](../reference/Shared_UI.md#search-field)
 
 ## Requirements
 
@@ -16,7 +16,7 @@ Use one presentation across active web search fields: a focus-only search icon w
 
 ## Deliverables And Process
 
-The durable owner is [Search Fields](../studio/Search_Fields.md), parented under [Shared UI](../studio/Shared_UI.md). Its small shared field module and stylesheet replace the browser-native/site and report-specific clear presentation across Docs Viewer and Studio. Public-safe files and required artwork receive an explicit tracked projection. Opening a search, typing and clearing retain the existing workflow; no source/generated document or Search rebuild, Publish, deployment, commit or push belongs to this delivery.
+The durable owner is [Search Fields](../reference/Shared_UI.md#search-field), parented under [Shared UI](../reference/Shared_UI.md). Its small shared field module and stylesheet replace the browser-native/site and report-specific clear presentation across Docs Viewer and Studio. Public-safe files and required artwork receive an explicit tracked projection. Opening a search, typing and clearing retain the existing workflow; no source/generated document or Search rebuild, Publish, deployment, commit or push belongs to this delivery.
 
 ## Delivery Steps
 

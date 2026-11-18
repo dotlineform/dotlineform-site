@@ -10,9 +10,9 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Media View Links And Series Galleries - Delivery
 
-Accepted Work/Detail and Series media delivery. It preserves gallery loading and explicit caller-return decisions from before the Gallery conversion. [Current reference](../studio/Catalogue_Media_View.md)
+Accepted Work/Detail and Series media delivery. It preserves gallery loading and explicit caller-return decisions from before the Gallery conversion. [Current reference](../reference/Catalogue_Media_View.md)
 
-Complete, accepted and closed on 2026-09-12 under [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md). The user accepted authoring and gallery navigation, accepted the clean MVG-4 review and authorized closeout. Series Media View and token support was retired on 2026-09-28; the requirements and evidence below describe the historical delivery. [Catalogue Media View](../studio/Catalogue_Media_View.md) and [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md) own the current result. This delivery is ready for manual archive.
+Complete, accepted and closed on 2026-09-12 under [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md). The user accepted authoring and gallery navigation, accepted the clean MVG-4 review and authorized closeout. Series Media View and token support was retired on 2026-09-28; the requirements and evidence below describe the historical delivery. [Catalogue Media View](../reference/Catalogue_Media_View.md) and [Document and Catalogue references](../reference/Document_And_Catalogue_References.md) own the current result. This delivery is ready for manual archive.
 
 ## Requirements
 
@@ -109,7 +109,7 @@ Record: closeout completed on 2026-09-12 under the user's approval to continue a
 | --- | --- | --- |
 | [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md) | Archived feature parent | Retains the wider historical decisions and delivery sequence. |
 | Media View Links And Series Galleries - Delivery | Ready for manual archive | Catalogue Media View and Semantic Tokens Architecture contain the accepted result; this record retains acceptance and evidence. |
-| [Gallery Design](Gallery_Design.md) | Archived | Retains the Series gallery experiment. Current behaviour lives in [Catalogue Media View](../studio/Catalogue_Media_View.md). |
+| [Gallery Design](Gallery_Design.md) | Archived | Retains the Series gallery experiment. Current behaviour lives in [Catalogue Media View](../reference/Catalogue_Media_View.md). |
 | [Media View Gallery Navigation - Review](/docs/?doc=d-20260912-194630-965ab5) | Retain historical Working example | Authored Series tokens remain unchanged and now render as literal text. |
 | [Media View - Series 143 Gallery](/docs/?doc=d-20260906-164429-756174) | Retain historical note | The supplied Series gallery markup was retired from this Working document. |
 
@@ -117,6 +117,6 @@ No document was deleted or archived. The supplied Series 143 demonstration was r
 
 ## Follow-on
 
-[Catalogue Deployment](../studio/Catalogue_Deployment.md) retains the unimplemented public transfer. Its handoff now records Work and Series by-ID destinations and existing `<work_id>-thumb-96.webp` thumbnails under `site/assets/data/catalogue/`. Public runtime projection does not establish public data availability, and Catalogue distribution remains independent of document publication.
+[Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) retains the unimplemented public transfer. Its handoff now records Work and Series by-ID destinations and existing `<work_id>-thumb-96.webp` thumbnails under `site/assets/data/catalogue/`. Public runtime projection does not establish public data availability, and Catalogue distribution remains independent of document publication.
 
-[Runtime](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns browser Back/Forward and retained caller restoration. The superseded View Caching and History delivery is retired; wider resource reuse, static export/Docs Review image preparation, associated-document actions and shareable Media View URLs remain separate outcomes. Network-performance budgets and neighbour prefetch are not claimed. None of these follow-ons may reintroduce a Series primary image or galleries in document content without changing the agreed direction.
+[Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns browser Back/Forward and retained caller restoration. The superseded View Caching and History delivery is retired; wider resource reuse, static export/Docs Review image preparation, associated-document actions and shareable Media View URLs remain separate outcomes. Network-performance budgets and neighbour prefetch are not claimed. None of these follow-ons may reintroduce a Series primary image or galleries in document content without changing the agreed direction.

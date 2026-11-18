@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # UAC 2 - Prepare Catalogue Examples
 
-Historical sample-data preparation for the initial consumer studies. It records the selected records and artefacts used before full Catalogue output was available. [Current reference](../studio/Catalogue_Indexes_And_Payloads.md)
+Historical sample-data preparation for the initial consumer studies. It records the selected records and artefacts used before full Catalogue output was available. [Current reference](../reference/Catalogue_Indexes_And_Payloads.md)
 
 ## Requirements
 

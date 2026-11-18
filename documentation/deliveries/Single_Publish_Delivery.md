@@ -6,7 +6,7 @@ added_date: "2026-09-26 23:32:36"
 last_updated: "2026-09-27 11:52:05"
 summary: Keep Working and Preview inside one Publish pipeline, remove stage context from Docs Viewer readers and authoring, retain preview/ as inspectable output, and review through site-preview.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Docs Viewer Stage Simplification And Single Publish - Delivery
 
@@ -75,7 +75,7 @@ Preparation failure prevents distribution. Existing snapshot replacement and com
 - Removal of redundant plan reconstruction, snapshot reads and media comparisons that the combined operation no longer needs. No persistent cache, compatibility alias or second publication implementation is introduced.
 - Focused evidence for the combined operation, manual site-preview review and bounded code review, followed by current durable workflow documentation. Tests and fixtures require a separately approved specification before modification.
 
-The existing [Source Organisation](../reference/Source_Organisation.md), [Catalogue Deployment](../studio/Catalogue_Deployment.md) and [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) identify current storage and operation owners. This delivery changes their split user workflow and the runtime stage-context model; they must describe shipped behaviour until implementation is complete.
+The existing [Source Organisation](../reference/Source_Organisation.md), [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) and [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) identify current storage and operation owners. This delivery changes their split user workflow and the runtime stage-context model; they must describe shipped behaviour until implementation is complete.
 
 ## Process
 
@@ -87,7 +87,7 @@ The existing [Source Organisation](../reference/Source_Organisation.md), [Catalo
 
 ## Delivery Steps
 
-The gates below are development checkpoints, not gates inside the finished Publish workflow. Follow [Planned Features](../studio/Planned_Features.md) and the [Development Checklist](../studio/Development_Checklist.md). Keep each record to status, changed owners, selected evidence, deviations and gate outcome.
+The gates below are development checkpoints, not gates inside the finished Publish workflow. Follow [Planned Features](../_working/README.md) and the [Development Checklist](../development/Development_Checklist.md). Keep each record to status, changed owners, selected evidence, deviations and gate outcome.
 
 ### SP-0 — Readiness
 
@@ -116,7 +116,7 @@ Failure boundaries remain explicit: capture/build failure prevents distribution;
 - [x] Prepare and complete `preview/`, then pass that exact completed result into distribution without another user-reviewed plan or another source build.
 - [x] Preserve eligibility, output identity, artifact selection, freshness checks, failure reporting and synchronous completion. Retain the prepared artifact independently of the repository result.
 
-Verification budget: changed-source lint/syntax and source review of sequencing and failure paths. Select any existing service checks only after inspecting their coverage and cost; specify test changes separately under [Test Contract Discipline](../studio/Test_Contract_Discipline.md).
+Verification budget: changed-source lint/syntax and source review of sequencing and failure paths. Select any existing service checks only after inspecting their coverage and cost; specify test changes separately under [Test Contract Discipline](../development/Verification.md).
 
 Gate: review the coherent service change and its evidence before removing the old UI workflow. Record: implemented and continuation to SP-2 approved on 2026-09-27.
 
@@ -215,10 +215,16 @@ Gate: record findings and resolution, with no unresolved issue inside the accept
 
 Verification budget: documentation source/link review and whitespace checks; reuse accepted implementation evidence unless a new change warrants more.
 
-Durable destinations: [Source Organisation](../reference/Source_Organisation.md) owns the workflow and evidence limits; [Builder](../studio/Builder.md), [Configuration And Extension Points](../studio/Configuration_And_Extension_Points.md), [Generated Data Contracts](../studio/Generated_Data_Contracts.md), [Reports](../studio/Reports.md) and [Media And Asset Handling](../studio/Media_And_Asset_Handling.md) own their changed runtime/data boundaries. [Catalogue Deployment](../studio/Catalogue_Deployment.md) distinguishes one Publish action's internal preparation/distribution phases; [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) owns the local Save and proposed Refresh boundary. [Development Checklist](../studio/Development_Checklist.md) and repository `AGENTS.md` carry the current guardrails. No additional temporary Studio documents were created.
+Durable destinations: [Source Organisation](../reference/Source_Organisation.md) owns the workflow and evidence limits; [Builder](../reference/Builder.md), [Configuration And Extension Points](../reference/Configuration_And_Extension_Points.md), [Generated Data Contracts](../reference/Generated_Data_Contracts.md), [Reports](../reference/Reports.md) and [Media And Asset Handling](../reference/Media_And_Asset_Handling.md) own their changed runtime/data boundaries. [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) distinguishes one Publish action's internal preparation/distribution phases; [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) owns the local Save and proposed Refresh boundary. [Development Checklist](../development/Development_Checklist.md) and repository `AGENTS.md` carry the current guardrails. No additional temporary Studio documents were created.
 
 Gate: close only when one Publish action completes preparation and distribution, the Preview artifact remains useful and intact, ordinary Docs Viewer needs no stage context, and site-preview is the review surface. Record: closed with the evidence and limits above. Closeout changed documentation only; focused source/link review and `git diff --check` passed. No build, Search rebuild, repeat Publish, R2 audit, commit, push or public deployment was initiated by the agent during closeout.
 
 ## Follow-on
 
 Incremental document preparation, dependency invalidation and persistent comparison caches are separate possible optimisations if remaining measured costs justify them. They are not prerequisites for this delivery. Other Preview consumers remain possible through the retained artifact boundary; adding them is separately scoped. Search/Recents policy, Catalogue Save recovery, private lookup retirement and deployment architecture retain their existing owners.
+
+## Later workflow boundary
+
+This delivery's user-triggered Publish and site-preview acceptance covered the earlier complete Preview preparation and distribution. The current queue-only implementation replaced that whole-snapshot handoff. Current evidence for the Working generation review comes from the implementation owners. Use the [current workflow](../reference/Builder.md#docs-build-flow) and [design rationale](../design/Working_Generation_And_Publication.md).
+
+The earlier Builder record documented scope-era eligibility tests for draft descendants, ignore-list isolation and excluded collection hosts under `test_docs_pre_publish.py`. Those cases used the old pre-publish entry point and isolated fixture sources. The old selection does not establish coverage of today's Working metadata projection and queue completion. The original evidence and command remain in Git at `c76f6608ef:documentation/studio/Builder.md` under Historical Pre-publish Selection Evidence. [Test follow-ups](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)

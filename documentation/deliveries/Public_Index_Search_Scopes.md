@@ -10,7 +10,7 @@ parent_id: d-20260924-135214-baa9ec
 ---
 # Public Index Search Scopes
 
-Accepted shared Manage and Public Search delivery. It preserves the scope switch, retained reader behavior and local publication evidence. [Current reference](../studio/Docs_Viewer_Search.md)
+Accepted shared Manage and Public Search delivery. It preserves the scope switch, retained reader behavior and local publication evidence. [Current reference](../reference/Reader_Discovery_And_Return.md)
 
 Portfolio search helps readers find work and writing by title across Catalogue, Context, Concepts and Moments. Library and Living Memory are reference collections with their own search scopes. Manage and Public share the main Index search field, results list and scope rules. [Collection Search And Site Search](Collection_Search_And_Site_Search.md)
 
@@ -25,7 +25,7 @@ Portfolio search helps readers find work and writing by title across Catalogue, 
 | **Library** | Title filter. The query can match anywhere in an entry title. | Landing page and individual Library entries, full text |
 | **Living Memory** | Table of contents for browsing. No dedicated search field today. | Landing page and indexed web-edition pages, full text |
 
-Main Index search matches titles, headings, summaries, body text and code, and returns one result per document. Collection title filters match the typed text as a continuous string. The Index matches individual terms, so different words in a query can match in the title and body of the same document. [Collection matching](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js#L170) · [Index search contract](../studio/Docs_Search_Index.md#query-and-ranking)
+Main Index search matches titles, headings, summaries, body text and code, and returns one result per document. Collection title filters match the typed text as a continuous string. The Index matches individual terms, so different words in a query can match in the title and body of the same document. [Collection matching](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js#L170) · [Index search contract](../reference/Reader_Discovery_And_Return.md#query-and-ranking)
 
 In the prepared site snapshot on 16 November 2026, Library accounted for 152 of 168 indexed documents, compared with five Context documents and three Living Memory pages. [Prepared Search index](../../site/assets/data/search/analysis/index.json)
 
@@ -56,7 +56,7 @@ Drafts are excluded when the indexes are built. Living Memory search uses eligib
 
 ## Gallery Results
 
-Portfolio search matches a Catalogue Gallery by the Gallery's own title only. Each Gallery result carries its exact `gallery_id` for navigation. Selecting the result opens the existing Catalogue Gallery Media View in the main pane using that ID as a `catalogue-gallery` target. The Index retains the search query and results while the Gallery is open. [Catalogue Media View](../studio/Catalogue_Media_View.md)
+Portfolio search matches a Catalogue Gallery by the Gallery's own title only. Each Gallery result carries its exact `gallery_id` for navigation. Selecting the result opens the existing Catalogue Gallery Media View in the main pane using that ID as a `catalogue-gallery` target. The Index retains the search query and results while the Gallery is open. [Catalogue Media View](../reference/Catalogue_Media_View.md)
 
 ## Behaviour
 
@@ -79,7 +79,7 @@ Use spacing alone to group the Index items. Keep Context, Concepts, Catalogue an
 
 Portfolio has its own title-only index. Context, Concepts, Moments, Library and Living Memory each have a search index with the fields listed above. The main Index loads the file for the active scope and uses the same Docs Viewer matcher for all six indexes. Manage reads the latest completed Working indexes. Public reads the published copies of those same files. Catalogue search uses its existing Work manifest and Gallery search file.
 
-The current `include_in_site_search` setting controls which collections supply records to the shared Search index and also affects Recent. The proposed search indexes have their own coverage and field policies, independent of Recent. [Current Search index contract](../studio/Docs_Search_Index.md)
+The current `include_in_site_search` setting controls which collections supply records to the shared Search index and also affects Recent. The proposed search indexes have their own coverage and field policies, independent of Recent. [Current Search index contract](../reference/Reader_Discovery_And_Return.md#payload-contract)
 
 ### Search Files By Scope
 
@@ -116,13 +116,13 @@ The target estimates use the current Docs Viewer index format with a typed Galle
 
 ## Building And Publishing Search Indexes
 
-1. **Studio Refresh prepares Gallery data.** After adding, renaming or deleting a Gallery, run Studio Refresh before refreshing Docs Viewer search. Studio Refresh produces the Catalogue Gallery search file. The portfolio index uses the prepared Gallery titles and exact IDs from that file. [Work and Gallery projections](../studio/Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections)
+1. **Studio Refresh prepares Gallery data.** After adding, renaming or deleting a Gallery, run Studio Refresh before refreshing Docs Viewer search. Studio Refresh produces the Catalogue Gallery search file. The portfolio index uses the prepared Gallery titles and exact IDs from that file. [Work and Gallery projections](../reference/Catalogue_Indexes_And_Payloads.md#work-and-gallery-projections)
 2. **Refresh Search and Recent builds all six Search indexes in Working.** The action builds Portfolio, Context, Concepts, Moments, Library and Living Memory. Portfolio uses saved document titles and prepared Gallery data. The collection indexes reuse the eligible document metadata and read the fields specified in the target table. Recent follows its own selection rules within the same action. The refresh writes and queues each changed index as a separate publication artifact. The full Working Build uses the same index builder with the document data it already loaded. [Current refresh owner](../../docs-viewer/services/docs_discovery_refresh.py) · [Full Working Build owner](../../docs-viewer/services/docs_working_rebuild.py)
-3. **Publish transfers the queued files.** Publish copies the exact completed index files through Preview into the tracked `site/` tree. **Deploy Public** serves the indexes from the committed site snapshot. [Publication workflow](../studio/Builder.md#publish-preparation)
+3. **Publish transfers the queued files.** Publish copies the exact completed index files through Preview into the tracked `site/` tree. **Deploy Public** serves the indexes from the committed site snapshot. [Publication workflow](../reference/Builder.md#publish-preparation)
 
 ## Recent Coverage
 
-Site Recent keeps its current coverage. It selects eligible ordinary documents, including eligible collection landing pages, plus individual entries from Context, Library and Living Memory's web edition. Individual Concepts, Moments and Catalogue entries are outside this coverage. Recent applies its exact exclusions, sorts by update date and shows up to 20 entries. [Recent contract](../studio/Generated_Data_Contracts.md#recent-contract)
+Site Recent keeps its current coverage. It selects eligible ordinary documents, including eligible collection landing pages, plus individual entries from Context, Library and Living Memory's web edition. Individual Concepts, Moments and Catalogue entries are outside this coverage. Recent applies its exact exclusions, sorts by update date and shows up to 20 entries. [Recent contract](../reference/Generated_Data_Contracts.md#recent-contract)
 
 Gallery titles are searchable in Portfolio. Galleries stay outside site Recent for this delivery.
 
@@ -130,7 +130,7 @@ A follow-on can decide whether to show recent Galleries in site Recent or in a C
 
 ## Delivery Steps
 
-Status **Done.** The user accepted the local delivery on 17 November 2026. The six indexes and shared reader are prepared in the repository. Keep this record pending manual archive. [Docs Viewer Search](../studio/Docs_Viewer_Search.md) and [Search Index](../studio/Docs_Search_Index.md) own the current behaviour and artifact contract.
+Status **Done.** The user accepted the local delivery on 17 November 2026. The six indexes and shared reader are prepared in the repository. Keep this record pending manual archive. [Reader discovery and return](../reference/Reader_Discovery_And_Return.md) and [Search Index](../reference/Reader_Discovery_And_Return.md#payload-contract) own the current behaviour and artifact contract.
 
 ### 0. Confirm readiness
 
@@ -162,6 +162,6 @@ Status **Done.** The user accepted the local delivery on 17 November 2026. The s
 
 ### 4. Review and close
 
-- [x] Complete the [Redundancy And Defensive Behavior Review](../studio/Development_Checklist.md#redundancy-and-defensive-behavior-review). Reuse collection metadata for Portfolio and scoped rows, loaded sources in Full Working Build, and the current document mount for Gallery activation. Ordinary source reads supply dates for Recent only. Removed the browser's partial postings rewrite and the unused singleton publication path. Retained path and identity checks at selected read boundaries, a schema check on browser load, and selected byte verification in Publish. Publish does no new content or eligibility work.
-- [x] Update the maintained [Search guide](../studio/Docs_Viewer_Search.md) and [Search contract](../studio/Docs_Search_Index.md).
+- [x] Complete the [Redundancy And Defensive Behavior Review](../development/Development_Checklist.md#redundancy-and-defensive-behavior-review). Reuse collection metadata for Portfolio and scoped rows, loaded sources in Full Working Build, and the current document mount for Gallery activation. Ordinary source reads supply dates for Recent only. Removed the browser's partial postings rewrite and the unused singleton publication path. Retained path and identity checks at selected read boundaries, a schema check on browser load, and selected byte verification in Publish. Publish does no new content or eligibility work.
+- [x] Update the maintained [Search guide](../reference/Reader_Discovery_And_Return.md) and [Search contract](../reference/Reader_Discovery_And_Return.md#payload-contract).
 - [x] Record acceptance and evidence limits. The final same-tab `cat.` link passed focused lint and site validation. That click, shared URL restoration and narrow-screen behaviour were not individually reported in the manual walkthrough. Commit, push and Deploy Public are separate release actions.

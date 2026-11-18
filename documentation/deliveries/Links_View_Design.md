@@ -10,7 +10,7 @@ parent_id: d-20260907-125101-d3bde6
 ---
 # Links View design
 
-Accepted visual proof for the former Links View. It preserves the verified interaction and the direction before Related Links was embedded. [Current reference](../studio/Related_Links.md)
+Accepted visual proof for the former Links View. It preserves the verified interaction and the direction before Related Links was embedded. [Current reference](../reference/Related_Links.md)
 
 **Links is a distinct presentation using the same hosting mechanism as Media View.** The shared Content Detail host provides the toolbar, lifecycle cleanup and **Back to document**, including scroll and focus restoration. Layout is selected per presentation: Links uses the normal document area, without an outer border, and retains the index panel in its existing state. Media, diagrams, tables and expanded reports use the expanded main area. The host is available to both public and Manage apps.
 
@@ -26,7 +26,7 @@ The dedicated Links presentation adapter is implemented in the shared host. Medi
 
 The Links adapter reads the displayed document's separate `links-by-id/<doc_id>.json` relationship file. For Analysis Working, this is under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/generated/documents/links-by-id/`, resolved through scope configuration. The existing document `by-id` payload does not receive a relationship block. One relationship response supplies all entries and labels. The public-safe read path consumes configured static files without local services; public data preparation and activation remain separately owned.
 
-The initial design proof used `links-by-id` files generated for representative test documents. After the user accepted that proof, DR-6 removed the document restriction. Normal Doc Build now maintains the accepted version 1 relationship files across every configured Analysis Working collection. The reference model and JSON serializer remain separate. [Runtime](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns current browser-history caller restoration; the superseded View Caching and History delivery is retired and wider resource reuse remains separately scoped.
+The initial design proof used `links-by-id` files generated for representative test documents. After the user accepted that proof, DR-6 removed the document restriction. Normal Doc Build now maintains the accepted version 1 relationship files across every configured Analysis Working collection. The reference model and JSON serializer remain separate. [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns current browser-history caller restoration; the superseded View Caching and History delivery is retired and wider resource reuse remains separately scoped.
 
 - “all entries” currently means all relationships admitted by DR’s agreed rules. Non-publishable/Folder endpoints and missing targets are omitted; otherwise eligible drafts remain included in Working.
 

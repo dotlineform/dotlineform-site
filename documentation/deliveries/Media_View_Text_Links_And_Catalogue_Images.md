@@ -10,9 +10,9 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Media View Text Links And Catalogue Images
 
-Accepted move to exact Catalogue media targets in authored documents. It preserves early Work and Detail presentation evidence and separate static-consumer design. [Current reference](../studio/Catalogue_Media_View.md)
+Accepted move to exact Catalogue media targets in authored documents. It preserves early Work and Detail presentation evidence and separate static-consumer design. [Current reference](../reference/Catalogue_Media_View.md)
 
-Closed on 2026-09-10 at the user's request. [Catalogue Media View](../studio/Catalogue_Media_View.md) owns the implemented authoring, Build and runtime behavior; [Broken Links Script](../studio/Broken_Links_Script.md) owns read-only media availability diagnosis. Export/Docs Review images and public Catalogue deployment remain separate outcomes.
+Closed on 2026-09-10 at the user's request. [Catalogue Media View](../reference/Catalogue_Media_View.md) owns the implemented authoring, Build and runtime behavior; [Broken Links Script](../reference/Broken_Links.md) owns read-only media availability diagnosis. Export/Docs Review images and public Catalogue deployment remain separate outcomes.
 
 ## Requirements
 
@@ -24,7 +24,7 @@ Use Catalogue's generated consumer output. The exact Work record is `$DOTLINEFOR
 
 The accepted behavior references are Media View - Work 00523 (`/docs/?scope=analysis&stage=working&doc=d-20260906-164429-9892a8`) and Media View - Series 143 Gallery (`/docs/?scope=analysis&stage=working&doc=d-20260906-164429-756174`). They establish image activation, exact Work presentation, Back to document and the existing gallery/Work distinction. Their supplied HTML and data are demonstrations, not final source-token syntax or a requirement to embed complete galleries.
 
-Use Working for implementation and authoring review. Operations remain synchronous from the user's perspective: finish the required work before controls become available for the next action, following [Development Checklist](../studio/Development_Checklist.md).
+Use Working for implementation and authoring review. Operations remain synchronous from the user's perspective: finish the required work before controls become available for the next action, following [Development Checklist](../development/Development_Checklist.md).
 
 ## Deliverables
 
@@ -32,7 +32,7 @@ Use Working for implementation and authoring review. Operations remain synchrono
 - Document Build output that retains the authored text and exact Catalogue reference; Media View loads current Catalogue consumer data when activated.
 - An updated **Add Catalogue Image** that retains Catalogue search, optional Detail selection and useful alt-text/caption/presentation controls. Its token builds to the displayed image and caption; clicking the image always opens Media View at the selected Work or Detail image.
 - One shared Media View activation path for text and image entry, preserving Back to document and the exact invoking document context.
-- Focused evidence, user review and durable documentation transfer to [Catalogue Media View](../studio/Catalogue_Media_View.md).
+- Focused evidence, user review and durable documentation transfer to [Catalogue Media View](../reference/Catalogue_Media_View.md).
 
 Direct Series-gallery text authoring, broader gallery navigation/loading features, **Insert doc link**, doc-to-doc relationship JSON and retirement of the old **Add Catalogue Token** action are separately owned work. This delivery does not require Work documents, alter document Subjects or perform Publish, Deploy or public cutover.
 
@@ -53,7 +53,7 @@ The authored text link is a button styled as inline link text: it opens a view a
 
 Build preserves valid references even when Catalogue data is unavailable, so later availability can recover without rebuilding the document. Insertion validates current media; Broken Links audits current generated availability. The existing supplied Work/gallery demonstrations and report presentation API remain distinct callers of the shared host; newly authored Work links use references exclusively.
 
-This follows the deliberate current-Catalogue policy in [Publishing workflow concept](Publishing_Workflow_Concept.md). Public freshness means the latest deployed Catalogue record. [Catalogue Deployment](../studio/Catalogue_Deployment.md) owns the distribution boundary and pending work; this step configures and tests the reader but does not populate that destination or deploy data.
+This follows the deliberate current-Catalogue policy in [Publishing workflow concept](Publishing_Workflow_Concept.md). Public freshness means the latest deployed Catalogue record. [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) owns the distribution boundary and pending work; this step configures and tests the reader but does not populate that destination or deploy data.
 
 The current activation owner is `docs-viewer/runtime/js/shared/docs-viewer-media-detail.js`: `mountDocument()` registers the opener, and its click handler requests the Media View presentation. Both new authoring forms should reuse that owner.
 
@@ -183,7 +183,7 @@ Closeout verification is bounded to review of the four edited source documents, 
 
 - [Catalogue Images In Export And Review](Catalogue_Images_In_Export_And_Review.md) owns resolving Catalogue image references for exported snapshots and Docs Review previews, with proposed packaged-image and R2-URL policies respectively.
 - [Semantic Token References Across Collections](Cross_Collection_Semantic_References.md) owns sub-scope usage indexing and the open decision about sharing the forthcoming relationship index and document by-ID data.
-- The [Gallery Design study](Gallery_Design.md) considered direct text entry into a Series gallery. [Catalogue Media View](../studio/Catalogue_Media_View.md) owns the current Work and Gallery forms.
+- The [Gallery Design study](Gallery_Design.md) considered direct text entry into a Series gallery. [Catalogue Media View](../reference/Catalogue_Media_View.md) owns the current Work and Gallery forms.
 - Production gallery pagination, sequence controls and larger-gallery loading remain separately scoped.
 - **Insert doc link**, old Catalogue text-action retirement and generated document relationships remain under [Doc Relationships](Doc_Relationships.md).
 - Pre-Publish/Publish, accepted public data preparation and Deploy/public cutover retain their separate delivery boundaries.

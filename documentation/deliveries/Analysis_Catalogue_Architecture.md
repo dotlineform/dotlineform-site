@@ -9,7 +9,7 @@ parent_id: d-20260902-102745-8379ea
 ---
 # Architecture
 
-Early architecture for the former Analysis reader. It records the reasoning for keeping authored navigation, Catalogue membership and presentation references independent. [Current reference](../studio/Catalogue_Architecture.md)
+Early architecture for the former Analysis reader. It records the reasoning for keeping authored navigation, Catalogue membership and presentation references independent. [Current reference](../reference/Catalogue_Source_Model.md#output-boundary)
 
 ## Purpose
 
@@ -109,7 +109,7 @@ The unified `cat_id` proposal is abandoned. Documents retain explicit `series_id
 
 Bulk document migration and automatic Details-document creation are abandoned. [Delivery Sequence](Analysis_Catalogue_Delivery_Sequence.md) instead plans batch New doc for selected Works or Series alongside the existing Project docs backlog. Any future coverage report helps curation without enforcing one document per entity.
 
-Work-level galleries in this design required no document per Detail. The [original navigation proposal](Catalogue_Navigation.md) considered carrying Gallery sequence context separately from bulk document creation. [Catalogue Media View](../studio/Catalogue_Media_View.md) describes the implemented Work and Gallery views.
+Work-level galleries in this design required no document per Detail. The [original navigation proposal](Catalogue_Navigation.md) considered carrying Gallery sequence context separately from bulk document creation. [Catalogue Media View](../reference/Catalogue_Media_View.md) describes the implemented Work and Gallery views.
 
 ## Publication And Consumer Snapshot
 
@@ -137,7 +137,7 @@ The main Analysis presentation is curated rather than an obligatory rendering of
 
 Inventory is not navigation. Complete alphabetical, chronological, Series and hierarchy views remain possible as reports. They do not become editor validity rules or require the main index to announce the complete size of the portfolio.
 
-[Doc Navigation](../studio/Doc_Navigation.md), including scope-level Context Navigation and Reorder, is independent of the migration and Catalogue Navigation. Catalogue documents belong to a sub-scope and need their own navigation model.
+[Doc Navigation](../_working/Document_Context_Navigation.md), including scope-level Context Navigation and Reorder, is independent of the migration and Catalogue Navigation. Catalogue documents belong to a sub-scope and need their own navigation model.
 
 Catalogue Navigation depends on the accepted presentation and collection data, not a bulk migration cohort. Decide how authored galleries establish sequence membership, order, section boundaries, controls, history and return behavior. Shared counters or suspended Series context are not settled requirements.
 
@@ -178,7 +178,7 @@ Catalogue Navigation depends on the accepted presentation and collection data, n
 
 - [Catalogue And Analysis Storage Layout](Catalogue_And_Analysis_Storage_Layout.md) defines the proposed repository, external Catalogue, Analysis source/generated/Published and frozen archive directories.
 - [Catalogue Work Presentation](Catalogue_CSS.md) defines the versioned Work and Work Detail HTML/CSS component, host-loading seam and presentation review boundary required before the representative token pilot expands.
-- [Catalogue Media Focus View](../studio/Catalogue_Media_View.md) is part of post-migration Catalogue Navigation: its image-and-caption view enables required Work Detail previous/next without individual documents.
+- [Catalogue Media Focus View](../reference/Catalogue_Media_View.md) is part of post-migration Catalogue Navigation: its image-and-caption view enables required Work Detail previous/next without individual documents.
 
 ## Status
 

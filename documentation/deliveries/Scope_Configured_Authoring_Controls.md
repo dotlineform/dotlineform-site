@@ -6,15 +6,15 @@ added_date: "2026-09-10 15:18:40"
 last_updated: "2026-09-24 17:24:26"
 summary: Superseded by Document Action Context And Toolbar Placement; retained as historical context for the former multi-scope proposal and completed breadcrumb removal.
 ui_status: stopped
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Scope-configured Authoring Controls
 
-Superseded per-scope authoring availability proposal. It records the decisions about exact action context and earlier breadcrumb changes. [Current reference](../studio/Configuration_And_Extension_Points.md#workspace-and-target-contracts)
+Superseded per-scope authoring availability proposal. It records the decisions about exact action context and earlier breadcrumb changes. [Current reference](../reference/Configuration_And_Extension_Points.md#workspace-and-target-contracts)
 
 **Superseded on 2026-09-24 by [Document Action Context And Toolbar Placement](Document_Actions_And_Toolbar.md).** The replacement primarily consolidates how existing controls receive the active document/collection context. Top-row button placement, including subdocument Back at the left edge, is its visible result. It refactors the existing integration without a new ownership or configuration system. The per-scope availability and Search/Find copy proposals below are historical and are not carried into that delivery. Breadcrumb removal already shipped and remains in place.
 
-The replacement delivery is complete. [Docs Viewer Runtime](../studio/Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) now owns the shipped action-context and toolbar behavior, including the existing breadcrumb removal. This superseded proposal is recommended for manual archiving and remains in the repository until then. The remainder is historical proposal text, not active implementation guidance.
+The replacement delivery is complete. [Docs Viewer Runtime](../reference/Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) now owns the shipped action-context and toolbar behavior, including the existing breadcrumb removal. This superseded proposal is recommended for manual archiving and remains in the repository until then. The remainder is historical proposal text, not active implementation guidance.
 
 ## Outcome
 

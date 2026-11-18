@@ -10,7 +10,7 @@ parent_id: d-20260902-102745-8379ea
 ---
 # Catalogue Data Model
 
-Early document-Subject and Detail model. It records why exact identity, membership and document association were treated separately. The later Gallery conversion retired Details, and Subject Retirement records the document-side changes. [Current reference](../studio/Catalogue_Source_Model.md)
+Early document-Subject and Detail model. It records why exact identity, membership and document association were treated separately. The later Gallery conversion retired Details, and Subject Retirement records the document-side changes. [Current reference](../reference/Catalogue_Source_Model.md)
 
 ## Direction
 
@@ -86,7 +86,7 @@ A Detail may have its own document, several associated documents, or none. [Conc
 
 Collection membership, Catalogue hierarchy, token composition and previous/next sequence remain distinct. The data can inform navigation without automatically deciding whether next/previous traverses Series, stays within one Series, crosses Detail sections or includes independently documented Details.
 
-[Context Navigation](../studio/Document_Context_Navigation.md) remains scope-level only and independent. Detail previous/next is an intended Media View capability; its sequence semantics remain open.
+[Context Navigation](../_working/Document_Context_Navigation.md) remains scope-level only and independent. Detail previous/next is an intended Media View capability; its sequence semantics remain open.
 
 ## Migration Boundary
 

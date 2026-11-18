@@ -6,15 +6,15 @@ added_date: "2026-09-28 20:35:19"
 last_updated: "2026-10-19"
 summary: Work-derived alt text, optional title caption and metadata for Catalogue images across targeted, full and captured Preview builds, with action-level and Search follow-ons.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Catalogue Image Token Metadata - Delivery
 
-Accepted image-metadata delivery. It records why Work-derived alt text and optional title captions resolve from Catalogue data during document Build, with the original acceptance and its limits. [Current reference](../studio/Semantic_Tokens_Architecture.md#build-and-runtime-resolution)
+Accepted image-metadata delivery. It records why Work-derived alt text and optional title captions resolve from Catalogue data during document Build, with the original acceptance and its limits. [Current reference](../reference/Document_And_Catalogue_References.md#build-and-runtime-resolution)
 
-Historical delivery record. On 2026-10-08, the Catalogue Image metadata removal retired the metadata choice and migrated existing Working tokens. [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md) owns the current grammar and presentation; the metadata-selection requirements and examples below describe the completed 2026-09-28 delivery.
+Historical delivery record. On 2026-10-08, the Catalogue Image metadata removal retired the metadata choice and migrated existing Working tokens. [Document and Catalogue references](../reference/Document_And_Catalogue_References.md) owns the current grammar and presentation; the metadata-selection requirements and examples below describe the completed 2026-09-28 delivery.
 
-Completed under [Planned Features](../studio/Planned_Features.md). This delivery makes one `catalogue:image:work` occurrence capable of selecting current generated Work title and the defined display metadata whenever that document is built. Targeted Working builds, full Working rebuilds and Publish's full Preview build use the same token renderer. The source stores the exact Work identity, selection choices, image presentation settings and optional authored summary; it stores no Work metadata, image alt text or caption. The resulting page still contains static rendered text. The existing browser image and Media View resolution remain separate and current-data driven.
+Completed under [Planned Features](../_working/README.md). This delivery makes one `catalogue:image:work` occurrence capable of selecting current generated Work title and the defined display metadata whenever that document is built. Targeted Working builds, full Working rebuilds and Publish's full Preview build use the same token renderer. The source stores the exact Work identity, selection choices, image presentation settings and optional authored summary; it stores no Work metadata, image alt text or caption. The resulting page still contains static rendered text. The existing browser image and Media View resolution remain separate and current-data driven.
 
 ## Requirements
 
@@ -46,7 +46,7 @@ The bound form always uses `work.title` for image alt text. The separate Work-ti
 - Semantic token Info editing for the same choices and authored fields, preserving pending session values and the single Source Save boundary. Present the current Work title as the derived alt and optional caption without writing its literal value into source.
 - A one-time source transition for existing literal image tokens. The agreed conversion selects Work-title caption and full metadata for every existing occurrence, removes stored literal fields and preserves exact Work identities and image presentation settings. Existing Works and demonstration-token summaries may be overwritten as agreed. Avoid ongoing manual edits after Work data changes.
 - Update Catalogue Regenerate's Work-record token producer to emit the same bound form, so later regeneration cannot restore literal tokens. Do not change its controls, front-matter behavior or replacement policy.
-- A bounded durable update to [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md) after the behavior is accepted. Full Rebuild and Publish acquire token support through their existing document-builder calls; this delivery does not change their controls or Search/Recents ownership.
+- A bounded durable update to [Document and Catalogue references](../reference/Document_And_Catalogue_References.md) after the behavior is accepted. Full Rebuild and Publish acquire token support through their existing document-builder calls; this delivery does not change their controls or Search/Recents ownership.
 
 ## Process
 
@@ -71,7 +71,7 @@ Gate: present the bounded grammar and authoring behavior for approval before imp
 - [x] Resolve bound alt and selected fields through the shared builder for targeted and full Working builds; retain the bold title, summary-style metadata and existing inter-block gap before any authored summary, while retaining source identity and usage ranges.
 - [x] Supply Publish's already-captured Catalogue JSON to that same builder in the temporary Preview workspace before its full build. Do not reread live Working JSON during Preview rendering or add a second token resolver.
 - [x] Carry out the agreed bounded one-time source conversion and update Catalogue Regenerate's token producer without retargeting Works or changing image presentation settings. Make new tokens safe for the existing Search parser without indexing raw token syntax; dynamic Search content remains a follow-on.
-- [x] Record a proportional verification budget after owner inspection. Use focused existing parser/build evidence and changed-file lint only where justified; new or changed tests need their own agreed specification under [Test Contract Discipline](../studio/Test_Contract_Discipline.md).
+- [x] Record a proportional verification budget after owner inspection. Use focused existing parser/build evidence and changed-file lint only where justified; new or changed tests need their own agreed specification under [Test Contract Discipline](../development/Verification.md).
 
 Gate: inspect a selected Working document's source, current alt and generated figure after a Work-title change, confirm the agreed literal-token conversion and confirm the captured Preview path uses the same renderer and captured JSON. Select proportionate evidence without running a live Publish or full collection regeneration solely for this gate. Record: ready for review. Work `04620` source stores choices while its watcher-built alt and caption use the current generated title; all 4,638 active source occurrences parse as bound tokens. Captured Preview wiring uses the same renderer and copied captured JSON by code inspection, without executing a full isolated Preview build. Focused Working dry runs, changed-file lint, site projection and validation, and `git diff --check` passed. Existing literal-token tests were not run or changed; test work needs a separate agreed specification. Source authoring controls remain CIT-2.
 

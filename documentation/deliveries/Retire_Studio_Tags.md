@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Retire Studio Tags And Adopt Concept IDs
 
-Accepted retirement of Studio Tags. It records the original migration of editorial associations to Docs-owned identities before Concept tokens also changed. [Current reference](../studio/Related_Links.md)
+Accepted retirement of Studio Tags. It records the original migration of editorial associations to Docs-owned identities before Concept tokens also changed. [Current reference](../reference/Related_Links.md)
 
 ## Requirements
 

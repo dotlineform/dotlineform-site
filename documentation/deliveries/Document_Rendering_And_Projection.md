@@ -6,15 +6,15 @@ added_date: "2026-10-03 00:07:34"
 last_updated: "2026-10-15"
 summary: Remove redundant Working public-manifest generation and dependencies while preserving existing rendering and field contracts.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Document Rendering And Projection
 
 Completed rendering and projection simplification. It preserves the rationale for deriving reader output from completed document effects instead of duplicate generation. [Current reference](../reference/Source_Organisation.md#document-and-collection-identity)
 
-Current publication ownership is maintained in [Builder](../studio/Builder.md#publish-preparation). This completed slice records the former temporary Preview-build architecture. Queue-only publication now prepares eligible public artifacts in Working and transfers only selected bytes; historical commands, module pointers and evidence below do not describe or verify that new path.
+Current publication ownership is maintained in [Builder](../reference/Builder.md#publish-preparation). This completed slice records the former temporary Preview-build architecture. Queue-only publication now prepares eligible public artifacts in Working and transfers only selected bytes; historical commands, module pointers and evidence below do not describe or verify that new path.
 
-Status: complete on 2026-10-03. Implementation, obsolete Working output removal, selected static checks, code review and durable documentation transfer are complete. Build/Publish execution and browser verification were not part of the selected evidence. This feature and its bounded delivery are parented to [Planned Features](../studio/Planned_Features.md).
+Status: complete on 2026-10-03. Implementation, obsolete Working output removal, selected static checks, code review and durable documentation transfer are complete. Build/Publish execution and browser verification were not part of the selected evidence. This feature and its bounded delivery are parented to [Planned Features](../_working/README.md).
 
 The document model retains its existing field definitions, values, validation, rendering and publication rules. This delivery removes redundant work: Working collection builds previously generated a public `manifest.json` that neither Working readers nor Publish needed, and targeted builds maintained and compared two manifests. Builds now produce only their relevant collection manifest, making each workflow easier to inspect.
 
@@ -71,7 +71,7 @@ The [collection builder](../../docs-viewer/build/docs_builder/collection.py) sel
 
 The Publish preparation owner (`docs-viewer/services/docs_prepare_preview.py`) continues capturing eligible source inputs and building fresh output in temporary storage. It does not consume Working's collection `manifest.json`. The snapshot projection (`docs-viewer/services/docs_preview_snapshot.py`) retains its exclusion of management artifacts from the completed Preview artifact.
 
-The local generated-read owner accepts only the management manifest and exact document payloads; Delete's generated-output description names the management manifest. The obsolete Working public manifests were removed from all four configured collection document outputs. [Generated Data Contracts](../studio/Generated_Data_Contracts.md#collection-manifest-ownership) now owns the durable lifecycle contract; the older dual-manifest document is explicitly labelled historical.
+The local generated-read owner accepts only the management manifest and exact document payloads; Delete's generated-output description names the management manifest. The obsolete Working public manifests were removed from all four configured collection document outputs. [Generated Data Contracts](../reference/Generated_Data_Contracts.md#collection-manifest-ownership) now owns the durable lifecycle contract; the older dual-manifest document is explicitly labelled historical.
 
 ## Publish Impact
 
@@ -109,7 +109,7 @@ Record: complete. Readers use management metadata and Publish builds fresh publi
 - [x] Make targeted Working builds use only saved management metadata for merging, membership and title context; remove the dual-manifest comparison.
 - [x] Preserve source and metadata validation, conditional manifest writes, selected document deletions, and existing relationship and selected-document follow-through.
 
-Evidence budget: explicit-path Python lint for changed source and scoped source/diff review. Focus on lost validation, changed projections and accidental changes to unselected documents; expected cost is seconds to a few minutes, without workspace builds or network effects. Gate: both operation roles retain their existing output contracts, and Working has no public-manifest prerequisite. Record any execution evidence gap; test work follows a separately agreed specification under [Test Contract Discipline](../studio/Test_Contract_Discipline.md).
+Evidence budget: explicit-path Python lint for changed source and scoped source/diff review. Focus on lost validation, changed projections and accidental changes to unselected documents; expected cost is seconds to a few minutes, without workspace builds or network effects. Gate: both operation roles retain their existing output contracts, and Working has no public-manifest prerequisite. Record any execution evidence gap; test work follows a separately agreed specification under [Test Contract Discipline](../development/Verification.md).
 
 Record: complete. The collection builder and saved-metadata helper now maintain one operation-owned manifest. Existing date/identity validation moved into shared row construction; source loading, item rendering and relationship/selected-document follow-through remain with their existing owners. Targeted merging and conditional writes operate on the selected manifest alone. Final `bin/lint-python docs-viewer/build/docs_builder/collection.py` passed after source documentation updates. Gate passed with static/source-review evidence; full and targeted build execution was not selected.
 
@@ -133,7 +133,7 @@ Record: complete. Reviewed both build-role branches, shared row validation, save
 
 ### CM.4 Closeout
 
-- [x] Update [Generated Data Contracts](../studio/Generated_Data_Contracts.md) and directly affected manifest documentation to describe the shipped ownership and targeted-build prerequisites.
+- [x] Update [Generated Data Contracts](../reference/Generated_Data_Contracts.md) and directly affected manifest documentation to describe the shipped ownership and targeted-build prerequisites.
 - [x] Record the completed output cleanup, selected checks and remaining evidence limits; recommend whether this feature document should be retained or retired after durable documentation transfer.
 
 Evidence budget: documentation source review and reuse of accepted implementation evidence. Gate: the complete cleanup is delivered and the durable owner is current. Real Publish, Search rebuilds, public deployment, Git commit/push and document retirement remain separately requested actions.

@@ -9,7 +9,7 @@ parent_id: d-20260924-135214-baa9ec
 ---
 # Remove Stage Context From Search
 
-Search stage-context retirement. It preserves the decision to keep postings and identity separate from reader URLs and storage roles. [Current reference](../studio/Configuration_And_Extension_Points.md#workspace-and-target-contracts)
+Search stage-context retirement. It preserves the decision to keep postings and identity separate from reader URLs and storage roles. [Current reference](../reference/Configuration_And_Extension_Points.md#workspace-and-target-contracts)
 
 ## Requirements
 

@@ -6,7 +6,7 @@ added_date: "2026-11-17 21:33:39"
 last_updated: "2026-11-18"
 summary: Completed six-chapter guide to the site's workflows, with supporting references consolidated and design history preserved.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Site Workflow Guide
 
@@ -33,7 +33,7 @@ Repository Markdown is the first readable edition. A PDF or EPUB could follow th
 
 ## What A Chapter Should Carry
 
-Explain how to carry out the workflow, who owns each consequential step, and what the reader should expect to change. Put the reason for an important decision beside the rule it explains. Include the tradeoff or the condition that would make us reconsider it when the record supports one. For example, Working prepares eligible files and Publish consumes those completed selections so distribution can run without redoing authoring and generation. [Publish preparation](../studio/Builder.md#publish-preparation)
+Explain how to carry out the workflow, who owns each consequential step, and what the reader should expect to change. Put the reason for an important decision beside the rule it explains. Include the tradeoff or the condition that would make us reconsider it when the record supports one. For example, Working prepares eligible files and Publish consumes those completed selections so distribution can run without redoing authoring and generation. [Publish preparation](../reference/Builder.md#publish-preparation)
 
 Verify current behaviour against the owning code, configuration and maintained references. Use delivery notes and commits to recover why a decision was made. Record an open question when the rationale is uncertain. Link to specialist references and code for exact schemas, commands and extension details. Keep one maintained owner for a procedure.
 

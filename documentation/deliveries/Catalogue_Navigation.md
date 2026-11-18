@@ -5,11 +5,11 @@ title: Catalogue Navigation
 added_date: "2026-09-03 22:26:17"
 last_updated: "2026-09-05 16:40:03"
 summary: Require URL-carried gallery context for Catalogue document navigation, separate from Series membership and Media Focus image navigation.
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Catalogue Navigation
 
-Historical proposal for carrying Catalogue sequence context through URLs. It records why a Work's membership and its current browsing sequence serve different purposes. Current Catalogue browsing and Media View use the reader's invoking context. [Current reader workflow](../guide/Find_And_Read_Things.md) · [Catalogue Media View](../studio/Catalogue_Media_View.md)
+Historical proposal for carrying Catalogue sequence context through URLs. It records why a Work's membership and its current browsing sequence serve different purposes. Current Catalogue browsing and Media View use the reader's invoking context. [Current reader workflow](../guide/Find_And_Read_Things.md) · [Catalogue Media View](../reference/Catalogue_Media_View.md)
 
 In the current public Catalogue, navigation between series, works and work details is built into the individual pages. When series and works are surfaced as documents in an Analysis sub-scope, this may not be the best design:
 
@@ -23,7 +23,7 @@ The public document collection retains `analysis.works` and the name Works. [Cat
 
 Series/Work previous/next and position/total belong on the sub-scope report's document toolbar. They change the selected sub-scope document.
 
-[Catalogue Media Focus View](../studio/Catalogue_Media_View.md) owns a different implementation: its own previous/next and image position/total change the image and caption within the view, without changing documents. The gallery supplies an ordered image collection. The image view can be proved independently before real Catalogue galleries are connected; it must not wait for Series/Work document navigation.
+[Catalogue Media Focus View](../reference/Catalogue_Media_View.md) owns a different implementation: its own previous/next and image position/total change the image and caption within the view, without changing documents. The gallery supplies an ordered image collection. The image view can be proved independently before real Catalogue galleries are connected; it must not wait for Series/Work document navigation.
 
 [Nav Implementation](Catalogue_Navigation_Implementation.md) records the current site's query, sequence and caching implementation and the proposed reuse for Docs.
 
@@ -80,7 +80,7 @@ Media Focus owns image traversal; the sub-scope report owns document traversal. 
 
 Catalogue navigation builds on the accepted gallery and Media View data from [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md). Bulk source migration is abandoned and is not a navigation dependency. Batch New doc creates selected authored documents; their existence does not determine whether a Work or Detail can open in Media View. Ordinary document navigation remains distinct from image sequences.
 
-[Doc Navigation](../studio/Doc_Navigation.md) independently owns scope-level hierarchy traversal and sibling reordering. It neither supplies these Catalogue sequences nor blocks their implementation.
+[Doc Navigation](../_working/Document_Context_Navigation.md) independently owns scope-level hierarchy traversal and sibling reordering. It neither supplies these Catalogue sequences nor blocks their implementation.
 
 ## Status
 

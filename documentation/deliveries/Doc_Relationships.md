@@ -10,9 +10,9 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Doc Relationships
 
-Original relationship design. It preserves the distinction between authored links and generated relationship records and the history of scope aggregation. [Current reference](../studio/Related_Links.md)
+Original relationship design. It preserves the distinction between authored links and generated relationship records and the history of scope aggregation. [Current reference](../reference/Related_Links.md)
 
-This page retains the original relationship rollout and design history. [Builder](../studio/Builder.md#document-relationship-maintenance) owns the current relationship algorithm and version-4 records; [Related Links](../studio/Related_Links.md) owns their current presentation. Links maintenance is now a fixed Working-build responsibility across configured collections. The former scope/stage configuration file and the single-document Links view described below are retired.
+This page retains the original relationship rollout and design history. [Builder](../reference/Builder.md#document-relationship-maintenance) owns the current relationship algorithm and version-4 records; [Related Links](../reference/Related_Links.md) owns their current presentation. Links maintenance is now a fixed Working-build responsibility across configured collections. The former scope/stage configuration file and the single-document Links view described below are retired.
 
 ## Summary
 
@@ -26,7 +26,7 @@ Relationship records describe the documents that currently exist. If a linked ta
 
 ## Delivery
 
-[DR - Delivery](Document_Relationships_Delivery.md) is complete, accepted and closed on 2026-09-10. It delivered Insert doc link, retirement of the two old insertion actions, scope-wide Analysis Working relationship maintenance and the Links presentation. Initial reconciliation produced 368 eligible relationship files from 597 sources, preserving all ordinary document payloads. Code review, the external-href correction and durable transfer are complete. [Source Editor Scripts](../studio/Source_Editor_Scripts.md), [Builder](../studio/Builder.md) and [Links View](Links_View.md) own shipped behavior. The delivery and mock-up are ready for manual archive; seven Working test documents are retained for possible next-view checks. This parent remains useful for separately proposed aggregation, cross-scope and publication work. Pills and additional styling remain deferred.
+[DR - Delivery](Document_Relationships_Delivery.md) is complete, accepted and closed on 2026-09-10. It delivered Insert doc link, retirement of the two old insertion actions, scope-wide Analysis Working relationship maintenance and the Links presentation. Initial reconciliation produced 368 eligible relationship files from 597 sources, preserving all ordinary document payloads. Code review, the external-href correction and durable transfer are complete. [Source editing](../reference/Source_Editing.md), [Builder](../reference/Builder.md) and [Links View](Links_View.md) own shipped behavior. The delivery and mock-up are ready for manual archive; seven Working test documents are retained for possible next-view checks. This parent remains useful for separately proposed aggregation, cross-scope and publication work. Pills and additional styling remain deferred.
 
 Surfacing relationships across a scope or sub-scope belongs to Catalogue Data Visualisation (`/docs/?scope=notes&doc=d-20260802-225626-b123fa`). The scope-index design below preserves the prepared-data boundary for that later work; it does not expand the current single-document delivery into a scope-level visualisation.
 
@@ -68,7 +68,7 @@ Document Build applies reference eligibility in Working. `publishable: false` ex
 
 ## Catalogue Images And Media View Entry Points
 
-[Media View Text Links And Catalogue Images](Media_View_Text_Links_And_Catalogue_Images.md) delivered the selected-Work text link and Work/Detail image authoring through the same opener. Direct Series-gallery text authoring remains a follow-on proposal. [Media View](../studio/Catalogue_Media_View.md) owns the retained presentation independently of document-link insertion and relationship generation.
+[Media View Text Links And Catalogue Images](Media_View_Text_Links_And_Catalogue_Images.md) delivered the selected-Work text link and Work/Detail image authoring through the same opener. Direct Series-gallery text authoring remains a follow-on proposal. [Media View](../reference/Catalogue_Media_View.md) owns the retained presentation independently of document-link insertion and relationship generation.
 
 The actions have distinct purposes:
 
@@ -104,9 +104,9 @@ The working demonstrations are the behavior references:
 - Media View - Work 00523 (`/docs/?scope=analysis&doc=d-20260906-164429-9892a8`) displays an image and caption and opens the exact Work in Media View when the image is selected.
 - Media View - Series 143 Gallery (`/docs/?scope=analysis&doc=d-20260906-164429-756174`) opens an exact Series gallery, opens either member Work from its thumbnail, and returns to the gallery through the Series link inside the same Media View. Its supplied presentation set can also start at an exact member Work.
 
-The demos use supplied HTML and presentation data. Work media text and Work/Detail image tokens now use the implemented shared Media View opener; the demos remain references for gallery behavior. The [Gallery Design study](Gallery_Design.md) records why gallery browsing and exact Work presentation were treated separately. [Catalogue Media View](../studio/Catalogue_Media_View.md) owns the current behavior.
+The demos use supplied HTML and presentation data. Work media text and Work/Detail image tokens now use the implemented shared Media View opener; the demos remain references for gallery behavior. The [Gallery Design study](Gallery_Design.md) records why gallery browsing and exact Work presentation were treated separately. [Catalogue Media View](../reference/Catalogue_Media_View.md) owns the current behavior.
 
-A Catalogue image or Media View text link targets Catalogue media and creates no doc-to-doc incoming/outgoing relationship merely by being inserted. Document-reference extraction records actual authored document links. Current media/image syntax and Source contributions are documented in [Source Editor Scripts](../studio/Source_Editor_Scripts.md). The two old insertion actions and their exclusive text-token implementation are retired; active-source cleanup was completed by the user, with Pre-publish reconciliation separately owned.
+A Catalogue image or Media View text link targets Catalogue media and creates no doc-to-doc incoming/outgoing relationship merely by being inserted. Document-reference extraction records actual authored document links. Current media/image syntax and Source contributions are documented in [Source editing](../reference/Source_Editing.md). The two old insertion actions and their exclusive text-token implementation are retired; active-source cleanup was completed by the user, with Pre-publish reconciliation separately owned.
 
 ## Authored Links And Generated Relationship Data
 
@@ -128,7 +128,7 @@ If Document Build encounters a document link whose exact ordinary document by-ID
 
 Leave the ordinary authored link and rendered content unchanged. The link can remain in the unfiltered edit-comparison input, but it contributes nothing to generated relationship data. The relationship system reflects what currently exists, not what the author intended to exist or what existed earlier.
 
-The author uses the implemented Analysis Working Broken Links report (`/docs/?scope=analysis&stage=working&doc=d-20260909-140121-53c381`) to find and correct broken references across the scope-level and all configured Working collections. Studio excludes Analysis from its source-scope selection while retaining valid Analysis destinations for Studio-authored links. [Broken Links Script](../studio/Broken_Links_Script.md) owns audit operation, exact correction locations and diagnosis. The report audits authored links independently of filtered relationship records; it is not part of Document Build, scope aggregation or Pre-Publish/Publish validation.
+The author uses the implemented Analysis Working Broken Links report (`/docs/?scope=analysis&stage=working&doc=d-20260909-140121-53c381`) to find and correct broken references across the scope-level and all configured Working collections. Studio excludes Analysis from its source-scope selection while retaining valid Analysis destinations for Studio-authored links. [Broken Links Script](../reference/Broken_Links.md) owns audit operation, exact correction locations and diagnosis. The report audits authored links independently of filtered relationship records; it is not part of Document Build, scope aggregation or Pre-Publish/Publish validation.
 
 ### Non-publishable Documents Report
 
@@ -331,7 +331,7 @@ Eligibility is another front-matter case. If B becomes `publishable: false` or g
 
 In each example, Save completes the ordinary document output and separate `links-by-id` changes. A future scope-refresh or Pre-Publish integration will aggregate completed relationship records under the separately proposed index contract. B contributes an index entry only when its separate relationship file exists. Aggregation must perform no eligibility checks, relationship discovery or sanitisation.
 
-The app-wide operation rule is synchronous from the user's perspective: do A, wait for its complete outcome, then do B. [Development Checklist](../studio/Development_Checklist.md) owns this rule. Prefer awaited server operations; any necessary internal asynchronous work remains hidden within the same operation and finishes before the UI returns to ready.
+The app-wide operation rule is synchronous from the user's perspective: do A, wait for its complete outcome, then do B. [Development Checklist](../development/Development_Checklist.md) owns this rule. Prefer awaited server operations; any necessary internal asynchronous work remains hidden within the same operation and finishes before the UI returns to ready.
 
 Document Build runs as part of document Save, while controls are unavailable. One coordinated operation completes the document's own output and the required relationship updates at both ends before controls become available again. Ordinary body changes affect another document's separate relationship JSON only when the relationship data it displays changes.
 
@@ -351,7 +351,7 @@ Publish copies the prepared JSON files unchanged. It does not extract links, enr
 
 ## One-document-deep Views
 
-The Links adapter and exact generated-record read are implemented and reviewed for Analysis Working; [Links View](Links_View.md) is the durable runtime reference. Availability is projected from the scope/stage setting in `links-builder.json`; there is no document allowlist. The provider currently reads one separate record on each opening, preserves staged navigation and rejects mismatched identities. Public-safe rendering is present but public data preparation and activation remain pending. The proof and version 1 schema were accepted for the completed rollout. [Runtime](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns current browser-history caller restoration; the superseded View Caching and History delivery is retired and wider resource reuse remains separately scoped.
+The Links adapter and exact generated-record read are implemented and reviewed for Analysis Working; [Links View](Links_View.md) is the durable runtime reference. Availability is projected from the scope/stage setting in `links-builder.json`; there is no document allowlist. The provider currently reads one separate record on each opening, preserves staged navigation and rejects mismatched identities. Public-safe rendering is present but public data preparation and activation remain pending. The proof and version 1 schema were accepted for the completed rollout. [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns current browser-history caller restoration; the superseded View Caching and History delivery is retired and wider resource reuse remains separately scoped.
 
 After opening the initial view, the user chose normal document width without an outer border. Links now selects that layout through the shared host and retains the index panel's existing state. Media and other expanded presentations keep their own layout setting.
 

@@ -6,7 +6,7 @@ added_date: "2026-09-26 20:40:22"
 last_updated: "2026-09-26 21:36:29"
 summary: Deliver canonical ordinary document hierarchy and order with one Position modal, complete document-operation integration and preserved Preview branch exclusions.
 ui_status: done
-parent_id: d-20260903-220300-694ee5
+parent_id: d-20260423-000000-8fd731
 ---
 # Reorder docs delivery
 
@@ -14,7 +14,7 @@ Accepted ordinary Index Position delivery. It preserves the nested-order decisio
 
 ## Current And Next State
 
-Done. On 2026-09-26 the user confirmed: “great! tested through to site-preview”. This accepts the implemented Position workflow after the spinner and title-only picker refinements and closes the manual review gate. [Source Organisation](../reference/Source_Organisation.md) owns the maintained behaviour; [Doc Navigation](../studio/Doc_Navigation.md) retains the separate Context Navigation proposal. No implementation work remains in this delivery.
+Done. On 2026-09-26 the user confirmed: “great! tested through to site-preview”. This accepts the implemented Position workflow after the spinner and title-only picker refinements and closes the manual review gate. [Source Organisation](../reference/Source_Organisation.md) owns the maintained behaviour; [Doc Navigation](../_working/Document_Context_Navigation.md) retains the separate Context Navigation proposal. No implementation work remains in this delivery.
 
 ## Requirements
 
@@ -113,10 +113,10 @@ Record: User acceptance through site-preview is recorded, durable source organis
 
 ## Test Work Boundary
 
-New or changed tests, fixtures and harnesses require a separate agreed specification under [Test Contract Discipline](../studio/Test_Contract_Discipline.md). No suite is an automatic gate; record only the focused checks actually justified and run.
+New or changed tests, fixtures and harnesses require a separate agreed specification under [Test Contract Discipline](../development/Verification.md). No suite is an automatic gate; record only the focused checks actually justified and run.
 
 ## Follow-on
 
 On 14 October 2026, the source-control migration moved `index-order.json` and its three sibling controls directly under `working/source/`. Create and Import carry the exact order file as an additional confined write target; they do not get a broader write grant. The same day's sparse-tree cutover removed 33 empty child arrays and preserved all 34 documents and their order. Targeted dry-run generation reported zero proposed document or Index changes. The check covered source reads and generation wiring; live Position, Import and Publish were outside that check.
 
-[Context Navigation](../studio/Document_Context_Navigation.md) can consume the delivered ordered tree for previous/next navigation. [Separate Document Content And Metadata](../studio/Document_Content_And_Metadata.md) continues to own wider descriptive metadata and presentation separation. Neither result is silently included in this delivery.
+[Context Navigation](../_working/Document_Context_Navigation.md) can consume the delivered ordered tree for previous/next navigation. [Separate Document Content And Metadata](../_working/Document_Content_And_Metadata.md) continues to own wider descriptive metadata and presentation separation. Neither result is silently included in this delivery.

@@ -5,11 +5,11 @@ title: Document List Date Precision
 added_date: "2026-09-30 13:33:18"
 last_updated: "2026-09-30 13:33:18"
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Document List Date Precision
 
-Accepted calendar-day list projection delivery. It records why browser ordering can use days while keeping exact source and by-ID timestamps. [Current reference](../studio/Generated_Data_Contracts.md)
+Accepted calendar-day list projection delivery. It records why browser ordering can use days while keeping exact source and by-ID timestamps. [Current reference](../reference/Generated_Data_Contracts.md)
 
 ## Requirements
 
@@ -17,7 +17,7 @@ Use calendar dates for document browsing metadata because site updates do not ne
 
 ## Deliverables And Process
 
-Collection reader/management manifests, the ordinary builder's in-memory flat rows, Search, Recents and Selected Documents project `YYYY-MM-DD` update dates. The ordinary flat index remains retired. Source/output consistency still compares source and by-ID update values at their original precision, with manifest date comparison at the projected boundary. Existing date-only sources remain valid; undated documents remain undated and are excluded from Recents. Recents becomes `docs_recent_v2` without a basis field or route setting. The two existing Selected Documents cache rows migrate without changing membership. [Generated Data Contracts](../studio/Generated_Data_Contracts.md#list-date-projections) owns maintained behavior.
+Collection reader/management manifests, the ordinary builder's in-memory flat rows, Search, Recents and Selected Documents project `YYYY-MM-DD` update dates. The ordinary flat index remains retired. Source/output consistency still compares source and by-ID update values at their original precision, with manifest date comparison at the projected boundary. Existing date-only sources remain valid; undated documents remain undated and are excluded from Recents. Recents becomes `docs_recent_v2` without a basis field or route setting. The two existing Selected Documents cache rows migrate without changing membership. [Generated Data Contracts](../reference/Generated_Data_Contracts.md#list-date-projections) owns maintained behavior.
 
 Existing complete collection builds reconcile saved manifests before the ordinary Working build generates Recents and the explicit Search build refreshes its index. Builds skip registered media and Links work. Public runtime code follows the tracked site projection. Publish, commit and push remain separate actions.
 

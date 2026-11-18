@@ -6,13 +6,13 @@ added_date: "2026-10-01 12:12:08"
 last_updated: "2026-10-01 13:52:05"
 summary: Build Catalogue Work token references as document relationships and retire the semantic usage index and report.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Catalogue Token Links Delivery
 
-Accepted document-relationship adoption for Work tokens. It preserves the decision to retire the duplicate occurrence index and suppress self-links. [Current reference](../studio/Related_Links.md)
+Accepted document-relationship adoption for Work tokens. It preserves the decision to retire the duplicate occurrence index and suppress self-links. [Current reference](../reference/Related_Links.md)
 
-Status: complete; user accepted the delivery and approved closeout on 2026-10-01. Parented to [Planned Features](../studio/Planned_Features.md).
+Status: complete; user accepted the delivery and approved closeout on 2026-10-01. Parented to [Planned Features](../_working/README.md).
 
 ## Requirements
 
@@ -36,7 +36,7 @@ Every Catalogue subdocument ends with `[[links|related links]]`, separated from 
 - Catalogue source bodies containing the Work image followed by the Related links directive, maintained by the existing body generator for new and regenerated documents.
 - Retirement of `generated/documents/semantic-tokens/index.json`, its producer, build prerequisites, read endpoint and snapshot handling, with no aliases.
 - Retirement of the Semantic Tokens report registration, loader, service/configuration wiring and report document `d-20260912-110653-264748`.
-- Reconciled existing Work relationships and obsolete generated output, plus current [Builder](../studio/Builder.md), [Related Links](../studio/Related_Links.md) and affected token/report documentation.
+- Reconciled existing Work relationships and obsolete generated output, plus current [Builder](../reference/Builder.md), [Related Links](../reference/Related_Links.md) and affected token/report documentation.
 
 ## Process
 
@@ -61,7 +61,7 @@ A full Docs Build renders existing sources; it does not regenerate their bodies.
 - [x] Confirm the current Links, token rendering, Catalogue body generation, report retirement and generated-output owners against this scope.
 - [x] Confirm title handling supports relationship creation without destination checks and identify only the affected verification selection.
 
-Gate passed: approved implementation uses the existing Links owner, Catalogue Regenerate and report/source deletion owners. Titles are optional presentation metadata. No Gallery document work or new store layer. Follow [Development Checklist](../studio/Development_Checklist.md).
+Gate passed: approved implementation uses the existing Links owner, Catalogue Regenerate and report/source deletion owners. Titles are optional presentation metadata. No Gallery document work or new store layer. Follow [Development Checklist](../development/Development_Checklist.md).
 
 ### CTL 1 Implementation
 
@@ -71,7 +71,7 @@ Gate passed: approved implementation uses the existing Links owner, Catalogue Re
 - [x] Populate existing Work references before rebuilding Catalogue related sections; remove obsolete usage output and refresh affected embedded Related links.
 - [x] Update durable owners and any required runtime/configuration projections.
 
-Gate: complete relationship and retirement behavior. Verification budget: explicit-path lint/syntax, bounded source/output review and whitespace checks; represented shared-runtime changes also require site-code projection/check and site validation. Expect seconds to minutes plus bounded review; reconciliation writes Working output. Record exact selected evidence and cost before execution. Test creation, changes or runs need separate agreement under [Testing](../studio/Testing.md); UI review remains manual.
+Gate: complete relationship and retirement behavior. Verification budget: explicit-path lint/syntax, bounded source/output review and whitespace checks; represented shared-runtime changes also require site-code projection/check and site validation. Expect seconds to minutes plus bounded review; reconciliation writes Working output. Record exact selected evidence and cost before execution. Test creation, changes or runs need separate agreement under [Testing](../development/Verification.md); UI review remains manual.
 
 Gate passed: Context, ordinary documents, Concepts and Moments reconciled before full Catalogue Regenerate updated and built all 4,616 Catalogue documents, with no warnings. The obsolete Working index and report host were removed through their owning boundaries, and the workspace Links aggregate was refreshed. Static evidence passed: explicit-path Python lint and `py_compile` for all 16 changed Python files; JavaScript lint for `docs-viewer-reports.js` and `docs-viewer-report-service.js`; parsing both changed JSON configurations; and `git diff --check`. These checks took under a second in the recorded final selection; generation and bounded review had their separate costs. No changed runtime file is represented in the public code inventory, so no site-code projection was required. No tests were created, changed or run.
 
@@ -91,7 +91,7 @@ Gate passed: bounded source/configuration review found no remaining usage-index 
 
 Gate passed: user approved closeout. Existing implementation and review evidence remains the completion evidence; no separate manual-review result was recorded. Publish, Search rebuild, deployment, commit and push remain separate actions.
 
-Restart the local Studio/Docs Viewer services and reload the reader to load the changed runtime. Catalogue Work `00520` provides a current incoming-links example. Preview and the tracked public snapshot were not rewritten; their next authorized Publish adopts the new content and retirement. Search and Recents were intentionally not rebuilt. No Publish, deployment, commit or push occurred. This delivery is ready for manual archiving; [Builder](../studio/Builder.md), [Related Links](../studio/Related_Links.md), [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md), [Reports](../studio/Reports.md) and the [Development Checklist](../studio/Development_Checklist.md) retain the final contract.
+Restart the local Studio/Docs Viewer services and reload the reader to load the changed runtime. Catalogue Work `00520` provides a current incoming-links example. Preview and the tracked public snapshot were not rewritten; their next authorized Publish adopts the new content and retirement. Search and Recents were intentionally not rebuilt. No Publish, deployment, commit or push occurred. This delivery is ready for manual archiving; [Builder](../reference/Builder.md), [Related Links](../reference/Related_Links.md), [Document and Catalogue references](../reference/Document_And_Catalogue_References.md), [Reports](../reference/Reports.md) and the [Development Checklist](../development/Development_Checklist.md) retain the final contract.
 
 ## Follow-on
 

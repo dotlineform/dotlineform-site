@@ -6,13 +6,13 @@ added_date: "2026-10-02 12:15:13"
 last_updated: "2026-10-02 12:15:13"
 summary: Consolidate document and collection commands into the main Actions menu with exact targets and visible disabled states.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Context Actions Menu
 
-Earlier Actions menu delivery before workspace lifecycle and selected actions changed. It records how actions resolved exact targets and showed their availability. [Current reference](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return)
+Earlier Actions menu delivery before workspace lifecycle and selected actions changed. It records how actions resolved exact targets and showed their availability. [Current reference](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
-This bounded feature is parented to [Planned Features](../studio/Planned_Features.md). The user approved implementation with unavailable items shown disabled. Durable placement and target rules belong to [Toolbar Model](../studio/Toolbar_Model.md), runtime ownership to [Runtime Module Ownership](../studio/Runtime_Module_Ownership.md), and star storage to [Source Organisation](../reference/Source_Organisation.md#selected-documents).
+This bounded feature is parented to [Planned Features](../_working/README.md). The user approved implementation with unavailable items shown disabled. Durable placement and target rules belong to [Toolbar Model](../reference/Panel_Hosts_And_Control_Surfaces.md#control-placement), runtime ownership to [Runtime Module Ownership](../reference/Runtime_Module_Ownership.md), and star storage to [Source Organisation](../reference/Source_Organisation.md#selected-documents).
 
 Status: implementation and selected static verification complete. Visual fit and interaction remain manual user review.
 

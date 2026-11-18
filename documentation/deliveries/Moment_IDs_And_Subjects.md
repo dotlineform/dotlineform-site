@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Moment IDs And Subjects
 
-Earlier allocation of Moment identities. It preserves the historic IDs and reasoning before that separate identity scheme was retired. [Current reference](../studio/Related_Links.md)
+Earlier allocation of Moment identities. It preserves the historic IDs and reasoning before that separate identity scheme was retired. [Current reference](../reference/Related_Links.md)
 
 ## Outcome
 

@@ -5,11 +5,11 @@ title: Public Mobile Experience
 added_date: "2026-07-23 19:10:39"
 last_updated: "2026-09-03 20:40:32"
 summary: review and deliberately redesign public scope, index, navigation, and reading behaviour for actual mobile browsers
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Public Mobile Experience
 
-Earlier mobile exploration. Its reader journeys were carried into Mobile Layouts. It preserves the original public/mobile and local-desktop boundaries. [Current reference](../studio/CSS_Ownership.md)
+Earlier mobile exploration. Its reader journeys were carried into Mobile Layouts. It preserves the original public/mobile and local-desktop boundaries. [Current reference](../reference/CSS_Ownership.md)
 
 ## Purpose
 

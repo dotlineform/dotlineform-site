@@ -9,7 +9,7 @@ parent_id: d-20260924-135214-baa9ec
 ---
 # Copy Working Search Into Preview
 
-Archived record. Preserves the decision to give Working ownership of Search generation and the original exact-byte copy evidence. For current operation, see [Docs Search Index](../studio/Docs_Search_Index.md) and [Publish and deploy](../guide/Publish_And_Deploy.md).
+Archived record. Preserves the decision to give Working ownership of Search generation and the original exact-byte copy evidence. For current operation, see [Search index contract](../reference/Reader_Discovery_And_Return.md#payload-contract) and [Publish and deploy](../guide/Publish_And_Deploy.md).
 
 ## Requirements
 

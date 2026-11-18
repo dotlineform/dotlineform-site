@@ -6,15 +6,15 @@ added_date: "2026-10-03 22:26:07"
 last_updated: "2026-10-04 15:02:10"
 summary: Enhance shared Add image with document-based naming and optional thumbnails in a registered thumbs media family, and migrate existing Moments images and references.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Moments Images And Thumbnails Delivery
 
-Completed Moments image and thumbnail migration. It preserves the migration inventory and upload decisions before Thumb became independent. [Current reference](../studio/Media_And_Asset_Handling.md)
+Completed Moments image and thumbnail migration. It preserves the migration inventory and upload decisions before Thumb became independent. [Current reference](../reference/Media_And_Asset_Handling.md)
 
 ## Current And Next State
 
-Completed under [Planned Features](../studio/Planned_Features.md) and accepted for closeout by the user on 2026-10-04. Shared image naming and optional thumbnails, media/source migration, Working reconciliation, public runtime/configuration projection and bounded code review are complete. The user ran Publish and reviewed site-preview, confirming public loading and opening Moments after the configuration correction, then accepted the public list-navigation correction and authorized closure. [Media And Asset Handling](../studio/Media_And_Asset_Handling.md) owns the shipped behavior, and [Development Checklist](../studio/Development_Checklist.md) records the public-config projection guardrail. Retain this completed delivery for manual archive. The subsequent [Image Token Delivery](Image_Token_Delivery.md) was also accepted and closed on 2026-10-04. Further Publish, test work, commit, push and deployment remain separately authorized actions.
+Completed under [Planned Features](../_working/README.md) and accepted for closeout by the user on 2026-10-04. Shared image naming and optional thumbnails, media/source migration, Working reconciliation, public runtime/configuration projection and bounded code review are complete. The user ran Publish and reviewed site-preview, confirming public loading and opening Moments after the configuration correction, then accepted the public list-navigation correction and authorized closure. [Media And Asset Handling](../reference/Media_And_Asset_Handling.md) owns the shipped behavior, and [Development Checklist](../development/Development_Checklist.md) records the public-config projection guardrail. Retain this completed delivery for manual archive. The subsequent [Image Token Delivery](Image_Token_Delivery.md) was also accepted and closed on 2026-10-04. Further Publish, test work, commit, push and deployment remain separately authorized actions.
 
 Subsequent naming decision: on 2026-10-04 the user approved normalized original source filenames for future Add image operations, replacing this delivery's title/ID convention and numbered allocation. Image Token Delivery records that revision; this completed record retains the original migration decisions and evidence. Already migrated Moments media and fixed document-thumbnail identities are not renamed again.
 
@@ -123,7 +123,7 @@ Regenerate affected Working document and manifest output through the watcher or 
 - [x] Preparation and publication reference support for thumbnails outside document body HTML.
 - [x] Migrated existing display-image names, source references and thumbnails, with affected Working output reconciled.
 - [x] Shared/public runtime projection and focused validation where those files change.
-- [x] Shipped behavior documented in [Media And Asset Handling](../studio/Media_And_Asset_Handling.md), including generic naming, the `thumbs` role, source assignment and publication ownership.
+- [x] Shipped behavior documented in [Media And Asset Handling](../reference/Media_And_Asset_Handling.md), including generic naming, the `thumbs` role, source assignment and publication ownership.
 
 ## Process
 
@@ -216,10 +216,10 @@ Public list-item navigation then exposed a retained-list capture/restore assumpt
 
 Closeout: the user accepted the delivery and authorized closure on 2026-10-04 after reviewing Working rows and the published site-preview, reporting the alignment/public-loading/navigation findings and accepting their fixes. Individual ordinary/Concepts insertion, cancellation, thumbnail replacement and Back scenarios were not separately confirmed, and remote transfer bytes were not independently audited. This acceptance closes the delivery without claiming those individual checks. Durable media documentation and the public-config guardrail are current. The status/documentation closeout uses bounded source review and the recorded implementation evidence; no new code review, rebuild or repeated executable verification is warranted. No tests or browser probes were authored, changed or run. The user performed Publish; Codex performed no further Publish, remote deletion, deployment, commit or push.
 
-Closeout recommendation: retain this completed delivery for manual archive, with shipped media behavior in [Media And Asset Handling](../studio/Media_And_Asset_Handling.md) and the runtime projection guardrail in [Development Checklist](../studio/Development_Checklist.md). Retain [Image Token Delivery](Image_Token_Delivery.md) as the proposed next change. No planning documents or stored media are deleted by closeout.
+Closeout recommendation: retain this completed delivery for manual archive, with shipped media behavior in [Media And Asset Handling](../reference/Media_And_Asset_Handling.md) and the runtime projection guardrail in [Development Checklist](../development/Development_Checklist.md). Retain [Image Token Delivery](Image_Token_Delivery.md) as the proposed next change. No planning documents or stored media are deleted by closeout.
 
 ## Follow On
 
 The separately proposed [Image Token Delivery](Image_Token_Delivery.md) will make future Add image insertions store identity and presentation choices in a semantic token with builder-owned markup. Existing Markdown images and HTML figures will remain supported with no source-markup migration. This completed delivery satisfies its scheduling prerequisite; readiness and implementation approval for that refactor remain separate.
 
-Thumbnail presentation in ordinary Index, Search, Recent or unrelated reports, srcset generation, automatic title-change media renaming, a general media pipeline, migration of other collections' existing images and historical variant/remote cleanup are outside this delivery. Generic Add image and shared collection-row support are within this delivery. Test authoring or changes follow [Test Contract Discipline](../studio/Test_Contract_Discipline.md) and [Testing](../studio/Testing.md), with coverage maintained outside this delivery.
+Thumbnail presentation in ordinary Index, Search, Recent or unrelated reports, srcset generation, automatic title-change media renaming, a general media pipeline, migration of other collections' existing images and historical variant/remote cleanup are outside this delivery. Generic Add image and shared collection-row support are within this delivery. Test authoring or changes follow [Test Contract Discipline](../development/Verification.md) and [Testing](../development/Verification.md), with coverage maintained outside this delivery.

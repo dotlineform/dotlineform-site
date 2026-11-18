@@ -6,11 +6,11 @@ added_date: "2026-10-10 18:46:15"
 last_updated: "2026-10-20"
 summary: Refresh-owned Catalogue report inputs implemented, reviewed and closed; further verification continues during normal report use.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Catalogue Report Inputs
 
-Accepted private report input migration. It records why six readers share Refresh-owned Catalogue inputs while keeping independent report outputs and live filesystem work. [Current reference](../studio/Catalogue_Save_And_Refresh.md#private-report-input-maintenance)
+Accepted private report input migration. It records why six readers share Refresh-owned Catalogue inputs while keeping independent report outputs and live filesystem work. [Current reference](../reference/Catalogue_Save_And_Refresh.md#private-report-input-maintenance)
 
 ## Purpose And Status
 
@@ -18,7 +18,7 @@ Catalogue facts consumed by Docs Viewer reports advance through Studio Refresh. 
 
 The user approved implementation through code review on 2026-10-10 after CRI.0 readiness and accepted delivery closeout later that day, with further testing to happen during normal report use. Three shared private inputs are populated and all six reader migrations are implemented and reviewed, retaining live filesystem inspection. CRI.0–CRI.6 is complete; acceptance does not claim that the full manual scenarios were exercised. Work Document Coverage and its independent private manifest were retired on 2026-10-20.
 
-[Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) owns the operation boundary, [Catalogue Indexes And Payloads](../studio/Catalogue_Indexes_And_Payloads.md) owns generated contracts, and [Reports](../studio/Reports.md) owns report behavior and evidence limits. This delivery tracks implementation and acceptance; those durable owners describe the resulting contracts.
+[Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) owns the operation boundary, [Catalogue Indexes And Payloads](../reference/Catalogue_Indexes_And_Payloads.md) owns generated contracts, and [Reports](../reference/Reports.md) owns report behavior and evidence limits. This delivery tracks implementation and acceptance; those durable owners describe the resulting contracts.
 
 ## The Refresh Boundary
 
@@ -59,7 +59,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/private/
 
 `work-sources.json` supplies Work placement and source registrations; `work-resources.json` supplies link and download references; `series.json` supplies Series definitions. Resolve the Catalogue root through [workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json). Refresh owns writes and reports read the saved files. These private inputs stay outside Preview, Publish, the public artifact inventory and the publication queue.
 
-The proposed folder, filenames and grouping are confirmed. The combined resource aggregate avoids duplicated Work identity/title data; its download input is an array of exact filenames. [Shared Private Report Inputs](../studio/Catalogue_Indexes_And_Payloads.md#shared-private-report-inputs) owns the minimal schemas.
+The proposed folder, filenames and grouping are confirmed. The combined resource aggregate avoids duplicated Work identity/title data; its download input is an array of exact filenames. [Shared Private Report Inputs](../reference/Catalogue_Indexes_And_Payloads.md#shared-private-report-inputs) owns the minimal schemas.
 
 Store portable source declarations, resolving absolute project roots through the existing runtime configuration. Do not add private paths to public Work payloads or put unused fields back into the recently simplified Work/Gallery lookup and member rows.
 
@@ -73,37 +73,37 @@ Work Document Coverage's private manifest and producer are retired. Projects use
 
 ### Projects / Project State (`project_state`)
 
-Projects Run/Refresh reads refreshed Work placement, Series definitions and explicit Series–Gallery pairs through `docs_project_state.py`, alongside live immediate project folders and generated Context by-ID token targets discovered from its management manifest. It reads those inputs once and saves consumed facts in `working/generated/reports/projects/metadata.json`; opening reads only that snapshot. `project-state-data.js` owns Work/Gallery → Series → folder joins, unique document counts and presentation. Changes appear after explicit Projects Refresh, without committed-edit updates or Links JSON reads. [Reports](../studio/Reports.md) owns lifecycle and association boundaries.
+Projects Run/Refresh reads refreshed Work placement, Series definitions and explicit Series–Gallery pairs through `docs_project_state.py`, alongside live immediate project folders and generated Context by-ID token targets discovered from its management manifest. It reads those inputs once and saves consumed facts in `working/generated/reports/projects/metadata.json`; opening reads only that snapshot. `project-state-data.js` owns Work/Gallery → Series → folder joins, unique document counts and presentation. Changes appear after explicit Projects Refresh, without committed-edit updates or Links JSON reads. [Reports](../reference/Reports.md) owns lifecycle and association boundaries.
 
 Replace the canonical read with refreshed Work placement facts and Catalogue-owned Series definitions. Retain every Series definition, including empty Series, so relationship diagnostics do not depend on which Series happen to have Works. Keep the live immediate-folder scan, generated Context input, unmatched physical folders, current placement rules and document associations. Changing the source must not silently change how `project_folder` is interpreted across configured media sources; any correction to that behavior is a separate requirement.
 
 ### Work Downloads (`work_downloads`)
 
-Work Downloads reads refreshed Work titles and download filenames through `docs_work_downloads.py`, then scans direct regular files in the configured Working `assets.work_files` family. One resolved workspace supplies the saved resource reader and directory scan. The service returns references and filenames; the browser owns exact matching, missing/shared/unassigned rows and ordering. Configuration confines the directory once, and `scandir` types plus exact-basename checks replace per-file metadata/path rechecks. Catalogue Refresh owns adoption of staged attachment references and their Working files. [Reports](../studio/Reports.md) owns the current handoff, action safeguards and evidence limits.
+Work Downloads reads refreshed Work titles and download filenames through `docs_work_downloads.py`, then scans direct regular files in the configured Working `assets.work_files` family. One resolved workspace supplies the saved resource reader and directory scan. The service returns references and filenames; the browser owns exact matching, missing/shared/unassigned rows and ordering. Configuration confines the directory once, and `scandir` types plus exact-basename checks replace per-file metadata/path rechecks. Catalogue Refresh owns adoption of staged attachment references and their Working files. [Reports](../reference/Reports.md) owns the current handoff, action safeguards and evidence limits.
 
 Read refreshed Work IDs, titles and download filenames from the Catalogue resource projection. Keep the filesystem scan live and confined to the existing Working file family. Preserve exact-filename matching, shared files appearing for each referencing Work, unassigned files, missing-file rows, placeholder exclusions and Finder actions. Do not infer ownership from Work ID prefixes or replace the live scan with a generated list of files.
 
 ### Work Links (`work_links`)
 
-Work Links reads refreshed Work IDs/titles and authored link labels/URLs through `docs_work_links.py`. The UI owns complete resource input; effect comparison, Save/Refresh projection and server/browser report readers use labels and URLs unchanged, without resource-text normalization or substitutions. Work Links and Work Downloads trust the saved resource projection after confined JSON-object parsing, without repeated schema/identity/resource audits or browser response agreement checks. Optional canonical resource fields may be absent; explicit fields must be arrays of objects at their authoring owner, with no malformed-array or null-to-empty repair. File-processing basename/path checks and safe browser URL validation retain their actual boundary owners. [Catalogue Source Model](../studio/Catalogue_Source_Model.md#catalogue-source-audit) owns authoring/audit behavior, and [Reports](../studio/Reports.md) owns prepared exact navigation, view disposal and evidence limits. The report performs no filesystem scan or destination request. The former shared canonical resource loader is removed.
+Work Links reads refreshed Work IDs/titles and authored link labels/URLs through `docs_work_links.py`. The UI owns complete resource input; effect comparison, Save/Refresh projection and server/browser report readers use labels and URLs unchanged, without resource-text normalization or substitutions. Work Links and Work Downloads trust the saved resource projection after confined JSON-object parsing, without repeated schema/identity/resource audits or browser response agreement checks. Optional canonical resource fields may be absent; explicit fields must be arrays of objects at their authoring owner, with no malformed-array or null-to-empty repair. File-processing basename/path checks and safe browser URL validation retain their actual boundary owners. [Catalogue Source Model](../reference/Catalogue_Source_Model.md#catalogue-source-audit) owns authoring/audit behavior, and [Reports](../reference/Reports.md) owns prepared exact navigation, view disposal and evidence limits. The report performs no filesystem scan or destination request. The former shared canonical resource loader is removed.
 
 Read those same minimal facts from the refreshed Catalogue resource projection. Retain one row per authored link, exact Catalogue document navigation and the existing safe browser URL action. Do not add network link checking or a saved final-report snapshot to this migration.
 
 ### Uncataloged Images (`uncataloged_files`)
 
-The registry calls this report Uncataloged Files; its scope is image files. `docs_uncataloged_files.py` reads refreshed primary-source registrations and scans the source folders represented by them. Its shared run-local inspection owner carries resolved directories and file metadata through registered-file matching and candidate listing, preserving physical identity and confinement without repeated root walks. Work title is not needed by this consumer. [Reports](../studio/Reports.md) owns the current workflow, safeguards and evidence limits.
+The registry calls this report Uncataloged Files; its scope is image files. `docs_uncataloged_files.py` reads refreshed primary-source registrations and scans the source folders represented by them. Its shared run-local inspection owner carries resolved directories and file metadata through registered-file matching and candidate listing, preserving physical identity and confinement without repeated root walks. Work title is not needed by this consumer. [Reports](../reference/Reports.md) owns the current workflow, safeguards and evidence limits.
 
 Read registrations from the refreshed Catalogue source projection, then scan the represented source directories live. Preserve the shared supported-image extension policy, physical file-identity matching and configured path confinement. Keep its represented-folder scope: scanning every source-root descendant would be a separate scope change. Physical existence must never determine whether a registration is included in the generated input.
 
 ### Missing Source Files (`missing_source_files`)
 
-Missing Source Files reads refreshed source declarations and Work titles through `docs_missing_source_files.py`, resolves expected paths through one prepared media-source map and carries parent/terminal inspection results through its run. Shared expected paths are inspected once while retaining one result row per missing Work; no directory listing is needed. Its Studio URL remains an independent editor navigation link. [Reports](../studio/Reports.md) owns the current workflow, safeguards and evidence limits.
+Missing Source Files reads refreshed source declarations and Work titles through `docs_missing_source_files.py`, resolves expected paths through one prepared media-source map and carries parent/terminal inspection results through its run. Shared expected paths are inspected once while retaining one result row per missing Work; no directory listing is needed. Its Studio URL remains an independent editor navigation link. [Reports](../reference/Reports.md) owns the current workflow, safeguards and evidence limits.
 
 Read Work IDs/titles and complete source declarations from the refreshed Catalogue source projection. Keep live source-file existence checks, current physical path-equivalence handling and the editor action. Refresh must retain declared sources even when their files are absent, or the report would lose the very rows it needs to diagnose.
 
 ### Folders Without Works (`folders_without_works`)
 
-Retired on 2026-10-22 as Uncatalogued Folders, including its host, browser module and recursive scan service. The historical six-reader migration below includes this former consumer; five remain active. `private/work-sources.json` retains its existing contract and Refresh lifecycle for Projects, Uncataloged Images and Missing Source Files. [Reports](../studio/Reports.md) owns the current inventory.
+Retired on 2026-10-22 as Uncatalogued Folders, including its host, browser module and recursive scan service. The historical six-reader migration below includes this former consumer; five remain active. `private/work-sources.json` retains its existing contract and Refresh lifecycle for Projects, Uncataloged Images and Missing Source Files. [Reports](../reference/Reports.md) owns the current inventory.
 
 ## Recommendations For The Other Reports
 
@@ -191,7 +191,7 @@ Verification budget: changed-owner lint/syntax and scoped reader/matching review
 
 Gate: neither report reads canonical Works; the download join uses refreshed references and current Working files, and no network-checking or attachment-management behavior has been added.
 
-Record: implemented. Work Links/Downloads consume the resource aggregate; the canonical loader is removed. Resource validity belongs to authoring/Refresh, and readers trust the saved result after confined JSON-object parsing. Downloads' browser matches supplied references to its live direct-file inventory; Finder confinement remains a separate server action. Changed-reader lint/syntax/import diagnostics and scoped matching review passed. [Reports](../studio/Reports.md) owns current optimisation evidence and limits; staged attachments, physical-file changes and interactions remain manual acceptance.
+Record: implemented. Work Links/Downloads consume the resource aggregate; the canonical loader is removed. Resource validity belongs to authoring/Refresh, and readers trust the saved result after confined JSON-object parsing. Downloads' browser matches supplied references to its live direct-file inventory; Finder confinement remains a separate server action. Changed-reader lint/syntax/import diagnostics and scoped matching review passed. [Reports](../reference/Reports.md) owns current optimisation evidence and limits; staged attachments, physical-file changes and interactions remain manual acceptance.
 
 ### CRI.4 — Source Filesystem Report Migrations
 
@@ -205,7 +205,7 @@ Verification budget: changed-owner lint/syntax and scoped input/path review firs
 
 Gate: all three reports read refreshed registrations, retain their distinct scan scopes and observe physical changes on the next applicable run. Stop and resolve any requirement to broaden traversal, change identity matching or suppress registrations based on file existence.
 
-Record: implemented. All three consume refreshed sources; filesystem operations retain their scope and matching. Projection retains declarations independently of physical existence. Lint/syntax/import diagnostics passed for all six migrated services; registry JSON parses. No filesystem report run occurred. The input-boundary gate passed; real missing-source/image/folder and Refresh/physical-change cases remain manual acceptance. Existing canonical-path fixtures are unreviewed and untouched; [Reports](../studio/Reports.md) records the test gaps.
+Record: implemented. All three consume refreshed sources; filesystem operations retain their scope and matching. Projection retains declarations independently of physical existence. Lint/syntax/import diagnostics passed for all six migrated services; registry JSON parses. No filesystem report run occurred. The input-boundary gate passed; real missing-source/image/folder and Refresh/physical-change cases remain manual acceptance. Existing canonical-path fixtures are unreviewed and untouched; [Reports](../reference/Reports.md) records the test gaps.
 
 ### CRI.5 — Code Review
 
@@ -223,7 +223,7 @@ Record: complete on 2026-10-10. Bounded production/configuration/documentation d
 ### CRI.6 — Closeout
 
 - [x] Confirm all six migrations are complete and record the selected evidence, user closeout acceptance and any unverified variants without claiming broader coverage.
-- [x] Update [Reports](../studio/Reports.md), [Catalogue Indexes And Payloads](../studio/Catalogue_Indexes_And_Payloads.md) and [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) where their shipped contracts changed; update report descriptions that still imply direct canonical reads.
+- [x] Update [Reports](../reference/Reports.md), [Catalogue Indexes And Payloads](../reference/Catalogue_Indexes_And_Payloads.md) and [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) where their shipped contracts changed; update report descriptions that still imply direct canonical reads.
 - [x] State any required service restart/reload and confirm the private inputs need no Publish operation.
 - [x] Update this proposal and its Planned Features entry to the actual result, and present a retain-or-retire recommendation for this document and any temporary working notes. Document deletion, commit and push remain explicit actions.
 
@@ -243,4 +243,4 @@ The observable result is that all six reports use refreshed Catalogue facts, con
 - Review the report loaders and backend readers for direct canonical Catalogue reads and accidental dependencies on report metadata.
 - Review private-output selection and publication exclusion, then run proportionate existing lint/syntax/whitespace diagnostics for changed owners. UI behavior remains manual review.
 
-These remain verification concerns for normal report use, not an approved test implementation or an open delivery gate. Existing tests require relevant coverage review before execution; test changes need their own specification under [Testing](../studio/Testing.md) and [Test Contract Discipline](../studio/Test_Contract_Discipline.md). Runtime changes and initial inputs are implemented, and the user accepted closeout with the recorded evidence limits.
+These remain verification concerns for normal report use, not an approved test implementation or an open delivery gate. Existing tests require relevant coverage review before execution; test changes need their own specification under [Testing](../development/Verification.md) and [Test Contract Discipline](../development/Verification.md). Runtime changes and initial inputs are implemented, and the user accepted closeout with the recorded evidence limits.

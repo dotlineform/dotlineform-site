@@ -9,7 +9,7 @@ parent_id: d-20260424-000000-50b63f
 ---
 # External Media Workspace
 
-Archived record. Preserves the rationale for separating retained originals, managed media and public copies. For current operation, see [Media And Asset Handling](../studio/Media_And_Asset_Handling.md#workspace-configuration-and-storage).
+Archived record. Preserves the rationale for separating retained originals, managed media and public copies. For current operation, see [Media And Asset Handling](../reference/Media_And_Asset_Handling.md#workspace-configuration-and-storage).
 
 ## Purpose
 
@@ -151,4 +151,4 @@ Ordinary document Delete likewise has no authority to delete managed media. Imme
 - No nested identity migration, asset registry, checksum catalogue, content-addressing, CDN cache invalidation, or background publication worker.
 - No change to public document eligibility, lineage, or the meaning of `publishable`.
 
-[Media And Asset Handling](../studio/Media_And_Asset_Handling.md) owns intake and serving, [Source Organisation](../reference/Source_Organisation.md) owns topology and adapters, [Public Scopes](Public_Scopes.md) owns Publish, and [Document Diagrams](../studio/Document_Diagrams.md) owns external diagram authoring and SVG import.
+[Media And Asset Handling](../reference/Media_And_Asset_Handling.md) owns intake and serving, [Source Organisation](../reference/Source_Organisation.md) owns topology and adapters, [Public Scopes](Public_Scopes.md) owns Publish, and [Document Diagrams](../reference/Document_Identity.md#diagrams) owns external diagram authoring and SVG import.

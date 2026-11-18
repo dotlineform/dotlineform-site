@@ -9,7 +9,7 @@ parent_id: d-20260814-155129-c2a782
 ---
 # Docs Viewer Search Relevance Delivery
 
-Unimplemented evaluation plan for the former full-text corpora. It preserves the rationale for bounded comparisons and proportionate evidence. [Current reference](../studio/Docs_Viewer_Search.md)
+Unimplemented evaluation plan for the former full-text corpora. It preserves the rationale for bounded comparisons and proportionate evidence. [Current reference](../reference/Reader_Discovery_And_Return.md)
 
 ## Purpose
 

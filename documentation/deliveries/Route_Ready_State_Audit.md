@@ -8,7 +8,7 @@ parent_id: d-20260501-174746-efd581
 ---
 # Route Ready-State Audit
 
-Route-ready audit record. It preserves the exact startup and busy-state evidence from the former audit. [Current reference](../studio/Run_Checks.md)
+Route-ready audit record. It preserves the exact startup and busy-state evidence from the former audit. [Current reference](../development/Verification.md)
 
 ## Question It Answers
 
@@ -39,7 +39,7 @@ For each configured template the audit expects:
 - busy initially `false`;
 - ready initially `false`.
 
-Template globs and attribute names are code-owned in `APP_CONFIGS`. There is no initial-ready exception. The broader lifecycle and controller responsibilities are explained in [Route Ready State](../studio/Route_Ready_State.md); [Studio Frontend Retirement](../studio/Testing.md#studio-frontend-retirement) records the approved removal of the obsolete home-route exception and the current focused coverage.
+Template globs and attribute names are code-owned in `APP_CONFIGS`. There is no initial-ready exception. The broader lifecycle and controller responsibilities are explained in [Route Ready State](../reference/Route_Ready_State.md); [Studio Frontend Retirement](../_working/testing/Testing.md#studio-frontend-retirement) records the approved removal of the obsolete home-route exception and the current focused coverage.
 
 ## Interpretation
 

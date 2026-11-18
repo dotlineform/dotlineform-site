@@ -6,19 +6,19 @@ added_date: "2026-10-03 11:12:41"
 last_updated: "2026-10-03 19:19:18"
 summary: Completed exact document reader, independent Index, committed list updates and two retained views with one immediate caller return.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Document View And Return Navigation - Delivery
 
-Accepted reader navigation delivery. It records why the reader keeps one caller and remembers the Index and report states independently. [Current reference](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return)
+Accepted reader navigation delivery. It records why the reader keeps one caller and remembers the Index and report states independently. [Current reference](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
 ## Current And Next State
 
-DVR-0–6 are complete, accepted and closed on 2026-10-03 under [Planned Features](../studio/Planned_Features.md). The user reopened the original delivery for DVR-6, then accepted the follow-on and authorized closeout with “great, ok to close”. Retain only the current document/report and one immediate caller, consume that caller on Back, and keep Media View inside its document without a history slot. This replaces the unrestricted retained call chain delivered by DVR-2. The exact reader, independent Index, committed list updates and completed Working cutover remain delivered.
+DVR-0–6 are complete, accepted and closed on 2026-10-03 under [Planned Features](../_working/README.md). The user reopened the original delivery for DVR-6, then accepted the follow-on and authorized closeout with “great, ok to close”. Retain only the current document/report and one immediate caller, consume that caller on Back, and keep Media View inside its document without a history slot. This replaces the unrestricted retained call chain delivered by DVR-2. The exact reader, independent Index, committed list updates and completed Working cutover remain delivered.
 
 The user previously confirmed general navigation, opening Source editor, changing a title and the list updating. DVR-6 implementation, bounded lifecycle review and static checks are complete; user acceptance closes the follow-on without claiming individually confirmed results for every manual scenario. Further testing continues during normal work. The [archived handoff](Document_View_And_Return_Navigation_Handoff.md) preserves changed boundaries, commands and limits. Tests, Search rebuild, Publish, deployment, commit and push were not performed for this follow-on.
 
-The baseline below records the readiness finding, rather than the replacement's current ownership. [Runtime](../studio/Docs_Viewer_Runtime.md) and [Collection Report Architecture](../studio/Sub_Scope_Index_Architecture.md) describe the implemented model. User manual evidence is limited to the confirmed checks above; detailed failure, cancellation, Delete/Import and public/Review cases were not individually confirmed. The existing Preview/public data still uses its previous prepared contract; the new runtime, browser configuration and regenerated links must be published together through a separately authorized Publish before public release. Implementation closeout does not authorize or claim that release.
+The baseline below records the readiness finding, rather than the replacement's current ownership. [Runtime](../reference/Docs_Viewer_Runtime.md) and [Collection Report Architecture](../reference/Collections_And_Books.md) describe the implemented model. User manual evidence is limited to the confirmed checks above; detailed failure, cancellation, Delete/Import and public/Review cases were not individually confirmed. The existing Preview/public data still uses its previous prepared contract; the new runtime, browser configuration and regenerated links must be published together through a separately authorized Publish before public release. Implementation closeout does not authorize or claim that release.
 
 ## Concept
 
@@ -177,7 +177,7 @@ The route cutover covers the shared URL/parser and exact-target reader, authored
 
 After the global link/renderer contract changes, reconcile complete Working document output through its owning Build with media builds skipped. Do not hand-edit generated JSON or Preview/public payloads. Shared/public code still requires its tracked projection and site validation. Public generated links remain on the prepared snapshot until a separately authorized Publish; complete that publication before releasing the new runtime and generated route contract together. Search rebuild, Publish, deployment, commit and push are outside this implementation approval.
 
-This delivery owns caller history/restoration on the currently registered document collections, including Catalogue. The older View Caching and History and Subject Associations Retirement deliveries were retired as superseded on 2026-10-03 at the user's request. Catalogue remains a document collection; future Subject work is separate. This delivery does not claim wider resource/media caching changes. Use [Runtime](../studio/Docs_Viewer_Runtime.md) as the durable owner for shipped navigation/action/history behavior, with [Collection Report Architecture](../studio/Sub_Scope_Index_Architecture.md) updated for list ownership; previous/next traversal remains outside this delivery.
+This delivery owns caller history/restoration on the currently registered document collections, including Catalogue. The older View Caching and History and Subject Associations Retirement deliveries were retired as superseded on 2026-10-03 at the user's request. Catalogue remains a document collection; future Subject work is separate. This delivery does not claim wider resource/media caching changes. Use [Runtime](../reference/Docs_Viewer_Runtime.md) as the durable owner for shipped navigation/action/history behavior, with [Collection Report Architecture](../reference/Collections_And_Books.md) updated for list ownership; previous/next traversal remains outside this delivery.
 
 ## Deliverables
 
@@ -229,7 +229,7 @@ Gate: accepted; implementation is authorized within the recorded boundary.
 - [x] Reconcile affected generated output only where the changed builder or link contract requires it. Search rebuild, Publish, deployment, commit and push remain separately authorized actions.
 - [x] Preserve related-links capture, supported Content Detail adapters and local/public/package authority through the reader change.
 
-Verification budget: choose exact changed-file lint/syntax and direct existing diagnostics after the implementation owners are known, addressing exact target reads/actions, route agreement and public/package isolation. For represented shared/public code, run `bin/site-code-update`, inspect the tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`. Apply the same projection requirement to subsequent runtime steps. Select any existing tests only after inspecting their coverage and agreeing execution scope; creating or changing tests, fixtures, harnesses or profile membership requires a separate approved specification under [Test Contract Discipline](../studio/Test_Contract_Discipline.md). Record exact evidence, costs, side effects and limits; no automatic suites or browser click scripts.
+Verification budget: choose exact changed-file lint/syntax and direct existing diagnostics after the implementation owners are known, addressing exact target reads/actions, route agreement and public/package isolation. For represented shared/public code, run `bin/site-code-update`, inspect the tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`. Apply the same projection requirement to subsequent runtime steps. Select any existing tests only after inspecting their coverage and agreeing execution scope; creating or changing tests, fixtures, harnesses or profile membership requires a separate approved specification under [Test Contract Discipline](../development/Verification.md). Record exact evidence, costs, side effects and limits; no automatic suites or browser click scripts.
 
 Manual review gate: the same document opens with correct content/actions from a direct URL and each agreed link entry point; collection membership changes neither the reader nor action target. Missing targets show an error without substituting the host. Route cutover is complete within the approved boundary. These are acceptance cases, not evidence already obtained.
 
@@ -335,8 +335,8 @@ Closeout: accepted and closed on 2026-10-03. Runtime, Search, collection-list ar
 
 ## Follow-on And Related Proposals
 
-The older View Caching and History delivery was retired as superseded. [Runtime](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns caller restoration and browser history; its local HTTP caching section records the existing transport policy. Wider resource/media reuse changes require their own requirements and authorization. Working watcher/active refresh remains implemented.
+The older View Caching and History delivery was retired as superseded. [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns caller restoration and browser history; its local HTTP caching section records the existing transport policy. Wider resource/media reuse changes require their own requirements and authorization. Working watcher/active refresh remains implemented.
 
 The Subject Associations Retirement delivery was retired as superseded. Catalogue remains a registered document collection. Subject Associations (`documentation/studio/data/subject-associations.md`) records current behavior; future Subject review is separately scoped.
 
-[Doc Navigation](../studio/Doc_Navigation.md) and [Context Navigation](../studio/Document_Context_Navigation.md) concern saved hierarchy ordering and proposed previous/next traversal. Caller Back does not define that sequence. Native app navigation, cross-application return protocols, persistent/offline caching and general report redesign remain separate work.
+[Doc Navigation](../_working/Document_Context_Navigation.md) and [Context Navigation](../_working/Document_Context_Navigation.md) concern saved hierarchy ordering and proposed previous/next traversal. Caller Back does not define that sequence. Native app navigation, cross-application return protocols, persistent/offline caching and general report redesign remain separate work.

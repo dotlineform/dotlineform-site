@@ -9,9 +9,9 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Works Report Concept And Architecture
 
-Earlier Works coverage design using refresh-owned placement and generated Context rows. Its implementation and tradeoffs predate retirement of Work Document Coverage. [Current reference](../studio/Reports.md)
+Earlier Works coverage design using refresh-owned placement and generated Context rows. Its implementation and tradeoffs predate retirement of Work Document Coverage. [Current reference](../reference/Reports.md)
 
-Historical record: this behavior was retired or replaced by [Subject Retirement](Subject_Retirement.md) on 2026-10-20. Current report and artwork behavior belongs to [Reports](../studio/Reports.md) and [Media And Asset Handling](../studio/Media_And_Asset_Handling.md#assigned-document-thumbnails). Retained pending an explicit repository-document retirement decision.
+Historical record: this behavior was retired or replaced by [Subject Retirement](Subject_Retirement.md) on 2026-10-20. Current report and artwork behavior belongs to [Reports](../reference/Reports.md) and [Media And Asset Handling](../reference/Media_And_Asset_Handling.md#assigned-document-thumbnails). Retained pending an explicit repository-document retirement decision.
 
 ## Purpose
 
@@ -140,7 +140,7 @@ The subsequent 2026-10-10 row-merging slice passed lint/syntax for its five chan
 
 The 2026-10-14 Works and Series/Galleries optimisation retires consumer audits and unused validator helpers while preserving Refresh serializers/merges and explicit canonical maintenance. Focused lint/compilation and a read-only current-data call to both saved readers and the browser composition/link owners passed: 140 Series, 4,620 member Works and 235 Context documents produced 20 covered Series and 23 placed documents; Series and Galleries supplied 301 rows. This evidence exercises saved reads and initial in-memory composition, without HTTP/browser transport, committed-change execution, disposal/Back interaction, empty/unknown/invalid scenarios or failure variants. Restart Docs Viewer services and force-reload the viewer for manual review. No data/schema conversion, Build or Publish is required.
 
-The existing `docs-viewer/tests/python/test_works_report_contract.py` still asserts former live lookup inputs and retired scope/target plumbing. It remains unreviewed, unchanged and unrun; no test, fixture, harness or profile was changed for the optimisation. Test work requires separate approval under [Testing](../studio/Testing.md).
+The existing `docs-viewer/tests/python/test_works_report_contract.py` still asserts former live lookup inputs and retired scope/target plumbing. It remains unreviewed, unchanged and unrun; no test, fixture, harness or profile was changed for the optimisation. Test work requires separate approval under [Testing](../development/Verification.md).
 
 ## Not In Scope
 

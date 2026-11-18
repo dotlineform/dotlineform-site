@@ -1,0 +1,23 @@
+---
+draft: false
+doc_id: d-20261118-235100-64ad2e
+title: Working
+added_date: "2026-11-18 23:50:00"
+last_updated: "2026-11-18"
+summary: Active and proposed work, review follow-ons and writing in progress.
+parent_id: d-20260419-000000-d2e47b
+---
+# Working
+
+Review this directory when choosing or resuming work. It holds active/proposed deliveries, unresolved ideas and documents being written. Each useful document states its current outcome, decisions and next action; no separate Planned Features register or mandatory feature-parent hierarchy is maintained.
+
+Use the [development workflow](../development/Development_Workflow.md) when a change needs a concise plan. Small direct changes need no delivery document. At closeout, put current behaviour in Reference, reusable rationale in Design and useful completed evidence in Deliveries.
+
+## Follow-on Reviews
+
+- [Test policy and checks](Review_Test_Policy_And_Checks.md): review suspended scripts, profiles and policy before deciding retirement, replacement or reactivation.
+- [Cloud Environments](Cloud_Environments.md): recover the unresolved ChatGPT discussion and agree the new Codex Cloud setup.
+- [Documentation code findings](Documentation_Code_Follow_Ups.md): concrete implementation/configuration issues identified during the documentation review.
+- [Catalogue Archive retention](Review_Catalogue_Archive_Retention.md): decide the frozen reader/media future before any withdrawal.
+
+Other work is found by reviewing the directory and following its domain owners. A link or old planning status alone does not authorise implementation. Historical parent metadata is navigation, not a requirement to recreate the former planning hierarchy.

@@ -10,9 +10,9 @@ parent_id: d-20260902-102745-8379ea
 ---
 # Analysis Media In R2
 
-Historical media migration. The October 2026 release and authorized cleanup are recorded below, alongside the byte-preservation and reference checks that preceded deletion. [Current reference](../studio/Media_And_Asset_Handling.md)
+Historical media migration. The October 2026 release and authorized cleanup are recorded below, alongside the byte-preservation and reference checks that preceded deletion. [Current reference](../reference/Media_And_Asset_Handling.md)
 
-This delivery records the September migration. Current storage and publication paths are maintained in [Media And Asset Handling](../studio/Media_And_Asset_Handling.md#r2-namespace-and-historical-cleanup); the October maintenance migration superseded its R2 layout without changing its original restoration evidence.
+This delivery records the September migration. Current storage and publication paths are maintained in [Current media paths](../reference/Media_And_Asset_Handling.md#link-resolution-and-delivery); the October maintenance migration superseded its R2 layout without changing its original restoration evidence.
 
 ## Requirements
 
@@ -59,7 +59,7 @@ Ready for user review. Analysis promotion controls and Git/public deployment rem
 
 Released on 15 October 2026 after the user's successful GitHub Pages deployment of commit `1c4432723bc39d16db972ff51018dc8a7d5aa5e2`. Live public configuration, the Moments manifest and a sampled Moments payload match that artifact. It uses `docs/media/`, contains no legacy remote media paths and the retired `/moments/` route returns 404. All 85 referenced current Docs media objects passed public byte verification. The previous legacy Moments and PDF holds are released.
 
-The explicitly authorized follow-up deleted all 317 legacy `docs/` objects, including the 111 Moments variants, duplicate legacy Analysis PDF, old projection trees and folder markers. All 111 Moments variants remain byte-preserved in Working local media. The final authenticated inventory contains only the 137 migrated objects under `docs/media/`, with unchanged sizes and ETags. Catalogue Work media and local files were not changed. Exact deleted keys, preserved-object inventories and live/deletion evidence are recorded in `var/verification/2026-10-15-docs-r2-migration/` and summarized in [Media And Asset Handling](../studio/Media_And_Asset_Handling.md#r2-namespace-and-historical-cleanup).
+The explicitly authorized follow-up deleted all 317 legacy `docs/` objects, including the 111 Moments variants, duplicate legacy Analysis PDF, old projection trees and folder markers. All 111 Moments variants remain byte-preserved in Working local media. The final authenticated inventory contains only the 137 migrated objects under `docs/media/`, with unchanged sizes and ETags. Catalogue Work media and local files were not changed. Exact deleted keys, preserved-object inventories and live/deletion evidence are recorded in `var/verification/2026-10-15-docs-r2-migration/` and summarized in [Media migration evidence](Document_Media_And_Thumbnails_Review.md#what-shipped).
 
 ## Result And Evidence
 
@@ -69,4 +69,4 @@ The explicitly authorized follow-up deleted all 317 legacy `docs/` objects, incl
 - Focused configuration, collection building, storage, lifecycle, deployment and reconciliation tests: 114 passed. The final reconciliation-only rerun passed all five tests after the review adjustment. Python lint, `git diff --check`, `bin/site-code-update --check` and `bin/site-validate` pass. No browser interaction test or Search rebuild was required.
 - Bounded review checked Published ownership, exact child destinations, same-name separation, missing-file handling, upload-failure cleanup, retired-path compatibility and the media-only repository delta. Corrected the per-type reference count to remain a reference count when unreferenced accepted files are included. Final source review also caught and removed a nested token introduced by the Moments URL conversion: the existing media wrapper and dimensions are preserved while only its target changes. All 36 exact rendered image URLs, widths and heights now verify against Source, and the watcher rebuilt the corrected payloads. No unresolved findings remain in this slice.
 
-One-off inventories, previews, source/remote byte proofs, public URL checks and command logs are under `var/analysis-r2-migration/`. Durable ownership and serving rules are transferred to [Source Organisation](../reference/Source_Organisation.md) and [Media And Asset Handling](../studio/Media_And_Asset_Handling.md).
+One-off inventories, previews, source/remote byte proofs, public URL checks and command logs are under `var/analysis-r2-migration/`. Durable ownership and serving rules are transferred to [Source Organisation](../reference/Source_Organisation.md) and [Media And Asset Handling](../reference/Media_And_Asset_Handling.md).

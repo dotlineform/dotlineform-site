@@ -8,11 +8,11 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Package Return Review
 
-Earlier returned-package flow with former scope selectors. It records why a complete package is parsed before read-only review and canonical application are treated as separate operations. [Current reference](../studio/Scripts_Overview.md)
+This delivery records the former scope-based flow and why validation, read-only Review and canonical application are separate operations. The early projection and apply details below describe that implementation. [Current return contract](../reference/Document_Packages.md#what-a-return-can-overwrite)
 
 ## Boundary
 
-This workflow takes a returned document package from `import-staging/`, proves its prepare-run identity through [Export Metadata](../studio/Package_Export_Metadata.md), validates every returned row, and prepares one complete read-only Docs Review package.
+The workflow took a returned document package from `import-staging/`, proved its prepare-run identity through local metadata, validated every returned row and prepared one complete read-only Docs Review package. [Current provenance](../reference/Document_Packages.md#package-provenance)
 
 It does not mutate canonical documents. The normal Docs Viewer **Import** Action is the only returned-package apply path.
 
@@ -59,3 +59,13 @@ Docs Import plans each valid record as a create or overwrite and asks for one pa
 - The lower-level full-source normalizer is not an enabled returned workflow.
 
 Exact blockers and field normalization belong to `review_sources.py`, `docs_import_document_package_content.py`, `docs_import_collection_plan.py`, `docs_import_collection_apply.py`, and their tests.
+
+## Later Collection Handoff And Evidence
+
+The configured-collection cutover superseded scope routing, create-on-return, returned hierarchy and the sequential canonical apply described in older references. The current named-collection path matches one prepared local ID set and source version set. It writes only existing members and rebuilds the selected group. The consolidation traced this through source, including restoration after write/rebuild failure and the separate publication handoff failure boundary. [Current workflow](../reference/Document_Packages.md#follow-a-checked-document-round-trip) · [Design](../design/Document_Import_And_Packages.md#overwrite-from-a-prepared-selection)
+
+On 2026-10-19, service dry-runs prepared `document-content` with JSON and derived Markdown for Catalogue `00008` and Works `d-20260801-073846-e0a9ec`. Each exported one record with no output file written. This exercised static Entry, image and Summary preparation in the service. The current Manage Catalogue menu offers Export and hides Prepare package. The dry-runs establish service preparation only.
+
+The same date, the user accepted the Catalogue `00008` HTML snapshot after replacement reduced copied media to the standard 800 px image, PDF and DOCX, and inspection confirmed both image and opener used the packaged rendition. Stale confirmation and failed-write recovery were outside that acceptance. Later single-document root layout and Moments typography changes had focused lint, compilation and source review. Their live visual acceptance was left to ordinary use. [Catalogue Export and Review change](Catalogue_Images_In_Export_And_Review.md) · [Current snapshot](../reference/Export.md#artifact-contract)
+
+The former Studio reference records are available at `c76f6608ef` under `documentation/studio/`. The 2026-11-18 consolidation checked the native and complete return paths by source inspection. It did not run a native conversion, package-file write, canonical overwrite or browser acceptance.

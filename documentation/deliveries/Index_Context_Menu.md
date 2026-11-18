@@ -5,11 +5,11 @@ title: Index Context Menu
 added_date: "2026-10-02 10:00:00"
 last_updated: "2026-10-02 10:53:54"
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Index Context Menu
 
-Original Index context menu delivery. It preserves exact-target and open-in-editor decisions before the controls were reorganised. [Current reference](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return)
+Original Index context menu delivery. It preserves exact-target and open-in-editor decisions before the controls were reorganised. [Current reference](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
 ## Requirements And Deliverables
 
@@ -26,7 +26,7 @@ Right-click an Index node, or invoke its menu with Shift+F10/the context-menu ke
 - [x] Readiness: user approved explicit menu targeting and modal identification on 2026-10-02. Management owns invocation/capabilities, the shared action resolver owns target/subtree resolution, and the route owner owns refreshing the tree without navigation.
 - [x] Implementation: moved controls, captured explicit targets, identified modal targets, and added a tree refresh that preserves surviving display state.
 - [x] Code review: inspected the bounded final diff for mixed targets, lost collection context, stale toolbar paths and focus/refresh side effects. Removed retired control/render/event paths and unused menu refs; modal focus now resolves the current row after replacement. Menu state respects hidden ancestors, source-editing restrictions and capability/busy state. Only subtree actions traverse descendants, and invocation checks only the requested action. No compatibility aliases were introduced.
-- [x] Closeout: updated [Runtime](../studio/Docs_Viewer_Runtime.md); changed-source lint, whitespace and required public projection/site checks passed. Manual review remains with the user.
+- [x] Closeout: updated [Runtime](../reference/Docs_Viewer_Runtime.md); changed-source lint, whitespace and required public projection/site checks passed. Manual review remains with the user.
 
 Verification budget: changed-source JavaScript lint and `git diff --check` address syntax/static and whitespace defects, with no service or document writes and an expected cost under a minute. If the shared route owner changes, run the required code projection, inspect its exact tracked delta, and run `bin/site-code-update --check` and `bin/site-validate`; these write only tracked public runtime projections and read the site, with an expected cost under a minute. No test code, test runs, browser automation, document/Search rebuild, Publish, commit or push is included. Manual review covers menu placement, highlight, keyboard interaction, modal identity and preservation of an unrelated displayed document/collection detail.
 
@@ -40,6 +40,6 @@ Runtime now owns the durable behavior. Retain this delivery for the user's manua
 
 ### Prepare Package Loading Correction
 
-Manual review reported “load failed”. A direct read of `/docs/packages/documents` reproduced an empty server response; the source reader still called the removed three-argument builder API and skipped rendering setup outside a full Build. Corrected the builder call, initialized its Catalogue cache at construction and loaded saved related-links inputs before package rendering. Reviewed the three-file production diff, with no aliases, builds or relationship writes. Updated [Package Prepare](../studio/Package_Prepare.md) to describe current context-menu targeting and source-reading ownership.
+Manual review reported “load failed”. A direct read of `/docs/packages/documents` reproduced an empty server response; the source reader still called the removed three-argument builder API and skipped rendering setup outside a full Build. Corrected the builder call, initialized its Catalogue cache at construction and loaded saved related-links inputs before package rendering. Reviewed the three-file production diff, with no aliases, builds or relationship writes. Updated [Package Prepare](../reference/Document_Packages.md) to describe current context-menu targeting and source-reading ownership.
 
 Verification budget: bounded read-only service/HTTP diagnostics and changed-source Python lint address the actual loading exception without tests or package writes. The corrected handler and restarted local endpoint both returned `ok: true` with 41 ordinary records; the endpoint returned HTTP 200. Python lint passed for the three changed files, and whitespace validation passed. The existing `bin/local-all` runner was restarted to activate Python changes before the user's later instruction arrived; future restarts are left to the user. No package preparation, document/Search rebuild, Publish, commit or push was performed.

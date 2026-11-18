@@ -81,6 +81,6 @@ Review resolved parent-media assumptions in Copy/import/diagram readers and watc
 
 ## Closeout
 
-The user accepted this delivery and authorised closeout on 2026-09-11. SSM-0 through SSM-4 are complete. [Source Organisation](../reference/Source_Organisation.md) owns the durable structure, exact collection targeting and media ownership; [Media And Asset Handling](../studio/Media_And_Asset_Handling.md) owns intake and serving.
+The user accepted this delivery and authorised closeout on 2026-09-11. SSM-0 through SSM-4 are complete. [Source Organisation](../reference/Source_Organisation.md) owns the durable structure, exact collection targeting and media ownership; [Media And Asset Handling](../reference/Media_And_Asset_Handling.md) owns intake and serving.
 
 This documentation-only closeout reuses the implementation and review evidence above. Additional code review is not applicable because no code or configuration changed. The delivery is closed and ready for manual archive through the normal workflow.

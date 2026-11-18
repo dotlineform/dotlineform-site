@@ -10,7 +10,7 @@ parent_id: d-20260725-153656-516b61
 ---
 # Semantic Tokens Concept
 
-Original semantic-token study. It preserves the reasoning for stable identity, explicit presentation intent and editable occurrences while the supported grammar lives with the current architecture. [Current reference](../studio/Semantic_Tokens_Architecture.md)
+Original semantic-token study. It preserves the reasoning for stable identity, explicit presentation intent and editable occurrences while the supported grammar lives with the current architecture. [Current reference](../reference/Document_And_Catalogue_References.md)
 
 ## Purpose
 
@@ -103,6 +103,6 @@ as a Semantic Tokens family.
 - field directives, related lists, or other executable source instructions;
 - Catalogue and Tag combined into one family or discovery workflow.
 
-The [Architecture](../studio/Semantic_Tokens_Architecture.md) and
-[Source Editor UI](../studio/Semantic_Tokens_Source_Editor_UI.md) test these
+The [Architecture](../reference/Document_And_Catalogue_References.md) and
+[Source Editor UI](../reference/Document_And_Catalogue_References.md#source-editing) test these
 invariants against implementable data and interaction contracts.

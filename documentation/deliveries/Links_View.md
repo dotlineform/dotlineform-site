@@ -9,11 +9,11 @@ parent_id: d-20260331-000000-c313fd
 ---
 # Links View
 
-Former separate per-document Links interface. It preserves its presentation and navigation decisions before they moved into generated document content. [Current reference](../studio/Related_Links.md)
+Former separate per-document Links interface. It preserves its presentation and navigation decisions before they moved into generated document content. [Current reference](../reference/Related_Links.md)
 
-The single-document Links view, its read endpoint and browser availability configuration are retired. The sections below retain its historical design. [Related Links](../studio/Related_Links.md) owns the current presentation, and [Builder](../studio/Builder.md#document-relationship-maintenance) owns current Working-only relationship maintenance without a separate Links configuration file.
+The single-document Links view, its read endpoint and browser availability configuration are retired. The sections below retain its historical design. [Related Links](../reference/Related_Links.md) owns the current presentation, and [Builder](../reference/Builder.md#document-relationship-maintenance) owns current Working-only relationship maintenance without a separate Links configuration file.
 
-Links displays the documents related to the exact displayed document. It uses the shared Content Detail host alongside Media View, with its own adapter and presentation module. The current enabled context is Working, including its configured collections. [Builder](../studio/Builder.md) owns extraction, eligibility, both-end updates and the separate relationship records; [Source Editor Scripts](../studio/Source_Editor_Scripts.md) owns ordinary document-link insertion.
+Links displays the documents related to the exact displayed document. It uses the shared Content Detail host alongside Media View, with its own adapter and presentation module. The current enabled context is Working, including its configured collections. [Builder](../reference/Builder.md) owns extraction, eligibility, both-end updates and the separate relationship records; [Source editing](../reference/Source_Editing.md) owns ordinary document-link insertion.
 
 ## Display And Identity
 

@@ -5,15 +5,15 @@ title: Collection Search And Site Search
 added_date: "2026-09-24 13:52:14"
 last_updated: "2026-10-15"
 summary: Separate collection search, shared site-search and Recents coverage, and proposed editorial stars for a curated home-page report.
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Collection Search And Site Search
 
-Earlier decisions about collection search, portfolio discovery, Recent and editorial curation. The shipped scope and reader contracts have since changed. [Current reference](../studio/Docs_Viewer_Search.md)
+Earlier decisions about collection search, portfolio discovery, Recent and editorial curation. The shipped scope and reader contracts have since changed. [Current reference](../reference/Reader_Discovery_And_Return.md)
 
-This feature records the earlier site search and Recent deliveries, along with editorial curation proposals. It is maintained under [Planned Features](../studio/Planned_Features.md). Portfolio and collection scopes now share the main Index in Manage and Public. See [Docs Viewer Search](../studio/Docs_Viewer_Search.md) for the accepted behaviour and [Search Index](../studio/Docs_Search_Index.md) for the current coverage and files. The search plans and snapshots below describe earlier deliveries.
+This feature records the earlier site search and Recent deliveries, along with editorial curation proposals. It is maintained under [Planned Features](../_working/README.md). Portfolio and collection scopes now share the main Index in Manage and Public. See [Reader discovery and return](../reference/Reader_Discovery_And_Return.md) for the accepted behaviour and [Search Index](../reference/Reader_Discovery_And_Return.md#payload-contract) for the current coverage and files. The search plans and snapshots below describe earlier deliveries.
 
-Current publication follow-through is queue-only: Full Working Build generates and queues Recent; explicit Search builds queue saved index bytes. Ordinary operations preserve both, and Publish transfers only queued output without generation or freshness checks. [Generated Data Contracts](../studio/Generated_Data_Contracts.md) owns the current lifecycle; earlier scope/snapshot observations below retain their historical evidence limits.
+Current publication follow-through is queue-only: Full Working Build generates and queues Recent; explicit Search builds queue saved index bytes. Ordinary operations preserve both, and Publish transfers only queued output without generation or freshness checks. [Generated Data Contracts](../reference/Generated_Data_Contracts.md) owns the current lifecycle; earlier scope/snapshot observations below retain their historical evidence limits.
 
 Here, **site search** means the Docs Viewer main search over the selected workspace stage, including the public reader of its accepted snapshot. **Collection search** means search within one collection report. The separate Catalogue Works report and public Catalogue Search are distinct consumers.
 
@@ -59,7 +59,7 @@ Collection exclusion concerns the subdocs inside that collection. Its report lan
 
 ## Site Search: Index Build Process Implemented
 
-This Search change is implemented after the completed build/copy workflow. Select eligible IDs from existing Working metadata before reading document content. Ordinary documents form a tree; collections are flat sets of subdocs. Collection membership does not create a parent/child hierarchy between subdocs, and this implementation requires no collection `parent_id` field. [Docs Viewer Search Index](../studio/Docs_Search_Index.md) owns the maintained contract.
+This Search change is implemented after the completed build/copy workflow. Select eligible IDs from existing Working metadata before reading document content. Ordinary documents form a tree; collections are flat sets of subdocs. Collection membership does not create a parent/child hierarchy between subdocs, and this implementation requires no collection `parent_id` field. [Search index contract](../reference/Reader_Discovery_And_Return.md#payload-contract) owns the maintained contract.
 
 - [x] Implement metadata selection, exact selected-content loading, and required collection inclusion configuration. New collections explicitly start excluded; Recents can reuse the shared selector in its separate delivery.
 - [x] Run focused lint and a real Working Search dry run/write. The saved v4 index contains five ordinary documents and 11 Works, with 709 terms in 48,174 bytes. Processing is skipped because its configured ordinary host is draft. Eligible Catalogue, Concepts and Moments landing pages remain ordinary results. A subsequent dry run skipped unchanged content.
@@ -134,11 +134,11 @@ Both Manage and public routes currently use Recently Edited. The saved Recents p
 
 Existing bookmarks are saved in browser IndexedDB and provide personal navigation. They do not supply durable editorial selection to publication. Relevant owners are the [Recent candidate and payload builder](../../docs-viewer/build/docs_builder/payloads.py), its [build lifecycle](../../docs-viewer/build/docs_builder/pipeline.py), [route date-basis policy](../../docs-viewer/config/routes/docs-viewer-routes.json), and bookmark controller (`docs-viewer/runtime/js/shared/docs-viewer-bookmarks.js`).
 
-Current implementation owners are [workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json), the [search builder](../../docs-viewer/build/build_search.py), the [shared search engine](../../docs-viewer/runtime/js/shared/docs-viewer-search.js), the [collection report](../../docs-viewer/runtime/js/shared/docs-collection-report.js), its [title filter](../../docs-viewer/runtime/js/shared/docs-collection-report-filter.js), and the separate [Catalogue Works report](../../docs-viewer/runtime/js/reports/catalogue-works-report.js). Existing [Docs Viewer Search documentation](../studio/Docs_Viewer_Search.md) contains older scope terminology and should be reconciled with the shipped result during delivery closeout.
+Current implementation owners are [workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json), the [search builder](../../docs-viewer/build/build_search.py), the [shared search engine](../../docs-viewer/runtime/js/shared/docs-viewer-search.js), the [collection report](../../docs-viewer/runtime/js/shared/docs-collection-report.js), its [title filter](../../docs-viewer/runtime/js/shared/docs-collection-report-filter.js), and the separate [Catalogue Works report](../../docs-viewer/runtime/js/reports/catalogue-works-report.js). Existing [Docs Viewer Search documentation](../reference/Reader_Discovery_And_Return.md) contains older scope terminology and should be reconciled with the shipped result during delivery closeout.
 
 ## Recents: Working Build And Preview Copy Implemented
 
-This delivery makes Working the sole Recents builder, applies the same collection coverage and document eligibility as Search, reads compact collection metadata, and copies the saved result unchanged through Preview and repository projection. Implementation and focused review are complete. [Generated Data Contracts](../studio/Generated_Data_Contracts.md#recent-contract) owns the maintained Recents contract.
+This delivery makes Working the sole Recents builder, applies the same collection coverage and document eligibility as Search, reads compact collection metadata, and copies the saved result unchanged through Preview and repository projection. Implementation and focused review are complete. [Generated Data Contracts](../reference/Generated_Data_Contracts.md#recent-contract) owns the maintained Recents contract.
 
 ### Previous Implementation And Replaced Paths
 

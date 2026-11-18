@@ -6,19 +6,19 @@ added_date: "2026-10-26 21:21:05"
 last_updated: "2026-11-17"
 summary: Retired proposal to move Gallery ownership from Studio into Docs Viewer.
 ui_status: retired
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Docs Viewer Gallery Ownership
 
 ## Ownership Decision
 
-On 2026-11-17 the user confirmed that Studio retains Gallery ownership. Use Galleries for Medium groupings. The migration plan below is retained as history. The single date text idea remains a separate, parked question. [Catalogue Work Editor](../studio/Catalogue_Work_Editor.md#gallery-and-series-definitions)
+On 2026-11-17 the user confirmed that Studio retains Gallery ownership. Use Galleries for Medium groupings. The migration plan below is retained as history. The single date text idea remains a separate, parked question. [Catalogue Work Editor](../reference/Catalogue_Work_Editor.md#gallery-and-series-definitions)
 
 ## Historical Planning Handoff
 
-Queue-driven Work adoption, portable document readers, downstream preparation and raw Work copy retirement were delivered separately. The proposed GO.2 stage would have started from the adopted Catalogue document contract and moved ownership of its Gallery fields. The earlier live reader and public layout options below record the planning baseline. [Catalogue reference and presentation](../studio/Generated_Data_Contracts.md#catalogue-reference-and-presentation)
+Queue-driven Work adoption, portable document readers, downstream preparation and raw Work copy retirement were delivered separately. The proposed GO.2 stage would have started from the adopted Catalogue document contract and moved ownership of its Gallery fields. The earlier live reader and public layout options below record the planning baseline. [Catalogue reference and presentation](../reference/Generated_Data_Contracts.md#catalogue-reference-and-presentation)
 
-Catalogue discovery and search uses Studio-generated Gallery data. Local Studio provides membership browsing in the Work Editor. [Catalogue browsing](../studio/Sub_Scope_Index_Architecture.md#catalogue-collection-browsing) · [Browse Galleries](../studio/Catalogue_Work_Editor.md#browse-galleries)
+Catalogue discovery and search uses Studio-generated Gallery data. Local Studio provides membership browsing in the Work Editor. [Catalogue browsing](../reference/Reader_Discovery_And_Return.md#catalogue-collection-browsing) · [Browse Galleries](../reference/Catalogue_Work_Editor.md#browse-galleries)
 
 The original plan assumed the following:
 
@@ -40,7 +40,7 @@ Outcome: Studio owns Work/Series authoring, generated inputs and media preparati
 
 This proposal covers Gallery authoring and generation. The [Catalogue collection report](/docs/?doc=d-20260916-161504-f8c947) can improve Gallery discovery through a Studio Refresh projection. Studio retains Work and Series authoring and media processing.
 
-Parent: [Planned Features](../studio/Planned_Features.md). Use [Development Checklist](../studio/Development_Checklist.md) and [Development Workflow](../studio/Development_Workflow.md) for implementation, review and closeout.
+Parent: [Planned Features](../_working/README.md). Use [Development Checklist](../development/Development_Checklist.md) and [Development Workflow](../development/Development_Workflow.md) for implementation, review and closeout.
 
 ### Three Implementation Stages
 
@@ -201,7 +201,7 @@ Repository-relative locations below describe the existing authority. Stage 1 lea
 | `studio/data/canonical/catalogue/series-galleries.json` | Studio explicit Series → Gallery relevance arrays; `catalogue_source_series_galleries_v1` | Move with Galleries; preserve the existing navigation relationship independently of Work membership |
 | `$DOTLINEFORM_DOCS_BASE_DIR/working/source/collections/catalogue/documents/<work_id>.md` | Docs Catalogue sources generated from selected refreshed Works | Regenerate owns source/document adoption; Gallery workflows resolve the resulting baked Work snapshot by exact Work ID |
 
-Current source contracts are described by [Catalogue Source Model](../studio/Catalogue_Source_Model.md). Gallery data already lives outside `works.json`, but its persistence and operation ownership are still coupled to Studio.
+Current source contracts are described by [Catalogue Source Model](../reference/Catalogue_Source_Model.md). Gallery data already lives outside `works.json`, but its persistence and operation ownership are still coupled to Studio.
 
 ### Current Generated Data And Locations
 
@@ -229,11 +229,11 @@ In the table, `C` means `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/
 
 Docs Viewer Publish applies selected Catalogue artifacts to `$DOTLINEFORM_DOCS_BASE_DIR/preview/catalogue/` and repository `site/assets/data/catalogue/`. Existing public Gallery/system artifacts retain their transfer owner. Catalogue documents have their separate configured owner: Working collection documents, Preview at `preview/collections/catalogue/documents/`, and repository output under `site/assets/data/docs/catalogue/`. Preserve existing public targets and default to the current artifact inventory; make any actual layout/inventory change explicit at the performance/consumer decision gate.
 
-Gallery links also enter prepared document media presentations through the shared static preparer used by Publish, Export and Prepare package. Read the Catalogue document's ready Work/Gallery sections and preserve the public presentation contract; no extra lookup or canonical join belongs in preparation. [Catalogue Indexes And Payloads](../studio/Catalogue_Indexes_And_Payloads.md), [Catalogue Media View](../studio/Catalogue_Media_View.md) and [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) describe current boundaries.
+Gallery links also enter prepared document media presentations through the shared static preparer used by Publish, Export and Prepare package. Read the Catalogue document's ready Work/Gallery sections and preserve the public presentation contract; no extra lookup or canonical join belongs in preparation. [Catalogue Indexes And Payloads](../reference/Catalogue_Indexes_And_Payloads.md), [Catalogue Media View](../reference/Catalogue_Media_View.md) and [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) describe current boundaries.
 
 ### Work-Record Readers Before Work By-ID Separation
 
-This table records the readers before Catalogue Work by-ID adoption. Use the current [adopted Catalogue document contract](../studio/Generated_Data_Contracts.md#catalogue-reference-and-presentation) for GO.2.
+This table records the readers before Catalogue Work by-ID adoption. Use the current [adopted Catalogue document contract](../reference/Generated_Data_Contracts.md#catalogue-reference-and-presentation) for GO.2.
 
 | Identified current reader | Purpose and owning boundary |
 | --- | --- |
@@ -360,7 +360,7 @@ Record: not started.
 - [ ] Preserve valid empty Galleries and agree any explicit delete prompts without restoring Studio Gallery controls or adding automatic cleanup.
 - [ ] Review the authoring path and complete a bounded redundancy/defensive review before accepting the stage; present management, Media View and return behavior for manual confirmation.
 
-Verification budget: changed-path JavaScript/Python lint, syntax/whitespace and scoped source review address wiring, source ownership, selected derived-output completion and existing queue effects; static cost is expected to be seconds. Agree exact authoring/Refresh targets and source/generated/queue writes before execution. UI selection feel, empty states and navigation receive manual review. Existing test execution requires inspected coverage and an agreed budget; creating/updating tests, fixtures, harnesses or temporary regression scripts requires separate approval under [Test Contract Discipline](../studio/Test_Contract_Discipline.md). No browser suite is automatically added or run.
+Verification budget: changed-path JavaScript/Python lint, syntax/whitespace and scoped source review address wiring, source ownership, selected derived-output completion and existing queue effects; static cost is expected to be seconds. Agree exact authoring/Refresh targets and source/generated/queue writes before execution. UI selection feel, empty states and navigation receive manual review. Existing test execution requires inspected coverage and an agreed budget; creating/updating tests, fixtures, harnesses or temporary regression scripts requires separate approval under [Test Contract Discipline](../development/Verification.md). No browser suite is automatically added or run.
 
 Gate: Gallery authoring resumes entirely in Docs Viewer over last-Regenerate Work snapshots. Refresh/Save finishes Gallery output and selects publication effects without Studio involvement or a new Work adoption; Publish/preparation consumes completed adopted data. Medium/date/search changes remain outside this stage.
 
@@ -401,6 +401,6 @@ Catalogue Gallery discovery now uses the existing Studio-generated data.
 
 - **Medium groups:** resolved by using Studio Galleries for the editorial groupings.
 - **Single date text:** retain the current `year_display` content as the single authoritative free-text Work date and retire separately maintained numeric `year` through its Studio authoring/import/generated consumers. Derive ordering and year/range search interpretation in the browser, preserving the display text. Agree start/end ordering, abbreviated ranges, separate dates and suggestion semantics; ascending start-year ordering is a proposal, not an implemented rule.
-- [Catalogue browsing](../studio/Sub_Scope_Index_Architecture.md#catalogue-collection-browsing) describes Gallery discovery and its paginated display.
+- [Catalogue browsing](../reference/Reader_Discovery_And_Return.md#catalogue-collection-browsing) describes Gallery discovery and its paginated display.
 
 The earlier search proposal considered matching title, ID and description, structured filtering and derived date ordering from the loaded Catalogue data. The date work remains separate from Gallery ownership.

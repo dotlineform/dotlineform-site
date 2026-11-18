@@ -95,7 +95,7 @@ Public per-document payloads intentionally omit management metadata such as pare
 
 Public routes declare whether Recent means `added` or `edited`. The builder prepares that public projection independently and applies public visibility before its limit; Publish copies the prepared projection rather than trimming the local management list. The current public Analysis route uses `edited`.
 
-Exact schemas belong to [Generated Data Contracts](../studio/Generated_Data_Contracts.md) and the builders/tests, not this boundary summary.
+Exact schemas belong to [Generated Data Contracts](../reference/Generated_Data_Contracts.md) and the builders/tests, not this boundary summary.
 
 ## Creating And Deleting Public Scopes
 

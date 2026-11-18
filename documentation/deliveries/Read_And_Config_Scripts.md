@@ -4,11 +4,11 @@ doc_id: d-20260607-222033-f2a546
 title: Read And Config Scripts
 added_date: "2026-06-07 22:20:33"
 last_updated: "2026-10-15"
-parent_id: d-20260607-222033-2a494e
+parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Read And Config Scripts
 
-Former GET and scope-config module map. Use the workspace and endpoint references for live names and capabilities. [Current reference](../studio/Configuration_And_Extension_Points.md#workspace-and-target-contracts)
+Former GET and scope-config module map. Use the workspace and endpoint references for live names and capabilities. [Current reference](../reference/Configuration_And_Extension_Points.md#workspace-and-target-contracts)
 
 ## `docs-viewer/services/docs_management_read_service.py`
 

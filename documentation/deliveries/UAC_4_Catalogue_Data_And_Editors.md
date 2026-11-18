@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # UAC 4 - Simplify Catalogue Data And Editors
 
-Completed source and editor cutover. It records the decisions to remove draft state and simplify Series and Work data before rebuilding the consumer projections. [Current reference](../studio/Catalogue_Source_Model.md)
+Completed source and editor cutover. It records the decisions to remove draft state and simplify Series and Work data before rebuilding the consumer projections. [Current reference](../reference/Catalogue_Source_Model.md)
 
 ## Requirements
 
@@ -137,7 +137,7 @@ Implementation evidence and the Stage 5 dependency inventory are retained in `va
 
 ### 4.4 — Closeout And Stage 5 Handoff
 
-- [x] Update [Catalogue Source Model](../studio/Catalogue_Source_Model.md) and the changed workflows in [Catalogue Work Editor](../studio/Catalogue_Work_Editor.md) and [Catalogue Series Editor](../studio/Catalogue_Series_Management.md). Describe shipped behavior and the remaining pause accurately.
+- [x] Update [Catalogue Source Model](../reference/Catalogue_Source_Model.md) and the changed workflows in [Catalogue Work Editor](../reference/Catalogue_Work_Editor.md) and [Catalogue Series Editor](../reference/Studio.md#browser-responsibility). Describe shipped behavior and the remaining pause accurately.
 - [x] Update Delivery Sequence and Change Backlog (`/docs/?scope=studio&doc=d-20260904-183853-65ffcb`), distinguishing completed canonical/editor work from unfinished output and reader integration.
 - [x] Hand Stage 5 the accepted model, retained refresh boundaries, paused machinery and any necessary indexes/media references. Record the editor review and focused evidence.
 - [x] Recommend retaining this delivery as the Stage 5 handoff until integration, then retiring it after its durable transfer is confirmed. Do not delete planning documents during this closeout.

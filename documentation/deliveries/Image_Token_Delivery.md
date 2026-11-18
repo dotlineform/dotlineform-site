@@ -6,15 +6,15 @@ added_date: "2026-10-04 12:34:39"
 last_updated: "2026-10-04 15:02:10"
 summary: Make shared Add image insert an editable semantic image token, with builder-owned presentation and no migration of existing Markdown images or HTML figures.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Image Token Delivery
 
-Accepted semantic image-token delivery. It preserves editable authoring and builder-owned presentation without rewriting older authored images. [Current reference](../studio/Media_And_Asset_Handling.md)
+Accepted semantic image-token delivery. It preserves editable authoring and builder-owned presentation without rewriting older authored images. [Current reference](../reference/Media_And_Asset_Handling.md)
 
 ## Current And Next State
 
-Completed under [Planned Features](../studio/Planned_Features.md) and accepted for closeout by the user on 2026-10-04. IMT 0–4 and the approved source-filename revision are complete: canonical parsing/serialization, static rendering, shared insertion/editing, consumer integration, selected diagnostics and bounded code review are delivered. Search excludes the new token entirely; the broader policy across existing image forms remains a follow-on. [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md#docs-owned-images) owns the shipped source/rendering contract and [Media And Asset Handling](../studio/Media_And_Asset_Handling.md#import-materialization) owns source naming and replacement. Retain this completed delivery for manual archive. Individual manual scenarios were not separately confirmed; the recorded evidence limits remain. Tests, Search rebuild, Publish, commit, push and deployment have not run.
+Completed under [Planned Features](../_working/README.md) and accepted for closeout by the user on 2026-10-04. IMT 0–4 and the approved source-filename revision are complete: canonical parsing/serialization, static rendering, shared insertion/editing, consumer integration, selected diagnostics and bounded code review are delivered. Search excludes the new token entirely; the broader policy across existing image forms remains a follow-on. [Document and Catalogue references](../reference/Document_And_Catalogue_References.md#docs-owned-images) owns the shipped source/rendering contract and [Media And Asset Handling](../reference/Media_And_Asset_Handling.md#import-materialization) owns source naming and replacement. Retain this completed delivery for manual archive. Individual manual scenarios were not separately confirmed; the recorded evidence limits remain. Tests, Search rebuild, Publish, commit, push and deployment have not run.
 
 Shared Add image now stores image identity and authored presentation choices in one semantic token. The document builder owns the resulting HTML and classes, following the separation already used by Catalogue Image. Existing Markdown images and authored HTML remain supported document content without conversion.
 
@@ -60,7 +60,7 @@ The accepted grammar separates logical identity from authored settings. A token 
 
 ### Search Boundary
 
-The user clarified on 2026-10-04 that image alt, caption and summary should not be searchable. The delivered builder change is limited to excluding the new semantic image token entirely. The saved Search index has not been rebuilt. [Docs Search Index](../studio/Docs_Search_Index.md#source-boundary) owns the current behavior; the broader review of existing image forms is a separate follow-on.
+The user clarified on 2026-10-04 that image alt, caption and summary should not be searchable. The delivered builder change is limited to excluding the new semantic image token entirely. The saved Search index has not been rebuilt. [Search index contract](../reference/Reader_Discovery_And_Return.md#source-boundary) owns the current behavior; the broader review of existing image forms is a separate follow-on.
 
 The existing `searchable_markdown` method in `docs-viewer/build/build_search.py` projects semantic occurrences before the shared Markdown search extractor runs. It now replaces each active, valid image occurrence with whitespace rather than text from its fields. Whitespace preserves separation between surrounding words. The token contributes no searchable alt, caption, image summary, filename, path, field names or layout values. This requires no asset lookup or image-byte analysis. Inline/fenced examples keep their existing code-text treatment rather than becoming active image occurrences; unsupported/malformed forms keep the existing literal-source treatment.
 
@@ -77,7 +77,7 @@ The saved index schema, configured Search fields, selected documents/collections
 - [x] Media/reference, publication and Export/package/Review integration, plus exclusion of the new image token from Search within its existing extraction boundary.
 - [x] Removal of obsolete Add image source-fragment production only where its callers are replaced; retain standard Markdown/HTML rendering without a custom legacy parser or compatibility alias.
 - [x] Confirm represented shared/public runtime projection is current; no represented runtime files changed.
-- [x] Update [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md), the Add image description in [Media And Asset Handling](../studio/Media_And_Asset_Handling.md) and the changed source-extraction boundary in [Docs Search Index](../studio/Docs_Search_Index.md).
+- [x] Update [Document and Catalogue references](../reference/Document_And_Catalogue_References.md), the Add image description in [Media And Asset Handling](../reference/Media_And_Asset_Handling.md) and the changed source-extraction boundary in [Search index contract](../reference/Reader_Discovery_And_Return.md#payload-contract).
 
 ## Process
 
@@ -122,7 +122,7 @@ Selected implementation evidence: `bin/lint-python <changed-production-paths>`, 
 - [x] Preserve source-range/session guards, text escaping, exact media identity and the existing thumbnail operation boundary.
 - [x] Inspect active callers and remove obsolete producer paths within this bounded change.
 
-Verification budget: explicit-path Python/JavaScript lint, source/diff review and proportionate existing builder diagnostics. Name the exact selected commands, expected writes and cost after owner inspection. User manual review covers modal interaction and visual presentation. Test authoring, changes and execution need a separate agreed selection/specification under [Test Contract Discipline](../studio/Test_Contract_Discipline.md).
+Verification budget: explicit-path Python/JavaScript lint, source/diff review and proportionate existing builder diagnostics. Name the exact selected commands, expected writes and cost after owner inspection. User manual review covers modal interaction and visual presentation. Test authoring, changes and execution need a separate agreed selection/specification under [Test Contract Discipline](../development/Verification.md).
 
 Gate: new-format insertion and editing use one canonical source form, rendering produces the intended static presentation, and existing image markup remains supported without translation.
 

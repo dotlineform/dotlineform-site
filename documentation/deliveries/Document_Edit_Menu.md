@@ -4,13 +4,13 @@ doc_id: d-20261002-130225-c46d18
 title: Document Edit Menu
 added_date: "2026-10-02 13:02:25"
 last_updated: "2026-10-10 16:57:25"
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ui_status: done
 summary: Consolidate displayed-document editing actions into the right-aligned Edit dropdown.
 ---
 # Document Edit Menu
 
-Earlier shared Edit menu delivery. It records the grouping and authoring decisions before control labels and placement evolved. [Current reference](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return)
+Earlier shared Edit menu delivery. It records the grouping and authoring decisions before control labels and placement evolved. [Current reference](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
 ## Requirements
 
@@ -22,7 +22,7 @@ Collection detail actions keep their validated targets, existing workflows and l
 
 A local Edit menu owner renders the dropdown and dispatches ordinary actions. The existing context-actions owner supplies New's state/dispatch to Actions and VS Code, Draft/Ready and Star to Edit. State projection runs after Edit controls mount so returning from Source restores current labels and checkbox state. Keyboard navigation includes ordinary and checkbox items. The retained collection detail action host mounts inside the menu while rendered, and in the existing hidden collection-action mount during Source or expanded views. This preserves contribution lifecycle and asynchronous availability without another set of collection handlers. Delete restores focus to the Edit trigger; the Source Subject helper restores focus to the buffer.
 
-[Toolbar Model](../studio/Toolbar_Model.md), [Runtime Module Ownership](../studio/Runtime_Module_Ownership.md) and [Toolbar Icon Mapping](../studio/Toolbar_Icon_Mapping.md) own shipped placement, ownership and artwork. The shared runtime's Manage-specific mounting change receives the normal tracked public projection; the menu module, stylesheet changes and Source editor artwork remain local.
+[Toolbar Model](../reference/Panel_Hosts_And_Control_Surfaces.md#control-placement), [Runtime Module Ownership](../reference/Runtime_Module_Ownership.md) and [Toolbar Icon Mapping](../_working/Toolbar_Icon_Mapping.md) own shipped placement, ownership and artwork. The shared runtime's Manage-specific mounting change receives the normal tracked public projection; the menu module, stylesheet changes and Source editor artwork remain local.
 
 ## Delivery Steps
 

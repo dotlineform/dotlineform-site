@@ -26,7 +26,7 @@ Current prerequisite changes, 24 September: [Preview Stage Consolidation](Previe
 
 The public Analysis presentation serves the accepted document snapshot and current deployed Catalogue data through the existing Docs Viewer and Media View readers. Deploy Repo prepares the complete reviewed site artifact. Docs-only, Catalogue-only and combined deployment are available, with separate results; refreshing Catalogue does not rebuild or republish unchanged documents. The reviewed artifact is released through explicit Git commit/push and Deploy Public, then checked live while preserving the frozen Catalogue archive.
 
-This delivery belongs to [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md). [Catalogue Deployment](../studio/Catalogue_Deployment.md) owns the agreed current-Catalogue boundary and selected repo destination. When the scheduling hold is released, the next step is **DPC-0 — Readiness**. This document is proposed; writing it does not start implementation or authorise a real Publish, deployment, Git operation or remote deletion.
+This delivery belongs to [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md). [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) owns the agreed current-Catalogue boundary and selected repo destination. When the scheduling hold is released, the next step is **DPC-0 — Readiness**. This document is proposed; writing it does not start implementation or authorise a real Publish, deployment, Git operation or remote deletion.
 
 ### Input And Destination Ownership
 
@@ -51,7 +51,7 @@ Recovery uses corrected input/code/configuration and the ordinary owning operati
 
 ### Boundary
 
-Use the current document and Catalogue models. [Separate Document Content And Metadata](../studio/Document_Content_And_Metadata.md) remains parked and is not a prerequisite. Public Related/Links enhancements, shared view caching/history, Catalogue schema redesign, JSON hosting in R2, document adoption/backfill, batch New doc and automatic publishing/deployment are outside this delivery. Existing public-reader correctness and ordinary HTTP freshness needed for this release remain in scope.
+Use the current document and Catalogue models. [Separate Document Content And Metadata](../_working/Document_Content_And_Metadata.md) remains parked and is not a prerequisite. Public Related/Links enhancements, shared view caching/history, Catalogue schema redesign, JSON hosting in R2, document adoption/backfill, batch New doc and automatic publishing/deployment are outside this delivery. Existing public-reader correctness and ordinary HTTP freshness needed for this release remain in scope.
 
 ## Starting State — Verified 15 September 2026
 

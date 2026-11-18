@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Document-owned Concept And Moment IDs
 
-Accepted removal of redundant Concept and Moment identities. It preserves the rationale for exact document IDs and the reference-preservation evidence. [Current reference](../studio/Related_Links.md)
+Accepted removal of redundant Concept and Moment identities. It preserves the rationale for exact document IDs and the reference-preservation evidence. [Current reference](../reference/Related_Links.md)
 
 ## Requirements
 

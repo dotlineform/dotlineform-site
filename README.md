@@ -8,3 +8,5 @@ The repo also contains locally run web-apps:
 - **Docs Viewer**: edit, manage and publish documents to the site.
 
 Start with the [Site Workflow Guide](documentation/guide/README.md) to see how these apps prepare and release the public site.
+
+Use [Development](documentation/development/README.md) for implementation, review and verification guidance, and review [Working](documentation/_working/README.md) when choosing or resuming work.

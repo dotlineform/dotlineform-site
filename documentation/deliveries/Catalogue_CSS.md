@@ -9,13 +9,13 @@ parent_id: d-20260902-102745-8379ea
 ---
 # Catalogue CSS
 
-Presentation pilot. It records why a Work component used scoped styles and shared presentation rules across hosts instead of inheriting the old site's page CSS. [Current reference](../studio/CSS_Ownership.md)
+Presentation pilot. It records why a Work component used scoped styles and shared presentation rules across hosts instead of inheriting the old site's page CSS. [Current reference](../reference/CSS_Ownership.md)
 
 ## Purpose
 
 Define the presentation boundary that must be accepted before Stage 4 expands into a representative Catalogue token pilot. Moving current Work pages into Docs Viewer is not just a data or token migration: the essential Work and Work Detail presentation must be re-expressed as a host-neutral component without copying the public site's general stylesheet into Docs Viewer.
 
-This pilot covered full and image-only Work presentation and Work Details, including galleries, captions and ordinary full-image links. It treated Catalogue previous/next and Media Focus as separate from the presentation component. The [historical navigation proposal](Catalogue_Navigation.md) records that split. [Catalogue Media View](../studio/Catalogue_Media_View.md) describes the current Work and Gallery views. Series index, list and grid presentation was outside the pilot.
+This pilot covered full and image-only Work presentation and Work Details, including galleries, captions and ordinary full-image links. It treated Catalogue previous/next and Media Focus as separate from the presentation component. The [historical navigation proposal](Catalogue_Navigation.md) records that split. [Catalogue Media View](../reference/Catalogue_Media_View.md) describes the current Work and Gallery views. Series index, list and grid presentation was outside the pilot.
 
 ## Current CSS Problem
 
@@ -201,8 +201,8 @@ Do not add permanent screenshot or click-choreography tests merely to freeze lay
 
 ## Supporting Architecture
 
-- [Catalogue Media Focus View](../studio/Catalogue_Media_View.md) belongs to post-migration Catalogue Navigation and defines the image-and-caption view needed for Work Detail previous/next without individual documents. Its later CSS extension must preserve this component's ownership and isolation.
-- [Context Navigation](../studio/Document_Context_Navigation.md) is a separate scope-level document proposal, not the navigation owner or a delivery dependency for Catalogue sub-scope documents or focused media.
+- [Catalogue Media Focus View](../reference/Catalogue_Media_View.md) belongs to post-migration Catalogue Navigation and defines the image-and-caption view needed for Work Detail previous/next without individual documents. Its later CSS extension must preserve this component's ownership and isolation.
+- [Context Navigation](../_working/Document_Context_Navigation.md) is a separate scope-level document proposal, not the navigation owner or a delivery dependency for Catalogue sub-scope documents or focused media.
 
 ## Status
 

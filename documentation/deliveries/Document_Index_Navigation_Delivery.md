@@ -6,15 +6,15 @@ added_date: "2026-10-07 15:29:53"
 last_updated: "2026-10-07 15:53:51"
 summary: Browser document navigation, an index shortcut for collection subdocuments and per-tab collection report state.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Document Index Navigation - Delivery
 
-Collection index shortcut and per-tab state delivery. It preserves the navigation and restoration behavior tested at the time. [Current reference](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return)
+Collection index shortcut and per-tab state delivery. It preserves the navigation and restoration behavior tested at the time. [Current reference](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
 ## Current And Next State
 
-Implementation and bounded code review are complete. [Runtime](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns the durable navigation and report-state contract. JavaScript lint passed for the seven changed modules, `bin/site-code-update --check` confirmed the tracked projection, `bin/site-validate` passed and the whitespace check passed. No tests, browser interaction, Publish, deployment, commit or push ran. User manual review remains for the index shortcut, host/report state restoration and browser Back/Forward behavior; static evidence does not establish those outcomes.
+Implementation and bounded code review are complete. [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns the durable navigation and report-state contract. JavaScript lint passed for the seven changed modules, `bin/site-code-update --check` confirmed the tracked projection, `bin/site-validate` passed and the whitespace check passed. No tests, browser interaction, Publish, deployment, commit or push ran. User manual review remains for the index shortcut, host/report state restoration and browser Back/Forward behavior; static evidence does not establish those outcomes.
 
 ## Requirements And Deliverables
 

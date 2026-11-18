@@ -5,7 +5,7 @@ title: Preview Stage Consolidation
 added_date: "2026-09-24 20:18:24"
 last_updated: "2026-09-24 20:18:24"
 summary: Replace Pre-publish and local Published with one read-only Preview snapshot prepared from Working.
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Preview Stage Consolidation
 

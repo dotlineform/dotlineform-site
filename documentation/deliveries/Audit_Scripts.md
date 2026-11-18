@@ -4,11 +4,11 @@ doc_id: d-20260607-222033-6331b3
 title: Audit Scripts
 added_date: "2026-06-07 22:20:33"
 last_updated: "2026-08-14 20:31:29"
-parent_id: d-20260607-222033-2a494e
+parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Audit Scripts
 
-Former Broken Links adapter and corpus audit script map. Its current operator and implementation references are gathered under Broken Links. [Current reference](../studio/Scripts_Overview.md)
+Former Broken Links adapter and corpus audit script map. Its current operator and implementation references are gathered under Broken Links. [Current reference](../reference/Endpoint_Overview.md#service-and-dispatch)
 
 ## `docs-viewer/services/docs_management_broken_links_service.py`
 

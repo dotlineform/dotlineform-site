@@ -6,13 +6,13 @@ added_date: "2026-10-20 15:20:27"
 last_updated: "2026-10-20"
 summary: Retire Folder placeholders, reserve draft for active authoring, and derive Projects associations from Catalogue references.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Subject Retirement
 
-Accepted removal of old Subject authoring and Folder placeholders. It preserves the rationale for deriving project associations from exact Catalogue references. [Current reference](../studio/Related_Links.md)
+Accepted removal of old Subject authoring and Folder placeholders. It preserves the rationale for deriving project associations from exact Catalogue references. [Current reference](../reference/Related_Links.md)
 
-Status: complete; the user accepted closeout on 2026-10-20. Source cleanup, thumbnail reset and Projects snapshot cutover are complete. Manual Projects/Thumb interactions remain unverified in the recorded evidence and continue through normal use. [Reports](../studio/Reports.md), [Media And Asset Handling](../studio/Media_And_Asset_Handling.md#assigned-document-thumbnails) and [Generated Data Contracts](../studio/Generated_Data_Contracts.md) own shipped behavior. This document retains the authoring rationale and reference examples pending manual archive.
+Status: complete; the user accepted closeout on 2026-10-20. Source cleanup, thumbnail reset and Projects snapshot cutover are complete. Manual Projects/Thumb interactions remain unverified in the recorded evidence and continue through normal use. [Reports](../reference/Reports.md), [Media And Asset Handling](../reference/Media_And_Asset_Handling.md#assigned-document-thumbnails) and [Generated Data Contracts](../reference/Generated_Data_Contracts.md) own shipped behavior. This document retains the authoring rationale and reference examples pending manual archive.
 
 Ordinary Index documents retain SVG icons; Catalogue retains its separate media owner. Publish, commit and push were not performed by Codex as part of this delivery.
 
@@ -35,7 +35,7 @@ Projects can obtain both Work and Gallery token targets from the existing docume
 | Per-document Links record, used by Related Links | Adds an outgoing link to the Work's Catalogue document; self-references are omitted. | Adds no document relationship. | [`links_builder.py`, `_DocumentRefresh.references()`](../../docs-viewer/build/docs_builder/links_builder.py) accepts only `token.target_type == "work"`; [`links_model.py`](../../docs-viewer/build/docs_builder/links_model.py) represents endpoints as collection/document IDs. |
 | Document by-ID payload, `catalogue.references` | Retains a typed `catalogue-work` target. | Retains a typed `catalogue-gallery` target. | [`semantic_tokens.py`, `catalogue_reference()` and `resolve_semantic_tokens()`](../../docs-viewer/build/docs_builder/semantic_tokens.py) collect both kinds; [`payloads.py`, `item_entry()`](../../docs-viewer/build/docs_builder/payloads.py) attaches them to the document. |
 
-This is an intentional boundary, not missing relationship data to repair: a Work has a Catalogue subdocument; a Gallery opens Media View and has no corresponding Gallery document endpoint. Related Links navigates to documents, while `catalogue.references` records authored presentation occurrences. Those occurrences preserve target identity and options, not Series membership. Gallery targets should continue to open Media View without becoming Related Links entries. See [Related Links](../studio/Related_Links.md#generated-data-and-freshness) and [Generated Data Contracts](../studio/Generated_Data_Contracts.md#catalogue-reference-and-presentation).
+The document graph uses exact document endpoints. A Work has a Catalogue subdocument. A Gallery has a Media View target and no document endpoint. The authored occurrences in `catalogue.references` preserve target identity and presentation options. Projects derives Series associations from its own inputs. The current Related Links renderer can also display an authored Gallery as a Media View row outside the graph. [Related Links](../reference/Related_Links.md#generated-data-and-freshness) · [Generated data contracts](../reference/Generated_Data_Contracts.md#catalogue-reference-and-presentation)
 
 For an **illustrative** document containing these two tokens:
 
@@ -80,7 +80,7 @@ For a **real saved Work example**, [10,000](/docs/?collection=works&doc=d-202608
 
 Projects Refresh uses the Context manifest for discovery, reads each selected by-ID payload once and collects distinct `catalogue.references[].target` identities: `catalogue-work` and `catalogue-gallery`. An omitted envelope supplies no references. Consumed facts live only in Projects' snapshot; shared manifests/indexes are not extended. Python gathers/persists facts, while the browser owns joins and presentation. Context-only coverage remains the accepted boundary.
 
-Studio Refresh already produces the other inputs: `working/generated/catalogue/private/work-sources.json` supplies Work → Series/folder facts, and `working/generated/catalogue/series-galleries-index.json` supplies explicit Series → Gallery pairs. The latter currently includes Gallery `001` under Series `001`. Use those explicit pairs rather than infer Series from Gallery member Works. Reverse the pairs for Gallery → Series lookup. [Catalogue Report Inputs](Catalogue_Report_Inputs.md) and [Series and Galleries](../studio/Reports.md#current-reports) describe the owners.
+Studio Refresh already produces the other inputs: `working/generated/catalogue/private/work-sources.json` supplies Work → Series/folder facts, and `working/generated/catalogue/series-galleries-index.json` supplies explicit Series → Gallery pairs. The latter currently includes Gallery `001` under Series `001`. Use those explicit pairs rather than infer Series from Gallery member Works. Reverse the pairs for Gallery → Series lookup. [Catalogue Report Inputs](Catalogue_Report_Inputs.md) and [Series and Galleries](../reference/Reports.md#current-reports) describe the owners.
 
 This is a token-based association rule: plain Markdown links to Catalogue documents are not included in `catalogue.references` and would not contribute to Projects. Supporting those links would be a separate requirement. Refresh needs no Links JSON, source-token reparse or rendered-HTML scan. Incoming links, generated Related Links lists and chains through other documents do not create membership. Documents retained for actual authoring should use relevant Work/Gallery tokens; deleted Folder placeholders need no replacement association.
 
@@ -90,7 +90,7 @@ This is a token-based association rule: plain Markdown links to Catalogue docume
 - **Authored collection thumbnails — implemented:** Library, Context, Concepts and Moments share the independent Thumb action. Context has no Subject-derived Catalogue-thumbnail alternative. Catalogue and ordinary Index artwork keep their separate owners.
 - **Authoring and metadata — retired:** Assign Subject, source Subject/thumbnail declarations, validation/customisation/context paths, scalar projections, image-token thumbnail controls and thumbnail-only Source Save uploads are removed.
 
-On 16 September 2026, the user chose explicit Work IDs for Catalogue image and Media View tokens inserted through the former **Use document subject** shortcut. This fixed the target at insertion time so later Subject edits could not retarget the saved token. The migration converted two abbreviated tokens to Work `01942` in document `d-20260916-182813-39ce80` and Work `00520` in document `d-20260911-100212-71100f`, preserving their other fields. Subject Retirement removed the shortcut and kept explicit token identities. [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md#supported-source-forms)
+On 16 September 2026, the user chose explicit Work IDs for Catalogue image and Media View tokens inserted through the former **Use document subject** shortcut. This fixed the target at insertion time so later Subject edits could not retarget the saved token. The migration converted two abbreviated tokens to Work `01942` in document `d-20260916-182813-39ce80` and Work `00520` in document `d-20260911-100212-71100f`, preserving their other fields. Subject Retirement removed the shortcut and kept explicit token identities. [Document and Catalogue references](../reference/Document_And_Catalogue_References.md#supported-source-forms)
 
 ### Manual Thumbnail Authoring
 

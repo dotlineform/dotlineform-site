@@ -9,7 +9,7 @@ parent_id: d-20260814-155129-c2a782
 ---
 # Docs Viewer Search Relevance
 
-Earlier corpus-adaptive relevance proposal. It preserves possible scoring signals and evaluation rationale. Any future comparison starts from the current Portfolio and collection corpora. [Current reference](../studio/Docs_Viewer_Search.md)
+Earlier corpus-adaptive relevance proposal. It preserves possible scoring signals and evaluation rationale. Any future comparison starts from the current Portfolio and collection corpora. [Current reference](../reference/Reader_Discovery_And_Return.md)
 
 ## Status And Purpose
 

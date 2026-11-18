@@ -10,7 +10,7 @@ parent_id: d-20260902-102745-8379ea
 ---
 # Concept
 
-Presentation study. It records the decision to let one exact Work support its own media presentation and any number of separately authored discussions. [Current reference](../studio/Catalogue_Media_View.md)
+Presentation study. It records the decision to let one exact Work support its own media presentation and any number of separately authored discussions. [Current reference](../reference/Catalogue_Media_View.md)
 
 ## Intent
 
@@ -84,7 +84,7 @@ Catalogue gallery navigation moves between canonical entities in Media View, not
 
 For a Work opened from a Series gallery, previous/next cycles through that gallery's Works and a return link leads back to the originating document. Opening a Work without gallery context does not invent a sequence from its Series membership. Canonical membership and authored document destinations remain separate concerns.
 
-This proposal separated the Work-gallery sequence from ordinary document navigation. The [Catalogue Navigation proposal](Catalogue_Navigation.md) and [implementation notes](Catalogue_Navigation_Implementation.md) record the earlier loaded-sequence and caching ideas. [Catalogue Media View](../studio/Catalogue_Media_View.md) covers the implemented sequence and return behavior.
+This proposal separated the Work-gallery sequence from ordinary document navigation. The [Catalogue Navigation proposal](Catalogue_Navigation.md) and [implementation notes](Catalogue_Navigation_Implementation.md) record the earlier loaded-sequence and caching ideas. [Catalogue Media View](../reference/Catalogue_Media_View.md) covers the implemented sequence and return behavior.
 
 Any coverage report should describe associations and help curation, not enforce one document per Work or classify multiple documents as invalid.
 

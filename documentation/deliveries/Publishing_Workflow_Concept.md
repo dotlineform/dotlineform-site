@@ -97,7 +97,7 @@ Examples of meaningful catalogue changes that may require documents to be update
   - physical: deletion of works that have a subject association at `work_id`.
   - semantic: addition or removal of works in a series that change the meaning or context of the series.
 
-[Catalogue Deployment](../studio/Catalogue_Deployment.md) records the distribution boundary for this policy. Local consumers read current `catalogue/generated/`; public consumers read current deployed Catalogue data. Catalogue deployment must not require rebuilding or republishing unchanged documents. The record draft/Series Publish proposal and the later proposal to freeze Catalogue dependencies inside Analysis Published are superseded; exact deployment mechanics remain pending.
+[Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) records the distribution boundary for this policy. Local consumers read current `catalogue/generated/`; public consumers read current deployed Catalogue data. Catalogue deployment must not require rebuilding or republishing unchanged documents. The record draft/Series Publish proposal and the later proposal to freeze Catalogue dependencies inside Analysis Published are superseded; exact deployment mechanics remain pending.
 
 ## Workflow actions
 

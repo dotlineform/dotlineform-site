@@ -10,7 +10,7 @@ parent_id: d-20260904-204816-0f31be
 ---
 # Gallery List Design
 
-Stopped gallery-list proposal. It records why visual browsing and metadata lookup had different requirements, and the limits of the bounded Series report proof. [Current reference](../studio/Sub_Scope_Index_Architecture.md#catalogue-collection-browsing)
+Stopped gallery-list proposal. It records why visual browsing and metadata lookup had different requirements, and the limits of the bounded Series report proof. [Current reference](../reference/Reader_Discovery_And_Return.md#catalogue-collection-browsing)
 
 Retired on 28 September 2026: the Works in a Series report and this proposed insertable list direction are closed. Gallery Media View supplies gallery membership browsing; normal documents are not intended to host large Work lists. The requirements and questions below remain historical design notes, not planned work.
 

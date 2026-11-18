@@ -10,7 +10,7 @@ parent_id: d-20260902-102745-8379ea
 ---
 # UAC 3 - Explore Tokens, Reports And The Consumer Data Model
 
-Consumer research handoff. It records the proofs, pauses and unresolved questions about tokens, reports and shared generated data at the time. [Current reference](../studio/Catalogue_Media_View.md)
+Consumer research handoff. It records the proofs, pauses and unresolved questions about tokens, reports and shared generated data at the time. [Current reference](../reference/Catalogue_Media_View.md)
 
 Current-state note, 28 September 2026: Series remains a document Subject, but Series Media View tokens, the Works in a Series report, generated Series by-ID/index JSON and the proposed insertable list were retired. The report and list passages below record the earlier branch; they do not schedule a replacement. A future Series-to-Galleries index requires its own relationship rule and consumer design.
 
@@ -56,7 +56,7 @@ The single-Work view and Series 143 gallery extension in [UAC 3A - Implement A S
 
 The user accepted the main conclusions on 5 September: the consumer JSON needs no immediate structural change; existing tokens remain useful but need destinations beyond the old site pages, most likely explicitly selected subject-assigned documents; subject editing is available in Projects and Analysis Works; document Gallery Lists need a toolbar insertion button; thumbnail galleries belong only in Media View.
 
-Stages 4 and 5 are complete. Acceptance verified 1,935 Works, 139 Series, 2,681 Details and all 4,616 required thumbnails. At that handoff, [Catalogue Indexes And Payloads](../studio/Catalogue_Indexes_And_Payloads.md) described Work v6, Series v5, compact indexes and explicit media references. The `documents` arrays were empty and did not select associated or canonical documents. The unused Work field and its normalization were retired on 2026-10-07; current Work payloads use `work_record_v11`, with document relationships owned by Docs Viewer Links.
+Stages 4 and 5 are complete. Acceptance verified 1,935 Works, 139 Series, 2,681 Details and all 4,616 required thumbnails. At that handoff, [Catalogue Indexes And Payloads](../reference/Catalogue_Indexes_And_Payloads.md) described Work v6, Series v5, compact indexes and explicit media references. The `documents` arrays were empty and did not select associated or canonical documents. The unused Work field and its normalization were retired on 2026-10-07; current Work payloads use `work_record_v11`, with document relationships owned by Docs Viewer Links.
 
 When the current hold is resolved, use Working and the full data to evaluate selection, large Detail collections and Works without images against the accepted stage structure and Catalogue schema. The coordinated reader switch was excluded from Stage 5 and remains later work in [Delivery Sequence](Analysis_Catalogue_Delivery_Sequence.md). The remaining checklist and branch-specific manual reviews are still open; no new implementation branch starts as part of the Stage 5 closeout.
 

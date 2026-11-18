@@ -10,11 +10,11 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Docs Import Architecture
 
-Original import architecture and conversion delivery. It preserves the rationale for closed source discovery, normalized intent, preview and per-operation media preparation. The active import guide carries the current Working contract. [Current reference](../studio/Docs_Import.md#implementation-boundary)
+Original import architecture and conversion delivery. It preserves the rationale for closed source discovery, normalized intent, preview and per-operation media preparation. The collection path and its failure modes describe earlier behavior. [Current import reference](../reference/Docs_Import.md#implementation-boundary) · [Current overwrite contract](../reference/Document_Packages.md#what-a-return-can-overwrite)
 
 Docs Viewer Collections reports have two management intake workflows: Import doc receives one browser-selected ordinary file, while Import docs reads selected sources and complete packages beneath the configured Projects base's `data-sharing` directory. Both require the menu's exact collection, independently of checked rows and displayed document state, and normalize ordinary sources through the same converters and document planning, media, source persistence and targeted generation owners. Empty collections support both intake actions; Catalogue retains its Studio/Regenerate ownership.
 
-This document owns the stable architecture and extension method. [Docs Import](../studio/Docs_Import.md) owns the operator workflow. [HTML Import Mapping](../studio/HTML_Import_Mapping.md) owns the intended semantic-HTML conversion rules, and [Word Import Style Mapping](../studio/Word_Import_Style_Mapping.md) owns Word-style semantics. Exact fields, endpoint payloads, and tests remain code-owned.
+The original extension method appears below. [Docs Import](../reference/Docs_Import.md) owns the operator workflow. [HTML Import Mapping](../reference/HTML_Import_Mapping.md) owns the semantic-HTML conversion rules, and [Word Import Style Mapping](../reference/HTML_Import_Mapping.md#word-style-mapping) owns Word-style semantics.
 
 ## Execution Paths
 
@@ -87,7 +87,7 @@ The 2026-10-25 code and redundancy review traced SVG extraction, canonical seria
 
 Each inline raster data URL is decoded once and each HTML-inline SVG is sanitized once per operation. Prepared immutable bytes are held separately from JSON preview metadata, keyed by media family and filename, and passed through the internal document plan to materialisation. The original HTML and base64 Markdown are no longer retained for re-extraction. Materialisation consumes those exact bytes without another source read, decode, SVG parse, positional count audit or fallback conversion. The preparation object remains in memory until its operation completes; there is no saved cache or cross-request handoff. A separate confirmed request still performs its own conversion.
 
-The import helper performs the ampersand and XLink namespace conversion described in [Media And Asset Handling](../studio/Media_And_Asset_Handling.md#import-materialization) before the strict shared sanitizer, which remains the authoring owner for XML validity and SVG safety. Existing selected source/package confinement, document collision authority and media-write/transfer verification remain with their filesystem and storage owners. They prevent unsafe paths, unintended replacement and incomplete selected writes; this refactor adds no recovery, freshness checks or corpus inventory. Obsolete retargeting, media-link helper aliases and raw-source fallback interfaces have been removed without compatibility aliases.
+The import helper performs the ampersand and XLink namespace conversion described in [Media And Asset Handling](../reference/Media_And_Asset_Handling.md#import-materialization) before the strict shared sanitizer, which remains the authoring owner for XML validity and SVG safety. Existing selected source/package confinement, document collision authority and media-write/transfer verification remain with their filesystem and storage owners. They prevent unsafe paths, unintended replacement and incomplete selected writes; this refactor adds no recovery, freshness checks or corpus inventory. Obsolete retargeting, media-link helper aliases and raw-source fallback interfaces have been removed without compatibility aliases.
 
 ## Configuration And Registries
 
@@ -296,4 +296,8 @@ Register the media type's provider, confined path, served prefix, and required c
 - Returned Data Sharing packages and edited Docs Review source folders now
   prove two wrapper policies through the shared normalized planning/apply seam.
 
-[Media Handling](../studio/Media_And_Asset_Handling.md) owns storage paths and materialization rules. [Docs Management Endpoints](../studio/Endpoint_Overview.md) owns the HTTP surface rather than this architecture summary.
+[Media Handling](../reference/Media_And_Asset_Handling.md) owns storage paths and materialization rules. [Docs Management Endpoints](../reference/Endpoint_Overview.md) owns the HTTP surface rather than this architecture summary.
+
+## Earlier Preparation Acceptance Record
+
+The 18 October implementation review removed repeated extraction, materialisation count audits, owner rebinding/retargeting, unused media-link aliases and raw-source fallback. It retained strict sanitization, selected filesystem/storage checks, source-derived package image titles and the then-ordinary Review destination. Eight changed Python owners passed lint, compilation and import diagnostics. Read-only conversion of the reported Brain Structure HTML through the CLI and configured Library produced one prepared SVG without warnings. No tests, live import writes, generation or Publish were run; interaction remained for normal-use acceptance. This is dated evidence from the former planning register, not current test coverage.

@@ -1,6 +1,6 @@
 # Public Work JSON Delivery Handoff
 
-Archived implementation evidence for [Public Work JSON Review](Public_Work_JSON_Review.md). The user accepted and closed the delivery on 2026-10-19 after confirming the compact Catalogue Related Links correction. The record below covers Working conversion, Publish, Export creation and replacement, and two Prepare package dry runs. The [current Catalogue presentation contract](../studio/Generated_Data_Contracts.md#catalogue-reference-and-presentation) describes the surviving behaviour.
+Archived implementation evidence for [Public Work JSON Review](Public_Work_JSON_Review.md). The user accepted and closed the delivery on 2026-10-19 after confirming the compact Catalogue Related Links correction. The record below covers Working conversion, Publish, Export creation and replacement, and two Prepare package dry runs. The [current Catalogue presentation contract](../reference/Generated_Data_Contracts.md#catalogue-reference-and-presentation) describes the surviving behaviour.
 
 ## Decisions
 

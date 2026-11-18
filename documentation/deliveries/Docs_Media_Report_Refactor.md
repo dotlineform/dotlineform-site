@@ -5,15 +5,15 @@ title: Docs Media Report Refactor
 added_date: "2026-09-26 16:42:20"
 last_updated: "2026-09-26 16:53:52"
 summary: Front-end Docs Media report assembly with reusable server data and Finder helpers; manual review pending.
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Docs Media Report Refactor
 
-Saved Docs Media report refactor. It preserves the deliberate separation of inspection, presentation, Finder activation and manual review. [Current reference](../studio/Media_And_Asset_Handling.md)
+Saved Docs Media report refactor. It preserves the deliberate separation of inspection, presentation, Finder activation and manual review. [Current reference](../reference/Media_And_Asset_Handling.md)
 
 Status: implementation and static code review complete; manual report and Finder review pending.
 
-The Docs Media report (`/docs/?stage=working&doc=d-20260812-212735-6d9cf3`) now builds its rows in `docs-media-data.js` from generic `/docs/media-files` and `/docs/media-references` GET reads. `POST /docs/media-report` and `docs_media_report.py` are removed. [Media And Asset Handling](../studio/Media_And_Asset_Handling.md) owns the current payload and media boundary.
+The Docs Media report (`/docs/?stage=working&doc=d-20260812-212735-6d9cf3`) now builds its rows in `docs-media-data.js` from generic `/docs/media-files` and `/docs/media-references` GET reads. `POST /docs/media-report` and `docs_media_report.py` are removed. [Media And Asset Handling](../reference/Media_And_Asset_Handling.md) owns the current payload and media boundary.
 
 ## Responsibilities
 

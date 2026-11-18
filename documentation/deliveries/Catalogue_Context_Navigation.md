@@ -8,6 +8,6 @@ parent_id: d-20260903-222617-28475e
 ---
 # Context Navigation
 
-Historical note on the former Series-based Work sequence. [Catalogue Navigation](Catalogue_Navigation.md) carries the original proposal. [Catalogue Media View](../studio/Catalogue_Media_View.md) describes current sequence and return behavior.
+Historical note on the former Series-based Work sequence. [Catalogue Navigation](Catalogue_Navigation.md) carries the original proposal. [Catalogue Media View](../reference/Catalogue_Media_View.md) describes current sequence and return behavior.
 
 Navigation from one work to the next is currently defined by their place in a series of works. Works can be ordered in different ways within a series. When works become sub-scope documents, the documents exist in a flat, ordered sequence.

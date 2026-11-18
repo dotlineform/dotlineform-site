@@ -6,7 +6,7 @@ added_date: "2026-09-04 17:51:20"
 last_updated: "2026-09-04 17:51:20"
 summary: Back up selected external workspace folders to private R2 storage with retained history and a defined restore path.
 ui_status: proposed
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20261118-235100-64ad2e
 ---
 # R2 Workspace Backups
 

@@ -6,11 +6,11 @@ added_date: "2026-09-24 10:46:45"
 last_updated: "2026-09-24 11:50:39"
 summary: Separate New and Edit modals for shared Gallery and Series definitions, with global Gallery deletion and empty-Series deletion.
 ui_status: active
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Gallery And Series Definition Editing
 
-Earlier Gallery/Series definition editor delivery. It preserves separate definition and membership decisions and its original implementation status. [Current reference](../studio/Catalogue_Media_View.md)
+Earlier Gallery/Series definition editor delivery. It preserves separate definition and membership decisions and its original implementation status. [Current reference](../reference/Catalogue_Media_View.md)
 
 ## Requirements
 
@@ -25,7 +25,7 @@ Earlier Gallery/Series definition editor delivery. It preserves separate definit
 
 - Work editor field actions and shared definition modal presentation, with focused Gallery/Series service adapters.
 - Canonical Gallery create/save/delete service operations with exact identity, definition revision and deletion member-set checks; reuse the existing transaction and output-completion owners.
-- Updated [Work editor](../studio/Catalogue_Work_Editor.md) and [Catalogue completion](../studio/Catalogue_Save_And_Refresh.md) documentation.
+- Updated [Work editor](../reference/Catalogue_Work_Editor.md) and [Catalogue completion](../reference/Catalogue_Save_And_Refresh.md) documentation.
 
 ## Process
 
@@ -53,4 +53,4 @@ Local Studio must be restarted and the Works editor refreshed before manual revi
 
 ## Follow-on
 
-The proposed [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) split, bulk Series assignment, bulk Work creation, public deployment and native hosting remain separate work. The older targeted-Publish proposal is superseded by the single Docs Publish lifecycle.
+The proposed [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) split, bulk Series assignment, bulk Work creation, public deployment and native hosting remain separate work. The older targeted-Publish proposal is superseded by the single Docs Publish lifecycle.

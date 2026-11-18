@@ -10,7 +10,7 @@ parent_id: d-20261003-111241-1a513e
 ---
 # Document View And Return Navigation - Handoff
 
-Archived implementation evidence for [the completed delivery](Document_View_And_Return_Navigation_Delivery.md). DVR-0–5 were accepted and closed on 2026-10-03. The user then approved DVR-6's two-view follow-on and accepted its closeout with “great, ok to close”. [Docs Viewer Runtime](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns current navigation.
+Archived implementation evidence for [the completed delivery](Document_View_And_Return_Navigation_Delivery.md). DVR-0–5 were accepted and closed on 2026-10-03. The user then approved DVR-6's two-view follow-on and accepted its closeout with “great, ok to close”. [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns current navigation.
 
 ## DVR-6 Continuation
 
@@ -52,3 +52,7 @@ On 2026-10-03 the user confirmed general navigation, opening Source editor, chan
 Search's saved index, body postings and coverage are unchanged. Search rebuild, Publish, commit, push and deployment were not performed. Tests were not migrated or run; examples in `docs_viewer_stage_target_contract.mjs`, `docs_viewer_subscope_report_contract.mjs`, `docs_viewer_document_link_contract.mjs` and `docs_viewer_project_state_contract.mjs` still refer to retired route/helper contracts. Any test work needs its own agreed specification; do not change production to satisfy those old assumptions.
 
 DVR-0–6 were accepted and closed on 2026-10-03. Closeout updated the delivery and handoff status and Runtime's acceptance record. Bounded source and diff review reused the implementation evidence. Publish, deployment, commit and push were separate actions at closeout.
+
+## Later discovery evidence
+
+The later scoped Search delivery confirmed that returning from Gallery and Work browsing retained the active search and following a Context link kept its results. The Index Search and Recent delivery had already assigned narrow-screen access to a separately reviewed layout task. The current reader reference traces the subsequent code and keeps the direct, retained-caller and tab-snapshot paths distinct. [Scoped Search acceptance](Public_Index_Search_Scopes.md#3-verify-the-cutover-locally) · [Index and Recent delivery](Index_Search_And_Recent.md#separate-narrow-screen-review) · [Current reader return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)

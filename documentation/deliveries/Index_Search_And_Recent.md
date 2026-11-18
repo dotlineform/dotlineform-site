@@ -6,13 +6,13 @@ added_date: "2026-10-01 20:37:10"
 last_updated: "2026-10-01 22:42:48"
 summary: Share incremental sidebar tracking across document navigation, then move Search and Recent into retained Index panel views without index or document reloads on return.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Index Search And Recent
 
-Accepted retained Index views and return handoff. It preserves the reason to keep discovery controls independent of the open document. [Current reference](../studio/Docs_Viewer_Runtime.md#exact-document-navigation-and-return)
+Accepted retained Index views and return handoff. It preserves the reason to keep discovery controls independent of the open document. [Current reference](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
-Status: complete, accepted for closeout by the user on 2026-10-01. Implementation, public projection, selected static checks, code review and durable documentation transfer are complete. Public narrow-screen access remains a separate review. This feature is parented to [Planned Features](../studio/Planned_Features.md).
+Status: complete, accepted for closeout by the user on 2026-10-01. Implementation, public projection, selected static checks, code review and durable documentation transfer are complete. Public narrow-screen access remains a separate review. This feature is parented to [Planned Features](../_working/README.md).
 
 Move the shared Docs Viewer Search and Recent controls into the Index panel and make their results alternative views of that panel. Users can open several results while the list remains visible and the document appears in the main pane. The retained tree continues tracking the displayed document while hidden; returning to it reveals the current selection without fetching its data or redrawing it merely because it became visible.
 
@@ -41,7 +41,7 @@ For example, start Search while document A is displayed, then open result B. Cle
 
 ## Independent Related Links Panel
 
-Search results in the Index panel and pinned Related links in the [Info Panel](../studio/Info_Panel.md) can remain open together in the normal reader layout. Each owns its own list state and both use the shared document-navigation path to change the main pane. Recent can coexist with the pinned Info panel on the same basis.
+Search results in the Index panel and pinned Related links in the [Info Panel](../reference/Info_Panel.md) can remain open together in the normal reader layout. Each owns its own list state and both use the shared document-navigation path to change the main pane. Recent can coexist with the pinned Info panel on the same basis.
 
 - Following a result, a pinned Related link or an in-app document-content link preserves the active Search query/results or Recent list, including its paging and scroll position.
 - The Info panel remains pinned to its captured document when navigation changes the main pane. Another pin replaces that capture; Close releases it. Clearing Search or leaving Recent affects only the Index view, and closing or replacing the Info capture does not reset the Index results.
@@ -110,11 +110,11 @@ The shared sidebar owns incremental selection, ancestor expansion and branch tog
 
 Search and Recent are registered as Index-panel views. Their former main-pane presentation and automatic Search resets in the shared link handler/document opener are retired. The active Index view survives document navigation from results, pinned Related links, bookmarks and document content; resetting it belongs to explicit Search clearing, Index-view switching or the existing management reload/invalidation owner. No compatibility aliases or duplicate results surfaces remain.
 
-This is a reader presentation and navigation change. Search corpus, tokenizer, ranking, Recent eligibility, generated payload schemas, document builders, services and publication semantics retain their current owners. [Docs Viewer Search](../studio/Docs_Viewer_Search.md) describes the maintained data and query contracts.
+This is a reader presentation and navigation change. Search corpus, tokenizer, ranking, Recent eligibility, generated payload schemas, document builders, services and publication semantics retain their current owners. [Reader discovery and return](../reference/Reader_Discovery_And_Return.md) describes the maintained data and query contracts.
 
 ## Delivery Steps
 
-The steps below follow [Development Checklist](../studio/Development_Checklist.md). Delivery was authorized and accepted for closeout on 2026-10-01; each record identifies changed owners, selected evidence, findings and its gate outcome.
+The steps below follow [Development Checklist](../development/Development_Checklist.md). Delivery was authorized and accepted for closeout on 2026-10-01; each record identifies changed owners, selected evidence, findings and its gate outcome.
 
 ### 0 Readiness
 
@@ -150,9 +150,9 @@ Record: implemented on 2026-10-01 in the shared sidebar, router and route workfl
 
 Gate: all behavior criteria below are implemented, with no duplicate main-pane result surface, obsolete Search-reset path or compatibility alias. The user accepted delivery for closeout, assigning public narrow-screen access to a separate review.
 
-Proposed evidence budget: changed-source lint and whitespace checks, bounded route/view/selection review, then the required `bin/site-code-update`, exact tracked runtime projection review, `bin/site-code-update --check` and `bin/site-validate`. Projection and validation cover public asset distribution, not interaction correctness; inspect their current cost before running. User manual review covers pinned ordinary/collection navigation, simultaneous Index results and Related links, an Info-link destination outside the results, independent clearing/closing, document-content navigation, Back/Forward, disabled actions and public narrow-screen access. No Docs/Search rebuild or Publish is required for this runtime change. Any existing automated test selection or test changes need a separately agreed scope under [Testing](../studio/Testing.md).
+Proposed evidence budget: changed-source lint and whitespace checks, bounded route/view/selection review, then the required `bin/site-code-update`, exact tracked runtime projection review, `bin/site-code-update --check` and `bin/site-validate`. Projection and validation cover public asset distribution, not interaction correctness; inspect their current cost before running. User manual review covers pinned ordinary/collection navigation, simultaneous Index results and Related links, an Info-link destination outside the results, independent clearing/closing, document-content navigation, Back/Forward, disabled actions and public narrow-screen access. No Docs/Search rebuild or Publish is required for this runtime change. Any existing automated test selection or test changes need a separately agreed scope under [Testing](../development/Verification.md).
 
-Record: implemented on 2026-10-01. The Index shell/registry/panel layout own controls and tree/results visibility; the Search controller retains loaded inputs and mounted results; route history carries `q`, exact host/`subdoc` and the Index view independently of the main document. Main-pane result surfaces, navigation resets and duplicate mode flags were removed. Bookmark and document controls retain their normal capability rules; Index Actions/Position stay visible but disabled in results. Collection artwork comes from loaded configuration; the existing ordinary `dlf-doc.svg` now has a mask class and explicit public projection entry. Durable behavior is recorded in [Docs Viewer Search](../studio/Docs_Viewer_Search.md#index-results-and-navigation) and [Runtime](../studio/Docs_Viewer_Runtime.md#retained-index-views).
+Record: implemented on 2026-10-01. The Index shell/registry/panel layout own controls and tree/results visibility; the Search controller retains loaded inputs and mounted results; route history carries `q`, exact host/`subdoc` and the Index view independently of the main document. Main-pane result surfaces, navigation resets and duplicate mode flags were removed. Bookmark and document controls retain their normal capability rules; Index Actions/Position stay visible but disabled in results. Collection artwork comes from loaded configuration; the existing ordinary `dlf-doc.svg` now has a mask class and explicit public projection entry. Durable behavior is recorded in [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#index-results-and-navigation) and [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#retained-index-views).
 
 Selected evidence: `bin/lint-js` covered the 23 changed production JavaScript paths (18 shared, five management); the first run found one unused initial assignment, which was fixed, and subsequent runs covered only the affected/newly changed paths. Final changed-source lint is clear. `git diff --check` passed. `bin/site-code-update` projected 19 changed JS/CSS files and added the existing ordinary icon; the exact tracked projection delta and manifest addition were reviewed. After the artwork correction, `bin/site-code-update --check` reported 104 unchanged projected files and `bin/site-validate` passed (62 required files, seven directories, 72 runtime modules, one route and seven route files). Commands completed in under a second each. No tests, browser probes, benchmarks, Docs/Search builds, Publish, deployment, commit or push ran. Static evidence establishes source hygiene and public distribution; the user's closeout acceptance does not add automated interaction evidence or public narrow-screen review evidence.
 
@@ -204,4 +204,4 @@ Checked behavior items indicate implementation and source review. User acceptanc
 
 - [ ] Review public narrow-screen access to the displayed document while Search or Recent results sit above it, including bounded list scrolling and coexistence with pinned Info. This manual review is separate from the completed delivery and has not been performed or scheduled here.
 
-Test authoring, changes or non-trivial test runs require their separately agreed scope under [Testing](../studio/Testing.md). Delivery authorization does not authorize test work.
+Test authoring, changes or non-trivial test runs require their separately agreed scope under [Testing](../development/Verification.md). Delivery authorization does not authorize test work.

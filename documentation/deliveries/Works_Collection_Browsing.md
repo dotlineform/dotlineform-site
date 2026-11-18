@@ -5,15 +5,15 @@ title: Works Collection Browsing
 added_date: "2026-09-26 18:15:49"
 last_updated: "2026-10-08 19:10:43"
 summary: Completed Works browsing delivery: Save-maintained Manage metadata, pagination, delayed title search and title/recent sorting, accepted through Site Preview and Save review.
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Works Collection Browsing
 
-Completed first Works browsing delivery. It preserves the staged reader and private metadata evidence before the Context and Catalogue boundaries changed. [Current reference](../studio/Reports.md)
+Completed first Works browsing delivery. It preserves the staged reader and private metadata evidence before the Context and Catalogue boundaries changed. [Current reference](../reference/Reports.md)
 
 Status: **complete and closed on 2026-09-26 with user approval**. The user reviewed through Site Preview, accepted the final count/placeholder/heading adjustments, confirmed Save testing and authorized closeout. Studio Save maintains the generated Catalogue metadata needed by Manage Works, and the report simply loads it normally. Preview and Site Preview contain the required `last_updated` values. Retain this completed delivery for manual archive.
 
-Current-state note, 2026-10-03: Context no longer displays a Subject column or Title/Subject heading sorts. The private Catalogue title reader/file/generator are retired, and `working_works` retains document-detail Subject information and actions only. Toolbar sorting is Working-only. The original delivery below records its accepted historical scope; [collection architecture](../studio/Sub_Scope_Index_Architecture.md#context-collection-browsing-and-working-subjects) and [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) own current behavior.
+The original delivery below records the September Works list. Current Context uses the shared collection manifest, A–Z and Last added in both readers, independent document thumbnails and the tab's return state. The former Subject column, Subject controls and their private title reader were retired. [Current collection browsing](../reference/Reader_Discovery_And_Return.md#collection-list-preparation) · [Subject retirement](Subject_Retirement.md)
 
 The outcome is consistent, responsive browsing of Works (`/docs/?stage=working&doc=d-20260801-073826-8865a8`), report `docs_collection`, collection `works`, in Manage, Preview and the public reader. The delivery reused the [original Catalogue collection browsing](Catalogue_Collection_Browsing.md) while keeping Works' mixed subjects and richer Manage presentation. This delivery does not concern the separate report with registry ID `works` or the Catalogue Works report.
 
@@ -21,7 +21,7 @@ The outcome is consistent, responsive browsing of Works (`/docs/?stage=working&d
 
 The agreed browsing behavior is unchanged: A–Z on opening, a recent/A–Z button, title-fragment search with a 180 ms delay, 20 rows per page, and the existing richer Manage rows and subject actions.
 
-This delivery followed the [then-current Catalogue Works metadata approach](Catalogue_Works_Browsing_And_Search.md), where Save updated generated rows for the report to load directly. [Catalogue Works data and ownership](../studio/Catalogue_Works.md#data-and-ownership) describes the current Refresh handoff.
+This delivery followed the [then-current Catalogue Works metadata approach](Catalogue_Works_Browsing_And_Search.md), where Save updated generated rows for the report to load directly. [Catalogue Works data and ownership](../reference/Catalogue_Works.md#data-and-ownership) describes the current Refresh handoff.
 
 | Data | Owner of updates | Reader behavior |
 | --- | --- | --- |
@@ -83,7 +83,7 @@ Works contains mixed document subjects; this delivery does not add Work thumbnai
 - Shared browser behavior supplies title-fragment search, 180 ms delay, 20-row pagination, counts, title/recent controls and retained detail-return state in Manage and public views.
 - Save efficiently maintains the generated Catalogue display metadata required by Manage Works; normal report loading consumes that output alongside existing document metadata/associations, preserving selection, diagnostics and subject actions.
 - Canonical public runtime changes and required assets are projected into `site/` through the explicit inventory. Both sort icons and masks must be present in the public module/style/asset boundary.
-- Focused verification and manual review establish the result; the durable [collection architecture](../studio/Sub_Scope_Index_Architecture.md) receives the implemented behavior and remaining limitations at closeout.
+- Focused verification and manual review establish the result; the durable [collection architecture](../reference/Collections_And_Books.md) receives the implemented behavior and remaining limitations at closeout.
 
 The required targeted Save-output integration is included. A broader runtime server refactor, manual canonical/source data edits, additional image generation, full-text collection search, site Search/Recents changes, unrelated report cleanup, tests/fixtures/harness authoring, automatic publication, commit or push is excluded.
 
@@ -121,7 +121,7 @@ Record: browsing behavior and Save-owned freshness are agreed. Source inspection
 - [x] Project the changed public runtime and assets, review the exact tracked delta, and verify both icon states have shared masks and SVGs.
 - [x] Obtain user acceptance of Works browsing through Site Preview and confirmation of Studio Save testing with the generated metadata approach.
 
-Verification budget: explicit-path JavaScript/Python lint for changed sources, focused existing builder/generator diagnostics and direct generated-row inspection, then scoped whitespace review. Run `bin/site-code-update`, inspect its exact delta, then `bin/site-code-update --check` and `bin/site-validate` for public runtime changes. Confirm the smallest required Working build and write boundary before running it; do not repeat builds for idempotence alone. One direct read-only HTTP GET from a bounded temporary Studio process checks the new static route, allowed Docs origin headers and byte equality; it exercises no mutation. Static/transport checks are low-cost local work; broader Save/build cost remains unmeasured. User manual review owns UI fit and Finder behavior. New or changed tests, fixtures, harnesses and temporary regression scripts require a separate specification/approval under [Test Contract Discipline](../studio/Test_Contract_Discipline.md).
+Verification budget: explicit-path JavaScript/Python lint for changed sources, focused existing builder/generator diagnostics and direct generated-row inspection, then scoped whitespace review. Run `bin/site-code-update`, inspect its exact delta, then `bin/site-code-update --check` and `bin/site-validate` for public runtime changes. Confirm the smallest required Working build and write boundary before running it; do not repeat builds for idempotence alone. One direct read-only HTTP GET from a bounded temporary Studio process checks the new static route, allowed Docs origin headers and byte equality; it exercises no mutation. Static/transport checks are low-cost local work; broader Save/build cost remains unmeasured. User manual review owns UI fit and Finder behavior. New or changed tests, fixtures, harnesses and temporary regression scripts require a separate specification/approval under [Test Contract Discipline](../development/Verification.md).
 
 Gate: the bounded implementation and selected evidence are reviewable. Preview preparation, Deploy Repo, public deployment, commit and push retain their separate approval gates. If the new reader requires a refreshed snapshot, state that prerequisite clearly rather than accepting old data.
 
@@ -161,7 +161,7 @@ Verification budget: bounded documentation/source review; reuse completed implem
 
 Gate: passed. The complete result is accepted and durable ownership is current.
 
-Record: closed with user approval on 2026-09-26. [Collection architecture](../studio/Sub_Scope_Index_Architecture.md) and [Catalogue Save And Refresh](../studio/Catalogue_Save_And_Refresh.md) describe the accepted behavior and preserve verification limits. Durable navigation points to current owners, without a dependency on this delivery. Closeout changes documentation only and reuses completed implementation checks plus user review; additional executable code review is not applicable. No rebuild, test, generated-data write, publication, commit or push was performed for closeout. The completed delivery remains available for manual archive. Full-text search and general reports review remain separate outcomes.
+Record: closed with user approval on 2026-09-26. [Collection architecture](../reference/Collections_And_Books.md) and [Catalogue Save And Refresh](../reference/Catalogue_Save_And_Refresh.md) describe the accepted behavior and preserve verification limits. Durable navigation points to current owners, without a dependency on this delivery. Closeout changes documentation only and reuses completed implementation checks plus user review; additional executable code review is not applicable. No rebuild, test, generated-data write, publication, commit or push was performed for closeout. The completed delivery remains available for manual archive. Full-text search and general reports review remain separate outcomes.
 
 ## Follow-on
 

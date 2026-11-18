@@ -10,7 +10,7 @@ parent_id: d-20260904-204816-0f31be
 ---
 # UAC 3B - Works In A Series Report
 
-Stopped Series report study. It records what the bounded report proved about generated member data and exact Media View targets. [Current reference](../studio/Reports.md)
+Stopped Series report study. It records what the bounded report proved about generated member data and exact Media View targets. [Current reference](../reference/Reports.md)
 
 Retired on 28 September 2026: the Works in a Series report, its insertion action and generated Series by-ID/index files were removed. The Series 143 example document remains as a historical note with its exact Series Subject. The delivery record below describes the earlier implementation and is no longer a current workflow or design requirement.
 

@@ -6,21 +6,21 @@ added_date: "2026-09-16 21:14:43"
 last_updated: "2026-09-28 22:21:02"
 summary: Completed Catalogue Work-record generation, full collection delivery and retained list navigation; accepted for closeout.
 ui_status: done
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ---
 # Catalogue Work Record Regeneration
 
-Initial Catalogue document generation. It records the approved bounded pilot, full-collection acceptance and decisions about source identity and navigation. The workflow below used the former preview/apply action. [Current reference](../studio/Catalogue_Save_And_Refresh.md#regenerate-timing)
+Initial Catalogue document generation. It records the approved bounded pilot, full-collection acceptance and decisions about source identity and navigation. The workflow below used the former preview/apply action. [Current reference](../reference/Catalogue_Save_And_Refresh.md#regenerate-timing)
 
 ## Purpose And Status
 
-This document records the completed 2026-09-17 Regenerate delivery and its original literal image-token form. Regenerate now emits the bound image-token form described in [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md); the original source examples and acceptance evidence below remain historical.
+This document records the completed 2026-09-17 Regenerate delivery and its original literal image-token form. Regenerate now emits the bound image-token form described in [Document and Catalogue references](../reference/Document_And_Catalogue_References.md); the original source examples and acceptance evidence below remain historical.
 
 The Catalogue collection surfaces existing Works owned by the Studio Works editor. Studio owns Work creation, metadata and generated Work JSON. Docs Viewer owns the documents that present those records, with Regenerate as their creation and maintenance action.
 
 The first version uses one body generator defined in code. It reads a Work's generated JSON and produces an existing Catalogue image token containing the exact Work identity and resolved presentation text. There are no Markdown template files, JSON field-definition files or new template tokens. Changing the body structure or selected metadata means changing the code and regenerating the documents.
 
-Delivery is complete and was accepted for closeout on 2026-09-17. The normal Regenerate action creates and maintains Catalogue documents from Studio-generated Work data; manual Catalogue New is removed. The initial run created 100 documents, a subsequent run selected those 100 for regeneration, and the full run created 1,834 further documents while skipping the 101 existing documents. The generated collection manifests contain 1,935 records. Modal corrections and retained list navigation are delivered. [Runtime](../studio/Docs_Viewer_Runtime.md) and [Collection architecture](../studio/Sub_Scope_Index_Architecture.md#catalogue-work-records) own the maintained behavior; [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md) owns the existing image-token behavior used here.
+Delivery is complete and was accepted for closeout on 2026-09-17. The normal Regenerate action creates and maintains Catalogue documents from Studio-generated Work data; manual Catalogue New is removed. The initial run created 100 documents, a subsequent run selected those 100 for regeneration, and the full run created 1,834 further documents while skipping the 101 existing documents. The generated collection manifests contain 1,935 records. Modal corrections and retained list navigation are delivered. [Runtime](../reference/Docs_Viewer_Runtime.md) and [Collection architecture](../reference/Collections_And_Books.md#catalogue-work-records) own the maintained behavior; [Document and Catalogue references](../reference/Document_And_Catalogue_References.md) owns the existing image-token behavior used here.
 
 ## Ownership And Inputs
 
@@ -249,7 +249,7 @@ Record — closed on the user's explicit approval. Durable Runtime and Collectio
 
 Accepted evidence limits: no added or modified tests, browser automation, measured Apply/navigation timings, before/after Links-byte snapshots, forced partial-failure run or exhaustive optional-metadata/changed-body replacement coverage. Representative content and live outcomes are recorded above. Search remains a separate undecided feature. No further implementation work is required by this delivery. Publish, Deploy Repo, public deployment, commit and push were not performed.
 
-Closeout disposition: retain this combined feature/delivery document as done for manual archiving. Its durable destinations are [Runtime](../studio/Docs_Viewer_Runtime.md) and [Collection architecture](../studio/Sub_Scope_Index_Architecture.md#catalogue-work-records). No separate concept, proposed architecture or temporary verification siblings were created. Planned Features remains the workflow authority. No documents were deleted or moved.
+Closeout disposition: retain this combined feature/delivery document as done for manual archiving. Its durable destinations are [Runtime](../reference/Docs_Viewer_Runtime.md) and [Collection architecture](../reference/Collections_And_Books.md#catalogue-work-records). No separate concept, proposed architecture or temporary verification siblings were created. Planned Features remains the workflow authority. No documents were deleted or moved.
 
 New or changed tests, fixtures and harnesses require their own agreed specification. The live runs above used the product workflow and real collection; they did not authorize new test code.
 

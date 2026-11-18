@@ -10,7 +10,7 @@ parent_id: d-20260903-222617-28475e
 ---
 # Nav Implementation
 
-Historical implementation notes for the former public Catalogue and its proposed Docs adaptation. The earlier route names and code paths refer to the design before relocation. [Catalogue Archive](../studio/Catalogue_Archive.md) · [Current Catalogue Media View](../studio/Catalogue_Media_View.md)
+Historical implementation notes for the former public Catalogue and its proposed Docs adaptation. The earlier route names and code paths refer to the design before relocation. [Catalogue Archive](Catalogue_Archive.md) · [Current Catalogue Media View](../reference/Catalogue_Media_View.md)
 
 ## Purpose
 
@@ -123,7 +123,7 @@ Today, `writeSubdocUrl()` updates `doc`/`subdoc` while its report history state 
 
 ## Media Focus Uses The Same Principle, Not The Same Controller
 
-[Catalogue Media Focus View](../studio/Catalogue_Media_View.md) receives an ordered image collection and selected image ID. It derives its own previous/next and position/total in memory and updates the image, caption and original-image target together. Moving between images may load image resources; it should not reload Catalogue JSON to discover neighbours.
+[Catalogue Media Focus View](../reference/Catalogue_Media_View.md) receives an ordered image collection and selected image ID. It derives its own previous/next and position/total in memory and updates the image, caption and original-image target together. Moving between images may load image resources; it should not reload Catalogue JSON to discover neighbours.
 
 Use the existing Content Detail adapter lifecycle in `docs-viewer/runtime/js/shared/docs-viewer-content-detail-view.js`. It currently supports table, diagram and report adapters, not an image adapter. Media Focus is new work, with its own image controls; it does not navigate between sub-scope documents.
 

@@ -4,11 +4,11 @@ doc_id: d-20260607-222033-ccc471
 title: Service Entrypoints
 added_date: 2026-06-07 22:20:33
 last_updated: 2026-07-11
-parent_id: d-20260607-222033-2a494e
+parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Service Entrypoints
 
-Detailed service-launcher reference from the earlier script inventory. The current runnable commands and module dispatch are in Local Runners and the consolidated owner map. [Current reference](../studio/Scripts_Overview.md)
+Detailed service-launcher reference from the earlier script inventory. The current runnable commands and module dispatch are in Local Runners and the consolidated owner map. [Current reference](../reference/Endpoint_Overview.md#service-and-dispatch)
 
 ## `docs-viewer/bin/docs-viewer`
 

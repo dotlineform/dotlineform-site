@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Publishing Workflow - Analysis Media Namespace
 
-Earlier Analysis media namespace cutover. It preserves the one-logical-identity decision and the accepted token migration. [Current reference](../studio/Media_And_Asset_Handling.md)
+Earlier Analysis media namespace cutover. It preserves the one-logical-identity decision and the accepted token migration. [Current reference](../reference/Media_And_Asset_Handling.md)
 
 ## Outcome And Boundary
 

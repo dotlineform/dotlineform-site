@@ -8,9 +8,9 @@ parent_id: d-20260423-000000-d015e6
 ---
 # Series Tag Editor
 
-Former Series Tag editor. It preserves historical editing and persistence details alongside the Tag retirement record. [Current reference](../studio/Semantic_Tokens_Architecture.md)
+Former Series Tag editor. It preserves historical editing and persistence details alongside the Tag retirement record. [Current reference](../reference/Document_And_Catalogue_References.md)
 
-Studio Tag data, services and editors were retired on 7 September 2026. The implementation described below is historical. Concept definitions now belong to Analysis documents using optional, stage-unique `concept_id`; existing semantic tokens resolve through those documents. See [Retirement And Rename](Retire_Studio_Tags.md), [Doc Relationships](Doc_Relationships.md) and [Semantic Tokens](../studio/Semantic_Tokens.md).
+Studio Tag data, services and editors were retired on 7 September 2026. The implementation described below is historical. Concept definitions now belong to Analysis documents using optional, stage-unique `concept_id`; existing semantic tokens resolve through those documents. See [Retirement And Rename](Retire_Studio_Tags.md), [Doc Relationships](Doc_Relationships.md) and [Document and Catalogue references](../reference/Document_And_Catalogue_References.md).
 
 ## Historical Implementation
 

@@ -9,7 +9,7 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Management Services
 
-Earlier standalone service and local folder-link boundary. Current Working storage and service responsibilities are mapped from Management Operations. [Current reference](../studio/Configuration_And_Extension_Points.md#workspace-and-target-contracts)
+Earlier standalone service and local folder-link boundary. Current Working storage and service responsibilities are mapped from Management Operations. [Current reference](../reference/Configuration_And_Extension_Points.md#workspace-and-target-contracts)
 
 Docs Viewer management is the local service boundary that lets `/docs/` read published Docs Viewer projections, inspect source configuration, edit Markdown source docs, import staged files, run rebuilds, and perform local-only maintenance actions.
 
@@ -86,7 +86,7 @@ selected parent, displayed URL, label, or fallback target.
 
 ## Reference
 
-- [Endpoint Overview](../studio/Endpoint_Overview.md) lists all GET and POST management endpoints and links to focused endpoint contracts.
-- [Docs Review Endpoints](../studio/Docs_Review_Endpoints.md) records the independently gated returned-package API family.
-- [Script Overview](../studio/Scripts_Overview.md) lists the service entrypoints, route dispatchers, helper modules, rebuild helpers, and maintenance scripts.
-- [Operations](../studio/Management_Operations.md) records security constraints, operational notes, and verification references.
+- [Endpoint Overview](../reference/Endpoint_Overview.md) lists all GET and POST management endpoints and links to focused endpoint contracts.
+- [Docs Review Endpoints](../reference/Docs_Review.md#api-surface) records the independently gated returned-package API family.
+- [Script Overview](../reference/Endpoint_Overview.md#service-and-dispatch) lists the service entrypoints, route dispatchers, helper modules, rebuild helpers, and maintenance scripts.
+- [Operations](../reference/Source_Mutation_Endpoints.md#completion-and-recovery) records security constraints, operational notes, and verification references.

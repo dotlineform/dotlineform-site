@@ -4,13 +4,13 @@ doc_id: d-20261002-135221-f16b64
 title: Source Editor Toolbar
 added_date: "2026-10-02 13:52:21"
 last_updated: "2026-10-13 13:04:18"
-parent_id: d-20260428-000000-f5ff18
+parent_id: d-20260419-000000-d2e47b
 ui_status: done
 summary: Align Source controls at the document's left edge and consolidate insertion actions and VS Code in Directives.
 ---
 # Source Editor Toolbar
 
-Earlier Source toolbar consolidation. It records the decisions behind shared directives and local control placement. [Current reference](../studio/Semantic_Tokens_Architecture.md)
+Earlier Source toolbar consolidation. It records the decisions behind shared directives and local control placement. [Current reference](../reference/Document_And_Catalogue_References.md)
 
 ## Requirements
 
@@ -22,7 +22,7 @@ Return, Save, insertion and modal semantics remain with their existing owners. O
 
 Source registers three main-view controls in the required order. Local management CSS aligns the group to the shared document boundary and opens Directives to the right. The focused menu captures the adapter and selection before moving focus, closes before dispatch and invokes existing modal/workflow owners. Image/file insertion uses the Source adapter's staged-media operation with captured range/revision. VS Code reuses the existing source-opening workflow with immediate busy projection. Standalone insertion definitions/renderers, the two exclusive Catalogue toolbar wrappers and image/file event dispatch are retired without aliases.
 
-[Source Editor Scripts](../studio/Source_Editor_Scripts.md) owns current Source and menu behavior. [Toolbar Model](../studio/Toolbar_Model.md), [Toolbar Icon Mapping](../studio/Toolbar_Icon_Mapping.md), [Runtime Module Ownership](../studio/Runtime_Module_Ownership.md) and [Panel Hosts and Control Surfaces](../studio/Panel_Hosts_And_Control_Surfaces.md) own lasting placement, artwork and composition. All executable changes are management-only; the public code projection and manifest are unchanged.
+[Source editing](../reference/Source_Editing.md) owns current Source and menu behavior. [Toolbar Model](../reference/Panel_Hosts_And_Control_Surfaces.md#control-placement), [Toolbar Icon Mapping](../_working/Toolbar_Icon_Mapping.md), [Runtime Module Ownership](../reference/Runtime_Module_Ownership.md) and [Panel Hosts and Control Surfaces](../reference/Panel_Hosts_And_Control_Surfaces.md) own lasting placement, artwork and composition. All executable changes are management-only; the public code projection and manifest are unchanged.
 
 ## Delivery Steps
 

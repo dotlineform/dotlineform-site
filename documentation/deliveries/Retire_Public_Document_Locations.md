@@ -9,7 +9,7 @@ parent_id: d-20260924-135214-baa9ec
 ---
 # Retire Public Document Locations
 
-Retirement of the obsolete location index and Catalogue document URL refresh. It records the transition to exact reader-owned by-ID locations. [Current reference](../studio/Generated_Data_Contracts.md)
+Retirement of the obsolete location index and Catalogue document URL refresh. It records the transition to exact reader-owned by-ID locations. [Current reference](../reference/Generated_Data_Contracts.md)
 
 ## Requirements
 
@@ -21,7 +21,7 @@ Keep actual document navigation and link-authoring helpers, accepted document me
 
 Deploy Repo no longer produces or reads `document-locations.json`, computes legacy Catalogue document URLs, requires associations for that computation, or reports Catalogue as paused. Its response becomes `docs_deploy_repo_preview_v3` without `catalogue_document_urls`. Document counts come directly from accepted by-ID membership. Local subject association data retains its current owner and remains outside the public file projection.
 
-Current Catalogue distribution remains an independent file projection from Studio-owned generated output into `site/assets/data/catalogue/`, creating the required directory structure and copying the selected public consumer files. [Catalogue Deployment](../studio/Catalogue_Deployment.md) owns that pending requirement. No old Work/Series schema rewriting or Catalogue-to-document URL refresh is required by this retirement.
+Current Catalogue distribution remains an independent file projection from Studio-owned generated output into `site/assets/data/catalogue/`, creating the required directory structure and copying the selected public consumer files. [Catalogue publication](../reference/Catalogue_Save_And_Refresh.md#per-work-publish) owns that pending requirement. No old Work/Series schema rewriting or Catalogue-to-document URL refresh is required by this retirement.
 
 ## Delivery Steps
 

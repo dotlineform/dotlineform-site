@@ -10,13 +10,13 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Publication Ignore List
 
-Archived record. Preserves the retirement of the publishable field and the Unpublishable report’s implementation and verification evidence. For current operation, see [Source Organisation](../reference/Source_Organisation.md#operations) and [Reports](../studio/Reports.md#current-reports).
+Archived record. Preserves the retirement of the publishable field and the Unpublishable report’s implementation and verification evidence. For current operation, see [Source Organisation](../reference/Source_Organisation.md#operations) and [Reports](../reference/Reports.md#current-reports).
 
 ## Current Generation Ownership
 
 `working/source/unpublishable.json` is the single exclusion-policy input. Working index generation reads it once per operation and carries the exact ID set in memory through ordinary/collection projection and required dependent generation. Exact Save/Rebuild/Position follow-through uses the current policy, as complete builds do. Editing the list therefore affects the next index generation; no saved policy copy or change record is kept in `index-tree.json` or another generated file.
 
-Saved public indexes provide previous membership for withdrawal/restoration decisions. The policy excludes ordinary roots and descendants; an excluded collection host excludes its collection. Catalogue documents retain fixed intrinsic eligibility. Generation queues completed document/manifest effects; Publish only consumes those selections and never reads the policy. Search/Recent retain their separate explicit refresh owners. [Builder](../studio/Builder.md#publish-preparation) owns the current generation handoff; the delivery terminology and evidence below are historical.
+Saved public indexes provide previous membership for withdrawal/restoration decisions. The policy excludes ordinary roots and descendants; an excluded collection host excludes its collection. Catalogue documents retain fixed intrinsic eligibility. Generation queues completed document/manifest effects; Publish only consumes those selections and never reads the policy. Search/Recent retain their separate explicit refresh owners. [Builder](../reference/Builder.md#publish-preparation) owns the current generation handoff; the delivery terminology and evidence below are historical.
 
 ## Original Delivery Direction
 
@@ -172,7 +172,7 @@ Publication snapshots change only through separately requested Pre-publish, Publ
 
 | Material | Outcome and durable destination |
 | --- | --- |
-| Publication Ignore List | Complete. Current eligibility and lifecycle live in [Source Organisation](../reference/Source_Organisation.md#operations) and [Builder](../studio/Builder.md#publish-preparation). [Reports](../studio/Reports.md#current-reports) records both the Unpublishable report and the retirement of Analysis Documents. |
+| Publication Ignore List | Complete. Current eligibility and lifecycle live in [Source Organisation](../reference/Source_Organisation.md#operations) and [Builder](../reference/Builder.md#publish-preparation). [Reports](../reference/Reports.md#current-reports) records both the Unpublishable report and the retirement of Analysis Documents. |
 | Unified Analysis And Catalogue Presentation | Retain as the active parent for other outcomes; its Publication Ignore List entry records this accepted completion. |
 | Local handoff and verification artifacts | Retain as ignored delivery evidence. Stable Links creation/backfill conclusions are recorded in Builder; test-policy conclusions are recorded in Development Checklist and Test Contract Discipline. |
 

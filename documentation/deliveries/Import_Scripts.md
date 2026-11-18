@@ -4,11 +4,11 @@ doc_id: d-20260607-222033-c902f6
 title: Import Scripts
 added_date: "2026-06-07 22:20:33"
 last_updated: "2026-10-15"
-parent_id: d-20260607-222033-2a494e
+parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Import Scripts
 
-Earlier staged-import script map. It preserves the separation between the route adapter, format converters and checked apply. [Current reference](../studio/Scripts_Overview.md)
+Earlier staged-import script map. It preserves the separation between the route adapter, format converters and checked apply. [Current reference](../reference/Endpoint_Overview.md#service-and-dispatch)
 
 ## `docs-viewer/services/docs_management_import_service.py`
 

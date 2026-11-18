@@ -10,7 +10,7 @@ parent_id: d-20260908-171728-3c539a
 ---
 # Semantic Token References Across Collections
 
-Former semantic occurrence index and report delivery. It records how exact document identity was carried across collections before the index was retired. [Current reference](../studio/Related_Links.md)
+Former semantic occurrence index and report delivery. It records how exact document identity was carried across collections before the index was retired. [Current reference](../reference/Related_Links.md)
 
 ## Outcome
 
@@ -74,9 +74,9 @@ Code-review notes: removed the proposed build-overlap mitigation following user 
 - 75 focused Python checks passed: collection usage and reader contracts, existing parent/child payload checks, Catalogue grammar, the supported Move build handoff, generated reads and report declarations. Initial new-fixture failures were corrected to use supported Working metadata and an independent builder import; no product validation was relaxed.
 - `node docs-viewer/tests/js/docs_viewer_semantic_tokens_report_contract.mjs` passed for exact source mapping, repeated occurrences, raw Detail identity, explicit Working requests and rejection outside Analysis Working. Explicit changed-source Python/JavaScript lint and `git diff --check` passed.
 - Docs-only dry runs and then Builds completed for Analysis Working's main collection and all four configured sub-scopes, with zero warnings. At implementation verification, the shared index contained 13 occurrences: 10 main and 3 Works, across six source documents. The real reader resolved both Works hosts and all titles. Other configured children contributed no supported token occurrences at that check. These Builds changed one token-index file and no document payloads or document-link records; the watcher had already generated the new report host.
-- The watcher generated the former Analysis Working report (`d-20260912-110653-264748`), its Studio documentation and the updated [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md). Search, Publish, deployment, commit and push were not run.
+- The watcher generated the former Analysis Working report (`d-20260912-110653-264748`), its Studio documentation and the updated [Document and Catalogue references](../reference/Document_And_Catalogue_References.md). Search, Publish, deployment, commit and push were not run.
 
-The user accepted the delivery on 2026-09-12. The closeout reused the recorded implementation and review evidence. [Semantic Tokens Architecture](../studio/Semantic_Tokens_Architecture.md#document-relationships-and-audit) and [Reports](../studio/Reports.md#current-reports) document the later retirement of the usage index and report and the current relationship and audit owners.
+The user accepted the delivery on 2026-09-12. The closeout reused the recorded implementation and review evidence. [Document and Catalogue references](../reference/Document_And_Catalogue_References.md#document-relationships-and-audit) and [Reports](../reference/Reports.md#current-reports) document the later retirement of the usage index and report and the current relationship and audit owners.
 
 ## Focused Verification
 

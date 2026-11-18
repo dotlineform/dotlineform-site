@@ -4,7 +4,7 @@ doc_id: d-20260711-012238-814555
 title: Knowledge System Vision
 added_date: "2026-07-11 01:22:38"
 last_updated: "2026-09-03 21:21:08"
-parent_id: d-20260331-000000-4a16b0
+parent_id: d-20260524-214228-7247ef
 
 ---
 # Knowledge System Vision
@@ -143,6 +143,6 @@ Each project should remain independently reviewable. The vision explains why the
 
 ## Related Documents
 
-- [Docs Viewer](../studio/Docs_Viewer.md)
-- [Docs Review](../studio/Docs_Review.md)
-- [Semantic Tokens](../studio/Semantic_Tokens.md)
+- [Docs Viewer](../reference/Docs_Viewer.md)
+- [Docs Review](../reference/Docs_Review.md)
+- [Document and Catalogue references](../reference/Document_And_Catalogue_References.md)
