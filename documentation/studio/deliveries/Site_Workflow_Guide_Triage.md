@@ -46,15 +46,15 @@ The **First pass** markers in Delete candidates identify the 13 clear retirement
 | [Button_Placement.md](../Button_Placement.md) | 1 / 0 | Keep as the focused reference for button placement. |
 | [CSS_Ownership.md](../CSS_Ownership.md) | 5 / 0 | Shared reader style ownership. |
 | [Catalogue_Archive.md](../Catalogue_Archive.md) | 5 / 0 | Operational reference for the frozen Catalogue archive; its historical subject is intentional. |
-| [Catalogue_Deployment.md](../Catalogue_Deployment.md) | 31 / 0 | Selected Catalogue publication, destinations and failure timing. |
+| [Catalogue_Deployment.md](../Catalogue_Deployment.md) | 31 / 0 | Retain as the exact reference for selected Catalogue transfers, completion and failure timing. The guide covers the operator's release sequence. |
 | [Catalogue_Field_Registry.md](../Catalogue_Field_Registry.md) | 4 / 0 | Catalogue field and output families. |
 | [Catalogue_Indexes_And_Payloads.md](../Catalogue_Indexes_And_Payloads.md) | 14 / 0 | Current generated Work and Gallery payloads. |
 | [Catalogue_Media_Pipeline_Config.md](../Catalogue_Media_Pipeline_Config.md) | 7 / 0 | Keep as the focused reference for catalogue media pipeline config. |
 | [Catalogue_Media_View.md](../Catalogue_Media_View.md) | 27 / 0 | Work/Gallery viewer and Context links. |
-| [Catalogue_Save_And_Refresh.md](../Catalogue_Save_And_Refresh.md) | 37 / 0 | Save, Refresh and Regenerate sequence and queue ownership. |
+| [Catalogue_Save_And_Refresh.md](../Catalogue_Save_And_Refresh.md) | 37 / 0 | Retain as the exact reference for queue state, selection, media handoff and Regenerate completion. Chapter 3 carries the walkthroughs. |
 | [Catalogue_Services.md](../Catalogue_Services.md) | 3 / 0 | Keep as the focused reference for catalogue services. |
 | [Catalogue_Shuffle_Randomness.md](../Catalogue_Shuffle_Randomness.md) | 2 / 0 | Shuffle stock origin, replacement and reader behavior. |
-| [Catalogue_Work_Editor.md](../Catalogue_Work_Editor.md) | 12 / 0 | Work editor and Gallery workflow. |
+| [Catalogue_Work_Editor.md](../Catalogue_Work_Editor.md) | 12 / 0 | Retain for Work editor, bulk editing, media selection and Gallery dialog details. |
 | [Catalogue_Works.md](../Catalogue_Works.md) | 8 / 0 | Keep as the focused reference for catalogue works. |
 | [Development_Checklist.md](../Development_Checklist.md) | 17 / 0 | Repository implementation guardrails. |
 | [Development_Workflow.md](../Development_Workflow.md) | 5 / 0 | Development lifecycle and delivery workflow. |
@@ -116,7 +116,7 @@ Repair the reader’s route to maintained owners. Check all scope, storage, depl
 | [Site.md](../Site.md) | 2 / 6 | Retained and updated. Routes to the active root reader, the publication guide and the separately identified frozen Catalogue references. |
 | `Site_Overview.md` | 1 / 0 | Retired after checking repository and Working source paths, document IDs and parent references. [Site](../Site.md) and the guide cover the active site and release, [Site Shell Runtime](../Site_Shell_Runtime.md) covers shell ownership, and [Catalogue Archive](../Catalogue_Archive.md) covers the old routes. |
 | [Source_Tree_Ownership.md](../Source_Tree_Ownership.md) | 9 / 0 | Retained as the directory and cross-project ownership reference. Updated Working and Preview storage, direct publication destinations and the native app boundary. The workflow guide carries the release sequence. |
-| [Studio.md](../Studio.md) | 2 / 19 | Check the studio guidance against the owning implementation or current plan. |
+| [Studio.md](../Studio.md) | 2 / 19 | Retained and updated. Routes to the Catalogue chapter and the current Work Editor and Series controls. |
 | [Studio_Overview.md](../Studio_Overview.md) | 2 / 0 | A front door still includes former Detail authoring and draft/status capabilities. Compare the exact Studio route registry. |
 | [Sub_Scopes.md](../Sub_Scopes.md) | 0 / 3 | Check the sub scopes guidance against the owning implementation or current plan. |
 | [System_Architecture.md](../System_Architecture.md) | 1 / 7 | Check the system architecture guidance against the owning implementation or current plan. |
@@ -204,9 +204,9 @@ Retain the useful concepts and diagrams. Bring authoring, storage, relationship,
 
 | File | Links / ID refs | Recommendation |
 | --- | ---: | --- |
-| [Catalogue_Architecture.md](../Catalogue_Architecture.md) | 5 / 3 | Check the catalogue architecture guidance against the owning implementation or current plan. |
+| [Catalogue_Architecture.md](../Catalogue_Architecture.md) | 5 / 3 | Retain the canonical and generated-data ownership map. Updated Projects staging and the Refresh/Regenerate handoff, and linked the chapter for examples. |
 | [Catalogue_Data_Model_Map.md](../Catalogue_Data_Model_Map.md) | 0 / 0 | Check the catalogue data model map guidance against the owning implementation or current plan. |
-| [Catalogue_Series_Management.md](../Catalogue_Series_Management.md) | 4 / 0 | Check the catalogue series management guidance against the owning implementation or current plan. |
+| [Catalogue_Series_Management.md](../Catalogue_Series_Management.md) | 4 / 0 | Retain the Series browsing, membership and dialog reference at the current Work Editor route. |
 | [Catalogue_Source_Model.md](../Catalogue_Source_Model.md) | 17 / 1 | Retain the canonical Catalogue source contract and reconcile old Subject and editor-policy references against Studio and the field registry. |
 | [Data_Models_Diagrams.md](../Data_Models_Diagrams.md) | 1 / 3 | Check the data models diagrams guidance against the owning implementation or current plan. |
 | [Knowledge_System_Vision.md](../Knowledge_System_Vision.md) | 1 / 0 | Check the knowledge system vision guidance against the owning implementation or current plan. |

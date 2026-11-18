@@ -14,9 +14,9 @@ Create a short, definitive guide in `documentation/guide/` with one entry page a
 
 ## Where To Resume
 
-**Completed this batch.** Wrote and reviewed chapter 2, [Author and organise documents](../../guide/Author_And_Organise_Documents.md). Retired Docs Viewer Overview and Site Overview after checking links, document IDs and parent references. Recorded their maintained replacements in the [working triage inventory](Site_Workflow_Guide_Triage.md#entry-points).
+**Completed this batch.** Wrote and reviewed chapter 3, [Maintain the Catalogue](../../guide/Maintain_The_Catalogue.md), using a Work image replacement and a Gallery rename to trace both branches of the publication queue. Updated the Studio entry point and Catalogue Architecture, and recorded which specialist references to retain in the [working triage inventory](Site_Workflow_Guide_Triage.md#catalogue-and-cross-domain-ownership).
 
-**Next visit.** Draft chapter 3 from the Studio Catalogue editor, Refresh and Regenerate owners. Follow a Work and a shared definition change through preparation to the publication queue. Use the chapter to identify which older Catalogue operating guides still have a distinct purpose.
+**Next visit.** Draft chapter 5 from the current Index, Search, Recent, Catalogue browsing and Media View owners. Check where readers start and how they return from a result or opened Work. Identify older discovery and navigation references that can be consolidated.
 
 ## Contents And Progress
 
@@ -24,7 +24,7 @@ Create a short, definitive guide in `documentation/guide/` with one entry page a
 | --- | --- | --- | --- |
 | 1. [How the site fits together](../../guide/How_The_Site_Fits_Together.md) | The public site, Studio, Docs Viewer, and their sources and projections. | Done | Entry points and Source Tree Ownership updated. Docs Viewer Overview and Site Overview consolidated and retired. |
 | 2. [Author and organise documents](../../guide/Author_And_Organise_Documents.md) | Working, collections, Books, media, links and exact document generation. | Done | Linked specialist references and corrected the media guide's Delete instruction. Older authoring references still need triage. |
-| 3. Maintain the Catalogue | Works, Series, Galleries and Save → Refresh → Regenerate. | Queued | Review overlapping Catalogue guides and historical authoring instructions. |
+| 3. [Maintain the Catalogue](../../guide/Maintain_The_Catalogue.md) | Works, Series, Galleries and Save → Refresh → Regenerate. | Done | Studio and Catalogue Architecture updated. Retain specialist editor, queue and distribution references. Review the remaining historical operating guides. |
 | 4. [Publish and deploy](../../guide/Publish_And_Deploy.md) | What Working prepares, what Publish transfers, and when GitHub Pages changes. | Done | Runtime guidance corrected. Review the older publication references for consolidation. |
 | 5. Find and read things | Index, Search, Recent, Catalogue browsing and Media View. | Queued | Review old scope, search and navigation guidance against current reader workflows. |
 | 6. Change the system safely | Where to make a change, how to check it, and how to recover when a workflow fails. | Queued | Review setup, tooling and verification guides for overlapping procedures. |

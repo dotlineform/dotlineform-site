@@ -3,22 +3,22 @@ draft: false
 doc_id: d-20260423-000000-d015e6
 title: Studio
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-07 16:46:38"
+last_updated: "2026-11-18"
 summary: Entry point for using, operating, and changing the local catalogue authoring app.
 parent_id: ""
 
 ---
 # Studio
 
-Studio is the local catalogue authoring and maintenance app. [Studio Overview](Studio_Overview.md) gives the short capability, execution, authority, extension, and weak-spot model.
+Studio is the local Catalogue authoring and maintenance app. Start with [Maintain the Catalogue](../guide/Maintain_The_Catalogue.md) for the workflow from Studio Save to the publication queue.
 
 ## Use Studio
 
-- [Catalogue Work Editor](Catalogue_Work_Editor.md) — create and edit works and their detail sections.
-- [Catalogue Series Editor](Catalogue_Series_Management.md) — create and edit series and membership.
+- [Catalogue Work Editor](Catalogue_Work_Editor.md) — create and edit Works, manage Galleries and select media.
+- [Catalogue Series Management](Catalogue_Series_Management.md) — browse, edit and assign Series in the Work Editor.
 - [Catalogue Field Registry](Catalogue_Field_Registry.md) — review field definitions and build participation.
 
-Keep Analysis open in another tab for document browsing and Concept work. Work Details folder import is available inside the Work editor.
+Use [Docs Viewer](Docs_Viewer.md) for document authoring and for Regenerate and Publish.
 
 ## Operate Studio
 

@@ -5,7 +5,7 @@ Dotlineform is a public portfolio and reading site. Visitors browse documents, W
 | Surface | What it does | Where to start |
 | --- | --- | --- |
 | **Public site** | GitHub Pages serves the tracked `site/` tree. The public reader loads prepared data from that tree and media from the configured destinations. | Run `bin/site-preview` to inspect the repository snapshot locally. [Public entry page](../../site/index.html) |
-| **Studio** | Edits canonical Works, Series, Galleries and memberships. **Refresh Catalogue** prepares the changed data and media for Working. | Run `bin/local-studio`. [Catalogue workflow](../studio/Catalogue_Save_And_Refresh.md#current-workflow) |
+| **Studio** | Edits canonical Works, Series, Galleries and memberships. **Refresh Catalogue** prepares the changed data and media for Working. | Run `bin/local-studio`. [Maintain the Catalogue](Maintain_The_Catalogue.md) |
 | **Docs Viewer Manage** | Edits and organises Working documents and media. Catalogue **Regenerate** updates Catalogue documents from Studio's refreshed inputs. **Publish** applies queued Docs and Catalogue changes. | Run `docs-viewer/bin/docs-viewer`. [Local runners](../studio/Local_Runners.md) |
 
 The public reader can run from static files because the local apps finish the authoring and preparation before release. Manage and Public share reader code such as document rendering and navigation. Each gets its data and capabilities from its own entry point. Manage can call local authoring services, while Public reads prepared files. The local Docs service can also serve a separate preview of validated returned packages. [Docs Viewer runtime](../studio/Docs_Viewer_Runtime.md#three-surfaces) · [Docs Review](../studio/Docs_Review.md)
