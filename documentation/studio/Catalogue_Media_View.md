@@ -6,7 +6,7 @@ added_date: "2026-09-03 15:41:41"
 last_updated: "2026-11-17"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
-parent_id: d-20260903-222617-28475e
+parent_id: d-20260401-000000-a11bf3
 ---
 # Catalogue Media View
 
@@ -95,7 +95,7 @@ Exact Gallery entry uses `galleries/index/<gallery_id>.json` under `gallery_reco
 
 Gallery Media View displays Context documents below the Gallery title with a gap, with the configured Context icon beside each document title. Each Context document appears once if it names the Gallery in a visible or hidden Media View token or references a Work in the full member list. The title opens the exact Context route. The Context manifest supplies optional `catalogue_targets` with distinct `work_ids` and `gallery_ids` from the selected document's completed render. A hidden Gallery can also appear in the document's [Related Links](Related_Links.md) when the author places a `[[links|…]]` directive. Working includes drafts and public preparation carries the same facts for eligible rows. Public shares one lazy manifest read with the Context report for the page session. Working reads the current manifest once per Media View opening and reuses it as the reader browses Works and Galleries. The image or Gallery grid can display as the links load. A failed Context read leaves the current presentation available with a status message. Gallery membership changes take effect on the next read of the updated Gallery record.
 
-Work presentations use `images.svg` for Gallery links from the adopted document. Direct links come first, followed by the distinct Series-related links and the Context documents that name that Work. Both Work and Gallery Media View use icons and document titles for these links without visible section headings. A Work reached from a Gallery retains a return link to it. Previous/Next follows the loaded Gallery's natural title order and returning restores the page containing the selected Work. Failed or superseded reads preserve the current presentation.
+Work presentations use `images.svg` for Gallery links from the adopted document. Direct links come first, followed by the distinct Series-related links and the Context documents that name that Work. Both Work and Gallery Media View use icons and document titles for these links without visible section headings. A Work reached from a Gallery retains a return link to it. Previous/Next follows the invoking Gallery's loaded order so the reader stays in the sequence they chose, and returning restores the page containing the selected Work. Failed or superseded reads preserve the current presentation. The [original gallery study](archive/Gallery_Design.md) records the decisions on loading, navigation and return.
 
 The Gallery projector resolves thumbnail filenames from loaded member identities, the route-configured thumbnail base and the generated size, suffix and format. Opening and paging the Gallery use that member list. Selecting a member loads only its Catalogue document.
 

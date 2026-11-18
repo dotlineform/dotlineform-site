@@ -14,11 +14,13 @@ parent_id: d-20260413-000000-d314b7
 | Command | Starts |
 | --- | --- |
 | `bin/local-studio` | Local Studio Catalogue authoring |
-| `docs-viewer/bin/docs-viewer` | Docs Viewer management, document-package routes, and Docs Review when enabled |
+| `docs-viewer/bin/docs-viewer` | Local Docs Viewer, with management and Docs Review when their separate capabilities are enabled |
 | `bin/site-preview` | checked-in public `site/` preview |
 | `bin/local-all` | all enabled services above under one supervisor |
 
 Run only the owner you are changing. Use `bin/local-all` when a workflow crosses app boundaries or Studio links need both the public preview and Docs Viewer.
+
+For Manage, set `DOCS_VIEWER_MANAGEMENT_ENABLED=1` in `.env.local` and restart the runner. The service prints whether management is enabled. [Local environment](Local_Setup_Environment.md#runners)
 
 ## Default Boundaries
 

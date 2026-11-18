@@ -11,9 +11,9 @@ parent_id: d-20260903-220300-694ee5
 
 ## Purpose
 
-Add previous/next navigation through a scope's document hierarchy as part of [Doc Navigation](Doc_Navigation.md). Together with [Reorder docs](Reorder_Docs.md), this supports a book-like reading experience with chapters and pages.
+This proposal would add previous/next navigation through the ordinary Index hierarchy. The [Reorder docs](Reorder_Docs.md) delivery supplies its authored order. Book and collection sequences already have their own shipped owners. [Current collection navigation](Docs_Viewer_Runtime.md#collection-previous-and-next)
 
-This proposal applies only to scope-level documents. It is a general Docs Viewer improvement, not a Catalogue migration dependency. Catalogue Series and Works documents will live in a sub-scope, so their previous/next navigation needs a separate implementation.
+The remaining proposal concerns ordinary Index documents. It leaves Catalogue, named collection and Book reading order with their existing owners.
 
 ## Scope Boundary
 

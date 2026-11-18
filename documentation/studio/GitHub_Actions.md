@@ -16,7 +16,7 @@ parent_id: d-20260419-000000-d2e47b
 
 Current triggers:
 
-- `pull_request` when the workflow, `bin/site-validate`, `site/**`, or `site-tools/**` changes;
+- `pull_request` for the workflow, configured canonical public/shared runtime and stylesheet paths, projection/validation wrappers, `site/**` and `site-tools/**`. The [checked workflow](../../.github/workflows/public-site.yml) lists the exact paths.
 - manual `workflow_dispatch`.
 
 Current flow:

@@ -29,7 +29,7 @@ Only the selected file is supplied. Embedded media follows the existing converte
 ```mermaid
 flowchart TD
     accTitle: Docs Import and source-editor media boundaries
-    accDescr: Staged document sources and standalone media take separate workflows, but both publish required media before canonical source is written and rebuilt.
+    accDescr: Import converts selected document sources and prepares any Working media before generation. Source Save stores selected standalone media with the edited document.
 
     staging["Shared staging"]
     native["Import doc: native single file"]
@@ -37,7 +37,7 @@ flowchart TD
     import["Docs Import convert and plan"]
     embedded["Embedded-media plan"]
     editor["Add image or Add file"]
-    publish["Verified media publication"]
+    importMedia["Prepare Working import media"]
     buffer["Dirty Markdown buffer"]
     source["Canonical source write"]
     rebuild["Targeted docs rebuild"]
@@ -46,13 +46,12 @@ flowchart TD
     classify -- "Document source" --> import
     native --> import
     import --> embedded
-    embedded -- "Assets present" --> publish
+    embedded -- "Assets present" --> importMedia
     import -- "No assets" --> source
-    publish -- "Import path" --> source
+    importMedia --> source
     classify -- "Standalone media" --> editor
-    editor --> publish
-    publish -- "Source-editor path" --> buffer
-    buffer -- "Rebuild doc" --> source
+    editor --> buffer
+    buffer -- "Source Save prepares media" --> source
     source --> rebuild
 ```
 
@@ -70,7 +69,7 @@ The modal shows the current Projects-relative source. **Choose folder…** brows
 
 Ordinary document sources may be direct children of any accepted nested source folder. A Markdown package is a direct-child folder containing one Markdown file plus its local images or attachments. Returned packages and complete edited Docs Review `source/` folders are trusted collection formats and remain importable only from staging. Recognizers inspect each untouched direct child before generic format handling; a recognized trusted source outside staging stays visible but blocked rather than falling through as an ordinary document.
 
-The candidate list shows only formats the server currently accepts. Standalone raster, SVG and download sources belong to the source editor's **Add image…** and **Add file…** actions. [Docs Import Architecture](Docs_Import_Architecture.md) owns the source, format-adapter, and staging-gate boundaries, while [HTML Import Mapping](HTML_Import_Mapping.md) documents the current semantic conversion rules.
+The candidate list shows only formats the server currently accepts. Standalone raster, SVG and download sources belong to the source editor's **Add image…** and **Add file…** actions. [Docs Import Architecture](archive/Docs_Import_Architecture.md) owns the source, format-adapter, and staging-gate boundaries, while [HTML Import Mapping](HTML_Import_Mapping.md) documents the current semantic conversion rules.
 
 Docs Import always creates the target document front matter. For an ordinary Markdown source, a well-formed leading front-matter block is stripped after trusted collection recognition. Its scalar `title` may be used only when the body has no H1; every other field is ignored with a warning. Malformed or unterminated apparent front matter blocks the import instead of becoming body text.
 
@@ -88,7 +87,7 @@ Opening either action freezes the menu's exact `{collection}` destination. Sourc
 
 HTML can supply the title; Markdown uses its first H1 when present. Word uses the mapped `Title` style and falls back to the humanized source filename without promoting its first section heading. [Word Import Style Mapping](Word_Import_Style_Mapping.md) owns the exact Word heading rules. The source name remains conversion context. A genuinely new document receives an immutable local `doc_id` and matching Markdown filename when the service plans the write.
 
-Every ordinary source import creates a new document with a fresh immutable identity. Importing the same source file again creates another independent document; the workflow does not scan target documents or offer document overwrite. New documents omit `publishable`, so publish-capable targets are included in the next Publish by default and local targets carry no publication field.
+Every ordinary source import creates a new document with a fresh immutable identity, including repeat imports of the same file. New authored documents start as drafts. Mark a document ready and complete its Working generation before publishing eligible output. [Document eligibility](Source_Organisation.md#operations)
 
 ### Create-Only Document Imports
 
@@ -157,11 +156,7 @@ canonical timestamps.
 
 ## Media And Companion Assets
 
-Media behavior comes from the target scope configuration:
-
-- each logical media type selects its configured published location
-- repository, external-local, and R2 locations use the same provider-independent import plan
-- the chosen provider must complete and byte-verify the media write before canonical source is committed
+Media uses the configured Working document owner. The import plan supplies the exact media family and logical identity. Materialisation completes the selected Working writes before canonical source is committed. Eligible output later uses the separate Publish workflow. [Document media ownership](Source_Organisation.md#media-ownership)
 
 Markdown packages convert supported images to readable, 800px-maximum WebP outputs and copy supported attachments unchanged. HTML and Markdown can extract inline raster data URLs, and HTML-inline SVG is sanitized and published as deterministic image media. Word imports pass embedded PNG, JPEG, GIF, and WebP through the same inline-raster publication path; missing alt text receives a deterministic `Word image NN` label, while unsupported, unreadable, or empty images are omitted with warnings. Exact paths, location providers, collision rules, and media limitations belong to [Media Handling](Media_And_Asset_Handling.md).
 
@@ -171,7 +166,7 @@ A standalone HTML file marked with:
 <meta name="dlf:docs-import-role" content="interactive-html">
 ```
 
-is treated as a companion asset rather than a selectable source. A normal document import copies marked companions directly to the target scope's configured published `html` root after any required overwrite confirmation. Add the resulting `html-media` token to the document manually; import does not decide where the sandboxed iframe belongs.
+is treated as a companion asset. A staged document import copies marked companions to the configured Working `html` family after any required overwrite confirmation. Add the resulting `html-media` token where the iframe should appear. [HTML media authoring](Docs_Images_And_Assets.md#svg-and-interactive-assets)
 
 ## Results And Recovery
 
@@ -195,4 +190,12 @@ An ordinary one-source failure leaves the selected source and destination in pla
 
 Docs Import is best-effort conversion. Normal prose, headings, lists, links, simple tables, Markdown, and supported media are reliable inputs. Word layout, presentation-heavy HTML, interactive UI, unresolved package links, and unsupported assets may need source editing after import. Conversion HTML and inline media bodies remain inside the local service; the generated canonical Markdown is always checked by the shared Python renderer before a source write.
 
-For implementation boundaries, extension methods, and known structural weak spots, see [Docs Import Architecture](Docs_Import_Architecture.md).
+## Implementation Boundary
+
+The management dispatcher passes native-file and staged-source requests to their owning workflows. Source discovery accepts direct children of the confined Projects import folder. The exact collection comes from the menu target or trusted package provenance. The converter produces normalized document intent before persistence, keeping a source format or wrapper from inventing a destination. Trusted collection preview exposes collisions and planned effects before Apply. [Create and Import endpoints](Create_And_Import_Endpoints.md) · [Package provenance](Package_Export_Metadata.md)
+
+### Import Media Preparation
+
+Resolve the destination media owner and final create/overwrite identity before converting embedded media. The operation constructs filenames, document-owned identities and Markdown references together. Decode inline raster data and sanitize inline SVG once per operation. Keep prepared bytes outside JSON preview metadata and carry them in the internal plan to materialisation. The confirmed request owns its own preparation. These boundaries keep the same identity through conversion, parsing, storage and generation. [Import materialization](Media_And_Asset_Handling.md#import-materialization) · [Import media owner](../../docs-viewer/services/docs_import_media.py)
+
+Use the [historical architecture](archive/Docs_Import_Architecture.md) for the original design and verification record.

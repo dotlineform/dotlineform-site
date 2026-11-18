@@ -18,7 +18,7 @@ The manage-only Source editor provides actions for document references and Catal
 | **Add Catalogue Image** | Select an exact Catalogue Work; create or edit its image identity, title-caption choice, optional static summary, placement and width. |
 | **Add image** | Insert Docs-owned staged media through its existing media publication workflow. |
 
-**Add Catalogue Token**, **Insert Subject Link** and Concept-token authoring are retired. Subject assignment and ordinary local-folder paste/open remain independent supported workflows. Scope-specific button policy is proposed separately in [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md).
+**Add Catalogue Token**, **Insert Subject Link** and Concept-token authoring are retired. Subject assignment and ordinary local-folder paste/open remain independent supported workflows. Scope-specific button policy is proposed separately in [Scope-configured Authoring Controls](archive/Scope_Configured_Authoring_Controls.md).
 
 ## Creation And Guarded Insertion
 

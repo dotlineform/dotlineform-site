@@ -1,0 +1,90 @@
+---
+draft: false
+doc_id: d-20260607-222033-f2a546
+title: Read And Config Scripts
+added_date: "2026-06-07 22:20:33"
+last_updated: "2026-10-15"
+parent_id: d-20260607-222033-2a494e
+---
+# Docs Viewer Read And Config Scripts
+
+Former GET and scope-config module map. Use the workspace and endpoint references for live names and capabilities. [Current reference](../Configuration_And_Extension_Points.md#workspace-and-target-contracts)
+
+## `docs-viewer/services/docs_management_read_service.py`
+
+Purpose: GET route dispatcher for generated reads, source body reads, and staged import listings.
+
+Ownership: owns query parameter normalization and mapping GET endpoint paths to read helpers.
+
+Responsibilities:
+
+- validates `scope` against configured docs scopes
+- dispatches generated tree, Recent, doc payload, search, references, and reference-target reads
+- dispatches selected Markdown body reads
+- dispatches staged import file listings
+
+Not responsible for:
+
+- serving HTTP responses directly
+- writing source or generated files
+- rebuilding after writes
+
+## `docs-viewer/services/docs_generated_reads.py`
+
+Purpose: safe readers for generated Docs Viewer JSON artifacts at configured published locations.
+
+Ownership: owns generated artifact path resolution and raw generated JSON loading.
+
+Responsibilities:
+
+- resolves published docs and search locations from docs scope config
+- reads `index-tree.json`, `recent.json`, `by-id/<doc_id>.json`, and docs-search JSON
+- validates safe document ids
+- verifies document payload reads against the generated index tree before reading payload files
+- reports missing or invalid generated JSON as errors
+
+Not responsible for:
+
+- producing generated artifacts
+- mutating source config
+- filtering generated payload fields for callers
+
+## `docs-viewer/services/docs_management_capabilities_service.py`
+
+Purpose: capability and scope availability payload builder.
+
+Ownership: owns the `GET /capabilities` response contract.
+
+Responsibilities:
+
+- reports enabled management features
+- reports per-scope source root availability
+- reports published docs/search artifact availability
+- counts scope source docs
+- reports scope lifecycle manifest ownership and delete eligibility
+
+Not responsible for:
+
+- enforcing endpoint access
+- applying lifecycle changes
+
+## `docs-viewer/services/docs_source_model.py`
+
+Purpose: source Markdown model helpers shared by reads, mutations, imports, and capabilities.
+
+Ownership: owns parsing and formatting source docs inside configured docs scopes.
+
+Responsibilities:
+
+- loads configured scope docs
+- parses and renders front matter
+- resolves scope roots
+- normalizes scope ids and UI status values
+- validates `publishable` only for an exact collection with a public projection and rejects it for local collections
+- writes source text atomically when called by workflow modules
+
+Not responsible for:
+
+- HTTP routing
+- generated artifact formats
+- deciding rebuild scope after a mutation

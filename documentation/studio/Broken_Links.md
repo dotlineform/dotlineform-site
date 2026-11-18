@@ -9,7 +9,7 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Docs Broken Links
 
-Audit links authored in the selected non-Analysis scope. Use [Analysis Working Broken Links](/docs/?scope=analysis&stage=working&doc=d-20260909-140121-53c381) for Analysis source documents. Links from Studio to existing Analysis destinations still resolve.
+Use **Refresh** to inspect authored references across the configured Working workspace. Opening the report displays the saved findings. [Broken Links Script](Broken_Links_Script.md#saved-local-report)
 
 - Links inside rendered code and same-document fragment links are ignored.
 - The read-only audit checks generated document destinations and source Catalogue tokens independently of relationship data.

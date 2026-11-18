@@ -10,7 +10,7 @@ parent_id: d-20260428-000000-f5ff18
 ---
 # R2 Workspace Backups
 
-Provide an off-machine backup of selected external workspace folders, initially `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/`, with other folders considered explicitly. Preserve editable sources, media and the state needed for recovery, including work that has not been published.
+Provide an off-machine backup of selected external workspace inputs. First decide which editable source, source controls and managed media under `$DOTLINEFORM_DOCS_BASE_DIR/working/` must be restored together. Projects-owned originals and Catalogue staging have their own selection. The proposal retains unpublished work. [Workspace storage and roles](Source_Organisation.md#storage-and-roles)
 
 ## Basic Approach
 

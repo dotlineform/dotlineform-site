@@ -5,7 +5,7 @@ title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
 last_updated: "2026-10-24"
 summary: Collection-list ownership, exact document identity, standard management controls, retained selection and explicit management adoption.
-parent_id: d-20260801-084127-752d7e
+parent_id: d-20260424-000000-50b63f
 ---
 # Sub-Scope Index Architecture
 
@@ -302,11 +302,11 @@ The 2026-10-03 Subject-column removal passed explicit lint for the three changed
 
 Regenerate sits in the shared document toolbar, aligned with the document view's left edge. The top-row layout uses the same document axis when Regenerate is present as it does for the collection Index control and Media View Back.
 
-Working Catalogue's management contribution replaces New with Regenerate and omits independent document Delete. Studio Works editor owns Work creation, metadata and generated JSON. [Regeneration service](../../docs-viewer/services/docs_catalogue_regeneration.py) reads the generated Work index and selected `works/index/<work_id>.json` records through the configured Catalogue output reader. Each Catalogue document uses the exact five-digit Work ID as its one immutable `doc_id`: quoted front matter, `<work_id>.md`, `by-id/<work_id>.json`, manifest membership and direct viewer child identity all agree. Source and manifests have no separate `work_id`, old document-ID alias or mapping file. Regenerate inventories source once and creates, updates, deletes and selects Build targets by that same ID. Updates retain identity, filename, added date and existing Links unless their source relationships change. Ordinary documents, other collections and the ordinary Catalogue report host retain `d-...` IDs; numeric document IDs are valid only in Catalogue context. Direct Catalogue New/Delete management requests are rejected; other collections retain their actions.
+Working Catalogue's management contribution replaces New with Regenerate and omits independent document Delete. Studio owns Work creation and metadata editing. Refresh writes the generated Catalogue records. The [regeneration service](../../docs-viewer/services/docs_catalogue_regeneration.py) reads the exact sources and `works/index/<work_id>.json` records needed by ready queue entries, with the required shared media policy and Series–Gallery index. Each Catalogue document uses the exact five-digit Work ID as its immutable `doc_id` in quoted front matter, `<work_id>.md`, `by-id/<work_id>.json`, manifest membership and direct reader links. Regenerate creates, updates, deletes and selects Build targets by that ID. Ordinary documents, other collections and the Catalogue report host use `d-...` IDs.
 
 Catalogue documents represent Works with generated content and are always publishable at the document level. Their source, management metadata, list manifests and by-ID payloads omit `draft`; creation and Regenerate do not seed it. Their Draft control is omitted, Set Draft is rejected, and source reads for owning writes or Build reject any `draft` field. Build, Publish, Search and Recents use fixed Catalogue eligibility. Publication still depends on the ordinary report host's eligibility. Other document collections retain their required boolean draft fields, controls and defaults.
 
-The collection action supplies the exact Working Catalogue target and report-refresh callback. The modal has one Run and consumes refreshed queued Works without a mode selector. It awaits each required source/document Build, publication-queue merge and updates-entry removal, then refreshes the report. Counts remain Updated, Created and Deleted. Busy and committed-failure handling remain with the existing owners.
+Selecting Regenerate starts the operation immediately for refreshed queued Works. The page stays busy through the required source and document builds, publication-queue merge, updates-entry removal and report refresh. The result modal then shows Updated, Created and Deleted counts or the failure details. [Regenerate timing](Catalogue_Save_And_Refresh.md#regenerate-timing)
 
 Explicit design maintenance reconciles source templates and completes one full Catalogue document build, then queues completed document changes without inventing media transfers. It leaves false-readiness entries unconsumed. Normal Regenerate reads only exact queued sources. Missing or malformed private queues stop operations without empty-state fallback; failed operations retain completed effects and identify the Work/step. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns maintenance commands and queue transitions.
 
@@ -341,7 +341,7 @@ Catalogue displays the existing 96px Work thumbnail at 64px. The media provider 
 
 The Catalogue search placeholder is `work or gallery`. Row thumbnails have 6px rounded corners.
 
-Implementation and static review are complete, and the user confirmed review through Site Preview on 2026-09-26. The subsequent count/placeholder copy and rounded-thumbnail adjustments await final visual confirmation. Snapshot data adopts the required manifest through the normal Prepare Preview and Publish operations; old-shape manifests fail visibly. Static checks and the reported manual review do not establish measured browser performance, automated failure-path coverage or a public deployment.
+Working generation prepares the manifest for the reader, and Publish transfers the queued public output. The [original Catalogue collection browsing delivery](archive/Catalogue_Collection_Browsing.md) records the September 2026 Site Preview acceptance and its verification limits.
 
 ## App-Level Import
 

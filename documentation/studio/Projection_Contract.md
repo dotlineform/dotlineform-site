@@ -3,133 +3,27 @@ draft: false
 doc_id: d-20260523-222005-1085b2
 title: Projection Contract
 added_date: "2026-05-23 22:20:05"
-last_updated: "2026-10-07 16:26:39"
+last_updated: "2026-11-18"
 parent_id: d-20260331-000000-4a16b0
 
 ---
 # Projection Contract
 
-This document defines the boundary between canonical source, public projections, Studio projections, and Docs Viewer payloads.
+Canonical sources and configuration feed separate local and public projections. Keep private paths, authoring capabilities and operational state at their owning boundary. The tracked `site/` tree contains the artifact consumed by GitHub Pages. [Source Tree Ownership](Source_Tree_Ownership.md) · [Publish and deploy](../guide/Publish_And_Deploy.md)
 
-It complements [Source Tree Ownership](Source_Tree_Ownership.md) by documenting the source/projection contract rather than the whole repo layout.
+## Working And Public Outputs
 
-The executable source of truth is `tests/contracts/projection_contract.json`.
+| Family | Editable owner and Working handoff | Public projection and exact contract |
+| --- | --- | --- |
+| Docs, collections and ready media | Working Markdown, source controls and configured media. Document generation prepares eligible navigation, collection manifests, by-ID documents and exact media effects. | Publish applies queued selections to Preview and configured repository or R2 destinations. [Source Organisation](Source_Organisation.md#storage-and-roles) · [Generated Data Contracts](Generated_Data_Contracts.md#current-payload-roots) |
+| Catalogue | Studio canonical Works, Series, Galleries and memberships. Refresh prepares selected Working data and media. Regenerate adopts completed Work data into Catalogue documents. | Publish transfers completed Work documents, media and selected shared output. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#current-workflow) · [Catalogue Deployment](Catalogue_Deployment.md#storage-and-selection) |
+| Catalogue browsing and Search | Studio Refresh produces Catalogue Work/Gallery lookup data. Working explicitly builds the Docs Viewer Search scopes and Recent from their configured inputs. | Public Catalogue browsing uses the published Catalogue manifests and Gallery outputs. Portfolio Search and Recent load their own saved public files. The former standalone Catalogue Search belongs to the frozen archive. [Catalogue outputs](Catalogue_Indexes_And_Payloads.md#generated-read-models) · [Docs Search Index](Docs_Search_Index.md) · [Recent](Generated_Data_Contracts.md#recent-contract) · [Catalogue Archive](Catalogue_Archive.md#site-snapshot) |
+| Shared reader runtime and browser configuration | `docs-viewer/` owns viewer code and styles. The browser-config generator derives local and public settings from the checked workspace configuration. | The explicit `site-code-update` inventory creates the public subset in `site/docs-viewer/`. The public reader at `/` uses that subset and published data. [Configuration projection](Configuration_And_Extension_Points.md#source-config-becomes-browser-config) · [Runtime projection](Run_Checks.md#docs-viewer-site-code-projection) |
 
-- Run `$HOME/miniconda3/bin/python3 tests/audits/projection_contract.py` to validate the manifest, checked-in public JSON leak rules, and public source-reference rules.
-
-`public` means intended for dotlineform.com runtime output. It does not mean repository privacy. Canonical source can remain in a public repo while generated public projections omit source-only fields.
-
-## Contract Rules
-
-- canonical source is the editable source of truth
-- public projections are generated runtime artifacts for public routes and public read-only viewer scopes
-- Studio projections are local-app artifacts for authoring, review, lookup, diagnostics, and write workflows
-- Docs Viewer payloads are generated scope payloads; only Analysis payloads are currently public
-- Public static builds must consume public projections and must not publish Studio-only source or projections
-- source-only fields can exist in canonical source only when public builders copy fields through an explicit allowlist or documented transform
-- local generated and import/export artifacts under `var/` are working output, not canonical source
-
-## Catalogue
-<!-- dotlineform:table-detail -->
-
-| Family | Canonical Source | Public Projection | Studio Projection | Owner |
-| --- | --- | --- | --- | --- |
-| Catalogue metadata | `studio/data/canonical/catalogue/works.json`, `series.json`, `work_details/<work_id>.json` | fixed public route shells; lean `site/assets/data/series_index.json`; owned `site/assets/data/recent_index.json`; exact `site/assets/{series,works}/index/` payloads | retained generated lookup files, Catalogue editor API read responses, project-media reads, and focused local report links | [Catalogue Source Model](Catalogue_Source_Model.md), [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) |
-| Catalogue media metadata | source image fields and confirmed `media_version` values in canonical catalogue JSON plus `DOTLINEFORM_PROJECTS_BASE_DIR` media roots | public route thumbnails under `site/assets/works/img/` and `site/assets/work_details/img/`; work and nested detail versions in `site/assets/works/index/<work_id>.json`; versioned R2 primary URLs on work/detail routes | external derivative staging under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`; focused work editor reads include the work version | [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md), [Publish Media To R2](Publish_Media_To_R2.md) |
-| Catalogue search | canonical Catalogue Work and Series source | `site/assets/data/search/catalogue/index.json` | search preview/build diagnostics | [Search Build Pipeline](Search_Build_Pipeline.md) |
-
-Catalogue public builders must treat canonical source JSON as input, not as a browser payload.
-`media_version` is a deliberate public per-Work projection, not a source-path field. It remains out of the lean Series and Recent projections; those consumers render committed thumbnails rather than independently cached R2 primary images.
-The current manifest-backed leak rule covers source media path fields such as `project_folder`, `project_subfolder`, `project_filename`, `details_subfolder`, `source_image_file`, and `provenance`.
-It also treats work `storage` and any retired `notes` keys as forbidden in public output.
-Canonical `storage_location` remains available to local Studio through the Catalogue API; public exact records, lean/Recent indexes, and Catalogue Search must not publish it.
-Work and Series narrative prose is not a current canonical or public payload family. The former Markdown source tree and generated `content_html` field are retired.
-
-Catalogue search is catalogue-owned. Studio Tag registry, aliases, assignments and groups are retired; Concept definitions belong to Analysis documents.
-
-## Docs Viewer Scopes
-
-| Scope | Canonical Source | Public Projection | Local Docs Viewer Projection | Owner |
-| --- | --- | --- | --- | --- |
-| Studio docs | `docs-viewer/scopes/studio/source/documents/*.md` | none by default | `docs-viewer/scopes/studio/published/documents/`, `docs-viewer/scopes/studio/published/search/index.json`, `<DOCS_VIEWER_BASE_URL>/docs/` manage payload reads | [Studio Overview](Studio_Overview.md), [Docs Viewer Builder](Builder.md) |
-| Analysis docs | `docs-viewer/scopes/analysis/source/documents/*.md` | `site/assets/data/docs/scopes/analysis/`, `site/assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to `docs-viewer/scopes/analysis/published/documents/` and `docs-viewer/scopes/analysis/published/search/` | [Public Scopes](Public_Scopes.md) |
-
-Docs source files are the canonical authored content. Generated Docs Viewer payloads are projections of that source.
-`publishable: false` remains in the private Manage projection for an exact publish-capable collection while staying out of the prepared public tree, search, Recent, and by-ID projection. Local projections omit publishability entirely.
-
-Scope-wide Publish is the only positive promotion from working Docs products into public projections. Its negative plan removes only exact paths owned by current explicit publishability exclusions and retains files merely missing from source. Confirmed canonical document Delete is a separate exact negative owner: after the source and working mutation commit, it removes any current public projection of the deleted identity and rewrites only affected public inventories and Catalogue document URLs. It does not publish pending working bytes, infer publication from metadata, or apply to local collections.
-
-The public site may publish Analysis Docs Viewer payloads and search. It must not publish Studio docs payloads or Studio docs search unless a separate public Studio docs surface is intentionally defined.
-
-## Studio App Data
-
-| Family | Canonical Source | Public Projection | Studio Projection | Owner |
-| --- | --- | --- | --- | --- |
-| Concept definitions | exact Analysis Concept document front matter and body | accepted document projections only | private `concept-associations.json`, Concept fields metadata, document-owned semantic target lookup | [Doc Relationships](Doc_Relationships.md), [Semantic Tokens](Semantic_Tokens.md) |
-| Studio config and route UI code | `studio/app/frontend/config/studio-config.json`, Studio frontend route modules, related checked-in config files | public Docs Viewer config and public search policy only where separately generated or copied by their owners | local runtime config JSON and code-owned Studio route copy | [Studio Runtime](Studio_Runtime.md) |
-
-Studio app data is local by default.
-Public builders can read a narrow subset only through documented adapters.
-The tracked `site/` root should contain only public paths, and site validation should confirm required deploy files are present before upload.
-
-## Config And Build Outputs
-
-Public build configuration is part of the projection contract:
-
-- `site-tools/config/site-tools.json` is the public static validation and site-level settings config
-- public Docs Viewer config exposes only public read-only scopes
-- `bin/local-studio` serves Studio routes, local runtime config, and Studio-owned APIs
-- `docs-viewer/bin/docs-viewer` serves Docs Viewer manage mode, local published reads, Docs management APIs, and document Data Sharing endpoints
-- `bin/site-preview` and `bin/site-validate` run public static preview and validation paths
-
-## Public Build Surface
-
-The public static build should include:
-
-- home, about, recent, and other public site pages
-- public catalogue pages for works, series, and work details
-- public catalogue JSON projections under `site/assets/data/` and per-record public payloads
-- public catalogue search output under `site/assets/data/search/catalogue/`
-- public media and thumbnail assets intentionally served by the site
-- shared public JavaScript under `site/assets/js/`
-- shared public CSS under `site/assets/css/`
-- generated or public-copied Docs Viewer runtime files required by read-only installs
-- public Docs Viewer browser config generated from `docs-viewer/config/defaults/docs-viewer-public-config.json`
-- public read-only Analysis route at `/analysis/`
-- generated Analysis docs payloads and search under `site/assets/data/docs/scopes/analysis/` and `site/assets/data/search/analysis/`
-
-The public static build should not include:
-
-- `/studio/` routes
-- `/docs/` local management route
-- Studio app source/assets under `studio/app/`
-- local published Studio docs payloads under `docs-viewer/scopes/studio/published/documents/`
-- local published Studio docs search under `docs-viewer/scopes/studio/published/search/`
-- canonical catalogue source data under `studio/data/canonical/catalogue/`
-- local scripts, tests, logs, or `var/` output
-- footer or nav links that point public users to `/studio/` or `/docs/`
-
-`/analysis/` is an intentionally public read-only Docs Viewer install.
-It should keep using public generated docs payloads and public generated docs search.
-`/docs/` is local management infrastructure and should not be published.
-
-Generated output paths should stay explicit.
-Adding a new generated family requires naming:
-
-- source owner
-- public projection path, if any
-- Studio projection path, if any
-- builder or local service owner
-- check that prevents accidental publication or source-only field leaks
+Studio routes, live editor lookups and local report outputs serve Studio or Manage. Catalogue source paths, storage declarations and staging flags stay with their canonical or private owners. Public document and media references retain exact identities and use their configured reader destinations. [Catalogue source model](Catalogue_Source_Model.md) · [Public execution path](Docs_Viewer_Runtime.md#public-execution-path)
 
 ## Current Enforcement
 
-Existing enforcement is split across several checks and builders:
+The workspace configuration owns data and media locations. The Catalogue artifact inventory owns supported Catalogue public file families. The site-code inventory owns which runtime and configuration files ship publicly. Follow these owners when adding a projection and name the exact source, producer, destination and consumer. [Workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json) · [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json) · [Site-code inventory](../../site-tools/config/site-code-update.json)
 
-- `tests/contracts/projection_contract.json` classifies current artifact families and owns cross-domain public-build policy
-- `tests/audits/projection_contract.py` validates the manifest, `_config.yml` exclusions, checked-in public JSON field-leak rules, and public template/script source references
-- run `bin/site-validate` to check the deploy root before upload
-- catalogue build planners and validators decide which public catalogue projections are refreshed from source edits
-- docs builder emits false-only publishability metadata for publish-capable Manage projections and none for local collections
-- search builders own scope-specific flattened search projections
-- site consistency and field-registry checks catch selected catalogue/source relationship drift
+Use `bin/site-code-update --check` for projected runtime parity and `bin/site-validate` for the deploy root. Working generation decides eligibility and Publish verifies the selected operations at their configured destinations. The older projection audit retains scope-era entries and has its own review boundary. [Site validation and preview](Local_Setup_Public_Site_Preview.md#preview-versus-validation) · [Publish transfer boundary](Builder.md#preview-and-deployment-boundary) · [Older projection audit](archive/Projection_Contract_Validation.md)

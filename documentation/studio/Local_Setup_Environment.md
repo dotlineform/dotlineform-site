@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-210908-965f46
 title: Local Setup Environment
 added_date: 2026-05-19 21:09:08
-last_updated: 2026-09-01 19:09:47
+last_updated: "2026-11-18"
 parent_id: d-20260413-000000-d314b7
 ---
 # Local Setup Environment
@@ -18,19 +18,13 @@ $EDITOR .env.local
 
 Local runners/services load it server-side. Browser code must never read it or receive credentials. In cloud/Codespaces, use configured environment variables and secret stores instead.
 
-The shared loader gives `.env.local` precedence over inherited process values for local runs; if the file is absent, process environment remains available for cloud/container use.
+Precedence belongs to each entry point. The common builder bootstrap loads `.env.local` over inherited values. The standalone Docs Viewer service reads `.env.local` and then applies inherited values and explicit runner arguments. Keep local settings consistent across a workflow that uses both.
 
 ## Stable Variable Families
 
 ### External Workspaces
 
-`DOTLINEFORM_PROJECTS_BASE_DIR` is the base for marker-rooted external workspaces such as:
-
-- `data-sharing/` — exports, shared import staging, metadata, review previews;
-- `docs-viewer/` — external local scopes;
-- `projects/` and `processing/` — the configured Catalogue Work-media roots; Processing applications also write project media beneath the exact `processing/<project-id>/` directory.
-
-Create the required child workspace before using that capability. There is no repo-local fallback for these external roots.
+`DOTLINEFORM_DOCS_BASE_DIR` selects the existing Docs workspace containing Working and Preview. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects the existing Projects workspace for Catalogue staging, configured original Work media and project-owned files. Point each variable at its own configured root. [Workspace roles](Source_Organisation.md#storage-and-roles) · [Catalogue media authoring](Catalogue_Save_And_Refresh.md#work-media-authoring)
 
 A Processing application launched from the GUI does not read `.env.local`. Its ignored project-local output configuration receives the same external base plus one exact project identity; Studio and Catalogue continue to resolve their roots from the server environment and checked media configuration.
 
@@ -39,6 +33,8 @@ A Processing application launched from the GUI does not read `.env.local`. Its i
 Each local app/server owns host, port, logging, and enable/disable overrides in its runner/server source. `bin/local-all` composes sibling enable flags; it does not change their independent ownership.
 
 Read the runner and `.env.local.example` if present for exact current variable names. Do not maintain an exhaustive list here.
+
+Set `DOCS_VIEWER_MANAGEMENT_ENABLED=1` to use authoring controls at the local `/docs/` route. [Local runners](Local_Runners.md#default-boundaries)
 
 ### Media Concurrency/Manifests
 
@@ -61,12 +57,11 @@ R2 account/key/bucket/endpoint values belong only in `.env.local` or a platform 
 - run commands from `dotlineform-site/`;
 - use the configured Miniconda interpreter locally;
 - use project-local `bin/`/script entrypoints;
-- keep canonical catalogue/tag/docs source in its current app-owned tree;
+- keep canonical Catalogue and document source with their respective owners;
 - treat generated media and local logs/reports as disposable/ignored outputs unless a focused workflow says otherwise.
 
 ## Weak Spots
 
 - `.env.local` is shell syntax and can become an unvalidated second config file.
-- One base directory serves several external-workspace families; misconfigured ownership can affect multiple apps.
+- The two configured bases have independent owners and must be available for the operations that use them.
 - Runner variable inventories drift quickly, so code discovery is required for exact names/defaults.
-- Local precedence over process environment can surprise a shell user who expects an exported override to win.

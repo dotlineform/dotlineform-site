@@ -55,6 +55,8 @@ Public-scope diagrams follow the owning public scope's responsive requirements. 
 
 ## Child Document Shape
 
+The [Catalogue Data Model Map](Catalogue_Data_Model_Map.md) shows how the canonical relationships and exact queued effects reach Working and public readers.
+
 Each child owns one diagram and the context needed to use it responsibly:
 
 - **Purpose and reading guide** — the exact question and how to interpret nodes and edges;

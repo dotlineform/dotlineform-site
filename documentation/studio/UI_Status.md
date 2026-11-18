@@ -9,28 +9,8 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Doc UI Status
 
-The metadata status vocabulary is product-owned and identical in every Docs Viewer scope:
+Ordinary document front matter can carry a free-text `ui_status` value for editorial context. The shared viewer currently displays a status icon for `planned` and `report`. Other saved values can still describe delivery status in repository documentation.
 
-- 📝 Draft
-- ✅ Done
-- 🚫 Stopped
-- ❗ Urgent
-- 👀 Review
-- 🔄 In progress
-- 🧭 planned
-- ⏸️ Paused
-- 😴 Deferred
-- 📊 Report
-- 🔬 Research
+Document readiness uses the separate boolean `draft`. Named-collection documents omit `ui_status`. A status word such as `draft` or `done` does not select publication. [Source contract](Builder.md#source-contract)
 
-**Stopped** records an explicit decision to end unfinished work. **Paused** and **Deferred** retain an intended continuation; restarting stopped work begins with a new explicit lifecycle decision.
-
-The durable owner is:
-
-`site/docs-viewer/runtime/js/shared/docs-viewer-code-config.js`
-
-Every existing and newly created scope receives this list automatically. Scope creation, rename, and deletion do not add, rename, or remove status configuration.
-
-`docs-viewer/config/scopes/docs_scopes.json` contains no per-scope status list, and generated browser config does not duplicate the vocabulary. To add, remove, rename, or change the emoji for a status, edit the code-owned list and verify the shared browser runtime.
-
-The same code config owns the labels and emoji associated with the fixed `public`, `local`, and `local_external` scope types. Scope records retain their own identity and optional metadata, but do not choose their selector icon.
+The canonical [viewer code config](../../docs-viewer/runtime/js/shared/docs-viewer-code-config.js) owns the icon mapping. Project any change to its public copy through the [site-code workflow](Run_Checks.md#docs-viewer-site-code-projection).

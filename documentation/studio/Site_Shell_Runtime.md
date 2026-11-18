@@ -9,121 +9,20 @@ parent_id: d-20260720-161656-1357d0
 ---
 # Site Shell Runtime
 
-This document records the shared public shell around Site catalogue pages and public Docs Viewer routes.
-
-Current scope:
-
-- tracked public route HTML under `site/`
-- `docs-viewer/templates/public-route/index.html`
-- `site/assets/js/theme-toggle.js`
-- `site/assets/js/site-nav.js`
-- frozen Catalogue runtime under `site/archive/assets/js/catalogue/`
-- public Docs Viewer route shells beneath `site/`
+The active site has a tracked Docs Viewer shell at `site/index.html` and a standalone `site/404.html`. The reusable public-route template is maintained separately. GitHub Pages serves the committed files directly. [Public Docs Route Shell](Public_Docs_Route_Shell.md)
 
 ## Public Static Shell Responsibilities
 
-Tracked public route HTML under `site/` owns the shared public site shell:
-
-- document `<head>`
-- site header and primary navigation
-- page content wrapper
-- site footer
-
-The same site language surrounds:
-
-- public catalogue pages
-- public search
-- analysis docs
-- other small public pages such as About and the 404 page
-
-Each route shell carries this markup directly. There is no deploy-time layout expansion, so changing shared chrome is a deliberate copy-together operation across affected tracked HTML and the Docs Viewer public-route template.
-
-The frozen Catalogue uses independent shell assets under `site/archive/`. Active shell changes do not propagate into the archive.
+The tracked home shell supplies the public reader mounts and entrypoint. The viewer runtime owns current navigation, document presentation and controls. The 404 page keeps its own small stylesheet and theme-toggle script. [CSS Ownership](CSS_Ownership.md#owners)
 
 ## Theme Bootstrap
 
-The tiny theme bootstrap remains inline in public route `<head>` markup.
-
-- it reads `localStorage.theme`
-- it sets `data-theme` on `<html>` before first paint
-- this reduces the chance of a visible flash of the wrong theme
-
-This is intentionally different from the rest of the shell JS and should not be moved into an external asset unless the loading behavior is re-evaluated.
-
-## Shared Shell Scripts
-
-The active public shell runtime lives in shared asset files:
-
-- `site/assets/js/theme-toggle.js`
-  - handles the header theme toggle control
-- `site/assets/js/site-nav.js`
-  - applies shared public navigation behavior
-
-Notes:
-
-- the current public header does not render a `nav-more` control
-- archived catalogue behavior is route-loaded through ES module entrypoints under `site/archive/assets/js/catalogue/routes/`
-
-Archived catalogue route modules import narrow shared helpers from `site/archive/assets/js/catalogue/shared/` for URL construction, JSON fetches, text normalization, local storage, and thumbnail URL projection.
-The default shell remains responsible for page chrome; catalogue routes opt into only the module entrypoint they need.
+The active HTML shells set the saved theme in their heads before loading the main styles. Keeping that early read ahead of first paint avoids flashing the wrong palette. Both use the projected shared palette.
 
 ## Shared Asset Versioning
 
-The shared public CSS and JS append a lightweight static query token.
-
-Current versioned shell assets:
-
-- `site/assets/css/main.css`
-- `site/assets/js/theme-toggle.js`
-- `site/assets/js/site-nav.js`
-- archived catalogue route module entrypoints under `site/archive/assets/js/catalogue/routes/` when loaded by archive route shells
-
-Reason:
-
-- reduces stale-cache breakage after local JS or CSS changes
-- keeps cache-busting simple without introducing a separate fingerprinting pipeline
-- keeps the public shell independent of a deploy-time build process
-
-This is intentionally a minimal static-site mechanism, not a content-hash asset pipeline.
+The tracked shells spell out their stylesheet and entrypoint URLs and cache tokens. Update the appropriate shell when its asset loading changes. [Public code projection](Run_Checks.md#docs-viewer-site-code-projection)
 
 ## Public Nav
 
-The top-left `dotlineform` link points to the public Docs Viewer at `/`, which loads directly. Active pages have no separate `analysis` or `works` top navigation item. The header retains the theme control.
-
-Active pages have no footer or direct archive link. Archive shells retain their own navigation markup and assets.
-
-Navigation markup belongs to tracked route shells and the public-route template. `site-nav.js` does not infer the active destination.
-
-## Docs Viewer Shell Boundary
-
-The public Docs route is a tracked shell that mounts the shared Docs Viewer runtime while using the public site presentation.
-
-Current route shells:
-
-- `/`
-  - public workspace documents and collection documents
-  - loads `site/assets/data/docs/index-tree.json`
-  - enables Docs search with the existing `site/assets/data/search/analysis/index.json`
-
-Current shared Docs Viewer layer:
-
-- `site/index.html` for the installed public route shell
-- `site/docs-viewer/runtime/js/public/docs-viewer-public.js`
-
-The fork/no-fork rule for the viewer is documented in [Docs Viewer Runtime](Docs_Viewer_Runtime.md).
-
-## Change Method
-
-- active shared chrome markup: update every affected active tracked shell and the Docs Viewer public-route template; keep the frozen archive independent;
-- theme behaviour: update the inline pre-paint bootstrap and `theme-toggle.js` deliberately;
-- catalogue page behaviour: update the owning ES module rather than the shell script layer;
-- Docs Viewer reader behaviour: update Docs Viewer, not the Site catalogue runtime;
-- asset query tokens: keep changed shell assets aligned across affected HTML.
-
-Use `bin/site-validate` for deploy-root checks and manual/temporary browser review for visual fit.
-
-## Known Weak Spots
-
-- Shared shell markup and asset query tokens are repeated across static HTML.
-- `site-nav.js` retains optional overflow-menu behaviour that current public headers do not render.
-- Shell and older catalogue styling still share `main.css`.
+The root opens Docs Viewer directly. The previous Catalogue has independent routes, HTML and assets under `site/archive/`; active shell changes leave that snapshot intact. [Catalogue Archive](Catalogue_Archive.md)

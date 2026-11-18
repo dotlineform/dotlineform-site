@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260422-000000-c3135c
 title: Studio Read And Save Flow
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-11 00:00:00"
-summary: How Studio runtime config, safe reads, validated catalogue writes, optional builds, publication, and media fit together.
+last_updated: "2026-11-18"
+summary: How the Studio editor reads canonical Catalogue data and completes a local mutation before Working refreshes its reader data.
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -36,55 +36,24 @@ route boots
 
 `studio-data.js` owns allowlisted Catalogue server reads through the browser transport's named endpoint. The Work editor requires the local service for its current workflow; there is no offline editing or offline save mode.
 
-Focused record reads and current source truth come from the server. Catalogue reader JSON separately follows the Refresh-owned generated-output boundary.
+The editor reads canonical records and lookups through the Catalogue API. Thumbnails served from the generated-output route are a separate read. [Local Studio APIs](Local_Studio_APIs.md#catalogue-reads) lists the server-owned keys and addresses.
 
 ## Save Flow
 
 ```text
-route action
-  -> focused editor/workflow shapes request
+editor action
+  -> browser prepares the exact mutation request
   -> catalogue service client / studio-transport.js
-  -> /studio/api/catalogue/... adapter
-  -> domain service validates identity, hashes, source set, and requested action
-  -> preview returns a write-free plan where the workflow requires confirmation
-  -> apply revalidates and writes canonical source atomically
-  -> optional scoped build, search, publication, or media follow-through
-  -> result returned
-  -> browser refreshes affected record or lookup state
+  -> Catalogue API adapter dispatches to the write service
+  -> focused service validates and writes canonical source
+  -> local completion prepares required media and queues known effects
+  -> editor applies returned records and memberships
 ```
 
-The browser may compute record hashes and patches, but the service validates current source and owns mutation authority. Canonical catalogue writes use `studio/services/catalogue/catalogue_transactions.py` and focused service contexts rather than direct route-script file access.
+The [browser editor](../../studio/app/frontend/js/catalogue-work-editor.js) owns selections and form input. The [API adapter](../../studio/app/server/studio/studio_catalogue_api.py) delegates to the [write service](../../studio/services/catalogue/catalogue_write_service.py), which dispatches to the Work, Series, bulk edit and delete owners and completes the local effects. The required identity and revision fields depend on the operation. [Catalogue operations](Local_Studio_APIs.md#catalogue-operations)
 
-## Workflow Families
+## From Save To The Reader
 
-### Works And Series
+Save returns the canonical editor state and queues the effects for Working. Required converted images and native uploads go into Projects-owned media staging. A saved change with incomplete local completion is reported separately from a rejected mutation. [Save boundary](Catalogue_Save_And_Refresh.md#save-boundary)
 
-- create and save use focused work or series services
-- existing-record updates include expected record hashes
-- published records may request scoped build follow-through
-- series membership updates validate both series and affected works
-- work-detail sections are aggregate children of the Work editor, not separate route records
-
-### Bulk Changes And Detail Folders
-
-- bulk editor changes use one request with the selected ids, expected hashes, and touched fields
-- Work Details folder import belongs to the Work editor and its Detail-section service
-
-### Delete, Publication, Media, And Build
-
-- destructive and remote operations use named preview/apply pairs
-- delete plans identify dependent canonical/public/media consequences before apply
-- publication changes public status and required output through its focused service
-- media publication is separate from canonical record save
-- scoped build endpoints own catalogue generation and search follow-through
-
-## Authority And Failure Rules
-
-- `studio/data/canonical/` is catalogue source authority.
-- Refresh Catalogue owns rebuildable reader projections under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`; public files are separately published projections. See [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md).
-- runtime config and browser paths do not authorize writes.
-- source validation occurs before mutation; confirmed apply rechecks current state.
-- server unavailability is visible and disables writes.
-- remote media cleanup failures may require explicit manual follow-through; they do not make the browser the rollback owner.
-
-Exact endpoint spelling belongs in [Local Studio APIs](Local_Studio_APIs.md). Exact domain behavior belongs in focused catalogue services and workflow docs.
+Refresh Catalogue takes the pending effects into Working reader JSON and ready media. Regenerate turns refreshed Work changes into built Catalogue documents and forwards their completed publication selections. Publish transfers queued output. [Maintain the Catalogue](../guide/Maintain_The_Catalogue.md) · [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#current-workflow)

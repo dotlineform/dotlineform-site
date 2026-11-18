@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260802-205910-533be0
 title: Catalogue Data Model Map
 added_date: "2026-08-02 20:59:10"
-last_updated: "2026-10-07 18:27:57"
+last_updated: "2026-11-18"
 summary: Current Catalogue canonical relationships, live Studio views and explicitly refreshed Docs and public projections.
 ui_status: stable
 parent_id: d-20260802-123451-d0e52e
@@ -12,51 +12,54 @@ parent_id: d-20260802-123451-d0e52e
 
 ## Purpose
 
-This map shows the current Catalogue authority and reader boundaries. A Work has exactly one `series_id` and zero or more Gallery memberships. Canonical Works, Series and Gallery definitions are separate aggregate files; `galleries-by-work.json` owns Gallery membership. Former Detail records, optional or multiple Series membership and generated document URL enrichment are retired. [Catalogue Source Model](Catalogue_Source_Model.md) owns field and validation details.
+Each Work has one Series and may belong to any number of Galleries. Series–Gallery relevance is authored separately from direct Work membership. This lets a Series surface a relevant Gallery without putting all its Works in that Gallery. A document can refer to a Work without changing either relationship. [Catalogue Source Model](Catalogue_Source_Model.md#relationships-and-identity) · [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md#catalogue-identity-and-document-associations)
 
 ## Diagram
 
 ```mermaid
 flowchart TB
     accTitle: Catalogue source and reader projections
-    accDescr: Validated canonical Work, Series, Gallery and membership source feeds live Studio editor reads. Save prepares shared local media. Explicit Refresh builds Working Catalogue JSON and private Docs metadata, which Docs Publish later captures for public distribution.
+    accDescr: Studio reads canonical Catalogue records and Save queues known changes with staged media. Refresh prepares selected Working files and Regenerate builds Catalogue documents. Publish transfers selected finished outputs through Preview.
     subgraph canonical["Canonical Catalogue authority"]
         works["Works<br/>one series_id per Work"]
         series["Series definitions"]
         galleries["Gallery definitions"]
-        memberships["galleries-by-work.json"]
+        memberships["Direct Work–Gallery membership"]
+        relevance["Series–Gallery relevance"]
     end
-    source["Catalogue source validation and mutation"]
-    media["Shared local Work media"]
-    studio["Live Studio search and focused editor reads"]
-    refresh["Explicit Refresh Catalogue"]
-    working["Working Catalogue JSON and private Docs metadata"]
-    docs["Local Docs readers"]
-    publish["Docs Publish through Preview"]
-    public["Public Catalogue JSON and media"]
-    works --> source
-    series --> source
-    galleries --> source
-    memberships --> source
-    source -->|"Save"| media
-    source --> studio
-    source --> refresh --> working --> docs
-    working --> publish --> public
-    media --> publish
+    editor["Studio editor"]
+    updates["Updates queue and staged media"]
+    refresh["Refresh Catalogue"]
+    working["Selected Working records and ready media"]
+    reports["Private report inputs"]
+    regenerate["Regenerate Catalogue documents"]
+    pending["Publication queue"]
+    publish["Publish through Preview"]
+    public["Repository artifact and configured public media"]
+    canonical -->|"live reads"| editor
+    editor -->|"Save"| canonical
+    editor -->|"known effects"| updates
+    updates --> refresh
+    canonical -->|"selected source"| refresh
+    refresh --> working --> regenerate
+    refresh --> reports
+    refresh -->|"finished shared output"| pending
+    regenerate -->|"completed Work units"| pending
+    pending --> publish --> public
 ```
 
 ## Artefact Register
 
 | Artefact or family | Authority or producer | Reader and refresh boundary |
 | --- | --- | --- |
-| `studio/data/canonical/catalogue/{works,series,galleries,galleries-by-work}.json` | Catalogue source transaction owner | Live Studio service reads; accepted canonical Save or delete |
-| `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/` | Save's local media owner | Local Work images, thumbnails and downloads; required changed media complete during Save |
-| `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/` Work/Series/Gallery records and indexes | `generate_work_pages.py` through Refresh Catalogue | Local Docs Catalogue, subject and media readers; complete explicit Refresh |
-| Working `reports/catalogue-works/metadata.json` and `reports/works/manifest.json` | Private metadata generators through Refresh Catalogue | Local Docs report and Works collection readers; complete explicit Refresh |
-| `site/assets/data/catalogue/` and configured R2 media | Docs Publish distribution from completed Preview and current shared assets | Public readers after explicit Git/public deployment |
+| `studio/data/canonical/catalogue/` | Studio canonical transactions | Live editor records and lookups |
+| Projects `catalogue/media-staging/` and Docs `working/catalogue-updates-pending.json` | Studio mutation completion | Exact pending changes for Refresh |
+| Docs `working/generated/catalogue/` and `working/assets/works/` | Refresh Catalogue | Selected ready Working Catalogue records, indexes, media and private reports |
+| Working Catalogue document source and by-ID payloads | Regenerate and exact document Build | Working Catalogue reader and completed publication selections |
+| `site/assets/data/catalogue/`, `site/assets/data/docs/catalogue/` and configured R2 media | Publish through Preview | Repository artifacts reach public readers through Pages deployment. Media transfers take effect at Publish. |
 
-The historical `studio/data/generated/catalogue-lookup/` files are retired and removed. Live Studio lookup APIs build canonical read projections without a persisted-file fallback. Work payloads omit the retired `documents` array. Document relationships belong to Docs Viewer Links, while document subject associations have their own Docs owner and do not establish Series or Gallery membership.
+Catalogue JSON and generated document payloads are replaceable outputs. The [Catalogue Source Model](Catalogue_Source_Model.md#canonical-families) lists the exact canonical families. The [payload contract](Catalogue_Indexes_And_Payloads.md#generated-read-models) lists the current generated files and their consumers.
 
 ## Change And Recovery
 
-Save can complete while generated Docs readers still show the prior Refresh. Refresh failure leaves no current completion receipt; fix the cause and rerun complete generation. Docs Publish does not run Refresh or enforce its status, so confirm the local reader revision before publishing. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns these boundaries, and [Catalogue Deployment](Catalogue_Deployment.md) owns the public transfer and recovery path.
+Save can complete while Docs readers still show the previous output. Refresh and Regenerate carry exact effects forward so a correction can resume from unfinished queue entries after the cause is fixed. Publish consumes completed selections. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#current-workflow) · [Catalogue Deployment](Catalogue_Deployment.md)

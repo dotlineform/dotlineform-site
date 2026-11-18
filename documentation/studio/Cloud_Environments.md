@@ -65,7 +65,7 @@ Bootstrap first, then run explicit validation such as `bin/site-validate` and th
 
 ## Environment And Secrets
 
-- `DOTLINEFORM_PROJECTS_BASE_DIR` is required for external Data Sharing/Docs scope/media workflows that use it.
+- `DOTLINEFORM_DOCS_BASE_DIR` selects the existing Docs workspace. The separate `DOTLINEFORM_PROJECTS_BASE_DIR` selects Projects-owned package inputs and Catalogue media. [Local environment](Local_Setup_Environment.md#external-workspaces)
 - Other workspace/concurrency defaults are owned by current runner/container config.
 - R2 credentials belong in the platform secret store and must never be committed or written into docs output/logs.
 - `.env.local` is local-machine configuration; cloud sessions use platform environment/secrets.

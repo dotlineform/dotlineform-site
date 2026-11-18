@@ -54,4 +54,4 @@ Image extraction, sanitization, target naming, and publication belong to [Media 
 
 This is a semantic content mapping, not a general HTML-preservation or layout-fidelity pipeline. Add a rule only for a representative content structure with an explicit canonical-Markdown outcome, safe degradation, and focused tests. Format adapters should supply semantic HTML to this converter unchanged instead of adding a second renderer or a chain of output-specific repairs.
 
-[Docs Import Architecture](Docs_Import_Architecture.md) owns the adapter, preview, planning, and mutation boundaries around this converter.
+[Docs Import](Docs_Import.md#implementation-boundary) owns the adapter, preview, planning, and mutation boundaries around this converter.

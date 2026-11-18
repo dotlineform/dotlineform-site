@@ -8,77 +8,12 @@ parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Health And Capabilities Endpoints
 
+These are local service endpoints. The public reader gets its read capabilities from public route and browser configuration. [Public execution path](Docs_Viewer_Runtime.md#public-execution-path)
+
 ## `GET /health`
 
-Query parameters: none.
-
-Returned data:
-
-```json
-{
-  "ok": true,
-  "service": "docs_management",
-  "dry_run": false
-}
-```
-
-Used for:
-
-- confirming that the standalone Docs Viewer service is reachable
-- distinguishing a running management service from static generated-data fallback
-- reporting dry-run mode when the service is launched with dry-run behavior
-
-No source files, generated files, or logs are written.
+The standalone service responds with `ok`, `service: "docs_viewer"`, `management_enabled`, `generated_reads_enabled` and `review_enabled`. Use it to distinguish a reachable process from an enabled capability. [Service owner](../../docs-viewer/services/docs_viewer_service.py) · [Local runners](Local_Runners.md)
 
 ## `GET /capabilities`
 
-Query parameters: none.
-
-Returned data:
-
-```json
-{
-  "ok": true,
-  "capabilities": {
-    "docs_management": true,
-    "generated_data_reads": true,
-    "source_editor": true,
-    "html_import": true,
-    "docs_export": true,
-    "scope_lifecycle": {
-      "manifest": true,
-      "create_preview": true,
-      "create_apply": true,
-      "delete_preview": true,
-      "delete_apply": true,
-      "publishing_modes": ["public_readonly", "local_committed", "local_uncommitted"],
-      "manifest_path": "docs-viewer/config/scopes/docs_scope_manifest.json"
-    },
-    "scopes": {
-      "studio": {
-        "available": true,
-        "root": "docs-viewer/scopes/studio/source",
-        "generated_data_reads": true,
-        "generated_search_reads": true,
-        "count": 0,
-        "scope_lifecycle": {
-          "manifest_recorded": true,
-          "owner": "system",
-          "created_by_tool": false,
-          "delete_eligible": false
-        }
-      }
-    }
-  }
-}
-```
-
-The `scopes` object is keyed by configured scope id. `count` is the number of loadable source docs found for that scope.
-
-Used for:
-
-- deciding whether manage mode should enable editing, import, source-config, and scope lifecycle controls
-- showing per-scope generated-data availability
-- disabling lifecycle deletion for system-owned or unmanifested scopes
-
-No source files, generated files, or logs are written.
+The service builds the capability response for the configured Working workspace and applies its process-level flags. When management is disabled, the response disables authoring, import and Publish. When generated reads are disabled, it disables document and Search reads through the service. Review has its own package boundary. Use the response to gate controls and leave exact target, path and request validation with the called service. [Endpoint overview](Endpoint_Overview.md) · [Docs Review endpoints](Docs_Review_Endpoints.md)

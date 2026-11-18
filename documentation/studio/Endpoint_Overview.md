@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260607-222033-647b52
 title: Endpoint Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-20"
-parent_id: d-20260424-000000-04d75e
+last_updated: "2026-11-18"
+parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Endpoint Overview
 
@@ -16,16 +16,14 @@ Docs Viewer local endpoints are JSON APIs served by the Docs Viewer service. Can
 | --- | --- | --- |
 | `GET /health` | [Health And Capabilities](Health_And_Capabilities_Endpoints.md) | Probe service availability. |
 | `GET /capabilities` | [Health And Capabilities](Health_And_Capabilities_Endpoints.md) | Report enabled management features and per-scope availability. |
-| `GET /docs/index-tree` | [Generated Read Endpoints](Generated_Read_Endpoints.md) | Return generated scope tree JSON. |
+| `GET /docs/index-tree` | [Generated Read Endpoints](Generated_Read_Endpoints.md) | Return the generated Working Index tree. |
 | `GET /docs/recent` | [Generated Read Endpoints](Generated_Read_Endpoints.md) | Return the route-configured Recent JSON. |
 | `GET /docs/doc` | [Generated Read Endpoints](Generated_Read_Endpoints.md) | Return one generated document payload. |
 | `GET /docs/media-files` | [Media And Asset Handling](Media_And_Asset_Handling.md) | List files for an exact Working media owner without document associations. |
 | `GET /docs/media-references` | [Media And Asset Handling](Media_And_Asset_Handling.md) | Read source media references and exact document/collection-host identities for an exact Working media owner. |
 | `GET /docs/search` | [Generated Read Endpoints](Generated_Read_Endpoints.md) | Return generated docs-search JSON. |
-| `GET /docs/source` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Return Markdown body text and a revision token for one source doc. |
-| `GET /docs/staged-media-files` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | List staged image or opaque-file choices for source-editor insertion. |
-| `GET /docs/import-source-files` | [Create And Import Endpoints](Create_And_Import_Endpoints.md) | Project the body-free global Import candidate inventory and retained compatibility file list. |
-| `GET /docs/publish/status` | [Public Scopes](Public_Scopes.md) | Report pending public-scope local-to-public changes. |
+| `GET /docs/source` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Return the complete Markdown buffer for one exact Working document. |
+| `GET /docs/import-source-files` | [Docs Import](Docs_Import.md#choose-the-source-folder) | List document candidates in the accepted source folder. |
 
 ## Document Package GET Endpoints
 
@@ -54,27 +52,23 @@ The complete independently gated contract lives in [Docs Review Endpoints](Docs_
 
 | Endpoint | Child doc | Action |
 | --- | --- | --- |
-| `POST /docs/source/rebuild` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Replace one source doc body, preserving front matter, then rebuild affected outputs. |
-| `POST /docs/staged-media-preview` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Preview logical media identity and new/unchanged/replace collision state without writing. |
-| `POST /docs/staged-media-apply` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Publish verified staged media and return Markdown for insertion into the active buffer. |
+| `POST /docs/source/save` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Save the complete Markdown buffer and selected media, then generate the exact Working result. |
+| `POST /docs/source/media` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Resolve the selected media filename to a Working identity for the Source session. |
 | `POST /docs/open-source` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Open one source Markdown file in a local editor. |
-| `POST /docs/open-local-target` | [Management Services](Management_Services.md) | Revalidate one canonical base-relative target, then open or reveal the existing contained file or folder. |
+| `POST /docs/open-local-target` | [Local Folder Links](Management_Operations.md#local-folder-links) | Revalidate one canonical base-relative target, then open or reveal the existing contained file or folder. |
 | `POST /docs/create` | [Create And Import Endpoints](Create_And_Import_Endpoints.md) | Create a new source Markdown doc. |
 | `POST /docs/import-source` | [Create And Import Endpoints](Create_And_Import_Endpoints.md) | Preview or apply one ordinary staged source or one trusted complete collection. |
-| `POST /docs/rebuild` | [Rebuild And Audit Endpoints](Rebuild_And_Audit_Endpoints.md) | Rebuild generated docs and docs-search for one scope. |
-| `POST /docs/broken-links` | [Rebuild And Audit Endpoints](Rebuild_And_Audit_Endpoints.md) | Run a missing-target audit for one docs scope. |
+| `POST /docs/import-doc` | [Create And Import Endpoints](Create_And_Import_Endpoints.md) | Import one native-selected document through the exact Working owner. |
+| `POST /docs/rebuild-document` | [Rebuild And Audit Endpoints](Rebuild_And_Audit_Endpoints.md) | Regenerate one exact saved Working document and its Links effects. |
+| `POST /docs/refresh-discovery` | [Rebuild And Audit Endpoints](Rebuild_And_Audit_Endpoints.md) | Regenerate Working Search and Recent and queue changed discovery files. |
+| `POST /docs/broken-links` | [Broken Links Script](Broken_Links_Script.md#saved-local-report) | Run and save the private Working missing-target audit. |
 | `POST /docs/set-draft` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Persist one exact Working document's intended boolean and await generation from prepared source. |
 | `POST /docs/set-selected` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Star/Unstar exact Working Selected membership; Unstar needs no source read. |
 | `POST /docs/move` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Position an ordinary subtree and project navigation/parent metadata without source rendering. |
 | `POST /docs/delete` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Delete a confirmed ordinary subtree or singular flat collection target and await exact generated/Links removal. |
-| `POST /docs/scopes/create-preview` | [Scope Lifecycle Endpoints](Scope_Lifecycle_Endpoints.md) | Preview files and config changes for a new scope. |
-| `POST /docs/scopes/create-apply` | [Scope Lifecycle Endpoints](Scope_Lifecycle_Endpoints.md) | Create a new manifest-owned scope after confirmation. |
-| `POST /docs/scopes/delete-preview` | [Scope Lifecycle Endpoints](Scope_Lifecycle_Endpoints.md) | Preview deletion of a manifest-owned scope. |
-| `POST /docs/scopes/delete-apply` | [Scope Lifecycle Endpoints](Scope_Lifecycle_Endpoints.md) | Delete a manifest-owned scope after confirmation. |
-| `POST /docs/publish/confirm` | [Public Scopes](Public_Scopes.md) | Confirm the local-to-site-asset diff for one public scope without writing. |
-| `POST /docs/publish/apply` | [Public Scopes](Public_Scopes.md) | Copy local published docs/search to public route site assets after `confirm: true`, then set or clear exact private editorial-lineage public URLs. |
+| `POST /docs/publish` | [Publish transfer boundary](Builder.md#preview-and-deployment-boundary) | Apply completed Docs and Catalogue queue selections to Preview and configured destinations. |
 
-`POST /docs/update-metadata` rejects publication fields. `POST /docs/set-publishable` owns durable publication intent for ordinary Working scope documents; `POST /docs/set-draft` owns independent readiness for all Working documents. Neither operation publishes documents. Visual `ui_status` has no workflow role: it is free text for ordinary documents, including the text `draft`, and is omitted from metadata for named collection targets.
+Draft and the ordinary exclusion policy feed eligibility during Working generation. Publish consumes the completed selections. [Source Organisation](Source_Organisation.md#operations)
 
 ## Document Package POST Endpoints
 

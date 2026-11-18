@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-10-13 11:40:36"
+last_updated: "2026-11-18"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -36,6 +36,7 @@ The UI owns Series–Gallery authoring validation: a Series choice must resolve 
 - Catalogue membership, document subjects, document `parent_id` and token composition are independent. None establishes another relationship.
 - Catalogue Works and Series have no `status` or `published_date`. Series have no `primary_work_id` or `series_type`.
 - A Work may belong to multiple independent Galleries, including Galleries spanning Series. The initial Series overview Galleries retain their original selections; later Series membership changes do not synchronise them.
+- A Series–Gallery association makes that Gallery relevant to Works in the Series while preserving its independently selected members. A document reference creates a Docs relationship and leaves Catalogue membership unchanged. [Catalogue Data Model Map](Catalogue_Data_Model_Map.md) · [Catalogue identity and document associations](Semantic_Tokens_Architecture.md#catalogue-identity-and-document-associations)
 - Former Details became ordinary Works. Canonical Detail data, schemas, source helpers and the completed one-time converter are removed. No parent identity, section order or former-parent Gallery association is retained.
 
 ## Metadata And Ordering
@@ -68,9 +69,7 @@ The single/New Work Series field displays its selected title and ID in the searc
 
 The Work editor has a left-hand Series browser above a scrollable Member Works list, beside the existing Work search, metadata and preview panels. It reuses the loaded canonical Work/Series search projections and the shared thumbnail/ID/title record list. Choosing a Series filters by exact saved `series_id`; it changes browsing context only, with no Series Open/New actions or membership writes. Choosing a Work loads that exact record into the editor, with confirmation before discarding unsaved changes. Opening a Work directly initially seeds the browser from its saved Series; a subsequently chosen browsing Series stays independent of the Work's assignment. Saved Work titles and membership changes update the list from the returned canonical records. The wider layout applies only to this local route; on narrower editor columns the preview moves below the metadata form.
 
-An edit icon beside the browser's Series search opens a title-only modal with OK, Cancel and Delete; New has its own action. Existing Series use the editor's loaded title/revision and complete saved Work membership map without a definition/member lookup; the revision is used only for Delete. OK saves that exact Series through the ordinary save/output flow. Creation uses the next numeric ID suggested from the loaded Series map, and the service rejects a collision. A saved new Series becomes the browsing context with an empty member list. Series title saves update the browser and Work picker labels while preserving the current Work draft and membership. Empty titles are disabled, errors remain visible, and pending saves block dismissal. The standalone Series editor route, modules, page text and dedicated styling are retired; Series management now belongs to the Work editor.
-
-A delete icon beside Edit is enabled only for a selected Series with no saved member Works, while the editor is available. It previews and confirms the exact Series deletion; the service rechecks the record revision and required-Series membership rule before writing. Success removes the Series from search and clears the browser selection. The current Work draft is preserved and revalidated, including any unsaved assignment to the deleted Series. Output failures remain visible after the canonical deletion.
+The [Series management reference](Catalogue_Series_Management.md) owns the browser, title dialog and empty-Series deletion flow. Create, Save and Delete persist exact Series identities without a revision field. The editor preserves the Work draft while updating its saved Series choices. [Catalogue operations](Local_Studio_APIs.md#catalogue-operations)
 
 The Work editor places a multiple-selection Galleries field below Series for single and New Work editing. It searches canonical `galleries.json` by title or exact ID and displays removable selected pills. The UI owns Gallery membership validation: list representation, string IDs, distinct selections and existing Galleries in its loaded definitions. The service reads current membership from `galleries-by-work.json`; the editor sends UI-validated replacement `gallery_ids` separately from the Work record. Persistence applies the supplied lists without repeating array/member-type, endpoint or duplicate checks or membership revision comparisons. Metadata and membership changes share one canonical transaction; clearing the selection removes that Work's membership entry. Gallery IDs/titles are never copied into `works.json`. Single/New, subfolder-batch and bulk Gallery editing use the same canonical membership owner. Explicit canonical audits and definition deletion retain their separate validation contracts.
 
@@ -105,7 +104,6 @@ Ordinary Create/Save/Delete and normal queue-selected Refresh never invoke the c
 | CLI selection | Complete canonical audit scope |
 | --- | --- |
 | `catalogue_json_build.py --write --private-report-inputs` | All Works and Series |
-| `catalogue_json_build.py --write --work-document-coverage` | All Works and Series |
 | `catalogue_json_build.py --write --compact-indexes` | All Works/Series and Gallery definitions/memberships |
 | `catalogue_json_build.py --write --series-galleries` | All five canonical stores |
 | `catalogue_json_build.py --write --gallery-records` | All five canonical stores |
@@ -126,11 +124,9 @@ Generated Work JSON now uses `work_record_v11`, retiring the unused `documents` 
 
 ## Output Boundary
 
-Ordinary Studio Catalogue production is available. Save maintains canonical source and required local Work media; Refresh Catalogue reconciles generated Work, Series and Gallery records, indexes and private Docs metadata beneath `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`. The generator reads both canonical Gallery sources, writes individual `galleries/index/<gallery_id>.json` records and embeds Gallery IDs/titles in `work.galleries`. Gallery changes appear in current and former member Works after Refresh. Download staging resolves through `catalogue/media-staging/` under the configured Projects workspace; ready thumbnails use shared Docs `assets/works/thumbs/`. Docs Viewer reads the refreshed Gallery lookup and individual records for exact Gallery tokens, search and Media View. The historical `studio/data/generated/catalogue-lookup/` files are retired and removed; Studio lookup APIs read live canonical projections.
+Studio lookup APIs project live canonical records. Save stages prepared media in Projects `catalogue/media-staging/` and records known effects in the Working updates queue. Refresh writes selected reader JSON and private report inputs under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/` and hands selected media to `working/assets/works/`. Regenerate builds refreshed Work documents and forwards completed publication selections. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#current-workflow) · [Generated read models](Catalogue_Indexes_And_Payloads.md#generated-read-models)
 
-Refresh Catalogue is the explicit local generated-reader action; there is no separate media-publish or per-record publication action. Full JSON maintenance is available without media conversion or upload. The frozen site and media archive remain outside active writes. Docs Publish owns public acceptance; Save alone does not make a record public or refresh Docs semantic lookups, and Publish does not run Refresh or enforce its receipt.
-
-Generated output is replaceable data, not another canonical source. The Work/Series source model contains only those two record maps. Detail serialization, parsing, validation, sorting and transaction expansion are removed, along with the unused generated Detail projection and Detail field-registry families. Studio's focused Work projection contains no Detail sections. Historical test fixtures still describe the retired Detail model and require separately agreed test maintenance; [Catalogue Per-Work Detail Source](Catalogue_Per_Work_Detail_Source.md) records that evidence boundary.
+Publish distributes queued output, and the frozen site and media archive stay outside active writes. The [Detail migration record](archive/Catalogue_Per_Work_Detail_Source.md) preserves the old source and transaction-check evidence. Current fields, including Work and Gallery relationships, are defined in the canonical families above. [Catalogue Deployment](Catalogue_Deployment.md)
 
 ## One-time Gallery Conversion
 

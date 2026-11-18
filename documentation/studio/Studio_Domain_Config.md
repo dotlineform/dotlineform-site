@@ -10,28 +10,4 @@ parent_id: d-20260423-000000-d015e6
 ---
 # Studio Domain Config
 
-## Config Files
-
-- `studio/data/config/catalogue/catalogue-field-registry.json`
-This is a maintainer-edited domain contract, not a user preference or browser route configuration.
-
-## Catalogue Field Registry
-
-The field registry maps catalogue fields to their build and artifact consequences. It drives:
-
-- catalogue source-change and build planning
-- artifact impact ordering
-- field-registry verification
-- the Local Studio field-registry review route
-
-`studio/services/catalogue/catalogue_field_registry.py` owns loading and interpretation. The browser reads the same checked-in file through the configured `catalogue_field_registry` path.
-
-Change it when a source field or generated artifact relationship changes. Pair changes with registry verification and representative build-plan tests; do not reproduce its mapping in workflow docs.
-
-## Extension And Weak Spots
-
-- New catalogue artifacts need an explicit field-impact model before registry entries are added.
-- Visible route copy belongs in frontend modules, not these data contracts.
-- The catalogue field registry remains exposed through broad Studio data-path config as well as used by server code; a narrower server-owned resolver may eventually separate those concerns.
-
-[Configuration Map](Configuration_Map.md) places these owners beside the other app configuration families.
+The maintained [Catalogue Field Registry](Catalogue_Field_Registry.md) documents the checked `studio/data/config/catalogue/catalogue-field-registry.json` inventory and its verifier. The registry describes field ownership and output families. Save and Refresh carry effects through their own mutation and queue code. Runtime routes and browser/pipeline configuration use their separate owners. [Configuration Map](Configuration_Map.md) · [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#current-workflow)

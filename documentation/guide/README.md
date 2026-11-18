@@ -2,6 +2,8 @@
 
 This guide explains how the Dotlineform site is edited, built and released. It is for people working on the site and for technically skilled readers who want to understand how the repository fits together. Each chapter explains the workflow, who owns the important steps and why the boundaries exist. Follow its references for exact configuration and implementation details.
 
+To use the public reader, start with [Find and read things](Find_And_Read_Things.md). To run the local apps or preview the repository snapshot, start with [How the site fits together](How_The_Site_Fits_Together.md#start-a-local-surface).
+
 ## Contents
 
 1. [How the site fits together](How_The_Site_Fits_Together.md) — the public website, the local apps and the source of each kind of data.

@@ -8,7 +8,7 @@ parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Mutation Scripts
 
-Common Title/Summary editing belongs to the combined Source session and `/docs/source/save`, described in [Source Editor Scripts](Source_Editor_Scripts.md). Subject changes belong to the unsaved Source buffer. [Source Mutation Endpoints](Source_Mutation_Endpoints.md) describes the exact Draft, Selected, Position and Delete request/response boundaries; [Management Operations](Management_Operations.md) owns their completion/failure behavior. Scope lifecycle, generic metadata/field planners and preview/apply Delete routes remain retired without aliases.
+Common Title/Summary editing belongs to the combined Source session and `/docs/source/save`, described in [Source Editor Scripts](Source_Editor_Scripts.md). [Source Mutation Endpoints](Source_Mutation_Endpoints.md) describes the exact Draft, Selected, Position and Delete request/response boundaries; [Management Operations](Management_Operations.md) owns their completion/failure behavior. Scope lifecycle, generic metadata/field planners and preview/apply Delete routes remain retired without aliases.
 
 ## `docs-viewer/services/docs_management_mutations.py`
 

@@ -69,7 +69,7 @@ bin/site-validate
 
 Inspect the generated delta before handoff and commit canonical and projected files together. Add, remove, or change the public status of a runtime file by editing the manifest explicitly; local-only files in mixed source directories remain excluded. `--check` and `bin/site-validate` are non-mutating and require no external Docs Viewer scope workspace.
 
-This is a code-development gate only for represented runtime files. It is not part of document Build, Publish, Deploy Repo, Deploy Public, or ordinary document editing.
+This sequence applies to changes in represented runtime and browser configuration files. Document preparation, queued Publish and the Pages release have separate owners. [Publish and deploy](../guide/Publish_And_Deploy.md)
 
 ## Profile Intent
 

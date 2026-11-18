@@ -10,7 +10,7 @@ parent_id: d-20260428-000000-f5ff18
 ---
 # Mobile Layouts
 
-Review the public site as a whole on small screens. Choose a first delivery from the problems observed when readers browse collections, search, open documents and media, and return to where they were. The earlier mobile proposal records the wider reader tasks and interaction questions. [Public Mobile Experience](../Public_Mobile_Experience.md)
+Review the public site as a whole on small screens. Choose a first delivery from the problems observed when readers browse collections, search, open documents and media, and return to where they were. The earlier mobile proposal records the wider reader tasks and interaction questions. [Public Mobile Experience](../archive/Public_Mobile_Experience.md)
 
 ## Catalogue And Media View
 
@@ -21,6 +21,7 @@ Review the public site as a whole on small screens. Choose a first delivery from
 ## First Readiness Review
 
 - [ ] Walk representative public pages on a phone and tablet. Include orientation changes, long documents, the Index, search, image detail, and browser Back. Record where layout or controls make a task difficult.
+- [ ] Check deep Index branches, zoom, theme changes, diagrams and links. Check touch targets and safe areas where controls sit near an edge. Keep these public-reader checks separate from desktop Manage and Review.
 - [ ] Decide which reader journeys and layout changes belong in the first delivery, and which devices and pane widths will be used for manual acceptance.
 
 Review transfer size and loading separately, using the same reader journeys where that helps. [Site Optimisation](Site_Optimisation.md)

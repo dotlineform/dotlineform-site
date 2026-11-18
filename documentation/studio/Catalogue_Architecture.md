@@ -11,11 +11,13 @@ parent_id: d-20260423-000000-d015e6
 
 ## Current Shape
 
-Studio owns canonical Catalogue editing. A Work belongs to at most one Series and may belong to multiple Galleries; Series and Galleries may be empty. Canonical Work, Series, Gallery and membership sources live under `studio/data/canonical/catalogue/`. Detail records, source-owned publication state and parallel Catalogue Markdown prose are retired.
+Studio owns canonical Catalogue editing. A Work belongs to exactly one Series and may belong to multiple Galleries. Series and Galleries may be empty. Canonical Work, Series, Gallery and relationship sources live under `studio/data/canonical/catalogue/`. Detail records, source-owned publication state and parallel Catalogue Markdown prose are retired.
 
-The workflow guide follows a Work image change and a Gallery rename from their canonical edits to the publication queue. [Maintain the Catalogue](../guide/Maintain_The_Catalogue.md)
+The data model map traces the five canonical families through Studio, Working and publication. The workflow guide follows a Work image change and a Gallery rename through those steps. [Catalogue Data Model Map](Catalogue_Data_Model_Map.md) · [Maintain the Catalogue](../guide/Maintain_The_Catalogue.md)
 
 [Catalogue Source Model](Catalogue_Source_Model.md) owns exact identities, fields and relationships. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns operation completion and reader timing. [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) owns generated JSON shapes; [Catalogue Deployment](Catalogue_Deployment.md) owns public distribution.
+
+[Catalogue Media View](Catalogue_Media_View.md) describes how Docs Viewer opens Works and Galleries, traverses the invoking sequence and returns to the caller.
 
 ## Separate Authorities
 
@@ -34,6 +36,12 @@ The related obsolete tests, fixture dependency and profile registrations are ret
 Change canonical fields through the source definition, serializer, validation, editor and affected projections together. Keep exact IDs and one owner for each relationship; do not infer Gallery or document associations from titles, filenames or routes. Use focused service/generator evidence for the changed boundary.
 
 Normal Refresh reads the authorities needed by the supplied queue. Explicit canonical validation and family repair retain complete audits. Save and Refresh latency has not been measured. A failed Refresh can leave partial generated files and unfinished selections. Use the reported phase to correct the cause before rerunning the owning operation.
+
+## Design History
+
+The unification work kept the old public Catalogue frozen while testing a shared reader over independently owned Catalogue records and authored documents. The consumer studies separated exact media presentation from document links and held off on schema changes until a reader needed one. [Unification record](archive/Analysis_And_Catalogue_Presentation.md) · [Consumer study findings](archive/UAC_3_Findings.md)
+
+The first document regeneration proved Work-backed documents in a bounded pilot and then across the collection. The next delivery made exact pending IDs the normal input so routine changes could carry their completed effects forward without rebuilding the whole Catalogue. [Initial regeneration](archive/Catalogue_Work_Regeneration.md) · [Targeted regeneration delivery](archive/Catalogue_Changed_Regeneration_Delivery.md)
 
 ## Approved Persisted Lookup Test Cleanup
 

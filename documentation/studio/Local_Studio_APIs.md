@@ -35,12 +35,13 @@ The `read` endpoint accepts only server-owned keys and any required record id. I
 
 | group | POST paths |
 | --- | --- |
-| work | `/work/create`, `/work/save` |
+| work | `/work/create`, `/work/create-batch`, `/work/save` |
 | series | `/series/create`, `/series/save` |
+| gallery | `/gallery/create`, `/gallery/save`, `/gallery/delete` |
 | bulk edit | `/bulk-save` |
 | delete | `/delete-apply` |
 
-Every path is beneath `/studio/api/catalogue`. Successful mutations run shared local completion after canonical persistence. Bulk edit accepts Works only. Work deletion uses `{ "kind": "works", "ids": ["00001", "00002"] }` for one or many selected Works, without revision fields; IDs must be distinct exact five-digit strings. It returns the same `kind` and exact `ids` with `deleted: true`. Series deletion uses `{ "kind": "series", "series_id": "009", "expected_record_hash": "<revision>" }` and retains the empty-Series rule. Generic `id` request aliases, singular Work-delete requests and the preliminary Catalogue delete-preview route are retired without fallbacks. Detail mutation operations are also retired. Responses distinguish saved data from incomplete local completion; generated Catalogue readers still update through Refresh Catalogue. There are no separate publication, Build or media-publish endpoints.
+Every path is beneath `/studio/api/catalogue`. Work deletion uses `{ "kind": "works", "ids": ["00001", "00002"] }` for the exact distinct saved Work IDs selected in the editor. It returns the same `kind` and `ids` with `deleted: true`. Series deletion uses `{ "kind": "series", "series_id": "009" }` after the editor confirms from its saved membership map that the Series is empty. Gallery deletion takes only `gallery_id` on its own route. The service requires the exact existing targets and owns canonical persistence and local completion. Responses distinguish saved data with incomplete completion from a rejected mutation. Refresh Catalogue updates generated readers separately. [Catalogue Source Model](Catalogue_Source_Model.md#save-and-delete)
 
 Generated Catalogue thumbnail reads use the confined local `/studio/catalogue-output/` route, separate from mutation APIs.
 
@@ -49,7 +50,7 @@ Generated Catalogue thumbnail reads use the confined local `/studio/catalogue-ou
 The HTTP adapter parses the named request and delegates:
 
 - catalogue mutations to `catalogue_write_service.py`
-- the write dispatcher to Work, Series, Work bulk-edit and delete services, followed by shared output completion
+- the write dispatcher to Work, Series, Gallery, Work bulk-edit and delete services, followed by shared output completion
 
 The adapter does not own source schemas, mutation policy, build planning, or public projection.
 

@@ -20,11 +20,11 @@ Use this section for:
 
 ## References
 
-- **[Knowledge System Vision](Knowledge_System_Vision.md)** for the cross-system purpose of Studio, Analytics, Docs Viewer, Data Sharing, semantic tokens, and the hybrid Analysis scope
+- **[How the site fits together](../guide/How_The_Site_Fits_Together.md)** for the active site and app boundaries, with earlier design goals in the **[Knowledge System Vision](archive/Knowledge_System_Vision.md)**
 - **[Source Tree Ownership](Source_Tree_Ownership.md)** for the maintained boundary between Studio source, Docs Viewer source, public source, generated output, and local working output
 - **[Projection Contract](Projection_Contract.md)** for canonical source, local projection, and public projection boundaries
-- **[Projection Contract Validation](Projection_Contract_Validation.md)** for executable cross-boundary enforcement
-- **[Local Authoring Service And Publication Boundaries](Local_Authoring_And_Publication.md)** for the accepted Studio/Docs Viewer server composition, shared publication vocabulary, domain-specific publication timing, and reconsideration triggers
+- **[Projection Contract Validation](archive/Projection_Contract_Validation.md)** for the older cross-boundary audit and its review boundary
+- **[Local Runners](Local_Runners.md)** for Studio and Docs Viewer service composition and **[Publish and deploy](../guide/Publish_And_Deploy.md)** for the current publication sequence
 - **[Shared Artifact Patterns](Shared_Artifact_Patterns.md)** for reuse that crosses app ownership
 - **[Data Models Diagrams](Data_Models_Diagrams.md)** for bounded logical and projection maps plus the shared method for producing them
-- **[Site](Site.md)** for the public catalogue, routes, shell, design, and runtime data flow
+- **[Site](Site.md)** for the active public reader, checked deploy artifact and separately frozen Catalogue

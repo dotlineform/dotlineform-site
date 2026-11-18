@@ -69,4 +69,4 @@ Continue refining these choices before creating an implementation delivery. Effi
 
 ## Existing Context
 
-[Source Organisation](Source_Organisation.md) describes current storage and document-placement boundaries. [Document Build](Builder.md) describes current generated output and Links maintenance. [Save/Build optimisations](Save_Build_Optimisations.md) records earlier performance opportunities; use it as investigation context and recheck current code before selecting optimisation work. These documents remain current-state or investigation references; this feature proposes a future structure.
+[Source Organisation](Source_Organisation.md) describes current storage and document-placement boundaries. [Document Build](Builder.md) describes current generated output and Links maintenance. [Save/Build optimisations](archive/Save_Build_Optimisations.md) records earlier performance opportunities; use it as investigation context and recheck current code before selecting optimisation work. These documents remain current-state or investigation references; this feature proposes a future structure.

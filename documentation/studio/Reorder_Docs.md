@@ -95,6 +95,6 @@ This is a synchronous single-user editor. Do not add revision tokens, stale-moda
 
 ## Delivery And Status
 
-The approach above is implemented under [Reorder docs delivery](Reorder_Docs_Delivery.md). It covers canonical structure, existing mutation consumers, the Position modal, generation and preparation integration, code review and documentation. [Source Organisation](Source_Organisation.md) records the maintained behaviour.
+The approach above is implemented under [Reorder docs delivery](archive/Reorder_Docs_Delivery.md). It covers canonical structure, existing mutation consumers, the Position modal, generation and preparation integration, code review and documentation. [Source Organisation](Source_Organisation.md) records the maintained behaviour.
 
 The initial tree retained all 47 ordinary documents and their existing order. Focused lint, Working Build and public projection/site validation passed. On 2026-09-26 the user confirmed successful testing through site-preview, accepting the final modal and closing the delivery. This proposal and its delivery are ready for manual archival; [Source Organisation](Source_Organisation.md) remains the durable owner.

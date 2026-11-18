@@ -14,4 +14,4 @@ The active reader has Index Search on the public site at `/` and in Manage at `/
 - [Docs Search Index](Docs_Search_Index.md) and the [Tokenizer](Docs_Search_Tokenizer.md) own the prepared postings, coverage and browser matching. Keep the prepared index small enough for on-demand browser loading and deterministic ranking.
 - [Working rebuild](Builder.md#working-rebuild) owns the current Refresh Search and Recent action and generation handoff.
 - [Catalogue collection browsing](Sub_Scope_Index_Architecture.md#catalogue-collection-browsing) owns the Catalogue page’s Work and Gallery results.
-- [Catalogue Archive](Catalogue_Archive.md) describes the frozen former site. [Catalogue Search](Catalogue_Search.md) records its historical search design.
+- [Catalogue Archive](Catalogue_Archive.md#historical-reader-references) maps the frozen site's Search route and saved index.

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260413-000000-d314b7
 title: Local Setup
 added_date: 2026-04-13 00:00:00
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-11-18"
 parent_id: ""
 
 ---
@@ -21,13 +21,11 @@ All commands assume you are in `dotlineform-site/` unless stated otherwise.
 The local development stack is split into sibling services:
 
 - `bin/site-preview` for the public static-site preview
-- `bin/local-studio` for Local Studio catalogue/tag workflows
-- `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode, document-package routes, and docs management APIs
+- `bin/local-studio` for Studio Catalogue authoring and Refresh
+- `docs-viewer/bin/docs-viewer` for the local Docs reader, with Manage enabled by `DOCS_VIEWER_MANAGEMENT_ENABLED=1`
 - `bin/local-all` when one terminal should supervise the sibling services together
 
-These services should stay separate.
-Do not make public preview part of Studio startup semantics, and do not
-reintroduce retired Analytics or Data Sharing routes.
+Each service has its own startup command and data authority. [Local runners and default addresses](Local_Runners.md) · [Start a local surface](../guide/How_The_Site_Fits_Together.md#start-a-local-surface)
 
 ## Child References
 
@@ -35,4 +33,5 @@ reintroduce retired Analytics or Data Sharing routes.
 - [Environment](Local_Setup_Environment.md) covers `.env.local`, process environment fallback, repo-specific operating notes, and common commands.
 - [Public Site Preview](Local_Setup_Public_Site_Preview.md) covers the public static preview and validation commands and wrapper defaults.
 - [Recovery](Local_Setup_Recovery.md) covers recovery after macOS, Xcode, or Command Line Tools updates.
-- [GitHub And Codex Notes](Local_Setup_GitHub_And_Codex_Notes.md) covers local-vs-GitHub setup boundaries and Codex guidance.
+
+Local authoring and media preparation use the configured Python and media tools. Pages deploys the tracked site tree. [Runtime dependencies](Runtime_Dependencies.md) · [Publish and deploy](../guide/Publish_And_Deploy.md)

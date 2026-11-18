@@ -20,8 +20,6 @@ Start with [How the site fits together](../guide/How_The_Site_Fits_Together.md).
 - [Public Docs Route Shell](Public_Docs_Route_Shell.md) — the active public entry point and its boot path.
 - [Site Shell Runtime](Site_Shell_Runtime.md) — page shell, theme and asset loading.
 
-The previous Catalogue is documented in [Public Catalogue Design](Public_Catalogue_Design.md), [Public Route Model](Public_Route_Model.md), [Public Catalogue Data Flow](Public_Catalogue_Data_Flow.md) and [Catalogue Search](Catalogue_Search.md).
-
 ## Change Site Content
 
 - [Studio](Studio.md) owns Catalogue authoring. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#current-workflow) follows a change from Studio to Working and the publication queue.
@@ -40,7 +38,7 @@ The previous Catalogue is documented in [Public Catalogue Design](Public_Catalog
 - `site/assets/data/catalogue/` and `site/assets/data/docs/catalogue/` for published Catalogue records and documents
 - `site/archive/series/`, `site/archive/works/`, `site/archive/work-details/`, `site/archive/recent/`, and `site/archive/search/` for frozen historical catalogue route shells
 - `site/archive/assets/js/catalogue/` for archived catalogue routes, components, navigation, and shared helpers
-- `site/assets/css/main.css` for the current site shell; `site/archive/assets/css/main.css` and `site/archive/assets/css/catalogue.css` for archived presentation
+- `site/docs-viewer/static/css/` for the projected Docs Viewer styles and `site/archive/assets/css/` for the frozen site's styles
 - `site-tools/` for deploy-root validation and static preview tooling
 
 Use code, config, generated payloads, and focused tests for exact current fields and behaviour. These documents provide the stable map.

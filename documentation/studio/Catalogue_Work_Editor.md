@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-25"
+last_updated: "2026-11-18"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -116,6 +116,8 @@ A Work must belong to exactly one Series. The UI enforces this using its loaded 
 There is no Work publication state, Publish/Unpublish action or Catalogue Drafts route. Save and Refresh Catalogue are separate awaited actions; there is no media-publish control. Refresh reconciles generated Catalogue readers and private Docs metadata, without publishing documents. The local API must be available; browser edits are not queued for offline saving.
 
 ## Import A Project Subfolder
+
+Studio retired the separate Excel bulk import on 7 September 2026. Work creation and media preparation now share the Work Editor workflow.
 
 In New Work mode, the **Open subfolder** icon button beside project subfolder opens the shared **Select folder** modal. It uses the same folder-open artwork and icon-button styling as Choose image; its tooltip and accessible label remain **Open subfolder**. Choose a project folder and one direct subfolder. The existing file list shows every supported direct image as read-only filename text. **OK** remains unavailable during loading, after failure, for the project parent or for an empty subfolder. Cancel leaves the draft unchanged. Source originals stay in their configured Projects or Processing locations.
 

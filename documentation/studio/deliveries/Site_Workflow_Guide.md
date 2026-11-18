@@ -4,34 +4,32 @@ doc_id: d-20261117-213339-8c181b
 title: Site Workflow Guide
 added_date: "2026-11-17 21:33:39"
 last_updated: "2026-11-18"
-summary: Create a small definitive guide to the site's workflows and retain the reasoning behind its main design decisions.
-ui_status: active
+summary: Completed six-chapter guide to the site's workflows, with supporting references consolidated and design history preserved.
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Site Workflow Guide
 
-Create a short, definitive guide in `documentation/guide/` with one entry page and a small set of workflow chapters. It should help the product owner and coding collaborators see how the site works, find the owner of a change, and answer why the system works this way. The same guide should be readable in the public repository by a technically skilled newcomer.
+The [Site Workflow Guide](../../guide/README.md) covers the six main workflows, their owners and the decisions behind them. It is the entry point from the repository README and Studio Dev Home.
 
-## Where To Resume
+## Closeout
 
-**Completed this batch.** Wrote and reviewed chapter 6, [Change the system safely](../../guide/Change_The_System_Safely.md). Used a default-document change to trace configuration ownership, projection, verification and recovery. Linked the chapter from Dev Home and routed Search build instructions to the maintained owners.
+Closed on 18 November 2026. Reviewed all six chapters as a newcomer and as a maintainer changing the default document. The isolated change exercised config generation, public projection, missing-target diagnosis and recovery. Final cleanup consolidated Manage service references, moved current import architecture into Docs Import and corrected local capability, media and public shell guidance. [Walkthrough evidence](../archive/Site_Workflow_Guide_Triage.md#guide-walkthrough)
 
-**Next visit.** Walk the complete guide as a new reader and as someone changing a workflow. Use the working inventory to settle the remaining supporting-library dispositions, starting with the marked early retirements and their references. Close the delivery after that review and consolidation are complete.
+The 290-file inventory is settled and archived. It records 136 retained references or independent proposals, 137 archived records and 17 retirements. Independent implementation proposals and existing manual acceptance gates retain their own owners. The supporting-library pass used source, document identity, link and whitespace checks. It made no runtime, user-data, test or publication changes. [Final inventory](../archive/Site_Workflow_Guide_Triage.md)
 
 ## Contents And Progress
 
-| Chapter | Covers | Chapter status | Cleanup to track |
+| Chapter | Covers | Chapter status | Delivered cleanup |
 | --- | --- | --- | --- |
-| 1. [How the site fits together](../../guide/How_The_Site_Fits_Together.md) | The public site, Studio, Docs Viewer, and their sources and projections. | Done | Entry points and Source Tree Ownership updated. Docs Viewer Overview and Site Overview consolidated and retired. |
-| 2. [Author and organise documents](../../guide/Author_And_Organise_Documents.md) | Working, collections, Books, media, links and exact document generation. | Done | Linked specialist references and corrected the media guide's Delete instruction. Older authoring references still need triage. |
-| 3. [Maintain the Catalogue](../../guide/Maintain_The_Catalogue.md) | Works, Series, Galleries and Save → Refresh → Regenerate. | Done | Studio and Catalogue Architecture updated. Retain specialist editor, queue and distribution references. Review the remaining historical operating guides. |
-| 4. [Publish and deploy](../../guide/Publish_And_Deploy.md) | What Working prepares, what Publish transfers, and when GitHub Pages changes. | Done | Runtime guidance corrected. Review the older publication references for consolidation. |
-| 5. [Find and read things](../../guide/Find_And_Read_Things.md) | Index, Search, Recent, Catalogue browsing and Media View. | Done | Search overview and reader entry points updated. Older Search commands and navigation records remain in triage. |
-| 6. [Change the system safely](../../guide/Change_The_System_Safely.md) | Where to make a change, how to check it, and how to recover when a workflow fails. | Done | Linked setup and verification owners. Retired commands removed from Search Build Pipeline. Remaining reference consolidation stays in triage. |
+| 1. [How the site fits together](../../guide/How_The_Site_Fits_Together.md) | The public site, Studio, Docs Viewer, and their sources and projections. | Done | First-run path now includes runner addresses, required workspace roots and the Manage setting. |
+| 2. [Author and organise documents](../../guide/Author_And_Organise_Documents.md) | Working, collections, Books, media, links and exact document generation. | Done | Walkthrough corrected retired media paths, thumbnail ownership and recovery after Source Save. |
+| 3. [Maintain the Catalogue](../../guide/Maintain_The_Catalogue.md) | Works, Series, Galleries and Save → Refresh → Regenerate. | Done | Updated the canonical data-model map and current operation references. Archived the earlier storage, data-model, report and regeneration records. |
+| 4. [Publish and deploy](../../guide/Publish_And_Deploy.md) | What Working prepares, what Publish transfers, and when GitHub Pages changes. | Done | Walkthrough distinguishes code-only release, content Publish, recovery and the separate Pages gate. |
+| 5. [Find and read things](../../guide/Find_And_Read_Things.md) | Index, Search, Recent, Catalogue browsing and Media View. | Done | Frozen reader, standalone Search, navigation proposals and UAC presentation studies archived. Current browsing and return guidance stays with the guide and reader owners. |
+| 6. [Change the system safely](../../guide/Change_The_System_Safely.md) | Where to make a change, how to check it, and how to recover when a workflow fails. | Done | Default-document projection and missing-target recovery exercised in a disposable copy. Reader interaction stays a manual check. |
 
-At the end of each visit, update the relevant rows and leave the next concrete action and any decision it depends on under **Where To Resume**. Link each chapter here when its draft exists. Mark a chapter **Done** once its workflow, rationale and links have been reviewed. Record individual file dispositions in the [working triage inventory](Site_Workflow_Guide_Triage.md) and summarise any outstanding cleanup in the table.
-
-Treat the chapter order as the first contents list for a book. Repository Markdown is the first readable edition. A PDF or EPUB could follow through the separate export work. [Export Book](Export_Book.md)
+Repository Markdown is the first readable edition. A PDF or EPUB could follow through the separate export work. [Export Book](Export_Book.md)
 
 ## What A Chapter Should Carry
 
@@ -41,9 +39,7 @@ Verify current behaviour against the owning code, configuration and maintained r
 
 ## Cleanup In Batches
 
-The first pass identified 60 useful references, 96 files to review, 94 archive candidates, and 40 deletion candidates. The file-level recommendations and their dependencies are in the [working triage inventory](Site_Workflow_Guide_Triage.md).
-
-Use workflow batches. Draft the affected chapters, then update, consolidate, archive or delete old files as their replacement owner becomes clear. The scan found that docs in the 60-file keep set link to 32 review candidates, 10 archive candidates and one deletion candidate. Working by workflow lets those links follow the new authority as it is established. Use the 60-file set for evidence and retain specialist references with a distinct purpose. The 13 clearest retirements remain an early cleanup batch after link checks.
+Each workflow batch established the maintained owner before retiring duplicate guidance. The archive preserves original decisions, experiments, delivery evidence and limitations so later work can recover why the design changed. [Final inventory](../archive/Site_Workflow_Guide_Triage.md)
 
 ## Delivery Steps
 
@@ -52,5 +48,6 @@ Use workflow batches. Draft the affected chapters, then update, consolidate, arc
 - [x] **Check the first batch.** Identify the current owners and decision records for chapters 1 and 4 before writing.
 - [x] **Draft the first batch.** Add the guide entry page and draft chapters 1 and 4.
 - [x] **Write and link the guide.** Give readers a clear path from the repository and Studio entry points to each workflow. Check each chapter's instructions and rationale against its sources.
-- [ ] **Consolidate the supporting library.** Carry forward unique current procedures and significant reasoning before retiring old copies. Check relative links, document ID references and parent references for each move or deletion. Preserve the title and ID of any retained or moved Studio document.
-- [ ] **Review and close.** Walk the guide as a new reader and as someone changing a workflow. Confirm that each chapter points to its maintained authority, settle the remaining review queue and retire the working inventory.
+- [x] **Walk the complete guide.** Review it as a new reader and as someone changing a workflow. Fix the gaps found and record the evidence in the inventory.
+- [x] **Consolidate the supporting library.** Carry forward unique current procedures and significant reasoning before retiring old copies. Check paths, links, document and parent IDs.
+- [x] **Close the delivery.** Settle the supporting-library dispositions and archive the inventory.

@@ -1,6 +1,6 @@
 # Maintain the Catalogue
 
-Start Studio with `bin/local-studio` and open the Catalogue Work Editor at `/studio/catalogue-work/`. Studio owns the saved Works, Series, Galleries and memberships in `studio/data/canonical/catalogue/`. A Work can belong to one Series and several Galleries. A Gallery can also be relevant to a whole Series. Use the Work form to change a Work or its membership, and the definition dialogs to change a Series or Gallery. Docs Viewer presents the prepared results. [Work Editor](../studio/Catalogue_Work_Editor.md) · [Gallery and Series definitions](../studio/Catalogue_Work_Editor.md#gallery-and-series-definitions)
+Start Studio with `bin/local-studio` and open the Catalogue Work Editor at `/studio/catalogue-work/`. Run Docs Viewer Manage for the later Regenerate and Publish steps. Studio owns the saved Works, Series, Galleries and memberships in `studio/data/canonical/catalogue/`. A Work belongs to exactly one Series and may belong to several Galleries. A Gallery can also be relevant to a whole Series while keeping its own members. [Start a local surface](How_The_Site_Fits_Together.md#start-a-local-surface) · [Work Editor](../studio/Catalogue_Work_Editor.md) · [Gallery and Series definitions](../studio/Catalogue_Work_Editor.md#gallery-and-series-definitions)
 
 ## Replace a Work’s image
 
@@ -17,5 +17,7 @@ Studio can show saved edits immediately because it owns canonical data and stage
 3. **Regenerate in Docs Viewer Manage.** Regenerate updates the affected Work documents so their Gallery links carry the renamed title. It adds those Works to the same publication queue. The rename itself selects no media transfers. [Regenerate timing](../studio/Catalogue_Save_And_Refresh.md#regenerate-timing) · [Adopted Work data](../studio/Generated_Data_Contracts.md#catalogue-reference-and-presentation)
 
 A change limited to the Gallery’s **Description** or marker follows **Save → Refresh Catalogue**. These fields belong to the shared Catalogue report data, so Refresh queues the completed `galleries/report-search.json` and there are no Work entries for Regenerate from that edit. [Gallery report data](../studio/Catalogue_Indexes_And_Payloads.md#generated-read-models)
+
+Check the refreshed Work in the Catalogue collection and check the Gallery link or search row for the renamed title. If Portfolio Search still shows the previous Gallery title, update discovery explicitly before publishing. [Refresh Search and Recent](Publish_And_Deploy.md#1-prepare-the-change)
 
 After the relevant preparation finishes, use [Publish and deploy](Publish_And_Deploy.md) to release the queued output. Return to the [guide contents](README.md).

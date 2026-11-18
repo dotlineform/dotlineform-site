@@ -1,0 +1,50 @@
+---
+draft: false
+doc_id: d-20260905-120654-ab5e59
+title: Gallery Design
+added_date: "2026-09-05 12:06:54"
+last_updated: "2026-10-03 17:35:06"
+summary: Record the resolved Media View gallery design, its durable destination and the separately owned public distribution and shared navigation work.
+ui_status: done
+parent_id: d-20260904-204816-0f31be
+---
+# Gallery Design
+
+Accepted Series gallery experiment. It records the decisions on ordered input, per-selection loading and returning to the invoking page that informed the later Work and Gallery views. [Current reference](../Catalogue_Media_View.md#gallery-presentations)
+
+## Resolved Outcome
+
+The gallery design and ordinary Catalogue-backed implementation were accepted on 2026-09-12. The Series Media View and token behavior described below was retired on 2026-09-28; these decisions remain as historical context. [Catalogue Media View](../Catalogue_Media_View.md) owns current authoring, data, presentation and navigation behavior. [Semantic Tokens Architecture](../Semantic_Tokens_Architecture.md) owns exact source forms, occurrence identity, Build, usage and audit behavior. This note is ready for manual archive.
+
+A Series gallery has its own exact identity and ordered Work membership, distinct from an individual Work or Detail presentation. A gallery containing one Work remains a gallery; an empty Series remains valid. Catalogue ownership is independent of whether any corresponding document exists.
+
+## Accepted Decisions
+
+| concern | settled behavior |
+| --- | --- |
+| Document authoring | Add Media View link supports exact Work, Detail and Series text links. Add Catalogue image supports Work primaries and Details only. Document content gains no inline galleries or Series-image tokens. |
+| Gallery data | Read one existing generated Series membership record through the local/public provider. Reuse its ordered Work identities and labels, resolving existing thumbnails through explicit route configuration. No Catalogue schema change or full Work-index read was needed. |
+| Selected images | Load a Work record only when selected and use its explicit media URLs and metadata. A Detail keeps its exact owning Work and suffix and may display without a Work primary image. |
+| Layout | Centre up to eight columns and six rows of 64px thumbnails with 8px gaps beside the shared right information column. Use existing 96px thumbnails. Preserve 48-member pages when the public layout reflows. |
+| Navigation | Pages and Works cycle in both directions through the supplied order. Compact position/total and arrow-only controls sit together at the left of the information column. A single page or single Work has no active navigation arrows. |
+| Return behavior | Returning from a Work shows the gallery page containing the successfully selected Work. Failed or superseded requests retain the current selection and page. Back to document remains owned by Content Detail. |
+| Sequence identity | Explicit Series context enables Work traversal. Direct Work/Detail entry does not infer a sequence from membership. Any Series thumbnail derives from its first ordered Work; no primary Work or image is stored. |
+| Loading lifetime | Render only the current page and selected image. Retain only existing in-flight Work reads and reject late results. Shared page-session reuse and browser history remain separately owned. |
+
+## Historical Examples
+
+[Media View - Series 143 Gallery](/docs/?doc=d-20260906-164429-756174) previously supplied Series 143 and complete presentations for Works 01941 and 01942. Its interactive markup was retired; the Working document now preserves only a historical note.
+
+[Media View Gallery Navigation - Review](/docs/?doc=d-20260912-194630-965ab5) contains authored examples of the former Work, Detail and Series behavior. Its retired token forms remain source text and no longer provide Series regression coverage.
+
+## Archive Evidence And Remaining Boundaries
+
+The frozen archive established useful responsibilities: a compact ordered Series record, current-page thumbnail rendering and separately loaded Work data. The active implementation reuses existing Catalogue consumer records and the established thumbnail convention without importing archive runtime code or changing frozen assets.
+
+The September 2026 inspections found 167 Works in the archived Series 026 record (21,725 bytes), compared with 165 Works in the current generated record (21,296 bytes). These are input-size observations, not network-performance budgets. Focused checks prove page membership, selected-record reads and stale-response handling. Cold/warm loading and constrained-network performance have not been benchmarked; neighbouring-image prefetch remains outside the implemented result.
+
+[Catalogue Deployment](../Catalogue_Deployment.md) owns distribution of current Catalogue output, independently of document Publish. Public readers are configured for Work and Series by-ID records and existing 96px Work thumbnails under `/assets/data/catalogue/`; reader wiring does not establish deployment. The earlier proposal to pin Catalogue data to an accepted document snapshot is superseded.
+
+[Runtime](../Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns implemented browser Back/Forward and caller restoration. The older View Caching and History delivery is retired; wider resource reuse, associated-document actions and shareable Media View URLs remain separate choices.
+
+[Gallery List Design](Gallery_List_Design.md) was retired on 28 September 2026 with the Works in a Series report. Gallery Media View supplies gallery membership browsing; no large insertable Works list is planned for ordinary documents.

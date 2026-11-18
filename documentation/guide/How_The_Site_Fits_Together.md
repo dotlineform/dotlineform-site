@@ -2,11 +2,17 @@
 
 Dotlineform is a public portfolio and reading site. Visitors browse documents, Works and Galleries through a read-only Docs Viewer. The author uses two local web apps to make changes. Studio maintains the Catalogue, and Docs Viewer Manage maintains the documents and publishes the prepared changes.
 
+## Start a local surface
+
+Run these commands from the repository root. For a first local setup, follow the toolchain and environment instructions. Public preview serves the repository files and can use the configured public media URLs. Studio and Manage need the applicable existing local workspaces described below. [Local setup](../studio/Local_Setup.md)
+
 | Surface | What it does | Where to start |
 | --- | --- | --- |
-| **Public site** | GitHub Pages serves the tracked `site/` tree. The public reader loads prepared data from that tree and media from the configured destinations. | Run `bin/site-preview` to inspect the repository snapshot locally. [Public entry page](../../site/index.html) |
-| **Studio** | Edits canonical Works, Series, Galleries and memberships. **Refresh Catalogue** prepares the changed data and media for Working. | Run `bin/local-studio`. [Maintain the Catalogue](Maintain_The_Catalogue.md) |
-| **Docs Viewer Manage** | Edits and organises Working documents and media. Catalogue **Regenerate** updates Catalogue documents from Studio's refreshed inputs. **Publish** applies queued Docs and Catalogue changes. | Run `docs-viewer/bin/docs-viewer`. [Local runners](../studio/Local_Runners.md) |
+| **Public site** | GitHub Pages serves the tracked `site/` tree. The public reader loads prepared data from that tree and media from the configured destinations. | Run `bin/site-preview` and open `http://127.0.0.1:4000/`. [Read and browse](Find_And_Read_Things.md) |
+| **Studio** | Edits canonical Works, Series, Galleries and memberships. **Refresh Catalogue** prepares the changed data and media for Working. | Run `bin/local-studio` and open `http://127.0.0.1:8765/studio/catalogue-work/`. [Maintain the Catalogue](Maintain_The_Catalogue.md) |
+| **Docs Viewer Manage** | Edits and organises Working documents and media. Catalogue **Regenerate** updates Catalogue documents from Studio's refreshed inputs. **Publish** applies queued Docs and Catalogue changes. | Set `DOCS_VIEWER_MANAGEMENT_ENABLED=1` in `.env.local`. Run `docs-viewer/bin/docs-viewer` and open `http://127.0.0.1:8776/docs/`. [Author and organise documents](Author_And_Organise_Documents.md) |
+
+The addresses use the default ports. Check the runner's startup message when a local override changes the address. Use `bin/local-all` when following a change across Studio, Manage and public preview. [Local runners](../studio/Local_Runners.md#choose-a-runner)
 
 The public reader can run from static files because the local apps finish the authoring and preparation before release. Manage and Public share reader code such as document rendering and navigation. Each gets its data and capabilities from its own entry point. Manage can call local authoring services, while Public reads prepared files. The local Docs service can also serve a separate preview of validated returned packages. [Docs Viewer runtime](../studio/Docs_Viewer_Runtime.md#three-surfaces) · [Docs Review](../studio/Docs_Review.md)
 

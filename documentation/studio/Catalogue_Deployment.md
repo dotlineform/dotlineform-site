@@ -5,7 +5,7 @@ title: Catalogue Deployment
 added_date: "2026-09-09 20:59:38"
 last_updated: "2026-10-19"
 summary: Queued Work publication, separate Preview media, exact repository/R2 deployment and final shared output.
-parent_id: d-20260902-102745-8379ea
+parent_id: d-20260401-000000-a11bf3
 ---
 # Catalogue Deployment
 
@@ -29,7 +29,7 @@ One empty-body `POST /docs/publish` action processes queued Catalogue Works, Doc
 
 Studio staging remains Projects-owned and project originals retain their owner. Local readers use Working media; public readers use configured repository/R2 destinations. Operational staging/queue fields are private.
 
-The [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json) allows Work/Gallery by-ID JSON and explicit public system files. Publish reads only selected finished files. Unselected Catalogue output, private reports, public report configuration and archive files retain their bytes.
+The [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json) lists Gallery by-ID JSON and explicit shared system files. The Work queue separately selects Catalogue documents and their media, using the destinations above. Publish reads only finished files selected by those handoffs.
 
 ## Per-Work Publish
 

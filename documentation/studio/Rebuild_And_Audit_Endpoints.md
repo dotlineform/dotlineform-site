@@ -3,81 +3,17 @@ draft: false
 doc_id: d-20260607-222033-fc3fe4
 title: Rebuild And Audit Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-08-14 20:31:29"
+last_updated: "2026-11-18"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Rebuild And Audit Endpoints
 
-## `POST /docs/rebuild`
+These local endpoints operate on the configured Working workspace. [Management route owner](../../docs-viewer/services/docs_management_routes.py)
 
-Expected data:
+| Action | Request | Completed effect |
+| --- | --- | --- |
+| Exact document Rebuild | `POST /docs/rebuild-document` with `{doc_id}` or `{collection, doc_id}` | Read the saved source, generate the selected document and its Links effects, and prepare eligible publication changes. [External edits and rebuilds](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) |
+| Refresh Search and Recent | `POST /docs/refresh-discovery` with `{}` | Build and save Working Search and Recent and queue changed discovery files. [Working rebuild](Builder.md#working-rebuild) |
+| Broken Links Refresh | `POST /docs/broken-links` with `{}` | Scan current Working inputs and save the private audit. `GET /docs/broken-links` reads that saved result. [Saved local report](Broken_Links_Script.md#saved-local-report) |
 
-```json
-{
-  "scope": "studio"
-}
-```
-
-Actions:
-
-- validates `scope` against configured docs scopes
-- runs `docs-viewer/build/build_docs.py --scope <scope> --write --diagnostics`
-- runs `docs-viewer/build/build_search.py --scope <scope> --write`
-- returns command output and parsed diagnostics
-- does not change source Markdown files
-
-Returned data:
-
-```json
-{
-  "ok": true,
-  "steps": [],
-  "search": {
-    "mode": "full",
-    "doc_ids": []
-  },
-  "docs": {
-    "mode": "full",
-    "doc_ids": [],
-    "reason": "full-scope fallback: no targeted docs payload ids provided"
-  },
-  "diagnostics": {
-    "docs": {},
-    "search": {}
-  },
-  "summary_text": "Docs and docs search rebuilt for studio."
-}
-```
-
-Each `steps` item includes `command`, `returncode`, `stdout`, `stderr`, and `elapsed_seconds`.
-
-Used for:
-
-- explicit manage-mode rebuilds
-- repairing generated docs/search output after manual source changes
-- collecting diagnostics from both builders in one response
-
-## `POST /docs/broken-links`
-
-Expected data:
-
-```json
-{
-  "scope": "studio"
-}
-```
-
-Actions:
-
-- validates the scope for the broken-links audit
-- runs the shared docs broken-links audit
-- reports missing target issues
-- does not write source docs or generated outputs
-
-Returned data includes `ok`, selected `scope`, checked-link counts, broken-link counts, issue records, and summary text.
-
-Used for:
-
-- Docs Viewer report surfaces
-- local maintenance before publishing or reshaping docs source
-- terminal-backed checks that need the same audit behavior as the browser
+Full Working rebuild is an explicit maintenance CLI operation. Publish has its own queue-only endpoint. [Working rebuild](Builder.md#working-rebuild) · [Publish transfer boundary](Builder.md#preview-and-deployment-boundary)

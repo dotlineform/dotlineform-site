@@ -126,7 +126,7 @@ Document suffix classification is code-owned by `SOURCE_FORMAT_BY_SUFFIX` in `do
 
 JSON and JSONL appear in global Docs Import only when `docs_import_document_package.py` recognizes a trusted supported document package. An ordinary JSON/JSONL download is available through **Add file…**, not as a generic Docs Import fallback.
 
-Markdown package folders and interactive HTML companions are also classified outside the ordinary suffix registry. [Docs Import Architecture](Docs_Import_Architecture.md) owns the complete source-dispatch and document-planning boundary.
+Markdown package folders and interactive HTML companions are also classified outside the ordinary suffix registry. [Docs Import](Docs_Import.md#implementation-boundary) owns the complete source-dispatch and document-planning boundary.
 
 ## Workspace Configuration And Storage
 
@@ -240,7 +240,7 @@ The distinct configuration and redundancy review confirmed one publication desti
 - Package attachments retain their bytes and receive readable `<doc_id>/attachment-NN.<ext>` identities.
 - The resolved destination and final document identity are supplied before media planning. Plans contain their complete document-owned artifact identities and tokens immediately; no later filename retargeting or owner rebinding runs. The standalone preview CLI derives its preview identity from the source.
 
-Inline SVG sanitization also runs once per conversion. Prepared bytes remain outside JSON preview metadata and are reused during materialisation without re-reading or re-extracting the source. [Docs Import Architecture](Docs_Import_Architecture.md#import-media-preparation) owns this internal handoff and its retained safety boundaries.
+Inline SVG sanitization also runs once per conversion. Prepared bytes remain outside JSON preview metadata and are reused during materialisation without re-reading or re-extracting the source. [Docs Import](Docs_Import.md#import-media-preparation) owns this internal handoff and its retained safety boundaries.
 
 The separately authorised Moments suffix cleanup on 18 October 2026 inspected its 58 canonical sources, renamed 36 images from `<title>-<doc_id>.webp` to `<title>.webp` within their existing document folders, and updated/rebuilt the 36 referencing documents. Media bytes, exact source headers and metadata were preserved. The targeted build rendered/wrote 36 documents with zero warnings and source rescans, unchanged private manifest and no Links changes. All 36 are eligible: the existing Docs queue carries 36 document/media writes and 36 exact old-media removals for the next Publish. The maintenance script passed syntax checking; review of its selected paths, source rewrites, generation and publication handoff retained destination collision rejection and confinement, reused loaded inputs, and introduced no production code, alias, recovery or broader scan. The Keys payload was inspected with its shorter `keys.webp` identity. No Search, saved report refresh, thumbnails, tests, browser run or Publish was included. Completed effects are recorded in ignored `var/maintenance/2026-10-18-moments-media-suffix-result.json`; the operational script has already run. The user had confirmed successful Publish of the preceding prefix cleanup before requesting this separate suffix operation.
 

@@ -4,7 +4,7 @@ doc_id: d-20260519-202931-66c794
 title: Management Operations
 added_date: "2026-05-19 20:29:31"
 last_updated: "2026-10-18"
-parent_id: d-20260424-000000-04d75e
+parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Management Operations
 
@@ -41,10 +41,10 @@ var/docs/logs/
 
 ## Operational Notes
 
-- `bin/local-studio` starts Docs Viewer services and renders configured links, but Local Studio does not host Docs Viewer management itself.
+- `bin/local-studio` starts Studio. Use `bin/local-all` to supervise both local apps. [Local runners](Local_Runners.md)
 - `docs-viewer/bin/docs-viewer` serves `/docs/`, Docs Viewer static/runtime/config files, generated-data reads, and management endpoints.
 - The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint remains removed.
-- If the local service is unavailable, normal Docs Viewer reads can fall back to static generated JSON; manage mode remains read-only and shows an unavailable message.
+- Manage reads from the configured Working service. To inspect the repository's static public files, use `bin/site-preview`.
 - Application source writes await their required generated output through the existing build owners. The filesystem watcher and suppression markers are retired.
 
 ## Confirmed Document Delete
@@ -65,15 +65,9 @@ Draft submits its intended boolean with the exact ordinary or supported collecti
 
 Position accepts an exact ordinary ID, destination ID and Before/After/Inside placement. It moves the complete node once, checks destination/cycle integrity and projects saved navigation plus only the moved by-ID parent metadata, preserving Markdown/body/dates and Links. Collection-host root placement belongs to the frontend: Before/After another root or Inside Root. Common metadata projection and one awaited Index refresh complete the browser action. A failure after the canonical tree write reports `position_saved: true`, its committed record and unfinished generation without restoration.
 
-## Subject Assignment In Source
+## Local Folder Links
 
-**Assign Subject** belongs to the Source editor's Directives menu. `docs-viewer/runtime/js/management/source-editor/subject-modal.js` reads the captured unsaved buffer through `POST /docs/source/context`, then sends its selected Folder, Work or None as `subject_fields: {folder_path: "<path-or-empty>", work_id: "<five-digit-id-or-empty>"}` with that same buffer and its immutable document target. Only the selected field is nonempty. The exact configured collection's registered `authoring_subject` group owns availability and its metadata aspect owns value validation; `folder_subject_supported` projects whether its authoring fields include `folder_path`.
-
-`docs-viewer/services/docs_management_source_service.py` uses the shared strict front-matter parser and span-preserving field writer to return the candidate `source_text`. It updates or clears only the Subject fields, preserves other metadata, body and timestamps, and performs no source write or generation. Apply replaces the current editor buffer only when its captured revision and mounted adapter still match. Cancel leaves it unchanged. Save owns canonical persistence, timestamps, exact document/Links generation and retained-list/display updates.
-
-Work selection reuses the generated Catalogue provider and keeps exact five-digit identity strings. Folder preselects/prefills an existing declaration and accepts a decoded relative target, absolute path or file URL under the configured Projects root. The existing collection normaliser canonicalises it to a relative `folder_path` and clears `work_id`; unsupported collections omit the Folder choice and reject a Folder write through their metadata owner. None removes both declarations. The former blanket workspace rejection of Folder assignment is removed. Malformed/conflicting source must be corrected before its context can be read. Existing missing Work targets require a current Work, Folder or None before Apply.
-
-The separate immediate-write `POST /docs/assign-field-group` endpoint, its client helper and mutation plan are retired without aliases. Source's ordinary Save/discard lifecycle handles Subject changes. **Open Subject folder** follows Assign Subject in Directives. Menu opening reads the current unsaved buffer through the same context service; only a valid Folder subject enables it. Activation awaits the existing local-link service to open that folder beneath the configured Projects root, with silent success and visible failures. Work, None, unsupported documents and invalid source remain disabled. The former Edit Finder item and unused Document Info metadata contribution/normalisation are retired. That workflow was later retired. [Subject retirement](data_model/subject-associations.md)
+The local folder-link capability comes from the configured Projects and Docs roots. `POST /docs/open-local-target` accepts one exact canonical `target`. A `docs:` prefix selects the Docs workspace; otherwise the target is Projects-relative. The service checks canonical decoding, configured containment and the existing file or directory before opening it on macOS. The request carries no document, label or browser URL. [Local link service](../../docs-viewer/services/docs_local_links.py) · [Source editor owner](Source_Editor_Scripts.md)
 
 ## Verification
 

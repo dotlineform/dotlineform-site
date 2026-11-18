@@ -24,7 +24,7 @@ Use [Docs Viewer](Docs_Viewer.md) for document authoring and for Regenerate and 
 
 - [Local Studio App](Local_Studio_App.md) — server, runtime config, and sibling-service boundary.
 - [Local Runners](Local_Runners.md) — start Studio alone or with the other local apps.
-- [Config And Save Flow](Studio_Read_And_Save_Flow.md) — browser reads, validated writes, and build follow-through.
+- [Studio Read And Save Flow](Studio_Read_And_Save_Flow.md) — canonical reads, validated writes and local completion.
 - [Testing](Testing.md) — choose focused service, route, or broader checks.
 
 ## Change The Architecture
