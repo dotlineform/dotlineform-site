@@ -29,4 +29,4 @@ For a represented runtime/style/artwork change, edit canonical source, update th
 
 When moving a public route, align shell, route records, workspace/browser bases, 404 recovery and required-file inventory. Reload local apps to check canonical changes and use `bin/site-preview` to read the tracked public projection. Runtime projection and document Publish have separate owners; [Publish and Deploy](../guide/Publish_And_Deploy.md) explains when each is needed. Git commit, push and deployment remain explicit actions.
 
-The frozen Catalogue under `site/archive/` owns independent HTML/runtime/assets and is excluded from active projection. [Catalogue Archive](../deliveries/Catalogue_Archive.md) preserves its recovery and media-copy history.
+The legacy Catalogue archive was removed; the current live reader supplies the design reference. [Catalogue Archive](../deliveries/Catalogue_Archive.md#retirement-and-r2-cleanup) preserves its historical design, Git recovery point and dedicated-media deletion evidence.

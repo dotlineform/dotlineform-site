@@ -22,7 +22,7 @@ Collection detail actions keep their validated targets, existing workflows and l
 
 A local Edit menu owner renders the dropdown and dispatches ordinary actions. The existing context-actions owner supplies New's state/dispatch to Actions and VS Code, Draft/Ready and Star to Edit. State projection runs after Edit controls mount so returning from Source restores current labels and checkbox state. Keyboard navigation includes ordinary and checkbox items. The retained collection detail action host mounts inside the menu while rendered, and in the existing hidden collection-action mount during Source or expanded views. This preserves contribution lifecycle and asynchronous availability without another set of collection handlers. Delete restores focus to the Edit trigger; the Source Subject helper restores focus to the buffer.
 
-[Toolbar Model](../reference/Panel_Hosts_And_Control_Surfaces.md#control-placement), [Runtime Module Ownership](../reference/Runtime_Module_Ownership.md) and [Toolbar Icon Mapping](../_working/Toolbar_Icon_Mapping.md) own shipped placement, ownership and artwork. The shared runtime's Manage-specific mounting change receives the normal tracked public projection; the menu module, stylesheet changes and Source editor artwork remain local.
+[Toolbar Model](../reference/Panel_Hosts_And_Control_Surfaces.md#control-placement), [Runtime Module Ownership](../reference/Runtime_Module_Ownership.md) and [Toolbar Icons](../reference/Toolbar_Icons.md) own shipped placement, ownership and artwork. The shared runtime's Manage-specific mounting change receives the normal tracked public projection; the menu module, stylesheet changes and Source editor artwork remain local.
 
 ## Delivery Steps
 

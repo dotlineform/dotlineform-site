@@ -39,7 +39,7 @@ Docs Viewer owns the public reader, local Manage and package Review compositions
 
 The public site serves [site/index.html](../../site/index.html) and the committed files under `site/`. Shared/public runtime is edited under `docs-viewer/`; the [explicit inventory](../../site-tools/config/site-code-update.json) projects its public subset plus shared Search Field into `site/docs-viewer/` and `site/shared/`. Local-only membership in a source directory grants no public adoption. [Public shell](Public_Docs_Route_Shell.md) owns installed-shell/template and projection maintenance; [Publish and deploy](../guide/Publish_And_Deploy.md) separates runtime release from content transfer.
 
-The frozen Catalogue has independent HTML/runtime/assets under `site/archive/`; its snapshot/media-copy history stays with [Catalogue Archive](../deliveries/Catalogue_Archive.md). The active reader and publication pipeline use their current owners.
+The legacy Catalogue snapshot and its dedicated R2 copy were retired; the live site is the current design reference. [Catalogue Archive](../deliveries/Catalogue_Archive.md#retirement-and-r2-cleanup) retains the historical rationale and retirement evidence. The active reader and publication pipeline use their current owners.
 
 ### Processing
 

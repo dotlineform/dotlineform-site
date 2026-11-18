@@ -33,6 +33,10 @@ The 2026-10-14 cleanup had focused lint, compilation and source review. Its read
 
 ## Pending proposals and verification limits
 
-Metadata separation, independent seeding and directed link strength moved to Working with their original IDs and titles. Their retained text distinguishes the current front-matter, explicit generation and publication model from proposed storage or authoring changes. The navigation umbrella was retired into the completed order references and the open Context Navigation proposal.
+Metadata separation, independent seeding and directed link strength initially moved to Working with their original IDs and titles. Independent seeding was subsequently retired as recorded below. The other retained proposals distinguish the current front-matter, explicit generation and publication model from proposed storage or authoring changes. The navigation umbrella was retired into the completed order references and the open Context Navigation proposal.
 
 This batch inspected parser, renderer, link, conversion, package and Review source and checked Markdown links, identities and whitespace. Live parsing/builds, package writes, canonical Import, browser interaction and runtime tests were outside this documentation review.
+
+## Independent Seeding Proposal Retired
+
+The user requested retirement of Independent Canonical Documents. It proposed creating an independently editable Docs document once from selected structured-record fields, with each side retaining its own edit/deletion lifecycle and no ongoing synchronization. It was retired without implementation or a follow-on. Current [Catalogue adoption](../reference/Generated_Data_Contracts.md#catalogue-reference-and-presentation) and [Book copying](../reference/Collections_And_Books.md#book-curation-in-manage) retain their own explicit contracts; this proposal adds no generic Copy/Replace or lineage workflow. References and document-ID/parent dependencies were checked before removing the Working page.

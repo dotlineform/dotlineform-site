@@ -6,13 +6,13 @@ added_date: "2026-10-13 21:00:28"
 last_updated: "2026-11-18"
 summary: Proposed capability releases for a standalone Mac and iPad Docs Viewer, aligning with the existing apps one capability at a time and progressing towards local management.
 ui_status: proposed
-parent_id: d-20261118-235100-64ad2e
+parent_id: d-20260829-212459-c17eb8
 ---
 # Docs Viewer App Roadmap
 
 ## Status And Current Baseline
 
-Proposed Mac/iPad Docs Viewer capabilities under [Planned Features](README.md). This roadmap approves no implementation, release scope or test work. DVA.R1 is the next candidate; later rows may be reordered or split.
+Proposed Mac/iPad Docs Viewer capabilities, retained with the [App documentation](d-20260829-212459-c17eb8.md). Review this roadmap and its recorded baseline when app development resumes. This roadmap approves no implementation, release scope or test work. DVA.R1 is the next candidate; later rows may be reordered or split.
 
 The maintained native app has a SwiftUI entry that opens [AboutView](../../app/dotlineform/Features/About/AboutView.swift), a bundled About page and an About-specific [WebKit message/reply host](../../app/dotlineform/WebKit/WebKitHost.swift). The App-owned cloud operation is separate. Current source does not install Docs Viewer resources, a Docs workspace reader or native document management. [App README](../../app/README.md) and [App instructions](../../app/AGENTS.md) own build, signing and Mac/iPad review.
 
@@ -57,6 +57,6 @@ Use current App instructions and separately agreed test/live-write scope. A buil
 
 ## Historical Ideas And Next Decision
 
-Earlier [App Home](../app/d-20260829-212459-c17eb8.md), [Roadmap](../app/d-20260902-143007-05a794.md), [v0.2 Single Scope](../app/d-20260903-183129-18e663.md) and [v0.3 Scope Selection](../app/d-20260903-183219-aa278b.md) retain ideas/evidence. Their Published/scope storage, versions and unfinished checklists do not define this capability. Leave those records/identities intact until separately reviewed; reconcile reused ideas and old tests against current owners.
+Earlier [App Home](d-20260829-212459-c17eb8.md), [Roadmap](d-20260902-143007-05a794.md), [v0.2 Single Scope](d-20260903-183129-18e663.md) and [v0.3 Scope Selection](d-20260903-183219-aa278b.md) retain ideas/evidence. Their Published/scope storage, versions and unfinished checklists do not define this capability. Leave those records/identities intact until separately reviewed; reconcile reused ideas and old tests against current owners.
 
 For DVA.R1, the earlier recommendation is read-only access to existing generated Working content. Agree direct authorized access or an explicitly imported app workspace; decide how configuration and media owners reach the app without machine environment/repository assumptions. Then bound ordinary reading cases, resource packaging and Mac/iPad acceptance. Keep readiness read-only and concise; if implementation uncertainty remains, propose a small complete delivery instead of a prototype or general prerequisite refactor.

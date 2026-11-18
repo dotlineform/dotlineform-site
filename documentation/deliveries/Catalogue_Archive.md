@@ -4,12 +4,12 @@ doc_id: d-20260904-173415-b28651
 title: Catalogue Archive
 added_date: "2026-09-04 17:34:15"
 last_updated: "2026-11-18"
-summary: Consolidated legacy Catalogue rationale, freeze/copy evidence and the outstanding archive-retention decision.
+summary: Legacy Catalogue design and freeze history, retirement decision, and completed archive-only media cleanup.
 parent_id: d-20260613-115624-3d377c
 ---
 # Catalogue Archive
 
-Consolidated history of the legacy Catalogue freeze and its reader design. The snapshot remains in the tracked `site/archive/` deployment artifact. **Whether to keep it is an open follow-on decision**, recorded in the [tracker](../_working/Review_Catalogue_Archive_Retention.md). This documentation consolidation changes no site assets or remote objects.
+Consolidated history of the legacy Catalogue freeze, reader design and subsequent retirement. The user chose the current live site as the design reference and authorised deletion of the old reader and media used solely by it. The tracked `site/archive/` tree and its dedicated R2 copy have been removed; completed scope and evidence are recorded under [Retirement and R2 cleanup](#retirement-and-r2-cleanup). Git commit/push and the Pages withdrawal release remain separate explicit actions.
 
 The active Catalogue uses Docs Viewer at `/` and the current [Catalogue workflow](../reference/Catalogue_Save_And_Refresh.md). The pre-freeze route model below is historical. Original versions of UAC 1, Public Catalogue Design, Public Route Model, Public Catalogue Data Flow, Catalogue Search and Catalogue Search Policy remain in Git at `c76f6608ef` under `documentation/deliveries/`.
 
@@ -39,7 +39,7 @@ Global shell CSS and Catalogue components had separate intended owners, but olde
 
 ## Frozen Search
 
-[Saved policy](../../site/archive/assets/data/search/policy.json), [index](../../site/archive/assets/data/search/catalogue/index.json) and [browser runtime](../../site/archive/assets/js/search/catalogue-search-runtime.js) belong to the snapshot. Search loads these saved files; it is not rebuilt from current canonical data.
+The snapshot owned `site/archive/assets/data/search/policy.json`, `site/archive/assets/data/search/catalogue/index.json` and `site/archive/assets/js/search/catalogue-search-runtime.js`. These removed files remain recoverable from the pre-retirement Git revision below. Frozen Search loaded those saved files independently of current canonical data.
 
 The former builder read published Works/Series and a dependency registry declaring emitted-field provenance. Its `additive_only` policy could merge new records; edits/deletes required a full build. Registry terms such as `record_update`/`full_rebuild` described that retired builder, not current Docs Search.
 
@@ -63,7 +63,7 @@ rclone copy "uac:${R2_BUCKET}/work_details/" "uac:${R2_BUCKET}/archive/catalogue
 
 All 13,891 objects (1,749,367,336 bytes), including unlinked objects, copied server-side without reported errors in about 17m08s. HTTP metadata and original objects were preserved. Docs/home media were outside the copy. Ordinary logs/exit results lived under ignored `var/uac-1/`; no object manifest or separate checksum audit was created.
 
-Archived image/download bases were changed to `https://media.dotlineform.com/archive/catalogue/`; local thumbnails stayed in the snapshot. The current batch did not contact or inventory that remote storage.
+Archived image/download bases were changed to `https://media.dotlineform.com/archive/catalogue/`; local thumbnails stayed in the snapshot. That earlier documentation consolidation did not contact or inventory remote storage. The later retirement inventory and deletion are recorded below.
 
 ## Acceptance And Supersession
 
@@ -75,6 +75,23 @@ The accompanying import cleanup removed 24 retry blocks across twelve Catalogue/
 
 The Catalogue pause and document-location writers were subsequently retired through the new ownership/cutover work. Current Save → Refresh → Regenerate → Publish does not regenerate this snapshot. [Retired locations](Retire_Public_Document_Locations.md) · [Current source boundaries](../reference/Source_Tree_Ownership.md) · [Separate backup proposal](../_working/R2_Workspace_Backups.md)
 
-## Retention Decision Boundary
+## Retirement And R2 Cleanup
 
-Keeping public archive routes, keeping the tracked snapshot for Git-only recovery, and retaining remote copied media are separate choices. The [follow-on](../_working/Review_Catalogue_Archive_Retention.md) must settle them and the remaining validation/link dependencies. [Site validation configuration](../../site-tools/config/site-tools.json) still requires archive assets. Consolidating the documentation does not authorize deleting those files, changing required-file inventory, removing remote prefixes or deploying a withdrawal.
+The user confirmed the archive had served its purpose as a design reference; the live site now supplies that reference. The user also clarified that it had no active links. Retirement removed the snapshot rather than retaining a second deployed reader.
+
+- Removed all 6,740 tracked files under `site/archive/` (9,370,769 bytes), plus seven ignored Finder metadata files. No archive directory or redirect remains.
+- Removed 40 archive-only required-file entries and four required-directory entries from site validation, and the retired browser-source glob from lint configuration.
+- Confirmed there were no references to `archive/catalogue/` in active repository runtime/data or the configured Working source/generated and Preview roles. An external Library link containing another site's `/archive/` path is unrelated.
+- Listed the R2 `archive/` namespace: exactly 5,809 objects beneath `archive/catalogue/works/` and 8,082 beneath `archive/catalogue/work_details/`, totalling 1,749,367,336 bytes. These are the two dedicated copies described above.
+- Deleted those 13,891 exact keys through the existing R2 batch-delete client and confirmed that a final `archive/` listing contained zero objects. Active `works/`, Docs media and all other prefixes were outside the deletion selection.
+- Retired the Working retention-decision page and repaired documentation links. Historical design/copy/acceptance evidence remains here.
+
+The local inventory and deletion receipt are `var/maintenance/catalogue-archive-retirement/remote-inventory.json` and `remote-deletion.json`. The pre-removal repository revision is `abc409bdeeb8a33066b94e06d534e445af65a760`; it recovers tracked snapshot files through ordinary Git history, not deleted remote bytes.
+
+`bin/site-validate` passed for 22 required files, 3 directories, 115 projected code files, 72 runtime modules and 7 route files. Direct ESLint passed for the edited lint configuration; the path wrapper excludes tooling configuration from its adopted source roots. Documentation path/anchor/identity and whitespace checks complete the retirement evidence. No browser run, document/Search build, Publish, commit, push or Pages deployment was performed.
+
+### Code Review
+
+Scoped implementation and redundancy review checked the artifact removals, validation/lint deltas, active reference owners and reused R2 list/delete methods. The maintenance inventory supplied the exact archive-owned selection; required batch limits and per-key API errors remained with the existing client. The final listing verified deletion completion. No active media prefix, canonical source, public runtime projection or publication workflow was changed, and no new helper, recovery mechanism or compatibility route was introduced.
+
+Suspended projection-contract fixtures still refer to archive paths and remain separate [test-review work](../_working/Review_Test_Policy_And_Checks.md); no tests, fixtures or profiles were edited or run.

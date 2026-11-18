@@ -36,7 +36,7 @@ The state owner selects artwork when needed: theme shows the current light/dark 
 
 ## Changing Or Adding Artwork
 
-Reuse a saved SVG, or preserve origin/version/notices when adopting new artwork. Put a URL-only artwork class in the stylesheet actually loaded by its consumers: shared reader, local Manage, Review or Studio. CSS resolves URLs relative to that stylesheet. Review's VS Code class is deliberately declared in Review CSS as well as Manage CSS; both reference one saved `file-code-corner.svg`.
+Reuse a saved SVG, or credit its source and retain applicable licence notices when adopting new artwork. Put a URL-only artwork class in the stylesheet actually loaded by its consumers: shared reader, local Manage, Review or Studio. CSS resolves URLs relative to that stylesheet. Review's VS Code class is deliberately declared in Review CSS as well as Manage CSS; both reference one saved `file-code-corner.svg`.
 
 Keep the focused renderer and state owner, give icon-only controls an accessible name and tooltip, and hide redundant decoration. Studio's [icon helper](../../studio/app/frontend/js/studio-icon.js) and [stylesheet](../../studio/app/assets/css/studio.css) adapt saved artwork to Studio's theme without importing the Docs runtime. Its record-list adapter supplies File/Link type labels and action classes.
 
@@ -44,4 +44,4 @@ Only selected reader SVGs enter the [public inventory](../../site-tools/config/s
 
 ## Adoption And Remaining Work
 
-The detailed migration tables are historical choices rather than runtime configuration. [Design](../design/Shared_Controls_And_Visual_Assets.md) retains their reusable rationale; [delivery evidence](../deliveries/Shared_Controls_And_Visual_Assets_Review.md) records Studio acceptance and static-check limits. The remaining [toolbar visual review](../_working/Toolbar_Icon_Mapping.md), [manual token acceptance](../_working/Icon_Tokens_Delivery.md) and [collection marker acceptance](../_working/Collection_Icons_Delivery.md) remain open in Working. Broader [native/unselected icon work](../_working/Shared_Icons.md) remains proposed.
+The detailed migration tables are historical choices rather than runtime configuration. [Design](../design/Shared_Controls_And_Visual_Assets.md) retains their reusable rationale; [delivery evidence](../deliveries/Shared_Controls_And_Visual_Assets_Review.md) records Studio acceptance and static-check limits, including the completed [toolbar review](../deliveries/Shared_Controls_And_Visual_Assets_Review.md#toolbar-acceptance-closeout) and [manual-token/collection-marker deliveries](../deliveries/Shared_Controls_And_Visual_Assets_Review.md#token-and-collection-acceptance-closeout). [Repository credits](../../README.md#external-libraries-and-resources) name the external resources. The [shared Lucide licence notice](../../docs-viewer/static/icons/LICENSE.lucide) is retained with the canonical artwork.

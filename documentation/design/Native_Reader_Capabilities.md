@@ -11,7 +11,7 @@ parent_id: d-20261013-210028-8b3c2f
 
 ## Align One Capability At A Time
 
-The web apps continue to evolve. Requiring complete parity would keep a native reader unfinished; freezing both apps would obstruct useful work. The [proposed roadmap](../_working/Docs_Viewer_App_Roadmap.md) instead selects a supported behaviour/resource baseline for one complete capability. Acceptance records its limits and resource revision. Later web additions become candidates for a later release; defects in supported behaviour remain bounded corrections.
+The web apps continue to evolve. Requiring complete parity would keep a native reader unfinished; freezing both apps would obstruct useful work. The [proposed roadmap](../app/Docs_Viewer_App_Roadmap.md) instead selects a supported behaviour/resource baseline for one complete capability. Acceptance records its limits and resource revision. Later web additions become candidates for a later release; defects in supported behaviour remain bounded corrections.
 
 A useful reader can stand alone before local generation, publication or source editing exists. Each later operation must complete its actual effects, so a source write alone cannot stand in for Save. This keeps release boundaries meaningful without requiring a general management framework first.
 

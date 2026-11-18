@@ -34,4 +34,4 @@ Docs Viewer owns the shared document reader, Working document authoring, generat
 | Who owns browser state, controls and presentation? | [Runtime modules](Runtime_Module_Ownership.md), [shared UI](Shared_UI.md), [control surfaces](Panel_Hosts_And_Control_Surfaces.md), [CSS](CSS_Ownership.md), [icons](Toolbar_Icons.md) |
 | Which service/build/publication boundary changes? | [Local service map](Endpoint_Overview.md), [Builder](Builder.md), [public shell](Public_Docs_Route_Shell.md) |
 
-Exact modules, fields and endpoint membership remain code/config-owned. Active policy and proposed work stay under [Dev Home](../development/README.md) and [Planned Features](../_working/README.md). Native reader reuse is a [separate proposal](../_working/Docs_Viewer_App_Roadmap.md), governed by the native project's owner.
+Exact modules, fields and endpoint membership remain code/config-owned. Active policy and proposed work stay under [Dev Home](../development/README.md) and [Working](../_working/README.md). Native reader reuse is a [separate App proposal](../app/Docs_Viewer_App_Roadmap.md), retained for review when app development resumes.

@@ -8,7 +8,7 @@ parent_id: d-20261118-151521-a0f9c3
 ---
 # Shared Controls And Visual Assets Review
 
-This documentation batch consolidates twenty-two Studio pages into current component/control/style/shell references, separate design reasoning and four Working icon records. The [tracker](Rationalise_Documentation.md) and [triage inventory](Site_Workflow_Guide_Triage.md) own its disposition. Original migration tables and paragraphs remain in Git at `c76f6608ef` under `documentation/studio/`; they are historical evidence rather than current runtime inventories.
+This documentation batch consolidated twenty-two Studio pages into current component/control/style/shell references, separate design reasoning and initially four Working icon records. All four have since been retired as recorded below, and the [shared Lucide licence notice](../../docs-viewer/static/icons/LICENSE.lucide) is retained beside the canonical icons. The [tracker](Rationalise_Documentation.md) and [triage inventory](Site_Workflow_Guide_Triage.md) own the dispositions. Original migration tables and paragraphs remain in Git at `c76f6608ef` under `documentation/studio/`; they are historical evidence rather than current runtime inventories.
 
 ## Icon Migration Evidence
 
@@ -18,7 +18,23 @@ The 20 September list/status work reported JS lint for thirteen canonical module
 
 Studio's Work-editor conversion was user-accepted on 24 September 2026. Focused lint covered six JS modules and the Studio HTTP owner; source review removed a text refresh that would have restored picker emoji. The conversion reused existing SVGs through a small Studio mask layer, retained text confirmation/identity controls, and introduced no Catalogue data or publication change. No separate interaction-test run was recorded.
 
-The 30 September manual-token and collection-marker implementations reported static/code review and their separate build/config evidence. Tokens embedded sanitized masks; collection configuration reused the exact filename owner and projected four assets. Neither record established browser acceptance. Their remaining gates are preserved in [Icon Tokens Delivery](../_working/Icon_Tokens_Delivery.md) and [Collection Icons Delivery](../_working/Collection_Icons_Delivery.md), alongside [toolbar acceptance](../_working/Toolbar_Icon_Mapping.md).
+The 30 September manual-token implementation delivered extensionless `[[icon:name]]`, Source insertion with stem selection and portable sanitized SVG-mask markup. The record reports explicit Python/JavaScript lint, compilation, whitespace, public-projection consistency and the builder's read-only help/import diagnostic. Code review tightened confinement/diagnostics and checked literal preservation, operation-scoped caching and export portability. It did not build authored content, exercise export or run tests/browser checks.
+
+The collection-marker implementation configured Catalogue, Concepts, Context and Moments stems and exact Index report-host matching. Its record reports lint/compilation, production config loading, reader-config writing, projection of four SVGs and two shared modules, projection consistency, site validation and whitespace. Review covered exact filenames, path/symlink confinement, loaded host mapping and local/public SVG URLs. These checks did not establish browser appearance or document Publish/deployment; user completion is recorded below.
+
+## Toolbar Acceptance Closeout
+
+On 18 November 2026 the user confirmed that Toolbar Icon Mapping was done and its Working record was no longer needed. The remaining toolbar visual-review checklist was closed and retired after redirecting references and checking its document identity. This records the user's completion decision; individual theme, state and artwork cases were not separately itemised, and this retirement ran no browser review. Current artwork and placement remain with [Toolbar Icons](../reference/Toolbar_Icons.md) and [control surfaces](../reference/Panel_Hosts_And_Control_Surfaces.md). Manual-token and collection-marker completion follows below.
+
+## Token And Collection Acceptance Closeout
+
+On 18 November 2026 the user confirmed that Icon Tokens Delivery and Collection Icons Delivery were done and requested their retirement. This closes their remaining manual acceptance gates for token insertion/selection/rendering and the four selected collection markers. Individual cases were not separately itemised, and this retirement ran no new browser checks. Their useful implementation/verification evidence is preserved above; current behaviour belongs to [Icon Tokens](../reference/Icon_Tokens.md) and [Collection Icons](../reference/Source_Organisation.md#collection-icons). References and document identities were checked before retiring both Working files. The broader icon proposal's final disposition follows below.
+
+## Shared Icons Closeout
+
+The user subsequently requested retirement of Shared Icons, retaining only the canonical artwork origin/version/notice record as a follow-on. Additional artwork, native reuse, an icon picker and a combined image modal are no longer tracked as pending outcomes of this proposal. Current interface, token, collection-marker and Related Links behaviour remains with its Reference owners.
+
+The [repository README](../../README.md#external-libraries-and-resources) credits Lucide as the source of several SVG icons and names key document/media libraries. At the user's request, the full upstream [Lucide licence](../../docs-viewer/static/icons/LICENSE.lucide), including its ISC and Feather-derived MIT notices, was retained in the canonical icons folder and linked from the README. This completes the notice-retention follow-up without an icon-by-icon inventory or historical version reconstruction. No artwork or public assets changed.
 
 ## Shared Interaction And Style Evidence
 
@@ -34,4 +50,4 @@ Current references now describe five control surfaces, Search/Recent in Index, d
 
 ## Evidence Limit
 
-This batch inspected current browser components/controllers, style/shell files, icon rendering and the explicit public inventory, and checked documentation paths, headings and identities. It ran no live UI, build, import, publication or deployment operation and supplies no new visual acceptance. Proposed native reuse and further artwork remain in [Working](../_working/Shared_Icons.md).
+This batch inspected current browser components/controllers, style/shell files, icon rendering and the explicit public inventory, and checked documentation paths, headings and identities. It ran no live UI, build, import, publication or deployment operation and supplies no new visual acceptance. Subsequent user completion decisions, retirement of the four Working icon records and retention of the shared licence notice are recorded above; no icon follow-on remains open.

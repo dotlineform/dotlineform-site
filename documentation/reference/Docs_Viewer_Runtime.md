@@ -37,7 +37,7 @@ Loading and other in-flight work are textually quiet across Public, Manage and t
 
 [Focus presentation](CSS_Ownership.md#focus-and-feedback) uses one shared keyboard-navigation mode. Actual focus, modal trapping and restoration remain with their workflow owners.
 
-[Toolbar Icons](Toolbar_Icons.md) owns mask/button styling, artwork selection and explicit public assets. The remaining [visual acceptance](../_working/Toolbar_Icon_Mapping.md) is separate from current implementation.
+[Toolbar Icons](Toolbar_Icons.md) owns mask/button styling, artwork selection and explicit public assets.
 
 Manage shows its Actions controls in the top row. The Index tree context menu owns Copy Link, Open, Open in VS Code, New Sibling, New Child, Position, Sort Children A–Z, Prepare package and Delete. Every menu action captures the invoked ordinary tree node independently of the main pane, including a collection host while its detail document is displayed. Prepare package and Delete use that node and its complete subtree, including collapsed descendants; package profiles and filters still determine the effective package set. Position moves the node with its descendants. No second-row Index management controls, checkboxes or selection commands remain. Collection Actions shares the top row with the other document and collection actions and retains its own checked-row workflow. [Export](Export.md) is available only there, using one captured collection selection and one browser workflow. The public reader has no management controls.
 

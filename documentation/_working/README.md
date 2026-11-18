@@ -18,6 +18,5 @@ Use the [development workflow](../development/Development_Workflow.md) when a ch
 - [Test policy and checks](Review_Test_Policy_And_Checks.md): review suspended scripts, profiles and policy before deciding retirement, replacement or reactivation.
 - [Cloud Environments](Cloud_Environments.md): recover the unresolved ChatGPT discussion and agree the new Codex Cloud setup.
 - [Documentation code findings](Documentation_Code_Follow_Ups.md): concrete implementation/configuration issues identified during the documentation review.
-- [Catalogue Archive retention](Review_Catalogue_Archive_Retention.md): decide the frozen reader/media future before any withdrawal.
 
 Other work is found by reviewing the directory and following its domain owners. A link or old planning status alone does not authorise implementation. Historical parent metadata is navigation, not a requirement to recreate the former planning hierarchy.

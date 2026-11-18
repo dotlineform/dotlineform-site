@@ -40,7 +40,7 @@ For example, Doc A contains a token for Work 00523, and Doc B has Work Subject 0
 - Deduplicate media entries by exact typed Catalogue target. Repeated occurrences, image/text forms and matches from both selection paths share one media entry. Individual occurrences remain intact in the Semantic Tokens report and usage index.
 - Keep document and media identities separate. A document link and media link with the same displayed title both remain visible; different Catalogue targets with the same title also remain distinct.
 - Use Catalogue titles for consolidated media entries rather than choosing among authored occurrence labels. Include the selected Detail identifier in a Detail label. Authored token labels remain unchanged in source and usage data.
-- Prefix document entries with a document icon and media entries with an image/media icon. Expose the destination meaning in accessible link names as well. Reuse current icon primitives where suitable; this delivery does not require completion of the separate [Shared Icons](../_working/Shared_Icons.md) feature.
+- Prefix document entries with a document icon and media entries with an image/media icon. Expose the destination meaning in accessible link names as well. Reuse current icon primitives where suitable; [Toolbar Icons](../reference/Toolbar_Icons.md) owns the maintained artwork primitives. The former broader icon proposal was [retired separately](Shared_Controls_And_Visual_Assets_Review.md#shared-icons-closeout).
 - Sort the combined entries A–Z by displayed title with a deterministic identity tie-break; icons and destination kinds do not create separate priority groups. Hide a section only when its combined result is empty.
 
 ### Data Ownership And Read Boundary

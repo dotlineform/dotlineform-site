@@ -23,7 +23,7 @@ Docs Viewer owns reader presentation across Public, Manage and Review. Local rou
 | Studio shell and adapter presentation | [studio.css](../../studio/app/assets/css/studio.css) |
 | Standalone public 404 | [error.css](../../site/assets/css/error.css), consuming the Docs palette |
 
-Public and Manage load palette, reader and public report styles. Manage adds its local workflow styles; Review loads palette, reader and Review styles. Review does not inherit Manage's artwork declarations. The 404 uses its own layout and theme-toggle script. Active shells have no site-wide `main.css`; the frozen `site/archive/` styles remain independent.
+Public and Manage load palette, reader and public report styles. Manage adds its local workflow styles; Review loads palette, reader and Review styles. Review does not inherit Manage's artwork declarations. The 404 uses its own layout and theme-toggle script. Active shells have no site-wide `main.css`. The former Catalogue archive styles were removed with that reader.
 
 ## Layout And Prose
 

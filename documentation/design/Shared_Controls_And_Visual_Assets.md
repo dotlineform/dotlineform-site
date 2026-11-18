@@ -32,4 +32,4 @@ Manual document tokens name exact extensionless files instead of creating a seco
 
 The installed public shell, runtime projection and document publication are separate owners. One canonical runtime and an explicit tracked public subset keep local styles/pickers out of public imports while supporting a static deploy root. An installed shell remains independent of its reusable template. [Current shell and projection](../reference/Public_Docs_Route_Shell.md)
 
-Native packaging and further icon choices remain [proposals](../_working/Shared_Icons.md). Historical static checks and pending visual acceptance are [recorded separately](../deliveries/Shared_Controls_And_Visual_Assets_Review.md).
+Historical static checks, user completion and retirement of the broader icon proposal are [recorded separately](../deliveries/Shared_Controls_And_Visual_Assets_Review.md). The [shared Lucide notice](../../docs-viewer/static/icons/LICENSE.lucide) is retained beside the icons; [repository credits](../../README.md#external-libraries-and-resources) identify the external resources. No per-icon inventory or version reconstruction is required.
