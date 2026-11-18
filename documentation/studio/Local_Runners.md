@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-174736-9bd0fc
 title: Local Runners
 added_date: "2026-04-22 17:47:36"
-last_updated: "2026-10-24"
+last_updated: "2026-11-18"
 parent_id: d-20260413-000000-d314b7
 
 ---
@@ -13,7 +13,7 @@ parent_id: d-20260413-000000-d314b7
 
 | Command | Starts |
 | --- | --- |
-| `bin/local-studio` | Local Studio catalogue/tag routes |
+| `bin/local-studio` | Local Studio Catalogue authoring |
 | `docs-viewer/bin/docs-viewer` | Docs Viewer management, document-package routes, and Docs Review when enabled |
 | `bin/site-preview` | checked-in public `site/` preview |
 | `bin/local-all` | all enabled services above under one supervisor |
@@ -40,7 +40,7 @@ Each app owns its own pages and APIs. `bin/local-all` supervises siblings; it do
 4. starts `studio/app/server/studio/studio_app_server.py` when enabled;
 5. stops its child on interrupt, termination, or runner exit.
 
-The filesystem watcher is retired. Docs application writes complete their own required generation through the Docs Viewer service. External Markdown edits require exact-document Rebuild; rare persistent media edits use the explicit Rebuild docs and Search action. [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) owns those workflows. Studio Catalogue Save and explicit Refresh retain their own boundaries; the runner performs no startup Catalogue or document rebuild.
+Docs application writes complete their required generation through the Docs Viewer service. External Markdown edits require exact-document Rebuild. Persistent media edits use the explicit full Working rebuild command. [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) owns those workflows. Studio Catalogue Save and Refresh are explicit operations, as are document rebuilds.
 
 ## All-Services Runner
 

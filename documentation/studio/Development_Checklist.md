@@ -207,7 +207,7 @@ This checklist and the durable Studio development documentation are maintained d
 - [ ] Do not add feature lifecycle ownership to `docs-viewer-app-runtime.js`.
 - [ ] Public-safe and manage-only meanings of one UI slot use separate or explicitly shaped view contracts.
 
-[Docs Viewer Overview](Docs_Viewer_Overview.md) and [Runtime](Docs_Viewer_Runtime.md) own the architecture map.
+[Docs Viewer](Docs_Viewer.md) routes to the maintained references. [Runtime](Docs_Viewer_Runtime.md) owns the architecture map.
 
 ### Docs Import, Docs Review, And Document Packages
 

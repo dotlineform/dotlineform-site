@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260720-161656-1357d0
 title: Site
 added_date: "2026-07-20 16:16:56"
-last_updated: "2026-10-15 18:09:30"
+last_updated: "2026-11-18"
 summary: Entry point for understanding, changing, previewing, validating, and planning the public dotlineform site.
 parent_id: ""
 
@@ -12,28 +12,23 @@ parent_id: ""
 
 `site/` is the tracked public website and GitHub Pages deploy root. `/` directly hosts the public Docs Viewer, which reads the current Catalogue. The former `/analysis/` route is retired without a redirect or alias. The frozen historical catalogue remains under `/archive/`.
 
-The current public Catalogue reader is documented under [Docs Viewer](Docs_Viewer.md). This section owns the site-wide shell and the archived catalogue experience.
+Start with [How the site fits together](../guide/How_The_Site_Fits_Together.md). [Docs Viewer](Docs_Viewer.md) covers the current public reader, including the active Catalogue. [Catalogue Archive](Catalogue_Archive.md) covers the separate frozen site and its routes, data and media.
 
 ## Understand The Site
 
-- [Site Overview](Site_Overview.md) — product surface, execution path, ownership, extension method, and weak spots.
-- [Public Catalogue Design](Public_Catalogue_Design.md) — navigation, presentation, interaction, responsive behaviour, and frontend ownership.
-- [Public Route Model](Public_Route_Model.md) — stable catalogue URLs and query-state rules.
-- [Site Shell Runtime](Site_Shell_Runtime.md) — shared head, header, navigation, theme, footer, and asset-loading boundary.
-- [Public Catalogue Data Flow](Public_Catalogue_Data_Flow.md) — runtime payloads read by each catalogue route.
+- [Public Docs Route Shell](Public_Docs_Route_Shell.md) — the active public entry point and its boot path.
+- [Site Shell Runtime](Site_Shell_Runtime.md) — page shell, theme and asset loading.
+
+The previous Catalogue is documented in [Public Catalogue Design](Public_Catalogue_Design.md), [Public Route Model](Public_Route_Model.md), [Public Catalogue Data Flow](Public_Catalogue_Data_Flow.md) and [Catalogue Search](Catalogue_Search.md).
 
 ## Change Site Content
 
-- [Studio](Studio.md) owns catalogue authoring and maintenance.
-- [Catalogue Architecture](Catalogue_Architecture.md) owns the source-to-public-projection boundary.
-- [Catalogue Search](Catalogue_Search.md) owns the public catalogue search surface and index.
-
-The public browser never writes catalogue source. Studio validates and changes canonical records, then its catalogue services rebuild the public projections consumed by Site.
+- [Studio](Studio.md) owns Catalogue authoring. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#current-workflow) follows a change from Studio to Working and the publication queue.
+- [Publish and deploy](../guide/Publish_And_Deploy.md) explains how prepared changes reach the repository, public media and GitHub Pages.
 
 ## Operate The Site
 
 - [Public Site Preview](Local_Setup_Public_Site_Preview.md) — serve the checked deploy tree locally and run deploy-root validation.
-- [Site Consistency Audit](Site_Consistency_Audit.md) — check catalogue projections, routes, links, and media relationships.
 - [Testing](Testing.md) — choose focused runtime, browser-boundary, or visual evidence.
 - [GitHub Actions](GitHub_Actions.md) — public-site validation and deployment workflow.
 

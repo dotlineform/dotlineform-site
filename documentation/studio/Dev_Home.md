@@ -3,20 +3,21 @@ draft: false
 doc_id: d-20260419-000000-d2e47b
 title: Dev Home
 added_date: "2026-04-19 00:00:00"
-last_updated: "2026-09-03 21:37:12"
+last_updated: "2026-11-18"
 summary: Repo-wide development workflow, testing, environment, and deployment references.
 parent_id: ""
 
 ---
 # Dev Home
 
-## Repository Shape
+Start with the [Site Workflow Guide](../guide/README.md) for how the site fits together and how to publish and deploy changes.
 
-- `site/` is the checked public GitHub Pages artifact. There is no deploy-time copy/build step.
-- [Site](Site.md) owns the public catalogue, route, shell, design, and runtime documentation.
-- [Studio](Studio.md) edits catalogue/editorial source and builds public catalogue payloads.
-- [Docs Viewer](Docs_Viewer.md) renders/manages document scopes; public routes reuse site-owned assets/config.
-- [Processing](Processing.md) owns repository hosting and integration for the separate Java/Processing project; its own Docs Viewer scope retains conceptual and technical documentation.
+## Project References
+
+- [Site](Site.md) covers the public website, static preview and Pages deployment.
+- [Studio](Studio.md) covers Catalogue authoring and Refresh.
+- [Docs Viewer](Docs_Viewer.md) covers the public reader, Working, Publish and package review.
+- [Processing](Processing.md) covers repository hosting and integration for the separate Java/Processing project.
 
 ## Work Lifecycle
 
@@ -37,4 +38,4 @@ parent_id: ""
 
 ## Documentation Shape
 
-Studio-scope Markdown is flat under `docs-viewer/scopes/studio/source/`; `parent_id` builds the navigation tree. Treat current code and configuration as executable authority, focused tests as evidence, and these docs as maps to capabilities, methodology, extension points, and known gaps.
+Maintain Studio development and maintenance references under `documentation/studio/`. Keep each document's `doc_id` stable and use `parent_id` for its place in the documentation tree. Use the owning code and configuration for exact behaviour and the references here to find the relevant owner.

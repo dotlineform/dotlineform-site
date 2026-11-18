@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261117-213339-b5aa67
 title: Site Workflow Guide Triage
 added_date: "2026-11-17 21:33:39"
-last_updated: "2026-11-17"
+last_updated: "2026-11-18"
 summary: Working inventory of the 290 Studio documents reviewed before the Site Workflow Guide delivery.
 parent_id: d-20261117-213339-8c181b
 ---
@@ -26,7 +26,7 @@ Every top-level file was inventoried. The first pass read front matter, opening 
 
 The present model has one configured Docs workspace. Working owns source, generation and ready publication effects. Publish applies selected files and removals to Preview and configured destinations. GitHub Pages deploys tracked `site/` separately. Studio remains the Catalogue authoring owner, with Refresh producing Working data and Regenerate adopting the selected Work changes. The current Search contract describes Portfolio and collection Search scopes, which are distinct from the retired document workspace scopes. These are the strongest checks against stale operating instructions. [docs-workspace.json](../../../docs-viewer/config/workspace/docs-workspace.json) · [Source Organisation](../Source_Organisation.md) · [Builder](../Builder.md) · [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) · [Docs Search Index](../Docs_Search_Index.md)
 
-Concrete drift:
+Drift found in the 17 November scan. See the entry-point rows below for the current disposition.
 
 - Dev Home locates Studio Markdown in the retired repository scope tree. Docs Viewer and its Overview send readers to scope CRUD and a configuration file absent from the current checkout. The existing entry points are valuable because they route readers into the library. [Dev Home](../Dev_Home.md) · [Docs Viewer](../Docs_Viewer.md) · [Docs Viewer Overview](../Docs_Viewer_Overview.md)
 - Source Tree Ownership still describes an external Published snapshot and Deploy Repo. Parts of Docs Viewer Runtime accurately describe the reader, but its Publish row still calls for an automatic Recent refresh. The current Recent contract gives discovery its own explicit refresh/build and gives Publish only queued bytes. [Source Tree Ownership](../Source_Tree_Ownership.md) · [Docs Viewer Runtime](../Docs_Viewer_Runtime.md) · [Generated Data Contracts](../Generated_Data_Contracts.md)
@@ -109,13 +109,13 @@ Repair the reader’s route to maintained owners. Check all scope, storage, depl
 
 | File | Links / ID refs | Recommendation |
 | --- | ---: | --- |
-| [Dev_Home.md](../Dev_Home.md) | 0 / 9 | Front door still points at the retired repository Studio scope tree. |
-| [Docs_Viewer.md](../Docs_Viewer.md) | 5 / 49 | Front door directs readers to retired scope CRUD and scope configuration. |
-| [Docs_Viewer_Overview.md](../Docs_Viewer_Overview.md) | 2 / 0 | Names a removed `docs_scopes.json` and old Manage settings/scope workflows. Consider folding the overview into the main Docs Viewer page. |
-| [Docs_Viewer_Runtime.md](../Docs_Viewer_Runtime.md) | 40 / 5 | Core runtime guide. Its refresh table still says Publish invalidates Recent, while the current handoff copies queued output. |
-| [Site.md](../Site.md) | 2 / 6 | Check the site guidance against the owning implementation or current plan. |
-| [Site_Overview.md](../Site_Overview.md) | 1 / 0 | It mixes the active root Docs Viewer with former `/series/`, `/works/` and other Catalogue paths. Route legacy readers to Catalogue Archive. |
-| [Source_Tree_Ownership.md](../Source_Tree_Ownership.md) | 9 / 0 | Current repo ownership map still describes scope-wide Published output and Deploy Repo. |
+| [Dev_Home.md](../Dev_Home.md) | 0 / 9 | Retained and updated. Routes readers to the workflow guide, names the current Studio documentation root and keeps the development references. |
+| [Docs_Viewer.md](../Docs_Viewer.md) | 5 / 49 | Retained and updated as the task and reference entry point. Its opening now carries the three-surface overview and links to the guide and Runtime. |
+| [Docs_Viewer_Overview.md](../Docs_Viewer_Overview.md) | 2 / 0 | Consolidated into Docs Viewer for orientation and Runtime for boot, routes and service authority. Docs Review retains the package workflow. Redirected the Docs Viewer and Development Checklist links. File retirement pending. |
+| [Docs_Viewer_Runtime.md](../Docs_Viewer_Runtime.md) | 40 / 5 | Retained. Corrected the explicit discovery and Publish completion rows and removed the retired full-rebuild and Settings guidance from that section. |
+| [Site.md](../Site.md) | 2 / 6 | Retained and updated. Routes to the active root reader, the publication guide and the separately identified frozen Catalogue references. |
+| [Site_Overview.md](../Site_Overview.md) | 1 / 0 | Consolidated. Site and the guide cover the active entry and release flow, Site Shell Runtime covers shell ownership, and Catalogue Archive and its references cover the old routes. Redirected the Site link. File retirement pending. |
+| [Source_Tree_Ownership.md](../Source_Tree_Ownership.md) | 9 / 0 | Retained as the directory and cross-project ownership reference. Updated Working and Preview storage, direct publication destinations and the native app boundary. The workflow guide carries the release sequence. |
 | [Studio.md](../Studio.md) | 2 / 19 | Check the studio guidance against the owning implementation or current plan. |
 | [Studio_Overview.md](../Studio_Overview.md) | 2 / 0 | A front door still includes former Detail authoring and draft/status capabilities. Compare the exact Studio route registry. |
 | [Sub_Scopes.md](../Sub_Scopes.md) | 0 / 3 | Check the sub scopes guidance against the owning implementation or current plan. |

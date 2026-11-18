@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260524-214228-7247ef
 title: Source Tree Ownership
 added_date: "2026-05-24 21:42:28"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-11-18"
 parent_id: d-20260331-000000-4a16b0
 
 ---
@@ -11,12 +11,13 @@ parent_id: d-20260331-000000-4a16b0
 
 ## Repository Shape
 
-The repository contains several local apps, shared domain services, and one tracked public deploy tree. A runner may supervise them together, but it does not merge their ownership.
+The repository contains several local apps, shared domain services and one tracked public deploy tree. For the workflow across these roots, see [How the site fits together](../guide/How_The_Site_Fits_Together.md).
 
 | Root | Owns |
 | --- | --- |
 | `studio/` | catalogue authoring app; catalogue and media services; canonical Catalogue data; live Studio read projections; Studio/public-catalogue tests |
-| `docs-viewer/` | Docs Viewer canonical runtime and stylesheets, services, checked configuration, builders, import/export, integrated document packages, and tests; scope-owned source and lifecycle output remain external |
+| `docs-viewer/` | Docs Viewer canonical runtime and stylesheets, services, configuration, builders, import/export, integrated document packages and tests |
+| `app/` | separate native Mac and iPad app, with its own [project instructions](../../app/AGENTS.md) |
 | `processing/` | separate Java/Processing project source, pinned sketchbook libraries, project scripts, and project-owned tests |
 | `shared/` | reviewed app-neutral frontend modules and styles used across routes or apps, including explicitly accepted one-consumer cross-app primitives |
 | `site/` | tracked static deploy root: public shells and site-owned assets, deployed public data, public thumbnails, and the committed shared/public Docs Viewer runtime projection |
@@ -24,7 +25,7 @@ The repository contains several local apps, shared domain services, and one trac
 | `tooling/lint/` | repository development-tool pins, shared lint rules, and checked maintained Python/JavaScript boundaries |
 | `var/` | ignored reports, logs, caches, staging, and other local working output |
 
-Machine-owned projects, catalogue media staging, Docs Viewer external scopes, and document-package artifacts live below `$DOTLINEFORM_PROJECTS_BASE_DIR`, outside the repository. Document-package artifacts retain the physical `data-sharing/` workspace name as a frozen storage contract; there is no corresponding repository source owner.
+`DOTLINEFORM_DOCS_BASE_DIR` selects external Working and Preview storage. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects external project inputs, Catalogue media staging and document packages under `data-sharing/`. [Working storage and roles](Source_Organisation.md#storage-and-roles)
 
 ## Studio Boundary
 
@@ -52,16 +53,9 @@ The legacy Catalogue pages, payloads, Search/Recent indexes, runtime and thumbna
 
 The standalone Analytics source tree, runner, routes, APIs, configuration, checks, and tests are retired. Studio Tag services were subsequently retired; Concept definitions belong to Docs documents. Docs Viewer owns integrated document packages. Do not restore `/analytics/...`, `/studio/analytics/...`, `/studio/data-sharing/...`, or `/analytics/data-sharing/...` compatibility paths.
 
-The public `/analysis/` Docs Viewer scope is unaffected and is not an
-application namespace.
-
 ### Docs Viewer
 
-Docs Viewer owns its runtime, static assets, shells, checked configuration, services, builders, launcher, integrated document-package workflows, and tests beneath `docs-viewer/`. Every configured scope owns canonical source, replaceable generated output, and its accepted Published snapshot beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/<scope-id>/`; there is no repository scope-workspace fallback or shared top-level media workspace.
-
-Build replaces a scope's external generated output. Publish applies the one document-eligibility decision and replaces that scope's consumer-neutral external Published snapshot. Analysis alone can then use Deploy Repo to project one complete accepted Published revision into its configured `site/assets/data/` and public-media destinations without another eligibility filter. Public read-only installs consume that deployed projection. Local Studio may link to the Docs Viewer service but does not own `/docs/`, its management APIs, or Docs Review.
-
-Deploy Repo does not Build, Publish, commit, push, or release GitHub Pages. The resulting tracked `site/` delta is reviewed and committed through ordinary explicit Git actions. Deploy Public remains the separate manually triggered GitHub Pages workflow over the committed snapshot and has no external-scope access.
+Docs Viewer owns `/docs/`, its management APIs and `/docs-review/`. The external Working and Preview roots and the public destinations are configured in [`docs-workspace.json`](../../docs-viewer/config/workspace/docs-workspace.json). Working holds editable source in `working/source/`, replaceable outputs in `working/generated/`, ready media and publication queues. Publish applies those selected outputs and removals to Preview and the configured repository and R2 destinations. The public reader at `/` consumes prepared files and media. [Publish and deploy](../guide/Publish_And_Deploy.md)
 
 Shared/public browser code is canonical under `docs-viewer/runtime/js/{public,shared}/`, with the focused public report loader under `docs-viewer/runtime/js/reports/`; shared/public stylesheets are canonical under `docs-viewer/static/css/`. Local Manage and Review serve those canonical files. `site-tools/config/site-code-update.json` is the sole maintained inventory that maps the public subset into tracked `site/docs-viewer/` for static preview and GitHub Pages. `bin/site-code-update` is the only producer of that runtime projection. Local-only report, management, review, import, and stylesheet files never enter the public artifact merely because they share a canonical parent directory.
 
@@ -69,7 +63,7 @@ Shared/public browser code is canonical under `docs-viewer/runtime/js/{public,sh
 
 `processing/` is hosted in this repository but remains a separate Java/Processing project. It is not a website module or part of `site/`. Its development, build, test, render, and export lifecycle should be project-owned rather than inferred from the website toolchain.
 
-The Studio [Processing](Processing.md) family owns repository placement and shared-system integration. The Processing Docs Viewer scope owns artwork concepts, project architecture, experiments, and technical reference.
+The Studio [Processing](Processing.md) family covers repository placement and shared-system integration. Keep durable Processing development documentation with its project owner.
 
 Processing work media is not repository source. It belongs beneath the configured external `$DOTLINEFORM_PROJECTS_BASE_DIR/processing/<project-id>/` root. A selected output becomes public only through the existing Catalogue Work/Series pipeline using the Work's exact configured media-source identity; `processing/` and Docs Viewer do not become competing public media owners.
 
@@ -102,16 +96,6 @@ checked config + canonical source
   -> generated local or public read model
   -> runtime consumer
 
-external Docs Viewer scope source
-  -> Build
-  -> external generated output
-  -> Publish
-  -> external accepted Published snapshot
-  -> Deploy Repo for Analysis
-  -> tracked site document and public-media projection
-  -> explicit Git commit and push
-  -> Deploy Public
-
 canonical shared/public runtime code
   -> bin/site-code-update
   -> tracked site runtime projection
@@ -122,7 +106,6 @@ temporary inputs, logs, reports, and caches
 
 - Canonical source is edited and validated.
 - Generated output is rebuildable even when checked in.
-- Docs Viewer scope source, generated output, and accepted Published output live in the configured external scope root.
 - The deployed public document and media projection lives under `site/` or its configured remote destination.
 - App-local generated output lives with its app.
 - Reports and run artifacts do not become documentation source.

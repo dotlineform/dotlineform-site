@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-19"
+last_updated: "2026-11-18"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -24,7 +24,7 @@ The runtime boundary is not “which controls are hidden.” It is the combinati
 | surface | browser composition | data and service authority |
 | --- | --- | --- |
 | Public `/` | Static shell, public entrypoint, public-safe shared reader, and explicitly promoted public features. | Published static config and generated payloads. No local source or management services. |
-| Manage `/docs/` | Service shell, manage entrypoint, shared reader, and manage-owned views, controls, reports, imports, and scope workflows. | Independent generated-data, source, and management service surfaces, constrained by live capabilities and server validation. |
+| Manage `/docs/` | Service shell, manage entrypoint, shared reader, and Working views, authoring controls, reports and imports. | Independent generated-data, source, and management service surfaces, constrained by live capabilities and server validation. |
 | Review `/docs-review/` | Review shell, shared reader, returned-package provider, and package toolbar/workflow. | Independently gated reads over validated package previews. No canonical source write or general management authority. |
 
 Public and Manage share the top-row renderer and theme control. The `dotlineform` home link opens the configured default document at `/` publicly or `/docs/` in Manage. Document and management controls occupy the shared top row; Recent and Search occupy the first row inside the Index panel. The shared toolbar has no breadcrumb trail. Theme changes apply shared reader colours and retain the public theme event; imported SVG keeps its authored appearance.
@@ -53,7 +53,7 @@ Right-click or Shift+F10/the context-menu key opens the menu for its row. A temp
 
 The [document controller](../../docs-viewer/runtime/js/shared/docs-viewer-document-controller.js) owns the exact displayed target and record for ordinary and named-collection documents. The [collection list](../../docs-viewer/runtime/js/shared/docs-collection-report.js) contributes its host document and containing collection context while that list is displayed; it owns no document detail reader. Named documents obtain their supported Manage actions and private metadata through the existing collection contribution owner, independently of a manifest or calling report. Loading, invalid and error states supply no action target. A retained hidden report cannot replace the active document's context.
 
-Full Rebuild refresh retains the displayed `{collection, doc_id}` target, or `{doc_id}` for an ordinary document. After reloading the Index, management forwards that same exact target to the reader. Reducing it to a document ID would send named-collection documents through the ordinary `/docs/doc` route and produce a false missing-document error after a successful operation. Settings is retired; one design-time default feeds both readers through [configuration projection](Configuration_And_Extension_Points.md#workspace-and-target-contracts).
+One design-time default feeds both readers through [configuration projection](Configuration_And_Extension_Points.md#workspace-and-target-contracts).
 
 **Edit doc → Rebuild** rebuilds only the displayed ordinary or named-collection document when its frontend action resolution permits it. The UI excludes Catalogue Work documents. The local client posts its exact `{doc_id}` or `{collection, doc_id}` target to `/docs/rebuild-document`; the [document rebuild owner](../../docs-viewer/services/docs_document_rebuild.py) resolves the confined existing source, requires Working authoring capability and awaits the existing targeted builder. Incremental Links maintenance runs for that document and its relationship records; neighbouring document content is not rebuilt. Source bytes/dates, Search, Catalogue Refresh and media production are unchanged. Source Save uses the same build owner. The menu combines the frontend action resolution with existing rendered-document and busy availability rules. Management remains busy through the build and forced reload, validates the response's exact target, replaces the current browser entry and reports build/reload failure through the existing status. Forced reader loads bypass retained content and read a fresh generated payload; ordinary navigation and Back/Forward retain their existing records. Rebuilding uses current generated image inputs; regenerating actual media remains with its owning workflow.
 
@@ -230,18 +230,17 @@ The filesystem watcher and browser refresh timer are retired. Application comple
 | Source Assign Subject | Apply prepared Subject fields to the captured unsaved buffer and seed the resulting revision's context; Source Save owns complete validation, committed metadata projection and fresh display. |
 | Create | Project the committed record, refresh the ordinary Index where required, and open the exact created target in Source through the existing ordinary or collection owner. |
 | Edit doc → Rebuild | Reload ordinary Index metadata where applicable, read exact current management metadata for retained lists, and refresh the displayed generated payload. |
-| Rebuild docs and Search | Reload the ordinary Index and refresh the exact displayed document/report. Invalidate loaded Search and Recent inputs and await the currently visible list; the next activation reads inactive lists. Query, Index view and list scroll remain independent of the document refresh. |
-| Settings | Validate default membership against the loaded Index and apply the supplied default locally after configuration commits, including a later projection failure. No configuration, Index or displayed-document reload; the current target and position remain. |
+| Refresh Search and Recent | Await the discovery build, then refresh the Search and Recent caches and any active discovery view. |
 | Import | Forward confirmed committed records, including individually completed files before later cancellation/failure. Refresh an overwritten displayed target, reload the ordinary Index at terminal completion, and refresh the current named collection report for a completed collection import. Open the selected single-file result through the existing route owner. |
 | Delete / Position / Sort Children A–Z | Commit confirmed deletions and reparenting metadata to retained list owners and reload the ordinary Index after an ordinary mutation, including before returning to a caller after deleting the displayed document. Same-parent Position and sorting change navigation only. Keep a surviving main-pane target in place. |
 | Catalogue Regenerate | Await the owning collection's explicit manifest/report refresh. |
-| Publish | Await the existing Recent invalidation/visible-list refresh before releasing management busy state. Search retains its separate rebuild policy. |
+| Publish | Await the selected publication result before releasing management busy state. Search and Recent view updates belong to the separate discovery refresh. |
 
 `docs-viewer-route-workflow.js` owns the shared `refreshDocument` completion command. It preserves Source's existing leave/discard confirmation; only the Source Save service adapter marks its already persisted source as safe to leave directly. It reads the exact ordinary or named-collection by-ID payload from the generated-data owner, verifies the request, displayed target, current route and mode, then refreshes the retained mount and current browser entry without adding history or resetting reading position. Retained payloads do not satisfy this fresh-result read. Read, display and retained-list failures remain visible after a completed write/build; recovery is explicit reload or Rebuild, without background retry.
 
 The [Info Panel](Info_Panel.md) is an intentional detached capture of a pinned document, independent of the main pane and its updates. Navigation or content refresh does not retarget or reopen it. Source entry closes it. Draft changes affect operational metadata absent from the capture. These owners require no polling-based Info update.
 
-For a deliberate external Markdown change, rebuild the exact document and refresh/reopen the relevant view. A targeted CLI build changes generated files without notifying existing browser models; browser reload starts a fresh view, while navigation may reuse a retained caller. Changes made in another tab/window likewise need explicit reload or reopen. Persistent-media edits retain the separately selected full Rebuild docs and Search workflow in [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds). Public and Review retain read-only authority and their ordinary explicit loads.
+For a deliberate external Markdown change, rebuild the exact document and refresh/reopen the relevant view. A targeted CLI build changes generated files without notifying existing browser models. Reload the browser to start a fresh view after a CLI build or a change in another tab. Use the explicit full Working rebuild command for persistent-media edits. [External edits and rebuilds](Source_Organisation.md#explicit-external-edit-and-media-rebuilds)
 
 ## Review Execution Path
 

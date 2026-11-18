@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261117-213339-8c181b
 title: Site Workflow Guide
 added_date: "2026-11-17 21:33:39"
-last_updated: "2026-11-17"
+last_updated: "2026-11-18"
 summary: Create a small definitive guide to the site's workflows and retain the reasoning behind its main design decisions.
 ui_status: active
 parent_id: d-20260428-000000-f5ff18
@@ -14,18 +14,18 @@ Create a short, definitive guide in `documentation/guide/` with one entry page a
 
 ## Where To Resume
 
-**Completed this batch.** Created the [guide entry page](../../guide/README.md) and drafted chapters 1 and 4. Checked the workspace, publication and release descriptions against current configuration, service code and the Pages workflow.
+**Completed this batch.** Reviewed chapters 1 and 4 against the workspace and route config, discovery and Publish owners, and Pages workflow. Linked the guide from the repository README, Dev Home, Docs Viewer and Site. Updated Source Tree Ownership and corrected the discovery and Publish follow-through in Docs Viewer Runtime. Recorded the overview consolidations in the [working triage inventory](Site_Workflow_Guide_Triage.md#entry-points).
 
-**Next visit.** Review the two drafts together, then start the cleanup with Dev Home and the Docs Viewer entry page. Route readers to the guide, check what still needs to live in Docs Viewer Overview, Source Tree Ownership and Site Overview, and correct the Docs Viewer Runtime row that says Publish refreshes Recent. Record each disposition in the working inventory before moving or deleting files.
+**Next visit.** Draft chapter 2 from the current Working authoring, collection, Book and media owners. Check which existing references it should link and which duplicate instructions it can replace. Retire the consolidated Docs Viewer Overview and Site Overview once their remaining inventory references and any path, document ID or parent dependencies have been reconciled.
 
 ## Contents And Progress
 
 | Chapter | Covers | Chapter status | Cleanup to track |
 | --- | --- | --- | --- |
-| 1. [How the site fits together](../../guide/How_The_Site_Fits_Together.md) | The public site, Studio, Docs Viewer, and their sources and projections. | Drafted | Pending. Route Dev Home and Docs Viewer to the guide. Review Docs Viewer Overview, Source Tree Ownership and Site Overview for current material to keep or consolidate. |
+| 1. [How the site fits together](../../guide/How_The_Site_Fits_Together.md) | The public site, Studio, Docs Viewer, and their sources and projections. | Done | Entry points and Source Tree Ownership updated. Docs Viewer Overview and Site Overview consolidated, with file retirement pending. |
 | 2. Author and organise documents | Working, collections, Books, media, links and exact document generation. | Queued | Review overlapping source, media and authoring guides. |
 | 3. Maintain the Catalogue | Works, Series, Galleries and Save → Refresh → Regenerate. | Queued | Review overlapping Catalogue guides and historical authoring instructions. |
-| 4. [Publish and deploy](../../guide/Publish_And_Deploy.md) | What Working prepares, what Publish transfers, and when GitHub Pages changes. | Drafted | Pending. Correct Docs Viewer Runtime's Publish and Recent guidance. Use the draft to check which older publication guides can be consolidated. |
+| 4. [Publish and deploy](../../guide/Publish_And_Deploy.md) | What Working prepares, what Publish transfers, and when GitHub Pages changes. | Done | Runtime guidance corrected. Review the older publication references for consolidation. |
 | 5. Find and read things | Index, Search, Recent, Catalogue browsing and Media View. | Queued | Review old scope, search and navigation guidance against current reader workflows. |
 | 6. Change the system safely | Where to make a change, how to check it, and how to recover when a workflow fails. | Queued | Review setup, tooling and verification guides for overlapping procedures. |
 
