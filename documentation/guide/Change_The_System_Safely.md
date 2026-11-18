@@ -15,7 +15,7 @@ For a control or presentation change, start with [caller-owned component state](
 3. **Open both routes.** Open the bare local Manage and public-preview URLs in fresh tabs. A URL already carrying `?doc=…` tests an explicit target. Confirm the bare URLs open the new default, then follow an explicit link to a different document and confirm that it still opens its own target. [Local addresses](How_The_Site_Fits_Together.md#start-a-local-surface)
 4. **Release the reviewed files.** Include the workspace setting and its three generated copies in the reviewed Git change. The public copy travels with the committed `site/` snapshot through the manual Pages workflow. Use the Publish step only for separate queued content changes, such as preparing a new default document for the public site. [Publish and deploy](Publish_And_Deploy.md#3-review-and-deploy-the-site)
 
-For other changes, choose focused static diagnostics and source review for the changed boundary, with manual checks for presentation and live workflow completion. Automated test scripts/profiles are suspended pending their separate review; do not run or change them as routine follow-through. [Current verification](../development/Verification.md) · [Test/check follow-on](../_working/Review_Test_Policy_And_Checks.md)
+For other changes, choose focused static diagnostics and source review for the changed boundary, with manual checks for presentation and live workflow completion. Agree focused test work separately when a specific failure warrants automation. [Verification](../development/Verification.md) · [Test Contract Discipline](../development/Test_Contract_Discipline.md)
 
 ## Recover from a failure
 

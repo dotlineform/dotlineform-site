@@ -140,7 +140,7 @@ The subsequent 2026-10-10 row-merging slice passed lint/syntax for its five chan
 
 The 2026-10-14 Works and Series/Galleries optimisation retires consumer audits and unused validator helpers while preserving Refresh serializers/merges and explicit canonical maintenance. Focused lint/compilation and a read-only current-data call to both saved readers and the browser composition/link owners passed: 140 Series, 4,620 member Works and 235 Context documents produced 20 covered Series and 23 placed documents; Series and Galleries supplied 301 rows. This evidence exercises saved reads and initial in-memory composition, without HTTP/browser transport, committed-change execution, disposal/Back interaction, empty/unknown/invalid scenarios or failure variants. Restart Docs Viewer services and force-reload the viewer for manual review. No data/schema conversion, Build or Publish is required.
 
-The existing `docs-viewer/tests/python/test_works_report_contract.py` still asserts former live lookup inputs and retired scope/target plumbing. It remains unreviewed, unchanged and unrun; no test, fixture, harness or profile was changed for the optimisation. Test work requires separate approval under [Testing](../development/Verification.md).
+The optimisation left `docs-viewer/tests/python/test_works_report_contract.py` unrun. It asserted former live lookup inputs and scope/target plumbing until the later site suite retirement. [Site test retirement](Review_Test_Policy_And_Checks.md)
 
 ## Not In Scope
 

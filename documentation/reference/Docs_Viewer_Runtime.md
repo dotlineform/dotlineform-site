@@ -106,9 +106,7 @@ public entrypoint
 
 Public route records contain blank local service URLs. The browser reads published assets and does not probe the local Docs Viewer service.
 
-Public capabilities are promoted deliberately. A public report, view, or control needs a public-safe loader and data source plus route/config and import-graph coverage; it is not made public by hiding its management controls.
-
-The executable public boundary is protected by `docs-viewer/tests/python/test_docs_viewer_public_runtime_boundaries.py`, which walks the public entrypoint's static import graph and rejects manage-, review-, import-, source-editor-, and local-report-owned modules.
+Public capabilities are promoted deliberately. A public report, view or control needs a public-safe loader and data source. Review route configuration and trace imports from the public entrypoint so Manage, Review, Import, Source Editor and local report modules stay outside the public runtime. The site-code inventory controls which files ship. [Verification](../development/Verification.md#docs-viewer-site-code-projection)
 
 ## Local HTTP Caching
 
@@ -265,7 +263,7 @@ Views should attach through the code registry, explicit hosted-view context, and
 - A path under `shared/` is not proof that code is public-safe. Import-graph tests remain necessary.
 - The local service modifies route service URLs and management access when serving the checked-in registry. Reading the JSON file alone does not show the live route record.
 - Generated, source, and management services are separate browser contracts, but the current local service still enables source and management together under the main management flag.
-- Public promotion has no plugin mechanism. Each promotion still needs a deliberate asset, data, access, and test review.
+- Public promotion has no plugin mechanism. Each promotion needs a review of assets, data, access and the verification appropriate to the change.
 
 These are useful constraints to expose, not invitations to add another coordination layer.
 
@@ -276,9 +274,6 @@ These are useful constraints to expose, not invitations to add another coordinat
 - shared boot and runtime: `docs-viewer/runtime/js/shared/`
 - local service and capability projection: `docs-viewer/services/docs_viewer_service.py` and `docs-viewer/services/docs_management_capabilities_service.py`
 - committed ordering: `docs-viewer/services/docs_navigation_order.py`, `docs-viewer/services/docs_management_position.py` and `docs-viewer/runtime/js/management/docs-viewer-management-actions.js`
-- move service evidence: `docs-viewer/tests/python/test_docs_document_move_apply.py`; browser projection is accepted manually
-- public import boundary tests: `docs-viewer/tests/python/test_docs_viewer_public_runtime_boundaries.py`
-- service separation tests: `docs-viewer/tests/python/test_docs_viewer_service_config.py`
 
 Local Manage and Review serve canonical browser code from `docs-viewer/`. Public preview and GitHub Pages serve the explicit tracked subset projected under `site/docs-viewer/`; that deploy tree is not a fallback source for local runtime loading.
 

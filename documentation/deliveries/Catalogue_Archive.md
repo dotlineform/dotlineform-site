@@ -94,4 +94,4 @@ The local inventory and deletion receipt are `var/maintenance/catalogue-archive-
 
 Scoped implementation and redundancy review checked the artifact removals, validation/lint deltas, active reference owners and reused R2 list/delete methods. The maintenance inventory supplied the exact archive-owned selection; required batch limits and per-key API errors remained with the existing client. The final listing verified deletion completion. No active media prefix, canonical source, public runtime projection or publication workflow was changed, and no new helper, recovery mechanism or compatibility route was introduced.
 
-Suspended projection-contract fixtures still refer to archive paths and remain separate [test-review work](../_working/Review_Test_Policy_And_Checks.md); no tests, fixtures or profiles were edited or run.
+The archive withdrawal left the suspended projection-contract fixtures in place. The later site test retirement removed the obsolete archive paths with their audit and fixture inventory. [Site test retirement](Review_Test_Policy_And_Checks.md)

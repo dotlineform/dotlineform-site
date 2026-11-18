@@ -18,20 +18,16 @@ on:
       - "docs-viewer/static/css/docs-viewer-theme.css"
       - "docs-viewer/static/css/docs-viewer.css"
       - "docs-viewer/services/**"
-      - "docs-viewer/tests/**"
       - "shared/frontend/js/**"
       - "site/assets/js/**"
       - "site/docs-viewer/runtime/js/**"
       - "site-tools/site_tools/**"
-      - "site-tools/tests/**"
       - "site-tools/site_validate.py"
       - "studio/app/frontend/js/**"
       - "studio/app/server/**"
       - "studio/commands/**"
       - "studio/services/**"
       - "studio/shared/python/**"
-      - "studio/tests/**"
-      - "tests/**"
   workflow_dispatch:
 
 permissions:
@@ -74,4 +70,3 @@ jobs:
           bin/lint --scope studio
           bin/lint --scope public-site
           bin/lint --scope docs-viewer
-          bin/lint --scope tests

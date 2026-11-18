@@ -50,7 +50,7 @@ Studio, Docs Viewer and preview use the shared `IgnoreEarlyDisconnectMixin`. It 
 
 ### Focused Disconnect Test Coverage
 
-The user approved this test specification on 2026-10-24. The exact selection is `studio/tests/python/test_local_http_disconnects.py`; no profile definition or existing test is changed. The existing `studio` profile discovers this file through its complete `studio/tests/python` directory selection; it has no separate entry in the smaller explicit profiles. The tests protect the phase boundary that separates harmless early resets from real request failures, using the production mixin and Python's real `BaseHTTPRequestHandler` parser/dispatch over in-memory socket substitutes.
+The approved 2026-10-24 test used the production mixin and Python's `BaseHTTPRequestHandler` parser and dispatch over in-memory socket substitutes. Its former path was `studio/tests/python/test_local_http_disconnects.py`. Recover that file from the revision in the retirement record if this boundary warrants new test work. [Site test retirement](../deliveries/Review_Test_Policy_And_Checks.md#recovery)
 
 | Selector | Input and expected outcome |
 | --- | --- |
@@ -60,6 +60,4 @@ The user approved this test specification on 2026-10-24. The exact selection is 
 | `test_application_errors_propagate` | A parsed GET handler raises either `ConnectionResetError` or `RuntimeError`; the exact application exception propagates. |
 | `test_normal_request_still_returns_response` | A complete GET reaches the handler and returns an ordinary HTTP 200 response with the expected body. |
 
-The file owns its in-memory reader/socket and minimal GET/POST handler; there are no fixtures, application-service imports, real sockets, servers, ports, credentials, external workspace reads or writes. Only ordinary pytest/bytecode caches may be created. This selection proves the shared HTTP boundary, not real browser reset timing, application-route behavior, live stderr formatting or the three server classes' wiring; those integrations receive source review. Run `python3 -m pytest studio/tests/python/test_local_http_disconnects.py -q` when changing this boundary. Expected runtime is seconds with low setup/compute cost; maintenance is limited to this small stdlib adapter. Run once, then repeat only after a relevant change or failure. Code review and the selected run record complete this scope.
-
-[Earlier run evidence](../deliveries/Runtime_Configuration_And_Recovery_Review.md#early-disconnect-delivery) records the accepted implementation and its limits.
+The historical selection used an in-memory reader/socket and a minimal GET/POST handler. It exercised the shared HTTP boundary without workspace or network effects. Browser reset timing and live logging remained unexercised. Source review traced the three server integrations. [Earlier run evidence](../deliveries/Runtime_Configuration_And_Recovery_Review.md#early-disconnect-delivery)

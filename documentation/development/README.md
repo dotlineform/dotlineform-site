@@ -16,7 +16,7 @@ Use the [workflow guide](../guide/README.md) to understand the site, [Reference]
 
 1. Review [Working](../_working/README.md) for active proposals or deliveries relevant to the request.
 2. Follow [Development Workflow](Development_Workflow.md) for a bounded outcome and [Development Checklist](Development_Checklist.md) for implementation and review.
-3. Use [Verification](Verification.md) for focused static checks, code review and manual acceptance. Automated test scripts/profiles are suspended pending their separate review.
+3. Use [Verification](Verification.md) for focused static checks, code review and manual acceptance. Use [Test Contract Discipline](Test_Contract_Discipline.md) when a specific failure warrants a separate test proposal.
 
 ## Find An Operation
 
@@ -35,4 +35,4 @@ Use the [workflow guide](../guide/README.md) to understand the site, [Reference]
 
 `reference/` explains current behaviour; `design/` preserves reusable rationale; `deliveries/` records useful completed evidence. `development/` owns live development guidance. `_working/` holds active/proposed work and writing in progress; review that directory when choosing work rather than maintaining a second feature register. Processing uses its own [folder](../Processing/README.md). Purposeful links to delivery evidence are useful when they answer a concrete question; avoid duplicating its history in current references.
 
-The separate [test/check review](../_working/Review_Test_Policy_And_Checks.md) and [Codex Cloud setup](../_working/Cloud_Environments.md) remain open.
+The [Codex Cloud setup](../_working/Cloud_Environments.md) remains open.

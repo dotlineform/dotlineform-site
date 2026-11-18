@@ -4,12 +4,12 @@ doc_id: d-20261118-235000-c02e17
 title: Verification
 added_date: "2026-11-18 23:50:00"
 last_updated: "2026-11-18"
-summary: Current static checks, bounded code review and manual acceptance while automated test scripts remain suspended.
+summary: Current static checks, required public validation, bounded code review and manual acceptance.
 parent_id: d-20260419-000000-d2e47b
 ---
 # Verification
 
-Current development uses focused static diagnostics, the implementation review and relevant manual checks. Recorded normal-use acceptance has been useful; it does not establish unexercised paths or measured performance. Automated test scripts/profiles remain suspended pending the [test policy and checks review](../_working/Review_Test_Policy_And_Checks.md). Do not run, alter, delete or reactivate them as incidental feature work.
+Current site development uses focused static diagnostics, implementation review and relevant manual checks. Recorded normal-use acceptance establishes the workflow and outcomes observed. Agree focused test work separately when a specific failure warrants automation. [Test Contract Discipline](Test_Contract_Discipline.md)
 
 ## Choose The Evidence
 
@@ -36,7 +36,7 @@ bin/lint-js <path> [path ...]
 
 Use `bin/lint --scope <scope-id>` only for a complete adopted boundary. `tooling/lint/targets.json` owns membership; that package owns pinned Ruff/ESLint rules. Explicit commands fail without eligible targets. Report the actual paths/roots; generated, vendor, dependency, cache, canonical data, retired and Processing source remain outside this Python/JavaScript claim. [Tool installation](Runtime_Dependencies.md)
 
-Python compilation or existing read-only import/JSON diagnostics can resolve a specific syntax/wiring concern. Use the project interpreter; compilation can update ignored bytecode. `git diff --check` diagnoses changed-text whitespace. None of these commands is an instruction to run a suspended test profile.
+Python compilation or existing read-only import/JSON diagnostics can resolve a specific syntax or wiring concern. Use the project interpreter. Compilation can update ignored bytecode. `git diff --check` diagnoses changed-text whitespace.
 
 ## Docs Viewer Site Code Projection
 
@@ -58,5 +58,3 @@ Projection writes tracked public code/configuration; `--check` and site validati
 Each material code/config delivery retains a distinct review step, including the [Redundancy And Defensive Behavior Review](Development_Checklist.md#redundancy-and-defensive-behavior-review). Record actual findings/resolutions, changed-owner checks and important omissions. A passing static diagnostic does not establish that added behaviour is needed.
 
 Use the owning local app for local operations and `bin/site-preview` for the tracked public artifact. Leave visual/tactile review to the user unless specifically requested. Keep completed persistence/generation separate from fresh-display failures and report completed effects. Reuse existing acceptance without claiming cases that were never observed.
-
-The follow-on will decide whether suspended tests/harnesses/profiles should be retired or replaced. Existing approval and coverage records remain review inputs, not certification or run instructions. Test work still needs its separately agreed scope.

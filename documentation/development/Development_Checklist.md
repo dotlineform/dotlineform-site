@@ -96,6 +96,6 @@ When normal-use acceptance is agreed, retain concrete observations and investiga
 ## Documentation And Closeout
 
 - [ ] Update the relevant current owner; preserve useful rationale and unique evidence in Design/Deliveries. Links to those records are allowed when useful.
-- [ ] Keep tests/profiles suspended pending [their follow-on](../_working/Review_Test_Policy_And_Checks.md); do not migrate, delete or reactivate them incidentally.
+- [ ] Agree test work separately for a named failure that warrants automation. Use [Test Contract Discipline](Test_Contract_Discipline.md) for scope, isolation, coverage and run selection.
 - [ ] Report the exact evidence, results, generated follow-through, omissions and manual gates. Keep a scoped result at its actual scope.
 - [ ] Close only the complete outcome and separate follow-ons explicitly. Do not repeat implementation checks merely for a status edit.

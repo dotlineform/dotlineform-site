@@ -266,9 +266,9 @@ For Subject assignment, the registered `DocsCollectionAssignableFieldGroup` owne
 | Exact managed target resolution | `docs-viewer/runtime/js/management/docs-viewer-management-document-target.js` and `docs-viewer/services/docs_management_document_target.py` |
 | Exact collection transfer planning and receipt | `docs-viewer/services/docs_document_transfer.py` |
 
-## Verification Reference
+## Historical Verification Reference
 
-Use an isolated writable `DOTLINEFORM_PROJECTS_BASE_DIR` for checks that import the complete scope registry.
+The scope-era selection used an isolated writable `DOTLINEFORM_PROJECTS_BASE_DIR` for imports of the complete scope registry. The test files and profile were retired with the site suite. [Recovery](Review_Test_Policy_And_Checks.md#recovery)
 
 ```bash
 python -m pytest \
@@ -283,6 +283,4 @@ python -m pytest \
 
 ```
 
-Accept report composition, modal behavior, metadata presentation, and exact link interaction manually. Run `docs-viewer-smoke` only when one of its retained route/service/public/external-local boundaries changed.
-
-Let the ordinary watcher rebuild an edited Studio document projection; do not rebuild Search unless Search is the task. Finish with source lint for the changed implementation files, focused generated/config inspection, `git diff --check`, and a bounded diff review.
+The historical guidance used manual acceptance for report composition, modal behavior, metadata presentation and link interaction. The `docs-viewer-smoke` profile exercised selected route, service and public isolation boundaries.

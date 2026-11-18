@@ -15,7 +15,6 @@ Use the [development workflow](../development/Development_Workflow.md) when a ch
 
 ## Follow-on Reviews
 
-- [Test policy and checks](Review_Test_Policy_And_Checks.md): review suspended scripts, profiles and policy before deciding retirement, replacement or reactivation.
 - [Cloud Environments](Cloud_Environments.md): recover the unresolved ChatGPT discussion and agree the new Codex Cloud setup.
 - [Documentation code findings](Documentation_Code_Follow_Ups.md): concrete implementation/configuration issues identified during the documentation review.
 

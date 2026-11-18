@@ -67,49 +67,9 @@
 
 ## Checks And Test Policy
 
-- Use [Verification](documentation/development/Verification.md) for focused static diagnostics, required public projection/validation, bounded code review and manual acceptance. Automated test scripts/profiles are suspended pending [Review Test Policy And Checks](documentation/_working/Review_Test_Policy_And_Checks.md); do not run, delete, migrate or reactivate them without separately agreed test-work scope.
-- Earlier testing guidance and coverage records are retained under `documentation/_working/testing/` as review inputs. The approval and scope constraints below remain in force until that follow-on explicitly changes them; historical command recipes do not override suspension.
-- Test work is a delivery with its own agreed specification. Approval to implement a feature or fix does not authorize creating, updating, refactoring, deleting, or expanding tests, fixtures, harnesses, or profile membership. Specify the proposed test work and obtain approval before implementing it; an already approved test specification is sufficient authorization within its scope.
-- This applies to every test layer, including temporary regression scripts. Do not bypass the rule by calling new test code a probe, smoke, or one-off check.
-- Maintain each test or coherent collection's specification and current coverage description outside delivery documents, under Testing or its durable app/domain owner. Document exact test paths/selectors and collection membership, scenarios and inputs, asserted outcomes, fixtures and mocks, real systems exercised, write/network effects, exclusions, run commands/triggers, and costs. A profile name, test count, pass result, or source listing alone does not explain coverage. Deliveries link to this record and keep only selected run evidence and outcomes.
-- Account for authoring, maintenance, runtime, compute, setup, token/context use, and diagnosis time. Before a non-trivial run, identify the risk it addresses, the exact existing selection, what it proves, its side effects, and a proportionate cost estimate or unknowns. Use the smallest justified existing check within the accepted verification budget; do not run suites automatically because a file changed or a delivery is closing. Do not benchmark merely to fill an estimate.
-- Read-only inspection and ordinary existing lint, syntax, whitespace, or direct diagnostic commands may provide focused evidence without creating test code. A documentation-only or trivial change may need no executable test. An unapproved test proposal does not block an otherwise complete fix unless the user has made it an acceptance requirement; report the evidence limit.
-- Existing tests without adequate coverage documentation are unreviewed, not automatically accepted. Inspect only the relevant selection before relying on it; record what it actually does and any unknowns. Suite-wide documentation, cleanup, or redesign is separately scoped work. A failure does not authorize changing either the test or production behavior merely to obtain a pass.
-- Leave UI design testing to the user unless specifically requested; browser probes are brittle.
-- A UI change does not create an automatic requirement to add, update, or run a permanent browser test. Recorded manual confirmation is sufficient for ordinary interaction, presentation, copy, focus, modal, filtering, and navigation behavior when no durable browser integration boundary changed.
-- Before adding or expanding a browser test, name the unique regression it could catch, why a pure/service/API/generator check cannot catch it, and why repeated manual confirmation would be materially costly or risky. If those answers are not concrete, do not change the browser suite.
-- Do not use an executable smoke as a shared fixture library. Put genuinely shared route startup/readiness code in a small non-test support module; keep each retained smoke to one integration boundary.
-- Treat a browser script over 500 lines or covering more than one route/workflow owner as a mandatory deletion/split review, not a file to extend. Existing profile membership is not evidence that the script remains worthwhile.
-- Do not include smoke scripts in broad pytest collection. Smoke profiles are explicit boundary audits, not ordinary closeout gates.
-- When specifying test work for approval, apply the review gate:
-  - Can this be tested as pure function or service behavior?
-  - Can this be tested by direct HTTP/API request?
-  - Is a browser required to verify a product contract, or only to mimic user clicks?
-  - Will this fail because copy, layout, focus, hover state, or modal timing changed?
-- Permanent tests should protect data flows, server responses, generated contracts, parser behavior, ownership boundaries, and route/module integration. They should not police ordinary UI choreography, modal lifecycle feel, focus timing, copy, hover styling, or layout.
-- Browser smokes are only for durable browser boundaries: route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or shared ready/busy state.
-- Human manual checks are used for tactile interaction, visual fit, copy tone, modal feel, and mobile ergonomics.
-- The retained Docs Viewer browser profile is intentionally limited to Manage route/service boot, Docs Review authority and public read-only isolation. Additions require an explicit policy change, not routine feature follow-through.
-- The retained Studio browser profile is intentionally limited to local Catalogue route/service boot and one representative public Catalogue route without local capability. When automation is approved, deterministic Catalogue behavior belongs in Python tests; UI behavior remains manual.
-- Command recipes for justified checks, not an automatic checklist. Test/profile recipes apply only to separately authorised work during suspension:
-  - Selected existing Python/service tests: `$HOME/miniconda3/bin/python3 -m pytest <test-path> [-k <selection>]`
-  - Python syntax when relevant: `$HOME/miniconda3/bin/python3 -m py_compile <files>`
-  - Changed Python source: `bin/lint-python <path> [path ...]`
-  - Changed JavaScript source: `bin/lint-js <path> [path ...]`
-  - Complete adopted source boundary: `bin/lint --scope <scope-id>`
-  - Repo whitespace: `git diff --check`
-  - Accepted collection with a documented purpose and cost: `$HOME/miniconda3/bin/python3 tests/run_checks.py --profile <profile>`
-
-## Important testing factors
-- Before running Python tests that import Docs Viewer services, export `.env.local` in the same shell (`set -a; source .env.local; set +a`). The Docs workspace requires `DOTLINEFORM_DOCS_BASE_DIR`; Projects-owned media and packages independently require `DOTLINEFORM_PROJECTS_BASE_DIR`. Docs pytest fixtures isolate both settings before service imports.
-- Retire Scopes did not migrate tests or profiles. Existing scope-bearing test APIs and build commands are unreviewed for the new workspace contract; inspect the exact selection and obtain the separate test-work approval before changing them. Explicit build isolation uses `--docs-base-dir <absolute-writable-path>` and, when Projects-owned media or packages are involved, `--projects-base-dir <absolute-writable-path>` independently.
-- Select a `run_checks.py` profile only after inspecting its resolved commands and coverage; prefer an individual command when the collection includes unnecessary work. Profile names such as `quick` do not establish cost or relevance.
-- When `tests/run_checks.py` is used, report the profile, pass/fail result, and `var/test-runs/.../summary.md` path.
-- For commands that bind loopback ports or launch browser smokes, run them with elevated localhost/browser permissions in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
-- If a local route is expected to be running but the sandbox cannot reach localhost, use an isolated temporary build/server if automated verification needs it.
-- When explicitly agreed as needed, Codex-run browser checks should use Playwright from the Miniconda environment:
-  - Playwright CLI: `$HOME/miniconda3/bin/playwright`
-  - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
+- Use [Verification](documentation/development/Verification.md) for focused static diagnostics, required public projection/validation, bounded code review and manual acceptance. Leave visual and tactile UI review to the user unless specifically requested.
+- Agree each test delivery separately before editing tests, fixtures or harnesses, including temporary regression scripts. Use [Test Contract Discipline](documentation/development/Test_Contract_Discipline.md) for the specification, coverage record, run selection and workspace isolation. An approved specification authorizes implementation within its scope.
+- Run the smallest selection that answers the named risk. Use the app or tool that owns the behavior and reserve browser automation for failures that depend on a durable browser integration boundary. Report the evidence and its limits.
 
 ## Public Static Site Toolchain
 

@@ -29,11 +29,11 @@ The disconnected section-creation/save service, Detail lookup target, Detail bul
 
 Disposable authored Detail references remain unchanged, without aliases to converted Works. Frozen public archives and their media are outside this canonical-source cleanup. Gallery editing and ordinary Work creation use their current Work/Gallery owners.
 
-Historical tests have not been changed. `studio/tests/python/test_catalogue_detail_section_service.py` imports the deleted section service, and `studio/tests/python/test_catalogue_lookup_dependencies.py` imports retired Detail lookup helpers. `studio/tests/fixtures/catalogue_factory.py` and `studio/tests/python/test_catalogue_source_mutation.py` still construct the removed Detail maps; `studio/tests/python/test_catalogue_generation_records.py` still calls the deleted Detail projection helper. Other historical Catalogue and Docs tests also retain Detail scenarios. These are unreviewed retirement residue, not current acceptance evidence, and require separately agreed test maintenance. No compatibility fields or helpers are retained for them.
+The Detail withdrawal left tests and fixtures that still imported removed services, constructed Detail maps or used retired lookup helpers. The later site suite retirement removed those files. [Site test retirement](Review_Test_Policy_And_Checks.md)
 
-## Retained Transaction Check
+## Historical Transaction Check
 
-The existing selection is `studio/tests/python/test_catalogue_transactions.py -k execute_source_json_write`. It protects the current source-write wrapper after removing Detail expansion. No tests, fixtures or profile memberships were changed for this selection.
+The former `studio/tests/python/test_catalogue_transactions.py` selection exercised the source-write wrapper after removal of Detail expansion. Its code is available at the pre-retirement revision. [Recovery](Review_Test_Policy_And_Checks.md#recovery)
 
 | Exact selector | Scenario and asserted result |
 | --- | --- |
@@ -42,9 +42,9 @@ The existing selection is `studio/tests/python/test_catalogue_transactions.py -k
 | `test_execute_source_json_write_rolls_back_replaced_files_on_failure` | Two existing temporary JSON files receive replacement data; an injected failure on the second `os.replace` restores both original JSON values, propagates the error and leaves no temporary files. |
 | `test_execute_source_json_write_rejects_empty_payload_map` | An empty input mapping raises the source-write validation error. |
 
-Each case uses `TemporaryDirectory`; the rollback case temporarily replaces `os.replace` and restores it in `finally`. The real JSON validation and transaction code execute against temporary local files. The shared Studio conftest configures import paths. There is no network, local server, real canonical-data write, external workspace, media producer or browser. Temporary files are cleaned up by the tests. Setup and execution are expected to take seconds with low CPU cost; repeat only after relevant transaction changes or a failure. This selection does not prove media replacement, live Save, Refresh, generation or publication behavior.
+Each case used `TemporaryDirectory`. The rollback case temporarily replaced `os.replace` and restored it in `finally`. The real JSON validation and transaction code executed against temporary local files. The shared Studio conftest configured import paths. The selection left media replacement, live Save, Refresh, generation and publication unexercised.
 
-Run from the repository root using the configured Python environment:
+Former command:
 
 ```bash
 python3 -m pytest studio/tests/python/test_catalogue_transactions.py -q -k execute_source_json_write

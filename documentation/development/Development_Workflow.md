@@ -34,7 +34,7 @@ Implement one complete result. If another useful outcome appears, record it sepa
 
 Use [Verification](Verification.md): focused static diagnostics, the required runtime projection/validation for affected public files, bounded code review and relevant manual acceptance. Explain what the selected evidence proves, its effects and important omissions. Ordinary check reporting belongs in the session or a compact delivery record.
 
-Automated test scripts/profiles remain suspended pending the separate [test/check review](../_working/Review_Test_Policy_And_Checks.md). Their retirement, replacement or reactivation is separate work. Do not create or modify tests as incidental feature work.
+Propose focused tests as separate work when the affected behaviour and cost justify automation. Keep the specification and coverage with the owning domain and link to selected results from the delivery. [Test Contract Discipline](Test_Contract_Discipline.md)
 
 For each material code/config delivery, retain a distinct review step after implementation and selected checks, including the [Redundancy And Defensive Behavior Review](Development_Checklist.md#redundancy-and-defensive-behavior-review). Record findings/resolutions and rerun only evidence affected by changes or unresolved risks. A documentation-only delivery uses bounded source/link review.
 

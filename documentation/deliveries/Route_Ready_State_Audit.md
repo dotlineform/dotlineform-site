@@ -4,48 +4,47 @@ doc_id: d-20260625-174523-74cf61
 title: Route Ready-State Audit
 added_date: "2026-06-25 17:45:23"
 last_updated: "2026-10-11 00:00:00"
-parent_id: d-20260501-174746-efd581
+parent_id: d-20261118-235200-9870c4
 ---
 # Route Ready-State Audit
 
-Route-ready audit record. It preserves the exact startup and busy-state evidence from the former audit. [Current reference](../development/Verification.md)
+Historical record of the static route markup audit retired with the site suite. [Current contract](../reference/Route_Ready_State.md) · [Site test retirement](Review_Test_Policy_And_Checks.md#recovery)
 
 ## Question It Answers
 
-Do current Studio and Docs Viewer templates expose one consistent app-owned ready/busy root?
+Did the configured Studio and Docs Viewer templates expose one consistent app-owned ready/busy root?
 
-The audit validates the static template baseline. It does not prove that every controller reaches ready state at runtime.
+The audit validated static template markup. Run-time readiness still required exercising the route.
 
-## Run It
+## Former Commands
 
 ```bash
 python3 tests/audits/route_ready_state.py --strict
 ```
 
-Limit investigation to one or more apps:
+The focused Studio selection was:
 
 ```bash
 python3 tests/audits/route_ready_state.py --strict --app studio
 ```
 
-Valid IDs come from `APP_CONFIGS` in the script. Use `--json` when a structured result is useful for automation or focused diagnosis.
+App IDs came from `APP_CONFIGS`. The former `--json` flag emitted structured findings.
 
 ## Contract Checked
 
-For each configured template the audit expects:
+For each matched template the audit expected:
 
 - exactly one app-prefixed ready-state root;
 - the matching busy attribute on that same element;
 - busy initially `false`;
 - ready initially `false`.
 
-Template globs and attribute names are code-owned in `APP_CONFIGS`. There is no initial-ready exception. The broader lifecycle and controller responsibilities are explained in [Route Ready State](../reference/Route_Ready_State.md); [Studio Frontend Retirement](../_working/testing/Testing.md#studio-frontend-retirement) records the approved removal of the obsolete home-route exception and the current focused coverage.
+The Studio frontend retirement removed the obsolete home-route initial-ready exception. The audit skipped absent templates and omitted the installed public entrypoint and Docs Review. [Studio retirement evidence](Studio_And_Catalogue_Ownership_Review.md#studio-retirement-evidence)
 
 ## Interpretation
 
-- errors always fail;
-- strict mode also fails warnings;
-- missing configured templates, duplicate roots, invalid boolean values, and mismatched ready/busy ownership are structural failures;
-- runtime loading, error recovery, and stale-request behaviour require focused service or browser-boundary tests.
+- Errors failed the audit. Strict mode also failed on warnings.
+- Duplicate roots, invalid boolean values and mismatched ready/busy ownership were structural findings.
+- Runtime loading, error recovery and stale-request behaviour were outside the static audit.
 
-The `quick` check profile includes this audit. Run the direct command when template ownership is the only contract that changed.
+The former `quick` profile selected this audit.

@@ -34,7 +34,7 @@ Codespaces uses its own image and post-create configuration, selecting the repos
 
 Separate normal code/document work from media work and authorised publication. Media operations need their actual tools and source roots; site validation and runtime code projection do not need media processing. Dependency-download access, agent web access and application network/storage permissions are different requirements. Use only the access required by the agreed task.
 
-Review Python/system-library differences, private workspace availability and any absolute path persisted by bootstrap. Setup success is not deploy or publication evidence. Tests/profiles remain suspended under the separate [test/check review](Review_Test_Policy_And_Checks.md); do not carry the old automatic `quick` recipe into this setup.
+Review Python and system-library differences, private workspace availability and any absolute path persisted by bootstrap. Use focused installation and import diagnostics for setup. Agree focused test work separately if a specific failure warrants it. [Verification](../development/Verification.md) · [Test Contract Discipline](../development/Test_Contract_Discipline.md)
 
 ## Evidence To Agree
 

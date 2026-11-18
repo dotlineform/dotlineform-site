@@ -21,11 +21,11 @@ The workflow-guide review changed the default document in a disposable copy, gen
 
 ## Early disconnect delivery
 
-The approved 2026-10-24 selection passed all six cases in 0.04 seconds. Focused lint, preview `--help` and source review covered the shared exception boundary and the three server integrations. It suppressed only a reset before the initial request-line read. Actual browser reset timing and live logging remained unverified. The delivery did not restart services or run a broad profile. [Maintained coverage and command](../reference/Local_Runners.md#focused-disconnect-test-coverage)
+The approved 2026-10-24 selection passed all six cases in 0.04 seconds. Focused lint, preview `--help` and source review covered the shared exception boundary and the three server integrations. It suppressed only a reset before the initial request-line read. Actual browser reset timing and live logging remained unverified. [Former coverage and selector](../reference/Local_Runners.md#focused-disconnect-test-coverage)
 
 ## Current review and remaining work
 
-Source inspection traced runner bindings, environment precedence, workspace loading, served routes, capability responses, browser projection and static public loading. It found a disabled-Studio supervisor failure and the standalone Docs runner's workspace-environment gap. The tracker retains these as code follow-ups, together with tests that still reference retired Settings, scope configuration and public-boundary imports. [Follow-up tracker](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+Source inspection traced runner bindings, environment precedence, workspace loading, served routes, capability responses, browser projection and static public loading. It found a disabled-Studio supervisor failure and the standalone Docs runner's workspace-environment gap. The tracker retains those code follow-ups. The later suite retirement resolved the stale Settings, scope configuration and public-boundary test findings. [Follow-up tracker](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups) · [Site test retirement](Review_Test_Policy_And_Checks.md)
 
 This documentation batch checked redirected paths, headings, identities and whitespace. It did not start services, exercise browser flows, change configuration, run runtime tests or write to the external workspace.
 

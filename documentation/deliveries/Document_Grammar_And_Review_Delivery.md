@@ -19,13 +19,13 @@ The later Recent seed followed renames and selected the latest Git author time a
 
 ## Conversion and diagrams
 
-The Word adapter's fixed map reserves H1 for Title and reports Heading 6 clamping. The shared HTML converter preserves semantic content with deliberate degradation. Finished SVG import replaced application-owned diagram source/building, while repository Markdown retains external-viewer rendering. The approved diagram cleanup scope and evidence remain with Testing. [Mapping](../reference/HTML_Import_Mapping.md) · [Diagram cleanup](../_working/testing/Testing.md#diagram-pipeline-cleanup)
+The Word adapter's fixed map reserves H1 for Title and reports Heading 6 clamping. The shared HTML converter preserves semantic content with deliberate degradation. Finished SVG import replaced application-owned diagram source/building, while repository Markdown retains external-viewer rendering. The diagram cleanup passed focused lint, compilation and the selected runner-membership and fenced Markdown checks. The converter test failed to collect because its fixture still imported retired scope config. The full historical scope and evidence are in `documentation/_working/testing/Testing.md` at the recovery revision. [Mapping](../reference/HTML_Import_Mapping.md) · [Site test retirement](Review_Test_Policy_And_Checks.md#recovery)
 
 ## Review corrections
 
 Older Review pages described v1/v2 manifests with scope/stage provenance, canonical links containing a stage parameter and a guarantee that failed rebuilding preserved the previous preview. The current service requires v4 provenance, exact selected membership and collection identity. Explicit Build writes package-generated output in place, while initial materialization exposes a completed temporary package by rename. The reference now describes those separate failure boundaries. [Current Review](../reference/Docs_Review.md)
 
-The original reference listed package, materialization, edited-source and smoke files as coverage. Current retained Python fixtures still use v1 manifests or scope/stage requests. Those files require separately scoped review before they establish current behavior. Review's authority boundary and the missing named-collection canonical shortcut are recorded in the tracker. [Code and test follow-ups](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+The original reference listed package, materialization, edited-source and smoke files as coverage. The Python fixtures still used v1 manifests or scope/stage requests when they were retired with the site suite. Review's authority boundary and the missing named-collection canonical shortcut are recorded in the tracker. [Code follow-ups](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
 
 ## Broken Links evidence
 

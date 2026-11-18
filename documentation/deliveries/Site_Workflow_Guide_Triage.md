@@ -40,7 +40,7 @@ The later document media batch also consolidated the Working `data_model/Publica
 
 The later [data-model and rule-review retirement](Rationalise_Documentation.md#data-model-and-rule-review-retirement) removed the four remaining Working records and the folder, about 17,550 words. Current rules already live in Reference and Development; useful implementation evidence and verification limits were compiled into existing deliveries, with historical links redirected. These records were outside the original 290-file inventory, whose counts remain unchanged.
 
-The live-guidance review is complete: seven concise pages now live under [Development](../development/README.md), and `documentation/studio/` is empty. [Working](../_working/README.md) replaces the formal Planned Features register. Five suspended testing records remain bounded inputs to the [test/check review](../_working/Review_Test_Policy_And_Checks.md); [Codex Cloud setup](../_working/Cloud_Environments.md) remains separate. The later [Catalogue Archive retirement](Catalogue_Archive.md#retirement-and-r2-cleanup) removed the snapshot and its dedicated remote copy; its evidence is separate from the earlier documentation-only consolidation.
+The live-guidance review consolidated seven pages under [Development](../development/README.md) and emptied `documentation/studio/`. [Working](../_working/README.md) replaced the formal Planned Features register. Five testing records became inputs to the later [site test retirement](Review_Test_Policy_And_Checks.md). [Codex Cloud setup](../_working/Cloud_Environments.md) remains separate. The later [Catalogue Archive retirement](Catalogue_Archive.md#retirement-and-r2-cleanup) removed the snapshot and its dedicated remote copy.
 
 ## Guide Walkthrough
 
@@ -55,7 +55,7 @@ For the maintainer's route, a disposable copy set the homepage to the already av
 | File | Links / ID refs | Recommendation |
 | --- | ---: | --- |
 | [Broken_Links.md](../reference/Broken_Links.md) | 10 / 0 | Moved from `Broken_Links_Script.md` to Reference with its identity. Owns saved versus CLI scans, exact source/media checks and adopted Work-document diagnosis. Preserved [earlier evidence](Document_Grammar_And_Review_Delivery.md#broken-links-evidence). |
-| [Browser_Smoke_Testing.md](../_working/testing/Browser_Smoke_Testing.md) | 2 / 0 | Moved with its identity to test-review inputs, preserving former boundary/harness policy. Browser scripts remain suspended and no browser run or profile change occurred. |
+| `Browser_Smoke_Testing.md` | 2 / 0 | Moved with its identity to the test-review inputs and later retired. Preserved former boundary and harness policy for that review. |
 | [Builder.md](../reference/Builder.md) | 45 / 0 | Moved to Reference. Consolidates exact and complete Working Build, eligibility, queue completion and Publish. [Design rationale](../design/Working_Generation_And_Publication.md) · [Delivery evidence](Single_Publish_Delivery.md#later-workflow-boundary) |
 | `Button_Placement.md` | 1 / 0 | Consolidated and retired. [Control placement](../reference/Panel_Hosts_And_Control_Surfaces.md#control-placement) owns the current surfaces/targets; [Design](../design/Shared_Controls_And_Visual_Assets.md#placement-is-separate-from-operation-authority) preserves the user-attention rationale. |
 | [CSS_Ownership.md](../reference/CSS_Ownership.md) | 5 / 0 | Moved and reworked in Reference. Owns palette/cascade, layout, shared field roles, focus and public/local styling. Compiled historical check evidence separately. |
@@ -97,11 +97,11 @@ For the maintainer's route, a disposable copy set the homepage to the already av
 | `Package_Prepare_Script.md` | 4 / 0 | Retired into the [service boundary](../reference/Document_Packages.md#implementation-boundary) and [Prepare CLI](../reference/Document_Packages.md#prepare-cli). |
 | [Planned_Features.md](../_working/README.md) | 25 / 53 | Retired. Method is in Development Workflow; active/proposed work is found by reviewing Working. Reparented its children and preserved unique acceptance history in domain deliveries. |
 | [Public_Docs_Route_Shell.md](../reference/Public_Docs_Route_Shell.md) | 1 / 0 | Moved and shortened in Reference. Consolidates installed root, separate template, theme/404 and explicit runtime projection; preserves root-move evidence in Deliveries. |
-| [Pytest.md](../_working/testing/Pytest.md) | 0 / 0 | Moved with its identity to test-review inputs, preserving fixture/coverage limits. No tests or fixtures were migrated, executed or retired by documentation cleanup. |
+| `Pytest.md` | 0 / 0 | Moved with its identity to the test-review inputs and later retired. Preserved fixture and coverage limits for that review. |
 | `Record_List_And_Actions.md` | 3 / 0 | Consolidated and retired. [Shared UI](../reference/Shared_UI.md#record-list-and-actions) owns single selection, action/focus boundary, formatters, tooltips, safe URLs and caller-owned icons. |
 | [Related_Links.md](../reference/Related_Links.md) | 28 / 2 | Moved to Reference. Owns the generated list, its exact inputs and freshness. |
 | [Reports.md](../reference/Reports.md) | 25 / 1 | Moved to Reference. Combines report source, executable composition, public promotion and current report data owners. [Delivery and retirement evidence](Collections_Books_And_Reports_Review.md) |
-| [Run_Checks.md](../_working/testing/Run_Checks.md) | 6 / 0 | Moved with its identity to test-review inputs; no profile ran or changed. Current lint/projection commands are in Verification, and old suite recipes do not override suspension. |
+| `Run_Checks.md` | 6 / 0 | Moved with its identity to the test-review inputs and later retired with the runner. Current lint and projection commands are in Verification. |
 | `Search_Fields.md` | 3 / 0 | Consolidated and retired. [Shared UI](../reference/Shared_UI.md#search-field) owns existing-input identity, ordinary clear events, focus and explicit public serving. |
 | `Search_List.md` | 2 / 0 | Consolidated and retired. [Shared UI](../reference/Shared_UI.md#search-list) separates transient suggestions from committed caller values and documents free entry/cancellation. |
 | `Selectable_List.md` | 2 / 0 | Consolidated and retired. [Shared UI](../reference/Shared_UI.md#selectable-list) records the retained source with no active production adapter. Logged the keep/retire code decision. |
@@ -110,8 +110,8 @@ For the maintainer's route, a disposable copy set the homepage to the already av
 | [Source_Mutation_Endpoints.md](../reference/Source_Mutation_Endpoints.md) | 4 / 0 | Moved to Reference and consolidated with the script map. Owns exact action inputs, completion and the code pointers. |
 | [Source_Organisation.md](../reference/Source_Organisation.md) | 46 / 0 | Retained for canonical storage, authoring and placement. Routes generation, eligibility and transfer details to the [Working lifecycle](../reference/Builder.md#docs-build-flow). |
 | [Collections_And_Books.md](../reference/Collections_And_Books.md) | 18 / 1 | Renamed and consolidated in Reference with the original document identity. Owns hosts, collection actions, Book curation, editions and publication. [Design rationale](../design/Collections_Books_And_Reports.md) |
-| [Test_Contract_Discipline.md](../_working/testing/Test_Contract_Discipline.md) | 28 / 0 | Moved with its identity to test-review inputs. Earlier approval/specification rules remain available; current AGENTS constraints stay in force pending the separate review. |
-| [Testing.md](../_working/testing/Testing.md) | 26 / 5 | Moved with its identity to the bounded test-review inputs. Preserves coverage/approval/retirement evidence; scripts and profiles are suspended pending a separate retirement/replacement decision. |
+| [Test_Contract_Discipline.md](../development/Test_Contract_Discipline.md) | 28 / 0 | Moved with its identity to the test-review inputs, then condensed into the current development guidance. |
+| `Testing.md` | 26 / 5 | Moved with its identity to the test-review inputs and later retired. The former coverage and approval records remain in Git. |
 | [Toolbar_Icons.md](../reference/Toolbar_Icons.md) | 4 / 0 | Moved and shortened in Reference. Owns artwork/button/list dimensions, mask/class adapters, accessibility, state and public asset adoption. Migration/acceptance belongs elsewhere. |
 | `Word_Import_Style_Mapping.md` | 2 / 0 | Retired into [Word style mapping](../reference/HTML_Import_Mapping.md#word-style-mapping). |
 

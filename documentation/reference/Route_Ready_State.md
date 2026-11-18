@@ -26,8 +26,8 @@ Studio's [route-state helper](../../studio/app/frontend/js/studio-route-state.js
 
 Read root attributes when waiting for readiness; a listener attached after boot can miss the event. A failed service can leave the route ready with affected controls disabled. [Local Setup](Local_Setup.md) owns startup and recovery.
 
-## Nested Import And Audit Limits
+## Nested Import And Verification
 
 The nested Docs Import controller still emits Studio-prefixed attributes/events. This is an existing cross-app naming seam; do not use it as a pattern for a new route root.
 
-The existing read-only [route audit](../../tests/audits/route_ready_state.py) parses configured HTML templates for missing/duplicate roots and initial attributes. It does not execute boot or prove operation busy state. Its current path list includes the reusable public template and Manage shell but still names removed `site/analysis/index.html`; absent paths are skipped, so it does not inspect installed `site/index.html` or Review. That coverage gap is logged in the [tracker](../deliveries/Rationalise_Documentation.md). [Testing](../development/Verification.md) owns selection and separately approved changes; the [earlier audit delivery](../deliveries/Route_Ready_State_Audit.md) preserves its original evidence.
+Review the actual route template for one owning root and initially false attributes. Use the owning route to observe boot and operation completion when those behaviours change. Static markup establishes the initial state. [Verification](../development/Verification.md) · [Former route audit](../deliveries/Route_Ready_State_Audit.md)

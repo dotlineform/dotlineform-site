@@ -58,15 +58,6 @@
       "javascript": [
         "docs-viewer/runtime/js"
       ]
-    },
-    "tests": {
-      "python": [
-        "docs-viewer/tests",
-        "site-tools/tests",
-        "studio/tests",
-        "tests"
-      ],
-      "javascript": []
     }
   }
 }

@@ -9,8 +9,8 @@ parent_id: d-20260524-214228-7247ef
 ---
 # Projection Contract Audit
 
-Former cross-boundary projection audit and manifest. It records what the scope-era audit covered and the limits of that evidence. [Current reference](../development/Verification.md)
+Former cross-boundary projection audit and manifest. [Current projection enforcement](../reference/Projection_Contract.md#current-enforcement)
 
-`tests/audits/projection_contract.py` reads the checked `tests/contracts/projection_contract.json` manifest. It checks configured artifact paths and exclusions, scans selected JSON for listed source-only fields and checks selected public assets for prohibited source references.
+`tests/audits/projection_contract.py` validated the shape of `tests/contracts/projection_contract.json` and scanned selected assets for prohibited source references and selected JSON keys. Its private-field scan targeted the retired Catalogue archive. The manifest also retained former Analysis scope paths and the retired document-locations output.
 
-The manifest still contains former Analysis scope paths and the retired document-locations output. Treat it as an older audit specification. The current public boundaries and checks are described in [Projection Contract](../reference/Projection_Contract.md#current-enforcement). Revising the audit or its profile membership belongs to separate [test work](../development/Verification.md).
+The audit and manifest were retired with the site suite. Both former paths are available at the recovery revision. [Site test retirement](Review_Test_Policy_And_Checks.md#recovery)

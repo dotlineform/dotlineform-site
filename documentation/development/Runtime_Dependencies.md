@@ -23,7 +23,7 @@ Read those files for current versions and exhaustive package lists. A package's 
 | Mammoth | Word-to-semantic-HTML conversion through the repository's fixed style/image adapter |
 | Pillow | Required image decoding/validation, import WebP work and document thumbnail encoding |
 | markdown-it-py | Shared CommonMark rendering |
-| pytest | Suspended Python test infrastructure; installation is not permission to run it |
+| pytest | Pinned by the App-service development requirements and available for agreed focused Python test work |
 
 [Import](../reference/Docs_Import.md) and [format mappings](../reference/HTML_Import_Mapping.md) own conversion. [Document grammar](../reference/Document_Identity.md#parsing-and-rendering) owns renderer rules and their sanitization boundary. Do not introduce a generic third-party converter as the product-rule owner.
 
@@ -47,7 +47,7 @@ Local work follows the project Miniconda convention. Earlier cloud/Codespaces bo
 
 Establish the concrete consumer before adding a package/tool. Prefer existing dependencies or the standard library when sufficient. Pin Python packages in the shared requirements; pin direct Node packages exactly with their adjacent lockfile. Add system/bootstrap support only for environments that must execute that workflow.
 
-Use focused installation/import/`pip check` diagnostics and the relevant static/manual consumer evidence. Tests and profiles remain suspended pending [their review](../_working/Review_Test_Policy_And_Checks.md); package changes do not reactivate them or authorise test edits. [Verification](Verification.md) owns current checks.
+Use focused installation, import or `pip check` diagnostics and the relevant static or manual consumer evidence. Agree any focused test work separately. [Verification](Verification.md) · [Test Contract Discipline](Test_Contract_Discipline.md)
 
 Confirm the parsing stack in a new environment with the configured interpreter when that capability is needed:
 
