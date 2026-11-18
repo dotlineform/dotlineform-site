@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260902-122221-9f08aa
 title: Architecture
 added_date: "2026-09-02 12:22:21"
-last_updated: "2026-10-08 15:07:56"
+last_updated: "2026-11-18"
 summary: Define the frozen Catalogue archive and the proposed document, token, projection, Search and publication architecture for one mutable Analysis site.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -137,7 +137,7 @@ The main Analysis presentation is curated rather than an obligatory rendering of
 
 Inventory is not navigation. Complete alphabetical, chronological, Series and hierarchy views remain possible as reports. They do not become editor validity rules or require the main index to announce the complete size of the portfolio.
 
-[Doc Navigation](../_working/Document_Context_Navigation.md), including scope-level Context Navigation and Reorder, is independent of the migration and Catalogue Navigation. Catalogue documents belong to a sub-scope and need their own navigation model.
+Ordinary Index ordering belongs to [Source Organisation](../reference/Source_Organisation.md#position-ordinary-documents); the separate hierarchy-traversal proposal was [retired](Document_View_And_Return_Navigation_Handoff.md#ordinary-index-traversal-proposal-retired). These do not determine the Catalogue's own navigation model.
 
 Catalogue Navigation depends on the accepted presentation and collection data, not a bulk migration cohort. Decide how authored galleries establish sequence membership, order, section boundaries, controls, history and return behavior. Shared counters or suspended Series context are not settled requirements.
 

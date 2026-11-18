@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261002-135221-f16b64
 title: Source Editor Toolbar
 added_date: "2026-10-02 13:52:21"
-last_updated: "2026-10-13 13:04:18"
+last_updated: "2026-11-18"
 parent_id: d-20260419-000000-d2e47b
 ui_status: done
 summary: Align Source controls at the document's left edge and consolidate insertion actions and VS Code in Directives.
@@ -14,7 +14,7 @@ Earlier Source toolbar consolidation. It records the decisions behind shared dir
 
 ## Requirements
 
-Place Return to doc, Save Markdown source and Directives on one row beginning at the document's left edge. Move all other Source toolbar actions into Directives: Add image, Add Catalogue image, Add file, Add Media View link and Insert doc link. Assign Subject lives in Directives and updates the unsaved front matter. Opening Directives makes no context request. Folder opening is available through [Projects](/docs/?doc=d-20260805-155400-4c341f); Open Subject folder is removed from Source. User Facing Rules (`documentation/studio/data/User_Facing_Rules.md`) D.11/M.14 records this simplification. Open in VS Code uses the mounted editor's immutable document target. The existing Table detail, Insert related links, Insert icon and Summary actions remain together below a separator in the same flat menu. Keep existing icons and workflows; unavailable items remain disabled.
+Place Return to doc, Save Markdown source and Directives on one row beginning at the document's left edge. Move all other Source toolbar actions into Directives: Add image, Add Catalogue image, Add file, Add Media View link and Insert doc link. At this delivery, Assign Subject lived in Directives and updated only the unsaved front matter; [Subject retirement](Subject_Retirement.md) later removed it. Opening Directives makes no context request. Folder opening is available through [Projects](/docs/?doc=d-20260805-155400-4c341f); Open Subject folder is removed from Source. [Source editing](../reference/Source_Editing.md) owns the current buffer and toolbar workflow. Open in VS Code uses the mounted editor's immutable document target. The existing Table detail, Insert related links, Insert icon and Summary actions remain together below a separator in the same flat menu. Keep existing icons and workflows; unavailable items remain disabled.
 
 Return, Save, insertion and modal semantics remain with their existing owners. Opening the menu must preserve the selected source range; a menu item must never insert into a replaced editor or use edited front matter to choose a different Source file. This delivery does not combine modals, add token types or change persistence/publication policies.
 

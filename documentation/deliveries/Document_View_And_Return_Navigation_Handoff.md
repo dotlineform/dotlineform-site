@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261003-155555-59d4a7
 title: Document View And Return Navigation - Handoff
 added_date: "2026-10-03 15:55:55"
-last_updated: "2026-10-03 19:19:18"
+last_updated: "2026-11-18"
 summary: Completed and accepted exact-reader and two-view navigation delivery, selected static evidence and separate public release requirements.
 ui_status: done
 parent_id: d-20261003-111241-1a513e
@@ -32,7 +32,7 @@ The user accepted DVR-6 and authorized closeout without individually reporting e
 - Metadata/source/draft/create/import services return complete summaries from validated in-memory metadata. Source notifications cannot turn successful persistence into failed Save; listener errors are reported separately. Import summaries identify only confirmed commits, including supported partial results. Ordinary Delete includes confirmed descendants.
 - Browser configuration's ordinary `document_url_template` is owned by `build/docs_builder/browser_config.py` and projected to canonical defaults. The two new shared modules are registered in `site-tools/config/site-code-update.json`; represented public code is projected under `site/docs-viewer/`. Local report/service modules remain excluded from public code.
 - The approved Working source cutover changed nine active links in Beauty, Insert Doc link, 10,000, _a links test B and 3 symbols (book), plus reference text in Data Model and Reports. Exact IDs and unrelated content were preserved. External source/output lives only in the configured Docs workspace.
-- Runtime, Search, collection-list architecture and Development Checklist describe the implemented model. The superseded View Caching and History and Subject Associations Retirement deliveries were removed with user approval. Catalogue stays; future Subject work, wider resource/media caching and previous/next traversal remain separate.
+- Runtime, Search, collection-list architecture and Development Checklist describe the implemented model. The superseded View Caching and History and Subject Associations Retirement deliveries were removed with user approval. Catalogue stays; future Subject work and wider resource/media caching remained separate at closeout. The ordinary Index traversal proposal was subsequently retired below.
 - Manual-review follow-ups corrected visibility selectors for the retained document mount: Source keeps its editor visible while hiding rendered children; Content Detail hides the calling document while showing its presentation. Initial ordinary-document Index selection was also restored. The user subsequently confirmed general navigation and Source opening, plus changing a title and the list updating; detailed visual/failure cases were not individually confirmed.
 
 ## Evidence And Commands
@@ -56,3 +56,7 @@ DVR-0–6 were accepted and closed on 2026-10-03. Closeout updated the delivery 
 ## Later discovery evidence
 
 The later scoped Search delivery confirmed that returning from Gallery and Work browsing retained the active search and following a Context link kept its results. The Index Search and Recent delivery had already assigned narrow-screen access to a separately reviewed layout task. The current reader reference traces the subsequent code and keeps the direct, retained-caller and tab-snapshot paths distinct. [Scoped Search acceptance](Public_Index_Search_Scopes.md#3-verify-the-cutover-locally) · [Index and Recent delivery](Index_Search_And_Recent.md#separate-narrow-screen-review) · [Current reader return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
+
+## Ordinary Index Traversal Proposal Retired
+
+On 18 November 2026 the user requested retirement of Context Navigation because it was not needed. It proposed Previous/Next traversal through the authored ordinary Index hierarchy, with tree/subtree boundaries, wrapping and presentation still undecided. It was retired without implementation or a follow-on. Delivered [Position and authored ordering](../reference/Source_Organisation.md#position-ordinary-documents), [collection/Book Previous and Next](../reference/Reader_Discovery_And_Return.md#collection-previous-and-next) and caller Back retain their current owners. References and document-ID/parent dependencies were checked before removing the Working page.

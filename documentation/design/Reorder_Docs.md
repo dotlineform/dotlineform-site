@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-195713-4c8f2a
 title: Reorder docs
 added_date: "2026-09-03 19:57:13"
-last_updated: "2026-10-14 21:49:12"
+last_updated: "2026-11-18"
 summary: Design rationale for storing ordinary Index hierarchy and order together and editing them through one Position dialog.
 ui_status: done
 parent_id: d-20260423-000000-8fd731
@@ -14,6 +14,6 @@ The ordinary Index needs an editorial sequence that survives document renames an
 
 **Position** uses one searchable destination picker with Before, After and Inside. The same operation handles reordering and reparenting, and the whole subtree travels with its internal order. The dialog was chosen over drag-only placement so an author can find an exact destination in a large tree. Keeping placement separate from readiness lets authors arrange drafts and excluded branches before publication.
 
-An ordinary collection host can move in the Index while its flat member list keeps its own owner. This separation lets the ordinary tree describe placement without also becoming the order for every named collection. The proposed ordinary previous/next traversal can use the same authored tree. [Context Navigation](../_working/Document_Context_Navigation.md)
+An ordinary collection host can move in the Index while its flat member list keeps its own owner. This separation lets the ordinary tree describe placement without also becoming the order for every named collection.
 
 Current operator and storage details live in [Source Organisation](../reference/Source_Organisation.md#position-ordinary-documents). The [completed delivery](../deliveries/Reorder_Docs_Delivery.md) records the cutover and acceptance.

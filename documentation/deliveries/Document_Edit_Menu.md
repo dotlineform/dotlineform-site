@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261002-130225-c46d18
 title: Document Edit Menu
 added_date: "2026-10-02 13:02:25"
-last_updated: "2026-10-10 16:57:25"
+last_updated: "2026-11-18"
 parent_id: d-20260419-000000-d2e47b
 ui_status: done
 summary: Consolidate displayed-document editing actions into the right-aligned Edit dropdown.
@@ -14,7 +14,7 @@ Earlier shared Edit menu delivery. It records the grouping and authoring decisio
 
 ## Requirements
 
-Replace the direct Edit action with a dropdown containing Source editor, Rebuild, Open in VS Code, Draft/Ready, Star, Copy link and Delete, in that order. Source editor uses `square-code.svg` and retains the existing Source workflow. VS Code, Draft/Ready and Star move from workspace Actions and keep their context-aware targets, handlers, changing labels, checkbox state and artwork. New remains in Actions. All items remain visible; existing eligibility makes unsupported operations disabled. The pen trigger retains its document-right-edge placement and the menu opens left. Source and expanded views hide Edit; [Source Editor Toolbar](Source_Editor_Toolbar.md) separately supplies VS Code inside Source's Directives menu. Subject controls were later retired. [Subject retirement](../_working/data_model/subject-associations.md)
+Replace the direct Edit action with a dropdown containing Source editor, Rebuild, Open in VS Code, Draft/Ready, Star, Copy link and Delete, in that order. Source editor uses `square-code.svg` and retains the existing Source workflow. VS Code, Draft/Ready and Star move from workspace Actions and keep their context-aware targets, handlers, changing labels, checkbox state and artwork. New remains in Actions. All items remain visible; existing eligibility makes unsupported operations disabled. The pen trigger retains its document-right-edge placement and the menu opens left. Source and expanded views hide Edit; [Source Editor Toolbar](Source_Editor_Toolbar.md) separately supplies VS Code inside Source's Directives menu. Subject controls were later retired. [Subject retirement](Subject_Retirement.md)
 
 Collection detail actions keep their validated targets, existing workflows and live availability, with no duplicate detail toolbar buttons. Ordinary Copy/Delete use the existing handlers and deletion confirmation. Source editor toolbar changes remain a later outcome.
 

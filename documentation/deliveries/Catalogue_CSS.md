@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-153145-a4e72c
 title: Catalogue CSS
 added_date: "2026-09-03 15:31:45"
-last_updated: "2026-09-05 16:40:03"
+last_updated: "2026-11-18"
 summary: Define a versioned Work and Work Detail HTML/CSS component that preserves essential presentation in interactive Docs Viewer hosts without importing main.css.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -202,7 +202,7 @@ Do not add permanent screenshot or click-choreography tests merely to freeze lay
 ## Supporting Architecture
 
 - [Catalogue Media Focus View](../reference/Catalogue_Media_View.md) belongs to post-migration Catalogue Navigation and defines the image-and-caption view needed for Work Detail previous/next without individual documents. Its later CSS extension must preserve this component's ownership and isolation.
-- [Context Navigation](../_working/Document_Context_Navigation.md) is a separate scope-level document proposal, not the navigation owner or a delivery dependency for Catalogue sub-scope documents or focused media.
+- Ordinary Index ordering belongs to [Source Organisation](../reference/Source_Organisation.md#position-ordinary-documents). Its former hierarchy-traversal proposal was [retired](Document_View_And_Return_Navigation_Handoff.md#ordinary-index-traversal-proposal-retired), independently of Catalogue document/media navigation.
 
 ## Status
 

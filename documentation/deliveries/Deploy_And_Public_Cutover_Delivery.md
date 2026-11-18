@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260915-100525-dd0aa1
 title: Deploy And Public Cutover - Delivery
 added_date: "2026-09-15 10:05:25"
-last_updated: "2026-09-28 15:55:05"
+last_updated: "2026-11-18"
 summary: Deploy accepted Analysis documents and independent current Catalogue output into the tracked public site, verify the prepared release, and complete the reviewed public cutover.
 ui_status: proposed
 parent_id: d-20260902-102745-8379ea
@@ -51,7 +51,7 @@ Recovery uses corrected input/code/configuration and the ordinary owning operati
 
 ### Boundary
 
-Use the current document and Catalogue models. [Separate Document Content And Metadata](../_working/Document_Content_And_Metadata.md) remains parked and is not a prerequisite. Public Related/Links enhancements, shared view caching/history, Catalogue schema redesign, JSON hosting in R2, document adoption/backfill, batch New doc and automatic publishing/deployment are outside this delivery. Existing public-reader correctness and ordinary HTTP freshness needed for this release remain in scope.
+Use the current document and Catalogue models. The separate metadata-storage proposal was [retired](Document_Grammar_And_Review_Delivery.md#metadata-separation-proposal-retired). Public Related/Links enhancements, shared view caching/history, Catalogue schema redesign, JSON hosting in R2, document adoption/backfill, batch New doc and automatic publishing/deployment are outside this delivery. Existing public-reader correctness and ordinary HTTP freshness needed for this release remain in scope.
 
 ## Starting State — Verified 15 September 2026
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261003-111241-1a513e
 title: Document View And Return Navigation - Delivery
 added_date: "2026-10-03 11:12:41"
-last_updated: "2026-10-03 19:19:18"
+last_updated: "2026-11-18"
 summary: Completed exact document reader, independent Index, committed list updates and two retained views with one immediate caller return.
 ui_status: done
 parent_id: d-20260419-000000-d2e47b
@@ -337,6 +337,6 @@ Closeout: accepted and closed on 2026-10-03. Runtime, Search, collection-list ar
 
 The older View Caching and History delivery was retired as superseded. [Reader discovery and return](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) owns caller restoration and browser history; its local HTTP caching section records the existing transport policy. Wider resource/media reuse changes require their own requirements and authorization. Working watcher/active refresh remains implemented.
 
-The Subject Associations Retirement delivery was retired as superseded. Catalogue remains a registered document collection. Subject Associations (`documentation/studio/data/subject-associations.md`) records current behavior; future Subject review is separately scoped.
+The earlier Subject Associations Retirement proposal was retired as superseded; Catalogue remains a registered document collection. The later [Subject Retirement](Subject_Retirement.md) completed removal of document Subjects on 20 October 2026. [Document and Catalogue references](../reference/Document_And_Catalogue_References.md#catalogue-identity-and-document-associations) owns current associations.
 
-[Doc Navigation](../_working/Document_Context_Navigation.md) and [Context Navigation](../_working/Document_Context_Navigation.md) concern saved hierarchy ordering and proposed previous/next traversal. Caller Back does not define that sequence. Native app navigation, cross-application return protocols, persistent/offline caching and general report redesign remain separate work.
+[Source Organisation](../reference/Source_Organisation.md#position-ordinary-documents) owns authored Index ordering. The separate ordinary Index Previous/Next proposal was [retired](Document_View_And_Return_Navigation_Handoff.md#ordinary-index-traversal-proposal-retired). Caller Back retains its own return context. Native app navigation, cross-application return protocols, persistent/offline caching and general report redesign remain separate work.

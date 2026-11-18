@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-222617-28475e
 title: Catalogue Navigation
 added_date: "2026-09-03 22:26:17"
-last_updated: "2026-09-05 16:40:03"
+last_updated: "2026-11-18"
 summary: Require URL-carried gallery context for Catalogue document navigation, separate from Series membership and Media Focus image navigation.
 parent_id: d-20260419-000000-d2e47b
 ---
@@ -80,7 +80,7 @@ Media Focus owns image traversal; the sub-scope report owns document traversal. 
 
 Catalogue navigation builds on the accepted gallery and Media View data from [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md). Bulk source migration is abandoned and is not a navigation dependency. Batch New doc creates selected authored documents; their existence does not determine whether a Work or Detail can open in Media View. Ordinary document navigation remains distinct from image sequences.
 
-[Doc Navigation](../_working/Document_Context_Navigation.md) independently owns scope-level hierarchy traversal and sibling reordering. It neither supplies these Catalogue sequences nor blocks their implementation.
+[Source Organisation](../reference/Source_Organisation.md#position-ordinary-documents) owns ordinary Index ordering. Its separate traversal proposal was [retired](Document_View_And_Return_Navigation_Handoff.md#ordinary-index-traversal-proposal-retired); Catalogue sequences retain their own navigation owner.
 
 ## Status
 

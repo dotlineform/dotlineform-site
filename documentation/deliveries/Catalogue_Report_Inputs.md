@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261010-184615-e471b8
 title: Catalogue Report Inputs
 added_date: "2026-10-10 18:46:15"
-last_updated: "2026-10-20"
+last_updated: "2026-11-18"
 summary: Refresh-owned Catalogue report inputs implemented, reviewed and closed; further verification continues during normal report use.
 ui_status: done
 parent_id: d-20260419-000000-d2e47b
@@ -65,7 +65,9 @@ Store portable source declarations, resolving absolute project roots through the
 
 Authoring/import owners establish domain validity and Refresh owns projection. Source and Series readers retain their current minimal saved-schema/fact checks; Work resource readers perform a confined JSON-object read and trust completed Refresh-owned fields without schema, identity, title, link-shape or download-name audits. Do not make a report require unrelated canonical Work fields such as year, medium, image dimensions or editor state. Reports should not copy the Studio editor's full-record validator. Add header fields only for an actual consumer need, rather than default counts or content hashes.
 
-Work titles and source registrations pass through these projections and report readers literally, without repeated title-completeness checks, trimming, leading-apostrophe removal, text coercion or path repair. Genuine optional absence remains valid; it supplies no registration to inspect. Explicit media-source identities resolve exactly, while documented absence selects the configured default. Structural saved-input checks, confined paths, symlink/file inspection and URL escaping retain their owners. Missing Source Files preserves the supplied Work title and exact expected path in its browser rows. [Studio User Facing Rules](../_working/data_model/Studio_User_Facing_Rules.md) D.03 records this preservation boundary and the 2026-10-12 implementation evidence.
+Work titles and source registrations pass through these projections and report readers literally, without repeated title-completeness checks, trimming, leading-apostrophe removal, text coercion or path repair. Genuine optional absence remains valid; it supplies no registration to inspect. Explicit media-source identities resolve exactly, while documented absence selects the configured default. Structural saved-input checks, confined paths, symlink/file inspection and URL escaping retain their owners. Missing Source Files preserves the supplied Work title and exact expected path in its browser rows. [Current source model](../reference/Catalogue_Source_Model.md#validation-and-field-changes)
+
+The 12 October 2026 rule review extended literal-value preservation through Work Save, lookups, generation, reports and reader presentation, removing downstream scalar coercion, repeated Work-title completeness checks and fallback labels while retaining UI authoring feedback and boundary safety. Focused Python/JavaScript lint, compilation, bounded source/diff review, applicable public projection/site validation and whitespace checks passed. Tests, live Save/media/Refresh/Regenerate/Publish and browser workflows did not run; manual literal-value and resource cases remained pending. This implementation evidence does not broaden the report migration's accepted coverage. [Rule-review retirement and original records](Rationalise_Documentation.md#data-model-and-rule-review-retirement)
 
 Work Document Coverage's private manifest and producer are retired. Projects uses the shared Catalogue source/Series projections and explicit Series–Gallery index; it does not borrow another report's metadata. Work membership changes no longer select coverage output or its former Series endpoint maintenance.
 

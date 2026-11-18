@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-231534-b63aa9
 title: Catalogue Data Model
 added_date: "2026-09-03 23:15:34"
-last_updated: "2026-09-05 17:17:07"
+last_updated: "2026-11-18"
 summary: Define the five document subject choices, the composite Detail identity and Studio's data-quality ownership within the retained analysis.works collection.
 ui_status: proposed
 parent_id: d-20260902-102745-8379ea
@@ -86,7 +86,7 @@ A Detail may have its own document, several associated documents, or none. [Conc
 
 Collection membership, Catalogue hierarchy, token composition and previous/next sequence remain distinct. The data can inform navigation without automatically deciding whether next/previous traverses Series, stays within one Series, crosses Detail sections or includes independently documented Details.
 
-[Context Navigation](../_working/Document_Context_Navigation.md) remains scope-level only and independent. Detail previous/next is an intended Media View capability; its sequence semantics remain open.
+The ordinary Index traversal proposal was independent of this Catalogue model and was subsequently [retired](Document_View_And_Return_Navigation_Handoff.md#ordinary-index-traversal-proposal-retired). The historical Detail previous/next proposal had its own Media View sequence choices.
 
 ## Migration Boundary
 

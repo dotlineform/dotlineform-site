@@ -33,10 +33,14 @@ The 2026-10-14 cleanup had focused lint, compilation and source review. Its read
 
 ## Pending proposals and verification limits
 
-Metadata separation, independent seeding and directed link strength initially moved to Working with their original IDs and titles. Independent seeding was subsequently retired as recorded below. The other retained proposals distinguish the current front-matter, explicit generation and publication model from proposed storage or authoring changes. The navigation umbrella was retired into the completed order references and the open Context Navigation proposal.
+Metadata separation, independent seeding and directed link strength initially moved to Working with their original IDs and titles. Metadata separation and independent seeding were subsequently retired as recorded below. Directed link strength remains a separate proposal. The navigation umbrella was retired into the completed order references; the separate Context Navigation proposal was later [retired at the user's request](Document_View_And_Return_Navigation_Handoff.md#ordinary-index-traversal-proposal-retired).
 
 This batch inspected parser, renderer, link, conversion, package and Review source and checked Markdown links, identities and whitespace. Live parsing/builds, package writes, canonical Import, browser interaction and runtime tests were outside this documentation review.
 
 ## Independent Seeding Proposal Retired
 
 The user requested retirement of Independent Canonical Documents. It proposed creating an independently editable Docs document once from selected structured-record fields, with each side retaining its own edit/deletion lifecycle and no ongoing synchronization. It was retired without implementation or a follow-on. Current [Catalogue adoption](../reference/Generated_Data_Contracts.md#catalogue-reference-and-presentation) and [Book copying](../reference/Collections_And_Books.md#book-curation-in-manage) retain their own explicit contracts; this proposal adds no generic Copy/Replace or lineage workflow. References and document-ID/parent dependencies were checked before removing the Working page.
+
+## Metadata Separation Proposal Retired
+
+On 18 November 2026 the user agreed to retire Separate Document Content And Metadata. Keeping front matter and body together preserves a portable source file; ordinary organisation is already separate, and no measured benefit justified the wider storage migration and coordinated mutation/exchange work. The [design rationale](../design/Document_Grammar_And_Exchange.md#self-contained-source) retains that decision. Current [source ownership](../reference/Source_Organisation.md) and [Build/relationship maintenance](../reference/Builder.md) keep their existing contracts. The proposal was retired without implementation or a follow-on, after checking references and document-ID/parent dependencies.

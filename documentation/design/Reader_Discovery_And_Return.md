@@ -19,7 +19,7 @@ Retaining one caller lets Back restore a live report and its reading position wi
 
 ## The invoking order matters
 
-A collection list knows which Works or documents the reader is browsing. Capturing its order at opening gives Previous and Next stable neighbours while the reader moves through that sequence. Book's generated TOC can supply a web order on direct entry. A Gallery's Media View owns its image sequence and returns within its invoking document. An ordinary Index hierarchy sequence remains a separate proposal with open traversal and presentation choices. [Current return behaviour](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return) · [Ordinary Index proposal](../_working/Document_Context_Navigation.md)
+A collection list knows which Works or documents the reader is browsing. Capturing its order at opening gives Previous and Next stable neighbours while the reader moves through that sequence. Book's generated TOC can supply a web order on direct entry. A Gallery's Media View owns its image sequence and returns within its invoking document. [Current return behaviour](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
 ## Static Shuffle Stock
 

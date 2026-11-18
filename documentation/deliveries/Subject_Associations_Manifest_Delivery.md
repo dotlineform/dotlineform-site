@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-191938-974cc3
 title: Subject Associations To Manifests - Delivery
 added_date: "2026-09-27 19:19:38"
-last_updated: "2026-10-03 17:35:06"
+last_updated: "2026-11-18"
 summary: Retire subject-associations.json from all collections and derive existing report associations and navigation from management manifests without changing front matter or collection ownership.
 ui_status: done
 parent_id: d-20260419-000000-d2e47b
@@ -12,7 +12,7 @@ parent_id: d-20260419-000000-d2e47b
 
 Completed removal of a duplicate Subject association projection. It preserves why existing management manifests were sufficient at that stage. [Current reference](../reference/Related_Links.md)
 
-Complete under [Planned Features](../_working/README.md). SM-0 through SM-3 passed, including user confirmation of all three manual interactions. Subject Associations (`documentation/studio/data/subject-associations.md`) records maintained behavior. This delivery is retained pending a separately authorized archival or deletion decision. The superseded Catalogue retirement proposal was retired on 2026-10-03; Catalogue stays and future Subject work is separate.
+SM-0 through SM-3 passed, including user confirmation of all three manual interactions. This delivery preserves the earlier removal of the separate association file. The later [Subject Retirement](Subject_Retirement.md) removed document Subjects themselves on 2026-10-20; [document associations](../reference/Document_And_Catalogue_References.md#catalogue-identity-and-document-associations) describes current behaviour. The superseded Catalogue retirement proposal was retired on 2026-10-03; Catalogue remains a registered document collection.
 
 ## Requirements
 
@@ -74,7 +74,7 @@ Evidence: bounded production/configuration/documentation/projection diff and cal
 
 - [x] Record acceptance, durable transfer, artifact state and separate test/publication work; recommend retaining or retiring this document.
 
-Evidence: reuse accepted SM-1 and SM-2 results; the closeout edit requires only `git diff --check`. Record: accepted. Consumers work without association files, with user-confirmed navigation and Project State behavior. Maintained behavior is transferred to Subject Associations (`documentation/studio/data/subject-associations.md`), [Catalogue Works](../reference/Catalogue_Works.md) and the directly affected subject section of [Sub-Scope Customisation Architecture](Sub_Scope_Customisation_Architecture.md). No document-source or manifest reconciliation was required; only the local browser configuration and one tracked shared-runtime projection were refreshed. The five obsolete external artifacts are removed and Preview has no completion receipt. Existing tests that depend on retired association products or Project State path inputs need separately specified and authorized review; this is separate from the accepted product cutover. Publish and its live distribution evidence remain separate, as do Search rebuilds and Git/public deployment. Recommend manually archiving this completed delivery after closeout review; retain it until that action or deletion is explicitly authorized. Gate: passed; Publish, commit, push and document deletion were not performed.
+Evidence: reuse accepted SM-1 and SM-2 results; the closeout edit requires only `git diff --check`. Record: accepted. Consumers work without association files, with user-confirmed navigation and Project State behavior. At closeout, behaviour was transferred to the former Subject Associations record, [Catalogue Works](../reference/Catalogue_Works.md) and the directly affected subject section of [Sub-Scope Customisation Architecture](Sub_Scope_Customisation_Architecture.md); [Subject Retirement](Subject_Retirement.md) preserves the later cutover. No document-source or manifest reconciliation was required; only the local browser configuration and one tracked shared-runtime projection were refreshed. The five obsolete external artifacts are removed and Preview has no completion receipt. Existing tests that depend on retired association products or Project State path inputs need separately specified and authorized review; this is separate from the accepted product cutover. Publish and its live distribution evidence remain separate, as do Search rebuilds and Git/public deployment. Recommend manually archiving this completed delivery after closeout review; retain it until that action or deletion is explicitly authorized. Gate: passed; Publish, commit, push and document deletion were not performed.
 
 ## Follow-on
 

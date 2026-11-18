@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260926-204022-fc4764
 title: Reorder docs delivery
 added_date: "2026-09-26 20:40:22"
-last_updated: "2026-09-26 21:36:29"
+last_updated: "2026-11-18"
 summary: Deliver canonical ordinary document hierarchy and order with one Position modal, complete document-operation integration and preserved Preview branch exclusions.
 ui_status: done
 parent_id: d-20260423-000000-8fd731
@@ -14,7 +14,7 @@ Accepted ordinary Index Position delivery. It preserves the nested-order decisio
 
 ## Current And Next State
 
-Done. On 2026-09-26 the user confirmed: “great! tested through to site-preview”. This accepts the implemented Position workflow after the spinner and title-only picker refinements and closes the manual review gate. [Source Organisation](../reference/Source_Organisation.md) owns the maintained behaviour; [Doc Navigation](../_working/Document_Context_Navigation.md) retains the separate Context Navigation proposal. No implementation work remains in this delivery.
+Done. On 2026-09-26 the user confirmed: “great! tested through to site-preview”. This accepts the implemented Position workflow after the spinner and title-only picker refinements and closes the manual review gate. [Source Organisation](../reference/Source_Organisation.md) owns the maintained behaviour. The separate ordinary Index traversal proposal was subsequently [retired](Document_View_And_Return_Navigation_Handoff.md#ordinary-index-traversal-proposal-retired). No implementation work remains in this delivery.
 
 ## Requirements
 
@@ -109,7 +109,7 @@ Verification budget: documentation review and reuse of completed evidence.
 
 Gate: the complete result and durable documentation are accepted; only then mark the delivery done.
 
-Record: User acceptance through site-preview is recorded, durable source organisation is current, and the proposal/delivery are done. They are ready for manual archival; no files were deleted. This status-only closeout reuses the implementation checks and user confirmation; a new code review or executable check is not applicable. Codex did not commit, push or deploy. Context Navigation and wider metadata separation remain separate outcomes.
+Record: User acceptance through site-preview is recorded, durable source organisation is current, and the proposal/delivery are done. They are ready for manual archival; no files were deleted. This status-only closeout reuses the implementation checks and user confirmation; a new code review or executable check is not applicable. Codex did not commit, push or deploy. Context Navigation and wider metadata separation were outside this delivery and were subsequently retired.
 
 ## Test Work Boundary
 
@@ -119,4 +119,4 @@ New or changed tests, fixtures and harnesses require a separate agreed specifica
 
 On 14 October 2026, the source-control migration moved `index-order.json` and its three sibling controls directly under `working/source/`. Create and Import carry the exact order file as an additional confined write target; they do not get a broader write grant. The same day's sparse-tree cutover removed 33 empty child arrays and preserved all 34 documents and their order. Targeted dry-run generation reported zero proposed document or Index changes. The check covered source reads and generation wiring; live Position, Import and Publish were outside that check.
 
-[Context Navigation](../_working/Document_Context_Navigation.md) can consume the delivered ordered tree for previous/next navigation. [Separate Document Content And Metadata](../_working/Document_Content_And_Metadata.md) continues to own wider descriptive metadata and presentation separation. Neither result is silently included in this delivery.
+The proposed Previous/Next traversal of the delivered ordinary Index tree was [retired](Document_View_And_Return_Navigation_Handoff.md#ordinary-index-traversal-proposal-retired). The separate metadata-storage proposal was also [retired](Document_Grammar_And_Review_Delivery.md#metadata-separation-proposal-retired); the delivered Position and source-organisation behaviour remains current.
