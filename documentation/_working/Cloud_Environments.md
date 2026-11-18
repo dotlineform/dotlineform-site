@@ -11,14 +11,17 @@ ui_status: proposed
 
 ## Status And Next Decision
 
-The new Codex Cloud environment needs setup and review. The user reports a recent ChatGPT conversation with unresolved issues; its contents have not been supplied in this cleanup. Recover that discussion and record its actual decisions/issues before proposing implementation. Do not invent a resolution or treat the older setup below as acceptance of the new environment.
+The [27 October handoff](<2026-10-27 - dotlineform-environment-handoff.md>) records the Codex Cloud setup attempt from iPad without access to Codex desktop. Current environment state still needs checking.
 
-- [ ] Recover the ChatGPT discussion and identify the unresolved setup/access/dependency issues.
-- [ ] Check the actual Codex Cloud environment against the repository setup owner and agree its supported work, storage, interpreter, permissions/network and secret configuration.
+- **Verified in that session.** Static site validation passed. Public preview served the homepage, default document and public assets over HTTP, including after restart. The cloud checkout used the repository `.venv` because the local Miniconda interpreter path was absent in the image.
+- **Setup blocker.** Dependency downloads were blocked by the running environment's disabled network policy. The UI rejected Save and Publish and showed locked Manage controls. The scripts and restricted network proposal were recoverable in a saved draft, but the running instance still used the old policy. Correcting the imported mount path did not resolve the rejection. Its cause and effective permissions were unconfirmed.
+- **Repository follow-ups.** The handoff proposed aligning the lint package, lockfile and CI with the Node 24 image and documenting the cloud `.venv` interpreter alongside local Miniconda. The checked lint declarations still specify Node 22. Scope these separately from the environment settings issue.
+- **Unverified.** Full dependency installation, lint, activation in a fresh cloud task and authoring with real Docs and Projects storage.
+
+- [x] Recover the ChatGPT handoff and identify the open setup, access and dependency issues.
+- [ ] Check the saved draft and effective access in the intended account/workspace, and confirm whether settings can be applied before retrying installation. Agree the supported cloud work, storage, interpreter, network and secret configuration against the current repository owners.
 - [ ] Propose the smallest setup changes and explicit validation/write scope; keep Codespaces, local Miniconda, native App and Processing lifecycles distinct.
 - [ ] Implement and record observed environment evidence only after the setup scope is agreed. Compile stable operating instructions into the appropriate Reference/Development owner.
-
-This documentation move runs no bootstrap, dependency installation, tests, generators or remote writes.
 
 ## Repository Baseline To Review
 
