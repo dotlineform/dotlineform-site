@@ -14,16 +14,16 @@ Create a short, definitive guide in `documentation/guide/` with one entry page a
 
 ## Where To Resume
 
-**Completed this batch.** Reviewed chapters 1 and 4 against the workspace and route config, discovery and Publish owners, and Pages workflow. Linked the guide from the repository README, Dev Home, Docs Viewer and Site. Updated Source Tree Ownership and corrected the discovery and Publish follow-through in Docs Viewer Runtime. Recorded the overview consolidations in the [working triage inventory](Site_Workflow_Guide_Triage.md#entry-points).
+**Completed this batch.** Wrote and reviewed chapter 2, [Author and organise documents](../../guide/Author_And_Organise_Documents.md). Retired Docs Viewer Overview and Site Overview after checking links, document IDs and parent references. Recorded their maintained replacements in the [working triage inventory](Site_Workflow_Guide_Triage.md#entry-points).
 
-**Next visit.** Draft chapter 2 from the current Working authoring, collection, Book and media owners. Check which existing references it should link and which duplicate instructions it can replace. Retire the consolidated Docs Viewer Overview and Site Overview once their remaining inventory references and any path, document ID or parent dependencies have been reconciled.
+**Next visit.** Draft chapter 3 from the Studio Catalogue editor, Refresh and Regenerate owners. Follow a Work and a shared definition change through preparation to the publication queue. Use the chapter to identify which older Catalogue operating guides still have a distinct purpose.
 
 ## Contents And Progress
 
 | Chapter | Covers | Chapter status | Cleanup to track |
 | --- | --- | --- | --- |
-| 1. [How the site fits together](../../guide/How_The_Site_Fits_Together.md) | The public site, Studio, Docs Viewer, and their sources and projections. | Done | Entry points and Source Tree Ownership updated. Docs Viewer Overview and Site Overview consolidated, with file retirement pending. |
-| 2. Author and organise documents | Working, collections, Books, media, links and exact document generation. | Queued | Review overlapping source, media and authoring guides. |
+| 1. [How the site fits together](../../guide/How_The_Site_Fits_Together.md) | The public site, Studio, Docs Viewer, and their sources and projections. | Done | Entry points and Source Tree Ownership updated. Docs Viewer Overview and Site Overview consolidated and retired. |
+| 2. [Author and organise documents](../../guide/Author_And_Organise_Documents.md) | Working, collections, Books, media, links and exact document generation. | Done | Linked specialist references and corrected the media guide's Delete instruction. Older authoring references still need triage. |
 | 3. Maintain the Catalogue | Works, Series, Galleries and Save → Refresh → Regenerate. | Queued | Review overlapping Catalogue guides and historical authoring instructions. |
 | 4. [Publish and deploy](../../guide/Publish_And_Deploy.md) | What Working prepares, what Publish transfers, and when GitHub Pages changes. | Done | Runtime guidance corrected. Review the older publication references for consolidation. |
 | 5. Find and read things | Index, Search, Recent, Catalogue browsing and Media View. | Queued | Review old scope, search and navigation guidance against current reader workflows. |

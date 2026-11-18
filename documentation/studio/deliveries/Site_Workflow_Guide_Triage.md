@@ -28,9 +28,9 @@ The present model has one configured Docs workspace. Working owns source, genera
 
 Drift found in the 17 November scan. See the entry-point rows below for the current disposition.
 
-- Dev Home locates Studio Markdown in the retired repository scope tree. Docs Viewer and its Overview send readers to scope CRUD and a configuration file absent from the current checkout. The existing entry points are valuable because they route readers into the library. [Dev Home](../Dev_Home.md) · [Docs Viewer](../Docs_Viewer.md) · [Docs Viewer Overview](../Docs_Viewer_Overview.md)
+- Dev Home located Studio Markdown in the retired repository scope tree. Docs Viewer and its former Overview sent readers to obsolete scope operations and configuration. [Dev Home](../Dev_Home.md) · [Docs Viewer](../Docs_Viewer.md)
 - Source Tree Ownership still describes an external Published snapshot and Deploy Repo. Parts of Docs Viewer Runtime accurately describe the reader, but its Publish row still calls for an automatic Recent refresh. The current Recent contract gives discovery its own explicit refresh/build and gives Publish only queued bytes. [Source Tree Ownership](../Source_Tree_Ownership.md) · [Docs Viewer Runtime](../Docs_Viewer_Runtime.md) · [Generated Data Contracts](../Generated_Data_Contracts.md)
-- Site Overview mixes the active root Docs Viewer with routes from the frozen Catalogue. Catalogue Search Policy belongs with the old site, whose policy file is now under `site/archive/`. Keep an accurate archive reference so historical routing remains legible. [Site Overview](../Site_Overview.md) · [Catalogue Archive](../Catalogue_Archive.md) · [policy.json](../../../site/archive/assets/data/search/policy.json)
+- The former Site Overview mixed the active root Docs Viewer with routes from the frozen Catalogue. The archived Catalogue retains its search policy beneath `site/archive/`. [Site](../Site.md) · [Catalogue Archive](../Catalogue_Archive.md) · [policy.json](../../../site/archive/assets/data/search/policy.json)
 
 ## Using This Inventory
 
@@ -58,8 +58,8 @@ The **First pass** markers in Delete candidates identify the 13 clear retirement
 | [Catalogue_Works.md](../Catalogue_Works.md) | 8 / 0 | Keep as the focused reference for catalogue works. |
 | [Development_Checklist.md](../Development_Checklist.md) | 17 / 0 | Repository implementation guardrails. |
 | [Development_Workflow.md](../Development_Workflow.md) | 5 / 0 | Development lifecycle and delivery workflow. |
-| [Docs_Images_And_Assets.md](../Docs_Images_And_Assets.md) | 2 / 0 | Document image and download authoring. |
-| [Docs_Import.md](../Docs_Import.md) | 7 / 2 | Reader-facing collection import and return handoff. |
+| [Docs_Images_And_Assets.md](../Docs_Images_And_Assets.md) | 2 / 0 | Retain the native image and download procedure. Corrected its Delete instruction with chapter 2. The existing-media examples still need review for retired scope paths. |
+| [Docs_Import.md](../Docs_Import.md) | 7 / 2 | Retain collection import and the return handoff. Reconcile the older `publishable` discussion with the current Draft and Working eligibility rules. |
 | [Docs_Search_Index.md](../Docs_Search_Index.md) | 8 / 0 | Search artifact format and eligibility. |
 | [Docs_Search_Tokenizer.md](../Docs_Search_Tokenizer.md) | 2 / 0 | Search term normalization. |
 | [Docs_Viewer_Search.md](../Docs_Viewer_Search.md) | 8 / 2 | Current Search and Recent behavior. |
@@ -111,10 +111,10 @@ Repair the reader’s route to maintained owners. Check all scope, storage, depl
 | --- | ---: | --- |
 | [Dev_Home.md](../Dev_Home.md) | 0 / 9 | Retained and updated. Routes readers to the workflow guide, names the current Studio documentation root and keeps the development references. |
 | [Docs_Viewer.md](../Docs_Viewer.md) | 5 / 49 | Retained and updated as the task and reference entry point. Its opening now carries the three-surface overview and links to the guide and Runtime. |
-| [Docs_Viewer_Overview.md](../Docs_Viewer_Overview.md) | 2 / 0 | Consolidated into Docs Viewer for orientation and Runtime for boot, routes and service authority. Docs Review retains the package workflow. Redirected the Docs Viewer and Development Checklist links. File retirement pending. |
+| `Docs_Viewer_Overview.md` | 2 / 0 | Retired after checking repository and Working source paths, document IDs and parent references. [Docs Viewer](../Docs_Viewer.md) covers orientation, [Runtime](../Docs_Viewer_Runtime.md) covers route authority and [Docs Review](../Docs_Review.md) covers the package workflow. |
 | [Docs_Viewer_Runtime.md](../Docs_Viewer_Runtime.md) | 40 / 5 | Retained. Corrected the explicit discovery and Publish completion rows and removed the retired full-rebuild and Settings guidance from that section. |
 | [Site.md](../Site.md) | 2 / 6 | Retained and updated. Routes to the active root reader, the publication guide and the separately identified frozen Catalogue references. |
-| [Site_Overview.md](../Site_Overview.md) | 1 / 0 | Consolidated. Site and the guide cover the active entry and release flow, Site Shell Runtime covers shell ownership, and Catalogue Archive and its references cover the old routes. Redirected the Site link. File retirement pending. |
+| `Site_Overview.md` | 1 / 0 | Retired after checking repository and Working source paths, document IDs and parent references. [Site](../Site.md) and the guide cover the active site and release, [Site Shell Runtime](../Site_Shell_Runtime.md) covers shell ownership, and [Catalogue Archive](../Catalogue_Archive.md) covers the old routes. |
 | [Source_Tree_Ownership.md](../Source_Tree_Ownership.md) | 9 / 0 | Retained as the directory and cross-project ownership reference. Updated Working and Preview storage, direct publication destinations and the native app boundary. The workflow guide carries the release sequence. |
 | [Studio.md](../Studio.md) | 2 / 19 | Check the studio guidance against the owning implementation or current plan. |
 | [Studio_Overview.md](../Studio_Overview.md) | 2 / 0 | A front door still includes former Detail authoring and draft/status capabilities. Compare the exact Studio route registry. |

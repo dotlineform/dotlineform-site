@@ -5,7 +5,7 @@ This guide explains how the Dotlineform site is edited, built and released. It i
 ## Contents
 
 1. [How the site fits together](How_The_Site_Fits_Together.md) — the public website, the local apps and the source of each kind of data.
-2. **Author and organise documents** *(planned)* — Working, collections, Books, media and links.
+2. [Author and organise documents](Author_And_Organise_Documents.md) — Working, collections, Books, media and links.
 3. **Maintain the Catalogue** *(planned)* — Works, Series, Galleries, and Save → Refresh → Regenerate.
 4. [Publish and deploy](Publish_And_Deploy.md) — prepare changes, publish them to the configured destinations and release the static site.
 5. **Find and read things** *(planned)* — the Index, Search, Recent, Catalogue browsing and Media View.

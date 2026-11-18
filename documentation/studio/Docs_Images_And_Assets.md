@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-155039-e36925
 title: Docs Images And Assets
 added_date: 2026-04-23 15:50:39
-last_updated: "2026-10-16"
+last_updated: "2026-11-18"
 summary: Link existing media, add native-selected images and downloads to an active document, or embed self-contained visuals.
 parent_id: d-20260424-000000-50b63f
 
@@ -102,7 +102,7 @@ For a diagram, export SVG from its external authoring tool and use Add Image. Re
 
 Save sanitizes SVG automatically and reports changes as a nonblocking note. Invalid SVG or processing failure stops Save. Preparation errors make no permanent writes; later persistence failures identify the failed phase and completed effects. Partial media writes can leave orphans for manual cleanup, and saved source is reported accurately if generation subsequently fails.
 
-After document ownership has been recorded by generation, removing the last saved reference to an owned body file selects its exact Working file for deletion and queues its Preview/public removal. Clearing `thumbnail` selects the independent fixed thumbnail; removing a body image alone preserves it. Draft/exclusion alone preserves media, and deleting a whole document still leaves its remaining media for manual cleanup. Publish applies queued removals immediately, including R2; the next manual Pages deployment may happen later. Existing flat body-media files remain until optional manual cleanup after the separately authorised migration. [Media And Asset Handling](Media_And_Asset_Handling.md#saved-ownership-and-exact-removals) owns the precise boundary and current evidence limits.
+After document ownership has been recorded by generation, removing the last saved reference to an owned body file selects its exact Working file for deletion and queues its Preview/public removal. Clearing `thumbnail` selects the independent fixed thumbnail. Removing a body image alone preserves the thumbnail. Draft or exclusion preserves media. Confirmed document Delete selects its owned media folders and fixed thumbnail for Working removal and queues their Preview/public removal. Flat legacy files and other documents' media remain outside that selection. Publish applies queued removals, including R2, before the separate manual Pages deployment. [Saved ownership and exact removals](Media_And_Asset_Handling.md#saved-ownership-and-exact-removals) · [Document Delete media cleanup](Media_And_Asset_Handling.md#document-delete-media-cleanup)
 
 Markdown package imports are different: one Markdown source becomes one document, package images are converted to readable WebP outputs, and supported attachments are copied and linked. HTML and Markdown imports can also extract raster data URLs written as Markdown images. [Docs Import](Docs_Import.md) owns those operator workflows.
 
