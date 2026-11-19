@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Mapping
 from dataclasses import dataclass
 import json
 import mimetypes
@@ -178,7 +179,7 @@ def parse_site_env(path: Path) -> dict[str, str]:
     return values
 
 
-def env_bool(values: dict[str, str], name: str, default: bool) -> bool:
+def env_bool(values: Mapping[str, str], name: str, default: bool) -> bool:
     value = values.get(name)
     if value is None:
         return default
@@ -202,14 +203,14 @@ def service_defaults(repo_root: Path) -> dict[str, bool]:
 
 def load_service_config(
     repo_root: Path,
-    environ: dict[str, str] | None = None,
+    environ: Mapping[str, str] | None = None,
     *,
     host_override: str | None = None,
     port_override: int | None = None,
     base_url_override: str | None = None,
 ) -> DocsViewerServiceConfig:
-    env = dict(parse_site_env(repo_root / SITE_ENV_REL_PATH))
-    env.update(os.environ if environ is None else environ)
+    """Resolve service settings from the startup environment and binding overrides."""
+    env = os.environ if environ is None else environ
     defaults = service_defaults(repo_root)
     host = str(host_override or env.get("DOCS_VIEWER_HOST") or "127.0.0.1").strip()
     try:
@@ -874,13 +875,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
+        for name, value in parse_site_env(REPO_ROOT / SITE_ENV_REL_PATH).items():
+            os.environ.setdefault(name, value)
         config = load_service_config(
             REPO_ROOT,
             host_override=args.host,
             port_override=args.port,
             base_url_override=args.base_url,
         )
-    except ValueError as error:
+    except (OSError, ValueError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 1
 

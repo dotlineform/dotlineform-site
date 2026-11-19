@@ -65,13 +65,10 @@ Unavailable external storage fails visibly without creating a replacement root. 
 Run project commands from the repository root:
 
 ```bash
-set -a
-. ./.env.local
-set +a
 docs-viewer/bin/docs-viewer
 ```
 
-Exporting the file supplies workspace roots to the process. The service reads its binding and capability settings and serves Manage at `/docs/` and enabled package review at `/docs-review/`. Docs Review reads validated package content, and applying returned content belongs to an explicit Import operation. Local API targets contain an exact `doc_id` and, for a named owner, `collection`. The service resolves Working. Public `/` uses static repository output. Use `bin/local-studio` for Studio and `bin/site-preview` for the public artifact. [Environment and local recovery](../documentation/reference/Local_Setup.md)
+Service startup fills missing workspace, binding and capability settings from `.env.local`. Docs Viewer serves Manage at `/docs/` and enabled package review at `/docs-review/`. Docs Review reads validated package content, and applying returned content belongs to an explicit Import operation. Local API targets contain an exact `doc_id` and, for a named owner, `collection`. The service resolves Working. Public `/` uses static repository output. Use `bin/local-studio` for Studio and `bin/site-preview` for the public artifact. [Environment and local recovery](../documentation/reference/Local_Setup.md)
 
 ## Authoring and builds
 

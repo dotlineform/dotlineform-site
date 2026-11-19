@@ -37,16 +37,13 @@ Keep machine-specific roots, runner flags and credentials in gitignored `.env.lo
 
 Under the Projects root, the site uses `dotlineform-site/catalogue/media-staging/`, `dotlineform-site/data-sharing/` and `dotlineform-site/docs-export/`. Studio looks for original media under the Projects root's separate `projects/` and `processing/` directories. Select files from the Library inbox with the native picker for single-file imports. [Catalogue media configuration](Catalogue_Media_Pipeline_Config.md) · [Docs Import](Docs_Import.md)
 
-The shell runners for Studio, public preview and `local-all` source `.env.local` and export it to their children. The standalone Docs runner selects Python and launches its service. That service reads `.env.local` for binding and capability settings, but the workspace loader reads process environment. Export the local file before starting Docs on its own.
+The shell runners for Studio, public preview and `local-all` source `.env.local` and export it to their children. At startup, the Docs service fills missing process variables from `.env.local` for its workspace, binding and capability settings. To start Docs Viewer on its own, run its launcher from the repository root.
 
 ```bash
-set -a
-. ./.env.local
-set +a
 docs-viewer/bin/docs-viewer
 ```
 
-The Docs service applies inherited settings over its parsed local file and explicit `--host`, `--port` and `--base-url` over those. Builder bootstrap overlays the local file on inherited settings, then applies supported explicit workspace arguments. Keep shared settings consistent across these entrypoints. Local file values are simple bindings, and secrets stay server-side. [Service configuration](../../docs-viewer/services/docs_viewer_service.py) · [Builder bootstrap](../../docs-viewer/build/docs_builder/runtime_bootstrap.py)
+The Docs service uses explicit `--host`, `--port` and `--base-url` flags for their respective settings, then inherited process values, then `.env.local`. Builder bootstrap overlays the local file on inherited settings, then applies supported explicit workspace arguments. Keep shared settings consistent across these entrypoints. Local file values are simple bindings, and secrets stay server-side. [Service configuration](../../docs-viewer/services/docs_viewer_service.py) · [Builder bootstrap](../../docs-viewer/build/docs_builder/runtime_bootstrap.py)
 
 Set `DOCS_VIEWER_MANAGEMENT_ENABLED=1` for Manage authoring and `DOCS_VIEWER_REVIEW_ENABLED=1` for Review. Their checked defaults are false. Generated reads default true through `DOCS_VIEWER_GENERATED_READS_ENABLED`. `local-all` defaults Review on. Restart after changing process settings. [Runner overrides](Local_Runners.md#configuration)
 
@@ -79,7 +76,7 @@ Shared/public Docs code and styles are maintained under `docs-viewer/` and copie
 | Symptom | Check and recovery |
 | --- | --- |
 | Runner cannot bind or integrated startup stops | Read the named child and error. Stop an owned conflicting instance or choose a free configured port. Keep Studio's Docs link base, Docs' own binding/base URL and preview cross-links aligned. Start only the needed runners while isolating a failure. [Supervision](Local_Runners.md#all-services-runner). |
-| Docs says the workspace is unavailable | Check the selected root, mount and permissions. For standalone startup, export the environment above. Restore the intended existing storage and restart. Workspace loading cannot initialize or reconstruct missing source. |
+| Docs says the workspace is unavailable | Check `DOTLINEFORM_DOCS_BASE_DIR` in the launch environment and `.env.local`, then check the selected root, mount and permissions. Restore the intended existing storage and restart. |
 | Manage controls or a local operation are unavailable | Check health flags, capabilities, the served route registry and the exact action restriction. Enable the intended process flag, restore the required input or use the owning action, then restart/reload as needed. [Availability trace](Configuration_And_Extension_Points.md#how-a-workflow-becomes-available). |
 | Browser requests the wrong collection, default or media destination | Correct the owning workspace or route record and repeat its projection. Inspect both canonical browser files and the public site copy. A missing public default is diagnosed by `bin/site-validate`. [Default walkthrough](../guide/Change_The_System_Safely.md). |
 | Correct local code still looks old in Public | Check the canonical/public projection and browser cache, reload, and check the deployed revision when testing production. [Public projection](Runtime_Module_Ownership.md#public-deployment-projection). |

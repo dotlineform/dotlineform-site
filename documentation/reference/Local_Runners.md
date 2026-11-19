@@ -15,7 +15,7 @@ parent_id: d-20260413-000000-d314b7
 | Command | Starts |
 | --- | --- |
 | `bin/local-studio` | Studio Catalogue authoring and its local APIs. |
-| `docs-viewer/bin/docs-viewer` | Docs Viewer with generated reads and separately enabled Manage/Review. Export its environment for standalone startup. |
+| `docs-viewer/bin/docs-viewer` | Docs Viewer with generated reads and separately enabled Manage/Review. Service startup fills missing settings from `.env.local`. |
 | `bin/site-preview` | The static `site/` preview after validation. |
 | `bin/local-all` | The sibling services under one supervisor. |
 
