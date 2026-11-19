@@ -204,7 +204,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         try:
             report = run_docs_staged_media_publish(
                 repo_root,
-                collection=args.docs_collection or "",
+                collection=args.docs_collection,
                 doc_id=args.docs_doc_id,
                 media_class=args.kind,
                 staged_filename=args.staged_filename,

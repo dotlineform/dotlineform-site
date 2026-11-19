@@ -311,7 +311,7 @@ def docs_publish_report(
 def run_docs_staged_media_publish(
     repo_root: Path,
     *,
-    collection: str = "",
+    collection: str | None = None,
     doc_id: str,
     media_class: str,
     staged_filename: str,
@@ -324,7 +324,10 @@ def run_docs_staged_media_publish(
     normalized_filename = validate_media_filename(staged_filename)
     from docs_management_document_target import resolve_managed_document_target
 
-    target = resolve_managed_document_target(repo_root, {"collection": collection, "doc_id": doc_id})
+    request_target = {"doc_id": doc_id}
+    if collection is not None:
+        request_target["collection"] = collection
+    target = resolve_managed_document_target(repo_root, request_target)
     config = target.document_config
     workspace = configured_workspace_paths(repo_root)
     source_path = (workspace.import_staging / normalized_filename).resolve()
@@ -345,7 +348,7 @@ def run_docs_staged_media_publish(
         env_files=env_files,
         environ=environ,
     )
-    return docs_publish_report(collection=collection, results=results, write=write, force=force)
+    return docs_publish_report(collection=target.collection, results=results, write=write, force=force)
 
 
 def local_media_config(config: DocsStageConfig | DocsCollectionConfig, media_class: str) -> DocsManagedMediaConfig:

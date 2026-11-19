@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260508-093841-3e27b1
 title: Publish Media To R2
 added_date: "2026-05-08 09:38:41"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -40,15 +40,14 @@ Explicit `--delete` requires `--kind works --id <id>`; it HEADs deterministic co
 
 The Docs branch accepts `--kind img|files`, exact `--docs-doc-id`, one direct-child `--staged-filename` and optional `--docs-collection`. [The staged owner](../../docs-viewer/services/docs_media_storage.py) resolves the existing source target and configured import staging, then prepares `<doc_id>/<filename>` through the local media adapter. Its staging root is configured by the package workspace beneath the Projects base.
 
-Use the [exported workspace environment](Local_Setup.md#environment) for this branch. For a configured named collection:
+Omit `--docs-collection` for an ordinary document. Supply the configured collection ID for a named collection. Run either command with the exported workspace environment. [Environment setup](Local_Setup.md#environment)
 
 ```bash
+python3 studio/services/media/publish_media_to_r2.py --scope docs --docs-doc-id <doc-id> --kind files --staged-filename document.pdf
 python3 studio/services/media/publish_media_to_r2.py --scope docs --docs-collection <collection> --docs-doc-id <doc-id> --kind files --staged-filename document.pdf
 ```
 
 `--write` applies the local file change; differing local bytes require `--force`. It authors no link, creates no publication selection and sends nothing to R2. Ordinary Source Save and Import retain the normal linked-media workflow. This CLI has no Docs remote deletion or batch mode.
-
-**Current gap:** omitting `--docs-collection` passes an empty collection field to the exact-target resolver, which rejects it. The ordinary-document example in the older guidance therefore does not work as written. The tracker records this code follow-up and the CLI's missing media-effect/queue integration; source inspection has not exercised either path. [Current media ownership](Media_And_Asset_Handling.md#saved-ownership-and-exact-removals)
 
 ## Credentials, Reports And Verification
 
@@ -56,4 +55,4 @@ Catalogue CLI credentials come from `.env.local`, optional `--env-file` inputs a
 
 Results print to stdout. `--report-json <path>` deliberately writes a report, including during dry-run; no report file is written by default. Exact supported flags/statuses remain code-owned. The module's R2 client is live through normal publication adapters; retaining or changing the CLI requires tracing those consumers independently.
 
-This review inspected current source and callers only. It performed no CLI execution, remote HEAD/list/upload/delete, credentials check or publication. Existing publisher tests contain retired Details/version-promotion and Docs-scope expectations; their review is separately tracked.
+Dry runs using temporary staging verified target resolution and local media planning for an ordinary document and a Concepts document. Catalogue maintenance was reviewed through source and callers.
