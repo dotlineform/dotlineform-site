@@ -192,8 +192,8 @@ child_is_running() {
   local running_pids
 
   running_pids="$(jobs -pr)"
-  case " $running_pids " in
-    *" $pid "*)
+  case $'\n'"$running_pids"$'\n' in
+    *$'\n'"$pid"$'\n'*)
       return 0
       ;;
     *)
@@ -247,7 +247,9 @@ echo
 if [ "$SITE_ENABLED" != "0" ]; then
   start_child "Public site preview" "$ROOT_DIR/bin/site-preview"
 fi
-start_child "Local Studio runner" "$ROOT_DIR/bin/local-studio"
+if [ "$STUDIO_APP_ENABLED" != "0" ]; then
+  start_child "Local Studio runner" "$ROOT_DIR/bin/local-studio"
+fi
 start_child "Docs Viewer" "$ROOT_DIR/docs-viewer/bin/docs-viewer"
 
 while true; do

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-174736-9bd0fc
 title: Local Runners
 added_date: "2026-04-22 17:47:36"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: d-20260413-000000-d314b7
 
 ---
@@ -34,9 +34,7 @@ Each service owns its pages and APIs. Studio links can point to the Docs reader 
 
 ## All-Services Runner
 
-`bin/local-all` sources the local environment, checks configured enabled bindings for conflicts, then starts preview, Studio and Docs in that order. A child exit stops the other children and returns failure, including an unexpected clean exit. Ctrl+C stops the supervised session. Review defaults on in the supervisor.
-
-The current implementation always starts the Studio runner, even when `STUDIO_APP_ENABLED=0`. That child exits immediately and the supervisor then stops its siblings. Until the logged code follow-up is settled, use the individual preview and Docs runners for a session without Studio. [Supervisor source](../../bin/local-all) · [Follow-up tracker](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+`bin/local-all` sources the local environment, checks enabled bindings for conflicts, then starts preview, Studio and Docs in that order. `SITE_ENABLED=0` skips preview and `STUDIO_APP_ENABLED=0` skips Studio. Docs Viewer starts in either case. A child exit stops the other children and returns failure, including an unexpected clean exit. Ctrl+C stops the supervised session. Review defaults on in the supervisor. [Supervisor source](../../bin/local-all)
 
 ## Configuration
 
