@@ -58,69 +58,6 @@ function setStatus(node, state, message) {
   else node.removeAttribute("data-state");
 }
 
-function applyRouteDetail(root, detail = {}) {
-  if (!root) return;
-  if (Object.prototype.hasOwnProperty.call(detail, "route")) {
-    root.dataset.studioRoute = normalizeText(detail.route);
-  }
-  if (Object.prototype.hasOwnProperty.call(detail, "mode")) {
-    root.dataset.studioMode = normalizeText(detail.mode);
-  }
-  if (Object.prototype.hasOwnProperty.call(detail, "service")) {
-    root.dataset.studioService = normalizeText(detail.service);
-  }
-  if (Object.prototype.hasOwnProperty.call(detail, "recordLoaded")) {
-    root.dataset.studioRecordLoaded = detail.recordLoaded ? "true" : "false";
-  }
-}
-
-function initializeRouteState(root) {
-  if (!root) return;
-  applyRouteDetail(root, { route: "docs-import" });
-  root.dataset.studioReady = "false";
-  root.dataset.studioBusy = "false";
-}
-
-function routeModeForState(state) {
-  const collectionMode = state.collectionController && state.collectionController.mode();
-  if (collectionMode && collectionMode !== "idle") return collectionMode;
-  if (state.resultNode && !state.resultNode.hidden) return "result";
-  if (state.warningNode && !state.warningNode.hidden) return "confirm";
-  return "idle";
-}
-
-function routeStateDetail(state) {
-  return {
-    route: "docs-import",
-    mode: routeModeForState(state),
-    service: state.serviceAvailable ? "available" : "unavailable",
-    recordLoaded: Boolean(state.candidates.length)
-  };
-}
-
-function syncRouteBusyState(state) {
-  if (!state.root) return;
-  applyRouteDetail(state.root, routeStateDetail(state));
-  state.root.dataset.studioBusy = state.isRunning ? "true" : "false";
-}
-
-function markRouteReady(state, ready) {
-  if (!state.root) return;
-  applyRouteDetail(state.root, routeStateDetail(state));
-  state.root.dataset.studioReady = ready ? "true" : "false";
-  state.root.dispatchEvent(new CustomEvent("studio:ready", {
-    bubbles: true,
-    detail: {
-      ready: Boolean(ready),
-      busy: state.root.dataset.studioBusy === "true",
-      route: state.root.dataset.studioRoute || "",
-      mode: state.root.dataset.studioMode || "",
-      service: state.root.dataset.studioService || "",
-      recordLoaded: state.root.dataset.studioRecordLoaded === "true"
-    }
-  }));
-}
-
 function managementOptionsForState(state) {
   return docsHtmlImportManagementOptions({
     managementBaseUrl: state.managementBaseUrl
@@ -239,7 +176,6 @@ function selectCandidateFilename(state, filename, options = {}) {
   resetImportView(state);
   state.collectionController.reset({ active: false });
   syncImportInputControls(state);
-  markRouteReady(state, true);
 }
 
 function syncImportInputControls(state) {
@@ -298,7 +234,6 @@ function renderCandidateList(state, candidates) {
   if (!state.candidates.length) {
     setStatus(state.statusNode, "warn", "No supported staged documents or reviewed packages found in the shared import drop-zone.");
   }
-  markRouteReady(state, true);
 }
 
 function setImportDestination(state, destination, options = {}) {
@@ -340,7 +275,6 @@ function refreshSourceDirectory(state, sourceDirectory) {
         "error",
         normalizeText(error && error.message) || "Failed to load staged documents."
       );
-      markRouteReady(state, true);
       return state.candidates;
     })
     .finally(() => {
@@ -390,7 +324,6 @@ async function runReview(state) {
   }
   state.isRunning = true;
   syncImportInputControls(state);
-  syncRouteBusyState(state);
   state.onBusyChange(true);
   setStatus(state.statusNode, "", "");
   try {
@@ -418,7 +351,6 @@ async function runReview(state) {
   } finally {
     state.isRunning = false;
     syncImportInputControls(state);
-    syncRouteBusyState(state);
     state.onBusyChange(false);
   }
 }
@@ -452,7 +384,6 @@ async function runImport(state) {
     managementBaseUrl: state.managementBaseUrl,
     onRunningChange: (busy) => {
       syncImportInputControls(state);
-      syncRouteBusyState(state);
       state.onBusyChange(busy);
     },
     onCommittedResult: state.onCommittedResult,
@@ -554,11 +485,9 @@ export async function initDocsHtmlImport(options = {}) {
   if (!bootStatus || !root) return;
   if (root.dataset.docsImportInitialized === "true") return;
   root.dataset.docsImportInitialized = "true";
-  initializeRouteState(root);
 
   const state = {
     bootStatus,
-    root,
     candidateList: document.getElementById("docsHtmlImportCandidateList"),
     candidateNoteNode: document.getElementById("docsHtmlImportCandidateNote"),
     sourceDirectoryNode: document.getElementById("docsHtmlImportSourceDirectory"),
@@ -620,7 +549,6 @@ export async function initDocsHtmlImport(options = {}) {
     onBusyChange: (busy) => {
       state.isRunning = busy;
       syncImportInputControls(state);
-      syncRouteBusyState(state);
       state.onBusyChange(busy);
     }
   });
@@ -684,7 +612,6 @@ export async function initDocsHtmlImport(options = {}) {
     if (!state.serviceAvailable) {
       syncImportInputControls(state);
       setStatus(state.statusNode, "error", DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE);
-      markRouteReady(state, true);
       return importApp;
     }
 
@@ -715,7 +642,6 @@ export async function initDocsHtmlImport(options = {}) {
         normalizeText(error && error.message) || "Failed to load staged documents."
       );
       syncImportInputControls(state);
-      markRouteReady(state, true);
     }
     return importApp;
   } catch (error) {
@@ -724,7 +650,6 @@ export async function initDocsHtmlImport(options = {}) {
     setStatus(bootStatus, "error", "Failed to load staged documents.");
     root.hidden = false;
     state.serviceAvailable = false;
-    markRouteReady(state, true);
     delete root.dataset.docsImportInitialized;
     throw error;
   }

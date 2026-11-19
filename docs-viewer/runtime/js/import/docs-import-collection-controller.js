@@ -355,7 +355,6 @@ export function createDocsImportCollectionController(options = {}) {
   }
 
   return {
-    mode: () => state.active ? state.phase : "idle",
     preview,
     confirmApply,
     retryTerminalProjection,

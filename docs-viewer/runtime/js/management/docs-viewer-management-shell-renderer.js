@@ -27,7 +27,7 @@ var MANAGEMENT_SHELL_MARKUP = [
   '      </div>',
   '    </div>',
   '    <div class="docsViewer__importBody" id="docsViewerImportBody">',
-  '      <div class="docsViewerImport" id="docsHtmlImportRoot" hidden data-studio-ready="false" data-studio-busy="false">',
+  '      <div class="docsViewerImport" id="docsHtmlImportRoot" hidden>',
   '        <div class="docsViewerImport__panel">',
   '          <div class="docsViewerImport__scrollRegion">',
   '            <div class="docsViewerImport__controls">',

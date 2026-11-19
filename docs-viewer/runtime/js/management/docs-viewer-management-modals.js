@@ -19,6 +19,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
   var importModalCancelButton = null;
+  var importBusy = false;
   var importLifecycle = null;
   var importRestoreFocusTarget = null;
   var importEntryFocusTarget = null;
@@ -65,14 +66,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     return importModalCancelButton;
   }
 
-  function importModalBusy() {
-    var cancelButton = ensureImportModalCancelButton();
-    return Boolean(
-      refs.importRoot
-      && refs.importRoot.dataset.studioBusy === "true"
-    ) || Boolean(cancelButton && cancelButton.disabled);
-  }
-
   function importNestedCancelControl() {
     if (!refs.importModal) return null;
     return Array.from(refs.importModal.querySelectorAll([
@@ -88,7 +81,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       nestedCancel.click();
       return true;
     }
-    if (!importModalBusy()) return false;
+    if (!importBusy) return false;
     event.preventDefault();
     return true;
   }
@@ -257,9 +250,10 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function projectImportBusy(busy) {
+    importBusy = busy;
     var cancelButton = ensureImportModalCancelButton();
-    if (cancelButton) cancelButton.disabled = Boolean(busy);
-    if (!busy && cancelButton && cancelButton.textContent === "Close") {
+    if (cancelButton) cancelButton.disabled = importBusy;
+    if (!importBusy && cancelButton && cancelButton.textContent === "Close") {
       focusImportModalEntry();
     }
   }
@@ -269,7 +263,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     var runButton = document.getElementById("docsHtmlImportRun");
     if (runButton) runButton.hidden = false;
     if (cancelButton) {
-      cancelButton.disabled = false;
+      cancelButton.disabled = importBusy;
       cancelButton.textContent = "Cancel";
     }
   }
@@ -414,7 +408,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function closeImportModal() {
-    if (!refs.importModal || importModalBusy()) return false;
+    if (!refs.importModal || importBusy) return false;
     if (importLifecycle) importLifecycle.close();
     refs.importModal.hidden = true;
     return true;

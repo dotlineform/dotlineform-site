@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260625-162242-b0b6c7
 title: Route Ready State
 added_date: "2026-06-25 16:22:42"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -28,6 +28,6 @@ Read root attributes when waiting for readiness; a listener attached after boot 
 
 ## Nested Import And Verification
 
-The nested Docs Import controller still emits Studio-prefixed attributes/events. This is an existing cross-app naming seam; do not use it as a pattern for a new route root.
+**Import docs** is a dialog within the Manage route. Import reports its operation busy state through a callback to Manage, which uses that state to disable Cancel and guard dialog dismissal. [Import controller](../../docs-viewer/runtime/js/import/docs-html-import.js) · [Modal owner](../../docs-viewer/runtime/js/management/docs-viewer-management-modals.js)
 
 Review the actual route template for one owning root and initially false attributes. Use the owning route to observe boot and operation completion when those behaviours change. Static markup establishes the initial state. [Verification](../development/Verification.md) · [Former route audit](../deliveries/Route_Ready_State_Audit.md)
