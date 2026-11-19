@@ -23,10 +23,6 @@ from docs_artifact_locations import (
 )
 from docs_document_identity import is_immutable_doc_id
 from docs_icon_assets import icon_asset_path
-from docs_collection_customisations import (
-    DocsCollectionCustomisationConfig,
-    normalize_docs_collection_customisation,
-)
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
@@ -108,7 +104,6 @@ class DocsCollectionConfig:
     report_host_doc_id: str
     public_title: str
     supports_return_import: bool
-    collection_customisation: DocsCollectionCustomisationConfig | None
     stage: str
     source: DocsSourceConfig
     media: DocsMediaConfig | None
@@ -460,7 +455,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
     for index, raw_item in enumerate(raw):
         field = f"stages.{stage}.collections[{index}]"
         item = _object(raw_item, field=field, required={"collection", "document_media", "title", "icon", "report_host_doc_id"}, optional={
-            "public_title", "supports_return_import", "collection_customisation", "collection_type", "pin_starred_documents",
+            "public_title", "supports_return_import", "collection_type", "pin_starred_documents",
         })
         if stage == "preview":
             item = {**item, "supports_return_import": False}
@@ -498,7 +493,6 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
             collection=child, title=item["title"], icon=item["icon"], public_title=item.get("public_title", item["title"]),
             report_host_doc_id=_doc_id(item["report_host_doc_id"], field=f"{field}.report_host_doc_id"),
             supports_return_import=_boolean(item.get("supports_return_import", False), field=f"{field}.supports_return_import"),
-            collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
             stage=stage,
             source=DocsSourceConfig(source_root), generated=_generated(generated_root), preview=_preview(preview_root),
             media=_media(media_settings, assets=assets, stage=stage, collection=child) if owns_media else None,
