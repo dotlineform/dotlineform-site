@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -13,6 +13,10 @@ parent_id: d-20260424-000000-50b63f
 
 `DOTLINEFORM_DOCS_BASE_DIR` selects the Docs Viewer folder directly. It is independent of `DOTLINEFORM_PROJECTS_BASE_DIR`, which owns Catalogue, Processing, Data Sharing and other project workspaces. Both settings live in `.env.local`; neither is an alias or fallback for the other. To relocate Docs storage, stop services, move the complete Working and Preview trees to the explicitly selected root, change the setting, verify the resolved locations, and restart.
 
+## Source Version History
+
+The private `dotlineform/docs-viewer-data` repository versions `working/source/`, including ordinary and collection Markdown, source control JSON, and registered media build inputs. Its ignore rules exclude `working/assets/`, `working/generated/`, all of `preview/`, and the three Working update and publication queues. A clone recovers the versioned source. Keep a separate backup of the media and matching workspace state needed to resume local authoring and publication. [Data repository](https://github.com/dotlineform/docs-viewer-data) · [Workspace restore](Local_Setup.md#restore-the-docs-workspace)
+
 ## Storage And Roles
 
 ```text
@@ -20,6 +24,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
   working/
     catalogue-updates-pending.json
     catalogue-publish-pending.json
+    docs-publish-pending.json
     assets/works/{primary,thumbs,media/files}/
     assets/media/workspace/{img,thumbs,svg,files,html}/
     assets/media/collections/<collection>/{img,thumbs,svg,files,html}/

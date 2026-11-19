@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260413-000000-d314b7
 title: Local Setup
 added_date: 2026-04-13 00:00:00
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: ""
 
 ---
@@ -47,6 +47,12 @@ docs-viewer/bin/docs-viewer
 The Docs service applies inherited settings over its parsed local file and explicit `--host`, `--port` and `--base-url` over those. Builder bootstrap overlays the local file on inherited settings, then applies supported explicit workspace arguments. Keep shared settings consistent across these entrypoints. Local file values are simple bindings, and secrets stay server-side. [Service configuration](../../docs-viewer/services/docs_viewer_service.py) · [Builder bootstrap](../../docs-viewer/build/docs_builder/runtime_bootstrap.py)
 
 Set `DOCS_VIEWER_MANAGEMENT_ENABLED=1` for Manage authoring and `DOCS_VIEWER_REVIEW_ENABLED=1` for Review. Their checked defaults are false. Generated reads default true through `DOCS_VIEWER_GENERATED_READS_ENABLED`. `local-all` defaults Review on. Restart after changing process settings. [Runner overrides](Local_Runners.md#configuration)
+
+## Restore The Docs Workspace
+
+Clone the private `dotlineform/docs-viewer-data` repository into a separate folder. In the site checkout's `.env.local`, set `DOTLINEFORM_DOCS_BASE_DIR` to the absolute path of the data checkout itself. The checkout supplies `working/source/`. [Data repository](https://github.com/dotlineform/docs-viewer-data) · [Source version history](Source_Organisation.md#source-version-history)
+
+For a full workspace restore, bring back `working/assets/`, `working/generated/`, `preview/`, and the Working queue files from a matching workspace backup. Use Full Working Build when the restored document, Search, and Recent output needs refreshing. It requires ready media, the saved management tree and public membership, and the Docs publication queue. Catalogue Work output has its own Refresh and Regenerate workflow. [Full Working Build](Builder.md#working-rebuild) · [Catalogue workflow](Catalogue_Save_And_Refresh.md)
 
 ## Service Health And Capabilities
 
