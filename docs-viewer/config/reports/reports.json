@@ -16,7 +16,7 @@
     {
       "report_id": "workspace_links",
       "title": "Links",
-      "description": "Lists directed document links from the last Working Links rebuild.",
+      "description": "Shows saved directed document links. Refresh updates the report from current per-document Links records.",
       "loader_id": "workspace_links"
     },
     {
@@ -46,7 +46,7 @@
     {
       "report_id": "docs_media",
       "title": "Docs Media",
-      "description": "Lists each live ready-media and build-source file with its exact referencing documents.",
+      "description": "Working shows saved media files and their document references. R2 shows saved orphan findings. Refresh updates the active view.",
       "loader_id": "docs_media"
     },
     {
