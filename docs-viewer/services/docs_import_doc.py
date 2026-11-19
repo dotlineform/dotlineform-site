@@ -93,7 +93,10 @@ def import_doc(repo_root: Path, body: dict[str, Any], upload: ImportDocUpload) -
             staging_root=root, source_root=root, source_path=source_path,
             source_directory="", include_companion_assets=False,
         )
-        return {
-            "ok": True, "target": result["target"], "record": result["record"],
+        response = {
+            "ok": result["ok"], "target": result["target"], "record": result["record"],
             "warnings": result["import_preview"].get("warnings", []),
         }
+        if not response["ok"]:
+            response.update(source_saved=result["source_saved"], phase=result["phase"], error=result["error"])
+        return response

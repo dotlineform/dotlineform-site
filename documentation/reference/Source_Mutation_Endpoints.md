@@ -20,7 +20,7 @@ New supplies its title and exact ordinary placement or configured collection. Th
 
 ## `POST /docs/rebuild-document`
 
-Send the exact document target. Rebuild reads the saved Markdown once, checks identity, readiness and report structure, and supplies the parsed record to exact generation. It preserves source bytes and dates. The completed `target`, `record` and rebuild effects feed the management change owner. The reader awaits a fresh exact generated payload in the current route. Search and Recent retain their saved files. Use this after an external edit or to regenerate a saved source. [Rebuild owner](../../docs-viewer/services/docs_document_rebuild.py) · [Generation handoff](../../docs-viewer/services/docs_write_rebuild.py) · [Exact build](Builder.md#docs-build-flow)
+Send the exact document target. Rebuild reads the saved Markdown once, checks identity, readiness and report structure, and supplies the parsed record to exact generation. For a Book document it also reads the saved Book order so generation can project a placement already written by an import. It preserves source bytes and dates. The completed `target`, `record` and rebuild effects feed the management change owner. The reader awaits a fresh exact generated payload in the current route. Search and Recent retain their saved files. Use this after an external edit or to regenerate a saved source. [Rebuild owner](../../docs-viewer/services/docs_document_rebuild.py) · [Generation handoff](../../docs-viewer/services/docs_write_rebuild.py) · [Exact build](Builder.md#docs-build-flow)
 
 ## `POST /docs/set-draft`
 

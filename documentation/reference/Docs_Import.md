@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260424-000000-fc8b5d
 title: Docs Import
 added_date: "2026-04-24 00:00:00"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 summary: Import one native document or select Data Sharing sources and packages for a configured Docs Viewer collection.
 parent_id: d-20260424-000000-50b63f
 
@@ -19,7 +19,7 @@ In Docs Viewer Manage, open the destination collection. **Import doc…** takes 
 2. Check the filename and choose **Import**. The browser sends the selected bytes and the captured Concepts identity. A first Markdown H1 supplies the title. If there is no H1, a scalar `title` in valid Markdown front matter can supply it. Other incoming front matter is stripped and ignored with a warning. Malformed front matter blocks intake. Word uses the mapped Title style or a humanized filename. Native HTML includes recognized prompt/meta blocks. [Word mapping](HTML_Import_Mapping.md#word-style-mapping) · [HTML mapping](HTML_Import_Mapping.md)
 3. The service converts the file, allocates an immutable local `doc_id` and creation timestamp, and prepares supported embedded media under that ID. It validates the candidate, writes Working media and the new Draft source, then awaits exact generation. The returned identity opens that document. Its converted prose and supported media survive. The original file stays where it was, and the original ID, date, hierarchy, status and layout carry no authoring authority. Repeat imports create separate drafts. [Import media preparation](#import-media-preparation) · [Exact generation](Builder.md#exact-generation)
 
-After import, review the converted body and media in the new document. Set it ready when appropriate and use the normal Working publication flow. If the result says the document was imported but display failed, reopen the committed document. After a build error, check the configured source folder for the saved draft. The source write precedes generation, so it can already be there even if the collection list has yet to show it. If present, rebuild that exact ID. [Exact build command](Builder.md#exact-generation) · [Publish](../guide/Publish_And_Deploy.md)
+If generation fails after the media, draft source and any Book placement are saved, the modal names the saved draft and changes its primary action to **Rebuild**. Correct the reported issue and choose **Rebuild** to generate and open that same draft. **Close** leaves the saved ID and error in the Manage status. If generation succeeds and display fails, reopen the committed document. After import, review the converted body and media, then set the draft ready when appropriate. [Exact Rebuild](Source_Mutation_Endpoints.md#post-docsrebuild-document) · [Publish](../guide/Publish_And_Deploy.md)
 
 ## Choose The Source Folder
 
@@ -41,6 +41,6 @@ A staged ordinary document may bring a separate HTML companion marked `<meta nam
 
 ## Implementation Boundary
 
-- `POST /docs/import-doc` takes exactly two multipart fields, UTF-8 JSON `metadata` with `filename`, `collection` and optional `include_prompt_meta`, and one `document` byte part. The service requires a safe basename, bounds metadata and envelope overhead to 1 MiB each, and removes its request-local converter input after generation. Completion returns `target`, committed `record` and conversion `warnings`. [Native service](../../docs-viewer/services/docs_import_doc.py)
+- `POST /docs/import-doc` takes exactly two multipart fields, UTF-8 JSON `metadata` with `filename`, `collection` and optional `include_prompt_meta`, and one `document` byte part. The service requires a safe basename, bounds metadata and envelope overhead to 1 MiB each, and removes its request-local converter input when the operation ends. Completion returns `target`, committed `record` and conversion `warnings`. A generation or publication-handoff failure after persistence returns the saved target and record with `source_saved`, the failing `phase` and `error`. The modal sends that target to exact Rebuild. [Native service](../../docs-viewer/services/docs_import_doc.py)
 - `GET /docs/import-source-directories` and `GET /docs/import-source-files` list confined directories and direct candidates. `POST /docs/import-source` accepts the exact collection, approved directory and candidate name. For trusted collections, the first plan is write-free and Apply carries the confirmed plan inputs. [Staged service](../../docs-viewer/services/docs_import_source_service.py) · [Discovery routes](Generated_Data_Contracts.md#local-generated-reads)
 - Conversion produces authoring intent. The document planner owns target tests and candidate validation. The write and generation owners carry forward the prepared source and media effects. Independent document creation belongs to `POST /docs/create`. [Import planner](../../docs-viewer/services/docs_import_document.py) · [New document](Source_Mutation_Endpoints.md#post-docscreate)

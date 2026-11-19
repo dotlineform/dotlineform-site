@@ -201,7 +201,8 @@ def docs_management_post_response(
     if path == routes.IMPORT_DOC_PATH:
         if dry_run or document_upload is None:
             raise ValueError("Import doc requires its native upload envelope and does not support dry_run")
-        return HTTPStatus.OK, docs_import_doc.import_doc(repo_root, body, document_upload)
+        payload = docs_import_doc.import_doc(repo_root, body, document_upload)
+        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.SOURCE_MEDIA_PREPARE_PATH:
         return HTTPStatus.OK, docs_source_media_service.prepare_source_media_identity(repo_root, body)
     if path == routes.CREATE_PATH:

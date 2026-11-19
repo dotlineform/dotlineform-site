@@ -59,6 +59,7 @@ from docs_import_source_interactive import (
 from docs_management_document_target import (
     ManagedDocumentCollection,
 )
+from docs_publication_preparation import PublicationHandoffError
 from docs_source_model import (
     allocate_doc_id,
     current_doc_timestamp,
@@ -317,6 +318,7 @@ def import_ordinary_source(
     Native intake supplies one temporary file with no neighbouring-file authority.
     Both reuse the same converters, exact document planner and persistence owners;
     create identity allocation needs no target-collection source scan.
+    Native intake reports the saved target if generation fails after those writes.
     """
     collection = destination.collection
     staged_filename = source_path.name
@@ -437,11 +439,25 @@ def import_ordinary_source(
         allow_interactive_html_overwrite=confirm_interactive_html_overwrite,
     )
     apply_result = apply_import_document(repo_root, plan, media_context=media_context)
-    rebuild = dependencies.rebuild_prepared_document(
-        repo_root, destination, plan.prepared_document,
-        parent_ids=apply_result.parent_ids, media_change=plan.media_change,
-        **({"book_order": apply_result.book_order} if apply_result.book_order is not None else {}),
-    )
+    try:
+        rebuild = dependencies.rebuild_prepared_document(
+            repo_root, destination, plan.prepared_document,
+            parent_ids=apply_result.parent_ids, media_change=plan.media_change,
+            **({"book_order": apply_result.book_order} if apply_result.book_order is not None else {}),
+        )
+    except Exception as error:
+        if record.source_kind != "native-file":
+            raise
+        phase = error.phase if isinstance(error, PublicationHandoffError) else "document generation"
+        return {
+            "ok": False,
+            "source_saved": True,
+            "target": {**destination.request_target(), "doc_id": plan.doc_id},
+            "record": plan.committed_record,
+            "import_preview": plan.import_preview,
+            "phase": phase,
+            "error": f"Draft {plan.doc_id} was saved. {phase.capitalize()} failed. {error}",
+        }
     event_name, event_details = import_document_event(
         repo_root,
         plan,

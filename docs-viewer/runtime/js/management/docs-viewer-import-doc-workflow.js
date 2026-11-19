@@ -1,4 +1,5 @@
-import { importNativeDoc } from "./docs-viewer-management-client.js";
+import { importNativeDoc, rebuildManagedDocument } from "./docs-viewer-management-client.js";
+import { managedDocumentTargetsEqual } from "./docs-viewer-management-document-target.js";
 import { escapeHtml, openDocsViewerManagementModal } from "./docs-viewer-management-modal-shell.js";
 
 const DOCUMENT_TYPES = {
@@ -14,6 +15,7 @@ export function createDocsViewerImportDocWorkflow(options) {
     var kind = DOCUMENT_TYPES[extension];
     if (!kind) throw new Error("Choose a Word, HTML, Markdown or text file.");
     if (!file.size || file.size > MAX_DOCUMENT_BYTES) throw new Error("Choose a nonempty document of at most 64 MiB.");
+    var savedImport = null;
     options.setMessage("", false);
     options.render();
     try {
@@ -25,15 +27,31 @@ export function createDocsViewerImportDocWorkflow(options) {
           '<p class="docsViewer__modalNote">' + escapeHtml(file.name) + '</p>' +
           '<p class="docsViewer__modalNote muted small">For separate local images or attachments, use Import docs with the complete folder.</p>',
         actions: [{ role: "modal-cancel", label: "Cancel" }, { role: "modal-primary", label: "Import" }],
-        onSubmit: async function () {
+        onSubmit: async function (api) {
           options.setBusy(true);
           options.render();
           try {
+            if (savedImport) {
+              var rebuilt = await rebuildManagedDocument(savedImport.target, options.clientOptions());
+              if (!managedDocumentTargetsEqual(rebuilt.target, savedImport.target) || rebuilt.record?.doc_id !== savedImport.target.doc_id) {
+                throw new Error("Rebuild response did not match the saved draft.");
+              }
+              return { confirmed: true, result: { ...rebuilt, warnings: savedImport.warnings } };
+            }
             var result = await importNativeDoc(file, settings.destination, kind === "HTML", options.clientOptions());
             return { confirmed: true, result: result };
           } catch (error) {
             options.setBusy(false);
             options.render();
+            if (savedImport) {
+              throw new Error("Draft " + savedImport.target.doc_id + " is saved. Rebuild failed. " + error.message, { cause: error });
+            }
+            if (error.payload?.source_saved === true) {
+              savedImport = error.payload;
+              file = null;
+              api.host.querySelector('button[data-role="modal-primary"]').textContent = "Rebuild";
+              api.host.querySelector('button[data-role="modal-cancel"]').textContent = "Close";
+            }
             throw error;
           }
         }
@@ -48,6 +66,8 @@ export function createDocsViewerImportDocWorkflow(options) {
         } catch (error) {
           options.setMessage("Document imported, but display failed: " + error.message, true);
         }
+      } else if (savedImport) {
+        options.setMessage(savedImport.error, true);
       }
     } finally {
       file = null;

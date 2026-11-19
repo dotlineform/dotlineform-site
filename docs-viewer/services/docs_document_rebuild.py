@@ -4,9 +4,10 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+from docs_book_tree import book_order_path, read_book_order
 from docs_management_document_target import ManagedDocumentCollection, ManagedDocumentTarget, committed_document_record, resolve_managed_document_target
 from docs_source_model import SourceDoc, parse_collection_document_report, validate_document_status_front_matter
-from docs_workspace_config import require_document_authoring
+from docs_workspace_config import is_curated_book, require_document_authoring
 from docs_write_rebuild import rebuild_prepared_document_outputs
 from docs_document_media_ownership import DocumentMediaChange
 
@@ -35,7 +36,8 @@ def rebuild_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     if not resolved.collection:
         record["report_id"] = report.id if report is not None else ""
     prepared.has_thumbnail = record.get("has_thumbnail", False)
-    payload = rebuild_prepared_document(repo_root, resolved, prepared)
+    book_order = read_book_order(book_order_path(resolved.document_config)) if is_curated_book(resolved.document_config) else None
+    payload = rebuild_prepared_document(repo_root, resolved, prepared, book_order=book_order)
     payload["record"] = record
     return payload
 
