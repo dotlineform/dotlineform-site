@@ -73,7 +73,7 @@ The user accepted local preview and, on 4 September, confirmed that Work images,
 
 The accompanying import cleanup removed 24 retry blocks across twelve Catalogue/media modules while preserving primary imports/bootstrap. Fresh-process imports, five command-help checks, targeted missing-dependency checks, 28 existing publisher/lookup/generation tests, lint and whitespace passed. No new permanent tests or live build/media/deployment operation was recorded for that cleanup.
 
-The Catalogue pause and document-location writers were subsequently retired through the new ownership/cutover work. Current Save → Refresh → Regenerate → Publish does not regenerate this snapshot. [Retired locations](Retire_Public_Document_Locations.md) · [Current source boundaries](../reference/Source_Tree_Ownership.md) · [Separate backup proposal](../_working/R2_Workspace_Backups.md)
+The Catalogue pause and document-location writers were subsequently retired through the new ownership/cutover work. Current Save → Refresh → Regenerate → Publish does not regenerate this snapshot. [Retired locations](Retire_Public_Document_Locations.md) · [Current source boundaries](../reference/Source_Tree_Ownership.md) · [Docs workspace restore](../reference/Local_Setup.md#restore-the-docs-workspace)
 
 ## Retirement And R2 Cleanup
 

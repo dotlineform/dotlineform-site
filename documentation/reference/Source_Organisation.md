@@ -15,7 +15,7 @@ parent_id: d-20260424-000000-50b63f
 
 ## Source Version History
 
-The private `dotlineform/docs-viewer-data` repository versions `working/source/`, including ordinary and collection Markdown, source control JSON, and registered media build inputs, as well as document media under `working/assets/media/`. Its ignore rules exclude Catalogue Work assets under `working/assets/works/`, `working/generated/`, all of `preview/`, and the three Working update and publication queues. Keep a separate backup of the excluded assets and matching workspace state needed to resume local authoring and publication. [Data repository](https://github.com/dotlineform/docs-viewer-data) · [Workspace restore](Local_Setup.md#restore-the-docs-workspace)
+The private `dotlineform/docs-viewer-data` repository versions `working/source/`, including ordinary and collection Markdown, source control JSON, and registered media build inputs, as well as document media under `working/assets/media/`. It also versions the three Working update and publication queues as fallback recovery copies. Its ignore rules exclude Catalogue Work assets under `working/assets/works/`, `working/generated/` and `preview/`. Use a matching workspace backup when resuming pending operations. [Data repository](https://github.com/dotlineform/docs-viewer-data) · [Workspace restore](Local_Setup.md#restore-the-docs-workspace)
 
 ## Storage And Roles
 
