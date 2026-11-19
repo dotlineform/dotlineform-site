@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-154730-b019e0
 title: Catalogue Media Pipeline Config
 added_date: "2026-03-31 15:47:30"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -22,7 +22,7 @@ Normal Save calls `catalogue_build_media.py` to prepare the selected original's 
 
 The editor reads staged bytes when `image_staged` or the download's `staged` flag is true. Refresh hands those exact selected bytes to Working, clears flags and removes the copied staging files. Regenerate and Publish carry the completed version and selection onward. [Save trace](Catalogue_Services.md#follow-a-work-save-and-refresh) · [Media/version lifecycle](Catalogue_Save_And_Refresh.md#work-media-authoring)
 
-The checked primary widths are 800, 1200 and 1600 px, with a 96 px thumbnail and WebP encoding. The pipeline and its consumers own the complete policy. A change to variants can affect generation, filenames, browser references and public transfers, so trace those owners together.
+`variants.primary.widths` supplies the primary widths for generation, the reader policy and media transfer. The checked widths are 800, 1200 and 1600 px, with a 96 px thumbnail and WebP encoding. A change to variants can affect generation, filenames, browser references and public transfers, so trace those owners together.
 
 ## Thumbnail Colour Conversion
 

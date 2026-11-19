@@ -54,11 +54,6 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
             "suffix": "thumb",
             "output_subdir": "thumb",
         },
-        "compatibility": {
-            "generate_widths": [800, 1200, 1600],
-            "render_widths": [800, 1200, 1600],
-            "accepted_legacy_widths": [800, 1200, 1600, 2400],
-        },
     },
     "encoding": {
         "format": "webp",
