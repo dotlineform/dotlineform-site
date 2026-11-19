@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-73e30c5fd266317266de5604bbfa8f63",
-    "generated_at_utc": "2026-11-17T10:44:03Z",
-    "count": 152
+    "version": "blake2b-29970d146b99cfc5c035426605ec0f88",
+    "generated_at_utc": "2026-11-19T23:07:25Z",
+    "count": 153
   },
   "fields": [
     "title",
@@ -1374,6 +1374,15 @@
       "title": "Grouping the 100 words by a subset",
       "last_updated": "2026-11-14",
       "display_meta": "2026-11-14 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261117-221004-d9269a",
+      "title": "The Halting Problem — Computation and the Limits of Knowledge",
+      "last_updated": "2026-11-17",
+      "display_meta": "2026-11-17 • Library",
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
@@ -2915,7 +2924,8 @@
     },
     "computation": {
       "title": [
-        125
+        125,
+        152
       ],
       "summary": [
         28,
@@ -5343,6 +5353,14 @@
         136
       ]
     },
+    "halting": {
+      "title": [
+        152
+      ],
+      "summary": [
+        152
+      ]
+    },
     "handle": {
       "summary": [
         38
@@ -6072,6 +6090,9 @@
       ]
     },
     "knowledge": {
+      "title": [
+        152
+      ],
       "summary": [
         113
       ]
@@ -6234,6 +6255,9 @@
       ]
     },
     "limits": {
+      "title": [
+        152
+      ],
       "summary": [
         9,
         57
@@ -7969,8 +7993,12 @@
       ]
     },
     "problem": {
+      "title": [
+        152
+      ],
       "summary": [
-        38
+        38,
+        152
       ]
     },
     "problems": {
@@ -10607,7 +10635,8 @@
         103,
         135,
         142,
-        144
+        144,
+        152
       ]
     },
     "when": {
