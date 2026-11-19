@@ -17,7 +17,7 @@ BUILD_DIR = Path(__file__).resolve().parents[1] / "build"
 if str(BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(BUILD_DIR))
 
-from docs_builder.semantic_tokens import SemanticTokenOccurrence, parse_semantic_tokens  # noqa: E402
+from docs_builder.source_tokens import SourceTokenOccurrence, parse_source_tokens  # noqa: E402
 
 
 MEDIA_REFERENCE_PATTERN = re.compile(r"\[\[(?:media|html-media):(?P<path>[^\]\s]+)(?:[^\]]*)\]\]")
@@ -52,7 +52,7 @@ def source_media_references(
     _metadata, body = parse_source_text(source)
     return parsed_source_media_references(
         config, source,
-        semantic_tokens=parse_semantic_tokens(body, registry=None),
+        source_tokens=parse_source_tokens(body),
         doc_id=doc_id,
     )
 
@@ -61,7 +61,7 @@ def parsed_source_media_references(
     config: DocsStageConfig | DocsCollectionConfig,
     source: str,
     *,
-    semantic_tokens: Iterable[SemanticTokenOccurrence],
+    source_tokens: Iterable[SourceTokenOccurrence],
     doc_id: str,
 ) -> tuple[DocsMediaReference, ...]:
     """Extract body media using completed token parsing; artwork is independent."""
@@ -73,7 +73,7 @@ def parsed_source_media_references(
         media_type: media for media_type, media in config.media.types.items()
         if media_type != "thumbs"
     }
-    for token in semantic_tokens:
+    for token in source_tokens:
         if token.family != "image":
             continue
         for media_type, media in media_types.items():

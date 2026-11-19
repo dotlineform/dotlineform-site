@@ -73,7 +73,7 @@ class PayloadBuilderMixin:
             ) from exc
         content_html = add_missing_image_titles(
             self.rewrite_doc_links(
-                self.restore_semantic_media_html(rendered),
+                self.restore_source_token_html(rendered),
                 current_doc=doc, docs_by_id=docs_by_id,
             )
         )

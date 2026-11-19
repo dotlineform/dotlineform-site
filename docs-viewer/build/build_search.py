@@ -37,7 +37,7 @@ from docs_builder.common import (  # noqa: E402
     HTML_MEDIA_TOKEN_PATTERN,
     MEDIA_TOKEN_PATTERN,
 )
-from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
+from docs_builder.source_tokens import replace_source_tokens  # noqa: E402
 from docs_builder.source import DocRecord  # noqa: E402
 from docs_builder.summary_directive import omit_summary_directives  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
@@ -354,9 +354,8 @@ class DocsViewerSearchDataBuilder:
             include_host=False,
         )
         markdown = omit_summary_directives(markdown)
-        markdown = replace_semantic_tokens(
+        markdown = replace_source_tokens(
             markdown,
-            registry=None,
             replacer=lambda token: " " if token.family == "image" or not token.visible else html.escape(token.title),
         )
         markdown = HTML_MEDIA_TOKEN_PATTERN.sub("", markdown)

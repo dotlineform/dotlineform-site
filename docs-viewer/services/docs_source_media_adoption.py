@@ -11,7 +11,7 @@ from docs_artifact_locations import ArtifactLocationAdapter, artifact_location_a
 from docs_document_identity import is_immutable_doc_id
 from docs_image_tokens import encode_image_path, parse_image_token
 from docs_management_document_target import ManagedDocumentCollection, ManagedDocumentTarget
-from docs_semantic_source import semantic_source_ranges, token_opening_is_escaped
+from docs_source_token_scan import active_source_ranges, token_opening_is_escaped
 from docs_source_media_service import PreparedSourceMediaWrite, prepare_source_media_write
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, managed_media_config
 
@@ -28,7 +28,7 @@ SOURCE_REFERENCE = re.compile(
 def active_reference_ranges(body: str) -> Iterator[tuple[int, int]]:
     """Keep adjacent active lines together for wrapped Markdown destinations."""
     previous = None
-    for start, end in semantic_source_ranges(body, parse_token=parse_image_token):
+    for start, end in active_source_ranges(body, parse_token=parse_image_token):
         if previous is not None and previous[1] == start:
             previous = previous[0], end
         else:

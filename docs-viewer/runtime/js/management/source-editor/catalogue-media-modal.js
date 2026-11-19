@@ -2,11 +2,8 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { catalogueWorkThumbnail } from "../../shared/docs-viewer-catalogue-media.js";
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { selectedTextForCatalogueTitle } from "./catalogue-token-contract.js";
-import {
-  catalogueMediaLinkLabel, loadCatalogueMediaSupport
-} from "./catalogue-media-support.js";
-import { collectSemanticTokenTargetMatches } from "./semantic-token-targets.js";
-import { serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
+import { collectCatalogueMediaTargetMatches, loadCatalogueMediaTargets } from "./catalogue-media-targets.js";
+import { serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./source-token-parser.js";
 import { captureCatalogueTokenAction } from "./catalogue-token-contribution.js";
 import { createCatalogueTargetPickerList } from "./catalogue-target-picker.js";
 import {
@@ -17,6 +14,12 @@ import {
 var SEARCH_INPUT_ID = "docsViewerCatalogueImageSearch";
 var RESULTS_ID = "docsViewerCatalogueImageResults";
 var LINK_INPUT_ID = "docsViewerCatalogueLinkText";
+
+/** Preserve authored labels while allowing an untouched default to follow selection. */
+function catalogueMediaLinkLabel(target, current, previous, preserveLabel) {
+  if (preserveLabel && current) return current;
+  return !current || (previous && current === previous.title) ? target.title : current;
+}
 
 function modalBody(searchQuery, linkText, imageMode) {
   return (
@@ -49,7 +52,7 @@ export function openCatalogueMediaModal(options = {}) {
   var capture = action.capture;
   var initialToken = action.token;
   var selectionText = initialToken ? initialToken.title : selectedTextForCatalogueTitle(capture && capture.text);
-  var state = { disposed: false, list: null, support: null, target: null,
+  var state = { disposed: false, list: null, targets: null, target: null,
     linkDefault: "", replaceDefaults: null };
   return openDocsViewerManagementModal({
     root: options.root,
@@ -109,12 +112,11 @@ export function openCatalogueMediaModal(options = {}) {
         message("");
       }
       function updateMatches() {
-        if (!state.support) return;
+        if (!state.targets) return;
         state.target = null;
         if (visibilityField) visibilityField.hidden = true;
         primary.disabled = true;
-        var targets = imageMode ? state.support.targets.filter(function (target) { return target.targetType === "work"; }) : state.support.targets;
-        var matches = collectSemanticTokenTargetMatches(targets, search.value, state.support.registry, 20);
+        var matches = collectCatalogueMediaTargetMatches(state.targets, search.value, 20);
         state.list.setTargets(matches);
         showResults(matches.length > 0);
         if (search.value.trim() && !matches.length) {
@@ -158,16 +160,16 @@ export function openCatalogueMediaModal(options = {}) {
         if (!event.repeat) primary.click();
       });
       Promise.all([
-        loadCatalogueMediaSupport(adapter, { fetch: options.fetch }),
+        loadCatalogueMediaTargets(() => adapter.readCatalogueMediaTargets()),
         adapter.readCatalogueThumbnailSettings().catch(function () { return null; })
-      ]).then(function ([support, thumbnails]) {
+      ]).then(function ([targets, thumbnails]) {
         if (state.disposed) return;
-        state.support = support;
+        state.targets = imageMode ? targets.filter(function (target) { return target.targetType === "work"; }) : targets;
         thumbnailSettings = thumbnails;
         search.disabled = false;
         updateMatches();
         if (initialToken) {
-          var target = support.targets.find(function (item) {
+          var target = state.targets.find(function (item) {
             return item.targetType === initialToken.targetType && item.targetId === initialToken.targetId;
           });
           if (target) selectTarget(target);
@@ -181,7 +183,7 @@ export function openCatalogueMediaModal(options = {}) {
     onSubmit: function (api) {
       if (!adapter.isCurrent()) { api.setStatus("The Source editor was replaced. Cancel and try again."); return false; }
       if (!state.target) { api.setStatus("Choose a Catalogue target."); return false; }
-      var fields = { registry: state.support.registry, targetType: state.target.targetType, targetId: state.target.targetId };
+      var fields = { targetType: state.target.targetType, targetId: state.target.targetId };
       if (imageMode) {
         Object.assign(fields, readCatalogueImagePresentation(api.host));
       } else {

@@ -17,7 +17,7 @@ from docs_workspace_config import (
     DocsCollectionConfig, DocsStageConfig, load_docs_workspace_config,
     select_workspace_stage,
 )
-from docs_builder.semantic_tokens import parse_semantic_tokens
+from docs_builder.source_tokens import parse_source_tokens
 
 SCHEMA_VERSION = "docs_media_metadata_v1"
 REPORT_MEDIA_TYPES = MANAGED_MEDIA_TYPES - {"thumbs"}
@@ -96,7 +96,7 @@ def _owner_metadata(repo_root: Path, owner: DocsStageConfig | DocsCollectionConf
             {"role": "source", "media_type": reference.media_type, "identity": reference.identity}
             for reference in parsed_source_media_references(
                 owner, document.source_text,
-                semantic_tokens=parse_semantic_tokens(document.body, registry=None),
+                source_tokens=parse_source_tokens(document.body),
                 doc_id=document.doc_id,
             )
         ]

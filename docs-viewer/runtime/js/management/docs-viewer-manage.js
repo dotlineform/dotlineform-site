@@ -53,9 +53,7 @@ import {
   directiveActionsControlRenderer
 } from "./source-editor/directive-actions.js";
 import { handleSourceAddDateControl } from "./source-editor/source-editor-date.js";
-import {
-  mountSemanticTokenTargetLinks
-} from "./source-editor/semantic-token-targets.js";
+import { mountCatalogueTargetLinks } from "./source-editor/catalogue-media-targets.js";
 import {
   mountLocalFolderLinkActivation
 } from "./source-editor/local-folder-links.js";
@@ -76,7 +74,7 @@ function mountDocsViewerManageExtras(context) {
     viewerUrlForDocument: settings.viewerUrlForDocument
   });
   return Promise.resolve(mountDocsViewerManageDocumentExtras(settings)).then(function (result) {
-    mountSemanticTokenTargetLinks(
+    mountCatalogueTargetLinks(
       settings.content,
       routeContext.publicPreviewBase
     );

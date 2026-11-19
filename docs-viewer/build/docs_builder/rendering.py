@@ -21,7 +21,7 @@ from .common import (
     managed_media_config,
 )
 from .source import DocRecord, DocumentIdentity
-from .semantic_tokens import semantic_token_text_ranges
+from .source_tokens import source_token_text_ranges
 from docs_local_links import LocalLinkInputError, decode_local_link_target
 from docs_image_tokens import encode_image_path
 
@@ -46,7 +46,7 @@ def add_missing_image_titles(content_html: str) -> str:
 class ContentRenderingMixin:
     def resolve_local_folder_links(self, markdown: str) -> str:
         matches: list[re.Match[str]] = []
-        for start, end in semantic_token_text_ranges(markdown):
+        for start, end in source_token_text_ranges(markdown):
             for match in LOCAL_FOLDER_LINK_PATTERN.finditer(markdown, start, end):
                 line_start = markdown.rfind("\n", 0, match.start()) + 1
                 if markdown.startswith(("    ", "\t"), line_start) or markdown[:match.start()].lower().rfind("<pre") > markdown[:match.start()].lower().rfind("</pre"):
@@ -132,7 +132,7 @@ class ContentRenderingMixin:
         markdown: str,
         *, document_id: str = "",
     ) -> str:
-        resolved = self.resolve_semantic_tokens(
+        resolved = self.resolve_source_tokens(
             markdown,
             document_id=document_id,
         )
@@ -142,7 +142,7 @@ class ContentRenderingMixin:
         if "[[media:" not in markdown:
             return markdown
         # Authored examples and comments are literal Markdown, not media inputs.
-        for start, end in reversed(list(semantic_token_text_ranges(markdown))):
+        for start, end in reversed(list(source_token_text_ranges(markdown))):
             rendered = MEDIA_IMAGE_TOKEN_PATTERN.sub(self.render_media_image_token, markdown[start:end])
             rendered = MEDIA_TOKEN_PATTERN.sub(
                 lambda match: self.resolve_media_url(self.parse_media_token(match.group(1))[0]), rendered,
@@ -220,7 +220,7 @@ class ContentRenderingMixin:
     def resolve_html_media_tokens(self, markdown: str) -> str:
         if "[[html-media:" not in markdown:
             return markdown
-        for start, end in reversed(list(semantic_token_text_ranges(markdown))):
+        for start, end in reversed(list(source_token_text_ranges(markdown))):
             rendered = HTML_MEDIA_TOKEN_PATTERN.sub(
                 lambda match: self.html_media_iframe(match.group(1)), markdown[start:end],
             )

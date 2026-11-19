@@ -1,5 +1,5 @@
 import { parseImageToken } from "./image-token-parser.js";
-import { parseSourceTokens, semanticTokenTextRanges } from "./catalogue-token-parser.js";
+import { parseSourceTokens, sourceTokenTextRanges } from "./source-token-parser.js";
 import { sourceBodyStart } from "./source-buffer.js";
 
 function sourceMediaPaths(source) {
@@ -14,7 +14,7 @@ function sourceMediaPaths(source) {
   });
   // Retain pending bytes when the author rewrites a token as a Markdown/HTML URL.
   const urls = /(?:\]\(\s*|(?:src|href)\s*=\s*["']?|^\s{0,3}\[[^\]\n]+\]:\s*<?)(docs\/[^\s)\]"'<>?#]+)/gm;
-  semanticTokenTextRanges(body).forEach(([start, end]) => {
+  sourceTokenTextRanges(body).forEach(([start, end]) => {
     for (const match of body.slice(start, end).matchAll(urls)) {
       try { paths.add(decodeURIComponent(match[1])); } catch (_error) { /* Save owns invalid source. */ }
     }

@@ -8,7 +8,7 @@ import {
   readImagePresentation
 } from "./source-editor-image-presentation.js";
 import { parseImageTokens, serializeImageToken } from "./image-token-parser.js";
-import { parseSourceTokens, sourceTokenAtSelection } from "./catalogue-token-parser.js";
+import { parseSourceTokens, sourceTokenAtSelection } from "./source-token-parser.js";
 import { sourceBodyStart } from "./source-buffer.js";
 
 function cleanString(value) {
@@ -150,7 +150,7 @@ function sourceFileTokens(body) {
     var match = /^\[\[media:(docs\/(?:collections\/[a-z0-9-]+\/)?files\/[^\]\s]+)\]\]$/.exec(raw);
     if (!match) return null;
     var token = { raw: raw, mediaPath: match[1], label: "", start: location.start, end: location.start + raw.length,
-      tokenStart: location.start, tokenEnd: location.start + raw.length, activatable: true };
+      tokenStart: location.start, tokenEnd: location.start + raw.length };
     var link = links.get(location.start);
     if (link) {
       token.raw = link[0];

@@ -17,9 +17,9 @@ from urllib.parse import unquote, urlsplit
 from .common import json_text, render_markdown_to_html
 from .links_model import DocumentLinks, DocumentSummary, DocumentTarget
 from .links_schema import read_relationship_payload, relationship_payload
-from .semantic_tokens import SemanticTokenOccurrence, replace_semantic_tokens
 from .related_links_directive import RELATED_LINKS_PREFIX, render_without_related_links
 from .source import DocRecord, DocumentIdentity
+from .source_tokens import SourceTokenOccurrence, replace_source_tokens
 from docs_document_identity import is_document_id
 from docs_document_location import canonical_document_viewer_url
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
@@ -161,14 +161,14 @@ class _DocumentRefresh:
             references[neighbour] = (endpoint.document if endpoint.document.target == neighbour
                                      else self.summary(neighbour, self.docs.get(neighbour), label))
 
-        def token_reference(token: SemanticTokenOccurrence) -> str:
-            if token.supported and token.family == "catalogue" and token.target_type == "work":
+        def token_reference(token: SourceTokenOccurrence) -> str:
+            if token.family == "catalogue" and token.target_type == "work":
                 neighbour = DocumentTarget("catalogue", token.target_id)
                 if neighbour != target:
                     add_reference(neighbour, token.title)
             return ""
 
-        markdown = replace_semantic_tokens(doc.body_markdown, registry=self.builder.semantic_token_registry, replacer=token_reference)
+        markdown = replace_source_tokens(doc.body_markdown, replacer=token_reference)
         rendered = render_without_related_links(markdown) if RELATED_LINKS_PREFIX in markdown else render_markdown_to_html(markdown)
         for anchor in collect_anchors(rendered):
             authored = anchor["href"]

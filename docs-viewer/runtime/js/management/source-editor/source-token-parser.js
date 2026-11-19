@@ -1,9 +1,7 @@
 import { IMAGE_PLACEMENTS } from "./image-placement.js";
 
-var LEXICAL_KEY_PATTERN = /^[a-z][a-z0-9-]*$/;
-var LEXICAL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 var IMAGE_FIELDS = new Set(["use_work_title_caption", "summary", "placement", "fill_width", "left_size"]);
-var MEDIA_TARGET_PATTERNS = { work: /^[0-9]{5}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
+var CATALOGUE_TARGET_ID_PATTERNS = { work: /^[0-9]{5}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -54,16 +52,12 @@ function unescapeTitle(value) {
   return cleanString(output) || null;
 }
 
-function targetDefinition(registry, family, targetType) {
-  var familyDefinition = registry && registry.familiesById
-    ? registry.familiesById.get(family)
-    : null;
-  return familyDefinition && familyDefinition.targetTypesById
-    ? familyDefinition.targetTypesById.get(targetType)
-    : null;
+function isCatalogueTargetId(targetType, targetId) {
+  return Object.hasOwn(CATALOGUE_TARGET_ID_PATTERNS, targetType)
+    && CATALOGUE_TARGET_ID_PATTERNS[targetType].test(targetId);
 }
 
-export function semanticTokenClosingIndex(text, start) {
+function sourceTokenClosingIndex(text, start) {
   var index = start;
   while (index < text.length - 1) {
     if (text[index] === "\\") {
@@ -83,17 +77,7 @@ export function serializeCatalogueMediaToken(options = {}) {
   var hidden = options.visible === false;
   if (!title || /[\r\n]/.test(title)) return "";
   if (hidden && targetType !== "gallery") return "";
-  if (
-    !LEXICAL_KEY_PATTERN.test(targetType)
-    || !LEXICAL_ID_PATTERN.test(targetId)
-  ) return "";
-  var definition = targetDefinition(options.registry, "catalogue", targetType);
-  if (definition && definition.idPolicy.canonicalPattern) {
-    var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
-    if (!canonicalPattern.test(targetId)) return "";
-  }
-  var targetPattern = Object.prototype.hasOwnProperty.call(MEDIA_TARGET_PATTERNS, targetType) ? MEDIA_TARGET_PATTERNS[targetType] : null;
-  if (!targetPattern || !targetPattern.test(targetId)) return "";
+  if (!isCatalogueTargetId(targetType, targetId)) return "";
   return "[[catalogue:media:" + targetType + ":" + targetId + (hidden ? ":visible=false" : "") + "|" + escapedTitle(title) + "]]";
 }
 
@@ -101,19 +85,12 @@ export function serializeCatalogueMediaToken(options = {}) {
 export function serializeCatalogueImageToken(options = {}) {
   var targetType = cleanString(options.targetType);
   var targetId = cleanString(options.targetId);
-  if (targetType !== "work" || !/^\d{5}$/.test(targetId)) return "";
+  if (targetType !== "work" || !isCatalogueTargetId(targetType, targetId)) return "";
   if (
-    !LEXICAL_KEY_PATTERN.test(targetType)
-    || !LEXICAL_ID_PATTERN.test(targetId)
-    || typeof options.useWorkTitleCaption !== "boolean"
+    typeof options.useWorkTitleCaption !== "boolean"
     || typeof options.fillWidth !== "boolean"
     || (options.summary !== undefined && typeof options.summary !== "string")
   ) return "";
-  var definition = targetDefinition(options.registry, "catalogue", targetType);
-  if (definition && definition.idPolicy.canonicalPattern) {
-    var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
-    if (!canonicalPattern.test(targetId)) return "";
-  }
   var summary = summaryText(options.summary);
   var placement = cleanString(options.placement).toLowerCase();
   if (!IMAGE_PLACEMENTS.has(placement)) return "";
@@ -158,7 +135,6 @@ function parseCatalogueImageFields(rawQuery, options) {
     return fields[key] !== "true" && fields[key] !== "false";
   })) return null;
   var serialized = serializeCatalogueImageToken({
-    registry: options.registry,
     targetType: options.targetType,
     targetId: options.targetId,
     useWorkTitleCaption: fields.use_work_title_caption === "true",
@@ -177,25 +153,24 @@ function parseCatalogueImageFields(rawQuery, options) {
   };
 }
 
-export function parseCatalogueToken(raw, options = {}) {
+function parseCatalogueToken(raw, options = {}) {
   var source = String(raw || "");
   if (!source.startsWith("[[") || !source.endsWith("]]") || /[\r\n]/.test(source)) return null;
   var body = source.slice(2, -2);
   var separator = body.indexOf("|");
   if (separator < 0) return null;
   var identity = body.slice(0, separator).split(":");
-  var imagePresentation = identity.length === 4 && identity[1] === "image";
+  var imagePresentation = identity.length === 4 && identity[1] === "image" && identity[2] === "work";
   var galleryVisibility = identity.length === 5 && identity[2] === "gallery"
     && (identity[4] === "visible=true" || identity[4] === "visible=false");
   var mediaPresentation = (identity.length === 4 || galleryVisibility) && identity[1] === "media";
-  if (!imagePresentation && !mediaPresentation) return null;
-  var family = identity[0];
+  if (identity[0] !== "catalogue" || (!imagePresentation && !mediaPresentation)) return null;
   var targetType = identity[2];
   var targetId = identity[3];
+  if (!isCatalogueTargetId(targetType, targetId)) return null;
   var rawFields = body.slice(separator + 1);
   var imageFields = imagePresentation
     ? parseCatalogueImageFields(rawFields, {
-        registry: options.registry,
         targetType: targetType,
         targetId: targetId
       })
@@ -203,33 +178,16 @@ export function parseCatalogueToken(raw, options = {}) {
   var title = imagePresentation
     ? ""
     : unescapeTitle(rawFields);
-  if (mediaPresentation && !serializeCatalogueMediaToken({ targetType: targetType, targetId: targetId, title: title })) return null;
-  if (
-    family !== "catalogue"
-    || !LEXICAL_KEY_PATTERN.test(family)
-    || !LEXICAL_KEY_PATTERN.test(targetType)
-    || !LEXICAL_ID_PATTERN.test(targetId)
-    || (!imagePresentation && !title)
-    || (imagePresentation && !imageFields)
-  ) return null;
-  var definition = targetDefinition(options.registry, family, targetType);
-  var supported = options.registry ? Boolean(definition)
-    : imagePresentation ? targetType === "work" : Object.prototype.hasOwnProperty.call(MEDIA_TARGET_PATTERNS, targetType);
-  if (definition && definition.idPolicy.canonicalPattern) {
-    var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
-    if (!canonicalPattern.test(targetId)) return null;
-  }
+  if (imagePresentation ? !imageFields : !title) return null;
   var start = Number.isInteger(options.start) ? options.start : 0;
   return {
     raw: source,
-    family: family,
+    family: "catalogue",
     targetType: targetType,
     targetId: targetId,
     title: title,
     start: start,
     end: start + source.length,
-    supported: supported,
-    activatable: supported,
     presentation: imagePresentation ? "image" : "media",
     visible: !galleryVisibility || identity[4] === "visible=true",
     useWorkTitleCaption: imageFields ? imageFields.useWorkTitleCaption : null,
@@ -303,7 +261,7 @@ function tokenContextSource(markdown) {
   while (index < source.length) {
     var opening = source.indexOf("[[catalogue:", index);
     if (opening < 0) break;
-    var closing = semanticTokenClosingIndex(source, opening + 2);
+    var closing = sourceTokenClosingIndex(source, opening + 2);
     if (closing < 0) break;
     var end = closing + 2;
     if (!tokenOpeningIsEscaped(source, opening) && parseCatalogueToken(source.slice(opening, end))) {
@@ -315,7 +273,7 @@ function tokenContextSource(markdown) {
   return parts.join("") + source.slice(start);
 }
 
-export function semanticTokenTextRanges(markdown) {
+export function sourceTokenTextRanges(markdown) {
   var contextSource = tokenContextSource(markdown);
   var ranges = [];
   var lines = contextSource.match(/[^\n]*\n|[^\n]+$/g) || [];
@@ -346,23 +304,20 @@ export function semanticTokenTextRanges(markdown) {
   return ranges;
 }
 
-/** Scan any semantic family through the shared inactive-source boundaries. */
-export function parseSourceTokens(markdown, parseToken, options = {}) {
+/** Scan tokens of the supplied grammar through the shared inactive-source boundaries. */
+export function parseSourceTokens(markdown, parseToken) {
   var source = String(markdown || "");
   if (source.indexOf("[[") < 0) return [];
   var tokens = [];
-  semanticTokenTextRanges(source).forEach(function (range) {
+  sourceTokenTextRanges(source).forEach(function (range) {
     var index = range[0];
     while (index < range[1]) {
       var opening = source.indexOf("[[", index);
       if (opening < 0 || opening >= range[1]) break;
       if (tokenOpeningIsEscaped(source, opening)) { index = opening + 2; continue; }
-      var closing = semanticTokenClosingIndex(source, opening + 2);
+      var closing = sourceTokenClosingIndex(source, opening + 2);
       if (closing < 0 || closing + 2 > range[1]) break;
-      var token = parseToken(source.slice(opening, closing + 2), {
-        registry: options.registry,
-        start: opening
-      });
+      var token = parseToken(source.slice(opening, closing + 2), { start: opening });
       if (token) tokens.push(token);
       index = closing + 2;
     }
@@ -370,8 +325,8 @@ export function parseSourceTokens(markdown, parseToken, options = {}) {
   return tokens;
 }
 
-export function parseCatalogueTokens(markdown, options = {}) {
-  return parseSourceTokens(markdown, parseCatalogueToken, options);
+export function parseCatalogueTokens(markdown) {
+  return parseSourceTokens(markdown, parseCatalogueToken);
 }
 
 /** Activate an exact occurrence selection or a caret strictly inside one supported token. */
@@ -379,7 +334,6 @@ export function sourceTokenAtSelection(tokens, selection) {
   var start = Number(selection && selection.start);
   var end = Number(selection && selection.end);
   var active = (Array.isArray(tokens) ? tokens : []).filter(function (token) {
-    if (!token.activatable) return false;
     if (start === end) return token.start < start && start < token.end;
     return token.start === start && token.end === end;
   });

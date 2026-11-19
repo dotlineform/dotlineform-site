@@ -1,7 +1,7 @@
 import {
   sourceTokenAtSelection,
   parseCatalogueTokens
-} from "./catalogue-token-parser.js";
+} from "./source-token-parser.js";
 import { sourceBodyStart } from "./source-buffer.js";
 
 /** Capture the corresponding body occurrence before opening a modal or doing asynchronous reads. */

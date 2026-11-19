@@ -2,8 +2,7 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { escapeHtml, openDocsViewerManagementModal } from "./docs-viewer-management-modal-shell.js";
 import { readCatalogueMediaTargets, setManagedDocThumbnail } from "./docs-viewer-management-client.js";
 import { createCatalogueTargetPickerList } from "./source-editor/catalogue-target-picker.js";
-import { loadCatalogueMediaSupport } from "./source-editor/catalogue-media-support.js";
-import { collectSemanticTokenTargetMatches } from "./source-editor/semantic-token-targets.js";
+import { collectCatalogueMediaTargetMatches, loadCatalogueMediaTargets } from "./source-editor/catalogue-media-targets.js";
 import { requestUrl } from "../shared/docs-viewer-asset-url.js";
 
 const THUMBNAIL_MAX_EDGE = 96;
@@ -62,7 +61,7 @@ export function openDocumentThumbModal(options) {
   const target = options.target;
   const images = documentImages(options.documentMount, options.mediaRoot);
   const showDocument = images.length > 0;
-  const state = { disposed: false, list: null, support: null, work: null };
+  const state = { disposed: false, list: null, works: null, work: null };
   const src = options.record.has_thumbnail
     ? requestUrl(options.mediaRoot.replace(/\/+$/, "") + "/collections/" + encodeURIComponent(target.collection)
       + "/thumbs/" + encodeURIComponent(target.doc_id + "-thumb.webp"), { reloadNonce: Date.now() }) : "";
@@ -114,11 +113,9 @@ export function openDocumentThumbModal(options) {
       function loadCatalogue() {
         if (catalogueRequested) return;
         catalogueRequested = true;
-        loadCatalogueMediaSupport({
-          readCatalogueMediaTargets: () => readCatalogueMediaTargets(options.clientOptions)
-        }, { fetch: options.clientOptions.fetch }).then((support) => {
+        loadCatalogueMediaTargets(() => readCatalogueMediaTargets(options.clientOptions)).then((targets) => {
           if (state.disposed) return;
-          state.support = { ...support, targets: support.targets.filter((work) => work.targetType === "work") };
+          state.works = targets.filter((work) => work.targetType === "work");
           if (!form.dataset.busy) search.disabled = false;
         }).catch((error) => { if (!state.disposed) selection.textContent = error.message; });
       }
@@ -133,7 +130,7 @@ export function openDocumentThumbModal(options) {
       form.addEventListener("docs-viewer-modal-busy-change", (event) => {
         catalogueChoices.inert = event.detail.busy;
         clearButton.disabled = event.detail.busy;
-        if (!event.detail.busy && state.support) search.disabled = false;
+        if (!event.detail.busy && state.works) search.disabled = false;
       });
       function showResults(visible) {
         results.hidden = !visible;
@@ -155,10 +152,10 @@ export function openDocumentThumbModal(options) {
         }
       });
       search.addEventListener("input", () => {
-        if (!state.support) return;
+        if (!state.works) return;
         state.work = null;
         projectSelection();
-        const matches = collectSemanticTokenTargetMatches(state.support.targets, search.value, state.support.registry, 20);
+        const matches = collectCatalogueMediaTargetMatches(state.works, search.value, 20);
         state.list.setTargets(matches);
         showResults(matches.length > 0);
         selection.textContent = matches.length ? CATALOGUE_SELECTION_HINT : "No matching Works.";
@@ -189,6 +186,6 @@ export function openDocumentThumbModal(options) {
   }).finally(() => {
     state.disposed = true;
     state.list?.destroy();
-    state.support = null;
+    state.works = null;
   });
 }

@@ -26,7 +26,7 @@ Paths are relative to `working/generated/catalogue/` in the configured Docs work
 | `private/work-sources.json`, `private/work-resources.json`, `private/series.json` | Private reusable report inputs. |
 | `reports/catalogue-works/metadata.json`, `reports/series-galleries/metadata.json` | Private report-specific read models. |
 
-The public inventory contains Gallery records and named system files. Work by-ID handoff JSON and private report inputs remain in Working. Public Work metadata is part of the Catalogue document. [Inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json) · [Registry and chooser](Document_And_Catalogue_References.md#registry-and-lookups) · [Public payload](Generated_Data_Contracts.md#catalogue-reference-and-presentation)
+The public inventory contains Gallery records and named system files. Work by-ID handoff JSON and private report inputs remain in Working. Public Work metadata is part of the Catalogue document. [Inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json) · [Catalogue target lookup](Document_And_Catalogue_References.md#catalogue-target-lookup) · [Public payload](Generated_Data_Contracts.md#catalogue-reference-and-presentation)
 
 ## Shared Private Report Inputs
 

@@ -6,7 +6,6 @@ from uuid import uuid4
 from dataclasses import dataclass, replace
 from typing import Any, Callable, Iterable
 
-from .semantic_token_registry import SemanticTokenRegistry
 from .summary_formatting import render_summary_inline
 from docs_image_tokens import (
     FIGURE_NATURAL_WIDTH_CLASS,
@@ -15,15 +14,18 @@ from docs_image_tokens import (
     encode_image_value,
     parse_image_token,
 )
-from docs_semantic_source import semantic_source_ranges, source_token_spans
+from docs_source_token_scan import active_source_ranges, source_token_spans
 
 
-LEXICAL_KEY_PATTERN = re.compile(r"[a-z][a-z0-9-]*")
-LEXICAL_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+WORK_ID_PATTERN = re.compile(r"[0-9]{5}")
+CATALOGUE_TARGET_ID_PATTERNS = {
+    "work": WORK_ID_PATTERN,
+    "gallery": re.compile(r"(?:[0-9]{3}|[1-9][0-9]{3,})"),
+}
 
 
 @dataclass(frozen=True)
-class SemanticTokenOccurrence:
+class SourceTokenOccurrence:
     raw: str
     family: str
     target_type: str
@@ -31,7 +33,6 @@ class SemanticTokenOccurrence:
     title: str
     start: int
     end: int
-    supported: bool
     presentation: str
     visible: bool = True
     use_work_title_caption: bool | None = None
@@ -48,7 +49,7 @@ class SemanticTokenOccurrence:
         return {"start": self.start, "end": self.end}
 
 
-def unescape_semantic_token_title(value: str) -> str | None:
+def unescape_catalogue_label(value: str) -> str | None:
     out: list[str] = []
     index = 0
     while index < len(value):
@@ -79,13 +80,6 @@ def normalize_summary_text(value: Any) -> str:
     return "\n".join(" ".join(line.split()) for line in normalized.split("\n")).strip()
 
 
-def serialize_catalogue_entry_token(work_id: str) -> str:
-    """Bind a generated Catalogue document to its exact Work, without options."""
-    if not isinstance(work_id, str) or not re.fullmatch(r"[0-9]{5}", work_id):
-        return ""
-    return f"[[catalogue:entry:work:{work_id}]]"
-
-
 def serialize_catalogue_image_token(
     *,
     target_type: str,
@@ -99,7 +93,7 @@ def serialize_catalogue_image_token(
     """Serialize a Work image's caption choice, authored summary and layout."""
     if (
         target_type != "work"
-        or not re.fullmatch(r"[0-9]{5}", str(target_id or ""))
+        or not WORK_ID_PATTERN.fullmatch(str(target_id or ""))
         or type(use_work_title_caption) is not bool
         or type(fill_width) is not bool
         or not isinstance(summary, str)
@@ -177,17 +171,12 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
     }
 
 
-def parse_semantic_token(
-    raw: str,
-    *,
-    start: int = 0,
-    registry: SemanticTokenRegistry | None = None,
-) -> SemanticTokenOccurrence | None:
+def parse_source_token(raw: str) -> SourceTokenOccurrence | None:
     image = parse_image_token(raw)
     if image is not None:
-        return SemanticTokenOccurrence(
+        return SourceTokenOccurrence(
             raw=raw, family="image", target_type=image.media_type, target_id=image.media_path,
-            title="", start=start, end=start + len(raw), supported=True, presentation="image",
+            title="", start=0, end=len(raw), presentation="image",
             media_path=image.media_path, alt=image.alt, caption=image.caption, summary=image.summary,
             placement=image.placement, fill_width=image.fill_width,
         )
@@ -196,69 +185,41 @@ def parse_semantic_token(
     body = raw[2:-2]
     identity, separator, raw_fields = body.partition("|")
     parts = identity.split(":")
-    family = parts[0] if parts else ""
-    is_entry = family == "catalogue" and len(parts) == 4 and parts[1] == "entry"
-    if is_entry:
-        if separator or parts[2] != "work" or not serialize_catalogue_entry_token(parts[3]):
+    if len(parts) < 4 or parts[0] != "catalogue":
+        return None
+    family, presentation, target_type, target_id = parts[:4]
+    if len(parts) == 4 and presentation == "entry":
+        if separator or target_type != "work" or not WORK_ID_PATTERN.fullmatch(target_id):
             return None
-        definition = registry.family(family) if registry else None
-        return SemanticTokenOccurrence(
-            raw=raw, family=family, target_type="work", target_id=parts[3], title="",
-            start=start, end=start + len(raw),
-            supported=definition is not None and definition.target_type("work") is not None,
-            presentation="entry",
+        return SourceTokenOccurrence(
+            raw=raw, family=family, target_type=target_type, target_id=target_id, title="",
+            start=0, end=len(raw), presentation=presentation,
         )
-    is_image = (
-        family == "catalogue"
-        and len(parts) == 4
-        and parts[1] == "image"
-    )
-    gallery_visibility = len(parts) == 5 and parts[2] == "gallery" and parts[4] in {"visible=true", "visible=false"}
-    is_media = family == "catalogue" and (len(parts) == 4 or gallery_visibility) and parts[1] == "media"
+    is_image = presentation == "image" and len(parts) == 4 and target_type == "work"
+    gallery_visibility = len(parts) == 5 and target_type == "gallery" and parts[4] in {"visible=true", "visible=false"}
+    is_media = presentation == "media" and (len(parts) == 4 or gallery_visibility)
     if not separator or (not is_image and not is_media):
         return None
-    target_type = parts[2]
-    target_id = parts[3]
-    if is_image and (target_type != "work" or not re.fullmatch(r"[0-9]{5}", target_id)):
-        return None
-    if is_media:
-        if target_type == "work":
-            if not re.fullmatch(r"[0-9]{5}", target_id):
-                return None
-        elif target_type == "gallery":
-            if not re.fullmatch(r"(?:[0-9]{3}|[1-9][0-9]{3,})", target_id):
-                return None
-        else:
-            return None
-    if (
-        not LEXICAL_KEY_PATTERN.fullmatch(family)
-        or not LEXICAL_KEY_PATTERN.fullmatch(target_type)
-        or not LEXICAL_ID_PATTERN.fullmatch(target_id)
-    ):
+    id_pattern = CATALOGUE_TARGET_ID_PATTERNS.get(target_type)
+    if id_pattern is None or not id_pattern.fullmatch(target_id):
         return None
     image_fields = (
         parse_catalogue_image_fields(raw_fields, target_type=target_type)
         if is_image
         else None
     )
-    title = "" if is_image else unescape_semantic_token_title(raw_fields)
+    title = "" if is_image else unescape_catalogue_label(raw_fields)
     if title is None or (is_image and image_fields is None):
         return None
-    family_definition = registry.family(family) if registry else None
-    target_definition = family_definition.target_type(target_type) if family_definition else None
-    supported = target_definition is not None
-    if supported and not re.fullmatch(target_definition.id_policy.canonical_pattern, target_id):
-        return None
-    return SemanticTokenOccurrence(
+    return SourceTokenOccurrence(
         raw=raw,
         family=family,
         target_type=target_type,
         target_id=target_id,
         title=title,
-        start=start,
-        end=start + len(raw),
-        supported=supported,
-        presentation="image" if is_image else "media",
+        start=0,
+        end=len(raw),
+        presentation=presentation,
         visible=not gallery_visibility or parts[4] == "visible=true",
         use_work_title_caption=image_fields["use_work_title_caption"] if image_fields else None,
         summary=image_fields["summary"] if image_fields else "",
@@ -268,70 +229,23 @@ def parse_semantic_token(
     )
 
 
-def parse_catalogue_token(
-    raw: str,
-    *,
-    start: int = 0,
-    registry: SemanticTokenRegistry | None = None,
-) -> SemanticTokenOccurrence | None:
-    token = parse_semantic_token(raw, start=start, registry=registry)
-    return token if token is not None and token.family == "catalogue" else None
+def source_token_text_ranges(markdown: str) -> Iterable[tuple[int, int]]:
+    return active_source_ranges(markdown, parse_token=parse_source_token)
 
 
-def semantic_token_text_ranges(markdown: str) -> Iterable[tuple[int, int]]:
-    return semantic_source_ranges(markdown, parse_token=parse_semantic_token)
-
-
-def parse_semantic_tokens(
-    markdown: str,
-    *,
-    registry: SemanticTokenRegistry | None,
-) -> list[SemanticTokenOccurrence]:
+def parse_source_tokens(markdown: str) -> list[SourceTokenOccurrence]:
     return [
         replace(token, start=start, end=end)
-        for start, end, token in source_token_spans(
-            markdown, lambda raw: parse_semantic_token(raw, registry=registry),
-        )
+        for start, end, token in source_token_spans(markdown, parse_source_token)
     ]
 
 
-def parse_catalogue_tokens(
+def replace_source_tokens(
     markdown: str,
     *,
-    registry: SemanticTokenRegistry | None,
-) -> list[SemanticTokenOccurrence]:
-    return [
-        token
-        for token in parse_semantic_tokens(markdown, registry=registry)
-        if token.family == "catalogue"
-    ]
-
-
-def semantic_token_at_selection(
-    tokens: list[SemanticTokenOccurrence],
-    *,
-    start: int,
-    end: int,
-) -> SemanticTokenOccurrence | None:
-    active = [
-        token
-        for token in tokens
-        if token.supported
-        and (
-            (start == end and token.start < start < token.end)
-            or (start != end and token.start == start and token.end == end)
-        )
-    ]
-    return active[0] if len(active) == 1 else None
-
-
-def replace_semantic_tokens(
-    markdown: str,
-    *,
-    registry: SemanticTokenRegistry | None,
-    replacer: Callable[[SemanticTokenOccurrence], str],
+    replacer: Callable[[SourceTokenOccurrence], str],
 ) -> str:
-    tokens = parse_semantic_tokens(markdown, registry=registry)
+    tokens = parse_source_tokens(markdown)
     if not tokens:
         return markdown
     output: list[str] = []
@@ -344,26 +258,7 @@ def replace_semantic_tokens(
     return "".join(output)
 
 
-def replace_catalogue_tokens(
-    markdown: str,
-    *,
-    registry: SemanticTokenRegistry | None,
-    replacer: Callable[[SemanticTokenOccurrence], str],
-) -> str:
-    tokens = parse_catalogue_tokens(markdown, registry=registry)
-    if not tokens:
-        return markdown
-    output: list[str] = []
-    offset = 0
-    for token in tokens:
-        output.append(markdown[offset:token.start])
-        output.append(replacer(token))
-        offset = token.end
-    output.append(markdown[offset:])
-    return "".join(output)
-
-
-def catalogue_reference(token: SemanticTokenOccurrence, reference_id: str) -> dict[str, Any]:
+def catalogue_reference(token: SourceTokenOccurrence, reference_id: str) -> dict[str, Any]:
     """Carry only the occurrence's authored choices into Working output."""
     options: dict[str, Any] = {}
     if token.presentation == "image":
@@ -391,7 +286,7 @@ def catalogue_reference_slot(reference: dict[str, Any]) -> str:
     return f'<{tag} data-docs-catalogue-ref="{reference["reference_id"]}"></{tag}>'
 
 
-def render_image_reference(token: SemanticTokenOccurrence, src: str) -> str:
+def render_image_reference(token: SourceTokenOccurrence, src: str) -> str:
     """Render static Docs-owned image presentation without media writes or lookups."""
     modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
     if not token.fill_width:
@@ -409,28 +304,26 @@ def render_image_reference(token: SemanticTokenOccurrence, src: str) -> str:
     )
 
 
-class SemanticTokensMixin:
-    def restore_semantic_media_html(self, content_html: str) -> str:
+class SourceTokensMixin:
+    def restore_source_token_html(self, content_html: str) -> str:
         """Restore built fragments after Markdown so authored labels stay literal."""
-        for marker, fragment in self._semantic_media_html.items():
+        for marker, fragment in self._source_token_html.items():
             content_html = content_html.replace(marker, fragment)
         return content_html
 
-    def resolve_semantic_tokens(
+    def resolve_source_tokens(
         self,
         markdown: str,
         *, document_id: str = "",
     ) -> str:
         """Render media without writes; Entry needs its exact Catalogue document ID."""
-        self._semantic_media_html: dict[str, str] = {}
+        self._source_token_html: dict[str, str] = {}
         self.catalogue_references: list[dict[str, Any]] = []
         self.related_galleries: dict[str, str] = {}
         entry_seen = False
 
-        def replace(token: SemanticTokenOccurrence) -> str:
+        def replace(token: SourceTokenOccurrence) -> str:
             nonlocal entry_seen
-            if not token.supported:
-                return token.raw
             if token.family == "image":
                 fragment = render_image_reference(
                     token, self.image_token_media_url(token.media_path),
@@ -450,16 +343,11 @@ class SemanticTokensMixin:
             marker_id = uuid4().hex
             # Comments start HTML blocks at line beginnings; inline references must not.
             marker = (
-                f"<!--semantic-media-{marker_id}-->"
+                f"<!--source-token-{marker_id}-->"
                 if token.presentation in {"image", "entry"}
-                else f'<span data-semantic-media-fragment="{marker_id}"></span>'
+                else f'<span data-source-token-fragment="{marker_id}"></span>'
             )
-            self._semantic_media_html[marker] = fragment
+            self._source_token_html[marker] = fragment
             return marker
 
-        rendered = replace_semantic_tokens(
-            markdown,
-            registry=self.semantic_token_registry,
-            replacer=replace,
-        )
-        return rendered
+        return replace_source_tokens(markdown, replacer=replace)

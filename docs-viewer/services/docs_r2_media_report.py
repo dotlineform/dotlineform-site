@@ -21,7 +21,7 @@ from docs_document_identity import is_immutable_doc_id
 from docs_document_images import document_thumbnail_filename, has_document_thumbnail
 from docs_image_tokens import parse_image_token
 from docs_publication_queue import read_queue
-from docs_semantic_source import token_opening_is_escaped
+from docs_source_token_scan import token_opening_is_escaped
 from docs_source_inspection import inspection_source_paths, read_inspection_source
 from docs_source_media_adoption import SOURCE_REFERENCE, active_reference_ranges
 from docs_source_model import write_text_atomic

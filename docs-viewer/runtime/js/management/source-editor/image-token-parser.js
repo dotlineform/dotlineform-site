@@ -1,4 +1,4 @@
-import { decodeImageValue, encodeImageValue, parseSourceTokens } from "./catalogue-token-parser.js";
+import { decodeImageValue, encodeImageValue, parseSourceTokens } from "./source-token-parser.js";
 import { IMAGE_PLACEMENTS } from "./image-placement.js";
 
 var FIELDS = new Set(["alt", "caption", "summary", "placement", "fill_width"]);
@@ -81,8 +81,8 @@ export function parseImageToken(raw, options = {}) {
   };
   if (serializeImageToken(token) !== raw) return null;
   var start = Number.isInteger(options.start) ? options.start : 0;
-  return Object.assign(token, { raw: raw, family: "image", presentation: "image", supported: true,
-    activatable: true, start: start, end: start + raw.length });
+  return Object.assign(token, { raw: raw, family: "image", presentation: "image",
+    start: start, end: start + raw.length });
 }
 
 /** Return active canonical occurrences, preserving offsets in the supplied body buffer. */

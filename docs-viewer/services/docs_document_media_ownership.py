@@ -13,12 +13,12 @@ def document_media_references(owner: Any, *, doc_id: str, body: str) -> dict[str
     """Extract body media; independent artwork belongs to publication metadata."""
     if owner.media is None:
         return {}
-    from docs_builder.semantic_tokens import parse_semantic_tokens
+    from docs_builder.source_tokens import parse_source_tokens
 
     references: dict[str, set[str]] = {}
     for reference in parsed_source_media_references(
         owner, body,
-        semantic_tokens=parse_semantic_tokens(body, registry=None), doc_id=doc_id,
+        source_tokens=parse_source_tokens(body), doc_id=doc_id,
     ):
         references.setdefault(reference.media_type, set()).add(reference.identity)
     return {kind: sorted(names) for kind, names in references.items()}

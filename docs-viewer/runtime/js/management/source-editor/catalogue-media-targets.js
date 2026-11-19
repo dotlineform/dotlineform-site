@@ -1,21 +1,8 @@
-const SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v2";
+const CATALOGUE_MEDIA_TARGETS_SCHEMA = "docs_catalogue_media_targets_v1";
+const TARGET_TYPE_ORDER = { gallery: 0, work: 1 };
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
-}
-
-function normalizeTargetImage(value) {
-  var row = value && typeof value === "object" && !Array.isArray(value) ? value : {};
-  var src = cleanString(row.src);
-  if (!src) return null;
-  if (src.startsWith("/") && !src.startsWith("//")) return { src: src };
-  try {
-    var url = new URL(src);
-    if (url.protocol !== "https:" || !url.host || url.username || url.password) return null;
-  } catch (_error) {
-    return null;
-  }
-  return { src: src };
 }
 
 function normalizeSearchText(value) {
@@ -30,28 +17,14 @@ function normalizeIdentityToken(value) {
   return /^\d+$/.test(value) ? value.replace(/^0+(?=\d)/, "") : value;
 }
 
-function normalizeTarget(record, registry) {
-  var row = record && typeof record === "object" && !Array.isArray(record) ? record : {};
-  var family = cleanString(row.family);
-  var targetType = cleanString(row.target_type);
-  var targetId = cleanString(row.target_id);
-  if (typeof row.title !== "string") throw new Error("Catalogue target title must be a string.");
-  var title = row.title;
-  var familyDefinition = registry && registry.familiesById
-    ? registry.familiesById.get(family)
-    : null;
-  if (!familyDefinition || !familyDefinition.targetTypesById.has(targetType) || !targetId) return null;
+function prepareCatalogueMediaTarget({ target_type: targetType, target_id: targetId, title }) {
   var titleNorm = normalizeSearchText(title);
   var targetIdNorm = normalizeIdentityToken(normalizeSearchText(targetId));
   var targetTypeNorm = normalizeSearchText(targetType);
   return {
-    family: family,
     targetType: targetType,
     targetId: targetId,
     title: title,
-    href: cleanString(row.href),
-    meta: Array.isArray(row.meta) ? row.meta.map(cleanString).filter(Boolean) : [],
-    image: normalizeTargetImage(row.image),
     targetIdNorm: targetIdNorm,
     targetTypeNorm: targetTypeNorm,
     titleNorm: titleNorm,
@@ -59,7 +32,7 @@ function normalizeTarget(record, registry) {
   };
 }
 
-export function resolveSemanticTokenTargetHref(href, publicPreviewBase) {
+function resolveCatalogueTargetHref(href, publicPreviewBase) {
   var targetHref = cleanString(href);
   var previewBase = cleanString(publicPreviewBase).replace(/\/+$/, "");
   if (!targetHref || !previewBase) return targetHref;
@@ -70,12 +43,12 @@ export function resolveSemanticTokenTargetHref(href, publicPreviewBase) {
   }
 }
 
-export function mountSemanticTokenTargetLinks(root, publicPreviewBase) {
+export function mountCatalogueTargetLinks(root, publicPreviewBase) {
   if (!root || typeof root.querySelectorAll !== "function") return 0;
   var mounted = 0;
   root.querySelectorAll("a[data-semantic-token-family][href]").forEach(function (link) {
     if (cleanString(link.getAttribute("data-semantic-token-family")) !== "catalogue") return;
-    var resolved = resolveSemanticTokenTargetHref(
+    var resolved = resolveCatalogueTargetHref(
       link.getAttribute("href"),
       publicPreviewBase
     );
@@ -86,27 +59,24 @@ export function mountSemanticTokenTargetLinks(root, publicPreviewBase) {
   return mounted;
 }
 
-export function normalizeSemanticTokenTargets(payload, registry) {
-  var rows = payload
-    && typeof payload === "object"
-    && payload.schema_version === SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION
-    && Array.isArray(payload.targets)
-    ? payload.targets
-    : [];
-  return rows.map(function (row) {
-    return normalizeTarget(row, registry);
-  }).filter(Boolean);
+/** Read exact generated Catalogue identities and prepare their search terms once. */
+export async function loadCatalogueMediaTargets(readTargets) {
+  const payload = await readTargets();
+  if (payload?.schema_version !== CATALOGUE_MEDIA_TARGETS_SCHEMA || !Array.isArray(payload.targets)) {
+    throw new Error("Generated Catalogue targets are unavailable.");
+  }
+  return payload.targets.map(prepareCatalogueMediaTarget);
 }
 
-export function collectSemanticTokenTargetMatches(targets, query, registry, limit) {
+export function collectCatalogueMediaTargetMatches(targets, query, limit) {
   var normalizedQuery = normalizeSearchText(query);
   var tokens = normalizedQuery.split(" ").filter(Boolean);
   if (!normalizedQuery || !tokens.length) return [];
   var identityTokens = tokens.map(normalizeIdentityToken);
   var identityQuery = identityTokens.join(" ");
   var matches = [];
-  (Array.isArray(targets) ? targets : []).forEach(function (target) {
-    if (!target || (!target.titleNorm && !(target.family === "catalogue" && target.targetType === "work"))) return;
+  targets.forEach(function (target) {
+    if (!target.titleNorm && target.targetType !== "work") return;
     var qualifiedIdentity = [target.targetTypeNorm, target.targetIdNorm].filter(Boolean).join(" ");
     var allIdentityTokens = identityTokens.every(function (token) {
       return (
@@ -143,14 +113,8 @@ export function collectSemanticTokenTargetMatches(targets, query, registry, limi
   });
   matches.sort(function (left, right) {
     if (left.score !== right.score) return right.score - left.score;
-    var familyDefinition = registry && registry.familiesById
-      ? registry.familiesById.get(left.target.family)
-      : null;
-    var leftType = familyDefinition ? familyDefinition.targetTypesById.get(left.target.targetType) : null;
-    var rightType = familyDefinition ? familyDefinition.targetTypesById.get(right.target.targetType) : null;
-    var leftOrder = leftType ? leftType.order : 999;
-    var rightOrder = rightType ? rightType.order : 999;
-    if (leftOrder !== rightOrder) return leftOrder - rightOrder;
+    var typeOrder = TARGET_TYPE_ORDER[left.target.targetType] - TARGET_TYPE_ORDER[right.target.targetType];
+    if (typeOrder) return typeOrder;
     var titleCmp = left.target.title.localeCompare(right.target.title, undefined, {
       sensitivity: "base",
       numeric: true

@@ -123,7 +123,7 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
             "family": "catalogue", "target_type": "gallery", "target_id": gallery_id,
             "title": record["title"], "meta": [],
         })
-    return {"ok": True, "schema_version": "docs_semantic_token_target_lookup_v2", "targets": targets}
+    return {"ok": True, "schema_version": "docs_catalogue_media_targets_v1", "targets": targets}
 
 
 def read_catalogue_work(repo_root: Path, work_id: str, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:

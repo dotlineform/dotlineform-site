@@ -1,4 +1,4 @@
-"""Shared active-source boundaries for semantic rendering and media discovery."""
+"""Shared active-source boundaries for token rendering and media discovery."""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ def _context_source(text: str, parse_token: Callable[[str], Any] | None) -> str:
     return "".join(parts) + text[offset:]
 
 
-def semantic_source_ranges(text: str, *, parse_token: Callable[[str], Any] | None = None) -> Iterable[tuple[int, int]]:
+def active_source_ranges(text: str, *, parse_token: Callable[[str], Any] | None = None) -> Iterable[tuple[int, int]]:
     """Yield active spans, excluding comments, pre, inline/indented/fenced code."""
     source = _context_source(text, parse_token)
     offset = 0
@@ -87,7 +87,7 @@ def semantic_source_ranges(text: str, *, parse_token: Callable[[str], Any] | Non
 
 def source_token_spans(text: str, parse_token: Callable[[str], Any]) -> Iterable[tuple[int, int, Any]]:
     """Yield parsed tokens and exact half-open ranges in active source only."""
-    for start, end in semantic_source_ranges(text, parse_token=parse_token):
+    for start, end in active_source_ranges(text, parse_token=parse_token):
         index = start
         while (opening := text.find("[[", index, end)) >= 0:
             if token_opening_is_escaped(text, opening):

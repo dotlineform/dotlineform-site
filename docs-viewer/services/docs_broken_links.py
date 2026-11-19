@@ -43,10 +43,7 @@ from docs_rendered_links import (  # noqa: E402
     resolve_href,
 )
 
-from docs_builder.semantic_token_registry import load_semantic_token_registry  # noqa: E402
-from docs_builder.semantic_tokens import (  # noqa: E402
-    parse_semantic_tokens,
-)
+from docs_builder.source_tokens import parse_source_tokens  # noqa: E402
 from docs_media_inventory import parsed_source_media_references  # noqa: E402
 from docs_catalogue_media import read_catalogue_media_config, read_catalogue_gallery  # noqa: E402
 from docs_catalogue_projection import catalogue_work_from_document  # noqa: E402
@@ -147,9 +144,6 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
     collections = [("", config), *((item.collection, item) for item in config.collections)]
     local_roots = {child: resolve_workspace_path(repo_root, generated_documents_path(owner)) for child, owner in collections}
     public_roots = {child: resolve_workspace_path(repo_root, path) for child, path in public_document_reader_paths(workspace).items()}
-    registry = load_semantic_token_registry(repo_root)
-    if registry is None:
-        raise ValueError("Semantic-token registry is unavailable.")
     entries: list[dict[str, Any]] = []
     unavailable_sources: list[dict[str, str]] = []
     destination_exists: dict[tuple[bool, str, str], bool] = {}
@@ -168,9 +162,9 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
             meta = DocMeta(
                 source.doc_id, source.title, canonical_document_viewer_url(source.doc_id, collection=collection), collection,
             )
-            tokens = parse_semantic_tokens(source.body, registry=registry)
+            tokens = parse_source_tokens(source.body)
             for reference in parsed_source_media_references(
-                owner, source.source_text, semantic_tokens=tokens,
+                owner, source.source_text, source_tokens=tokens,
                 doc_id=meta.doc_id,
             ):
                 key = (reference.media_type, reference.identity)
@@ -189,20 +183,18 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
             for token in tokens:
                 if token.family != "catalogue":
                     continue
-                reason = "unsupported_kind"
-                if token.supported:
-                    if token.target_type == "gallery" and media_policy_available is None:
-                        try:
-                            read_catalogue_media_config(repo_root, workspace=workspace.catalogue.working)
-                            media_policy_available = True
-                        except ValueError:
-                            media_policy_available = False
-                    key = (token.target_type, token.target_id)
-                    if key not in catalogue_reasons:
-                        catalogue_reasons[key] = catalogue_target_reason(
-                            repo_root, *key, workspace=workspace.catalogue.working, catalogue_documents=local_roots["catalogue"],
-                        ) if token.target_type == "work" or media_policy_available else "missing_gallery"
-                    reason = catalogue_reasons[key]
+                if token.target_type == "gallery" and media_policy_available is None:
+                    try:
+                        read_catalogue_media_config(repo_root, workspace=workspace.catalogue.working)
+                        media_policy_available = True
+                    except ValueError:
+                        media_policy_available = False
+                key = (token.target_type, token.target_id)
+                if key not in catalogue_reasons:
+                    catalogue_reasons[key] = catalogue_target_reason(
+                        repo_root, *key, workspace=workspace.catalogue.working, catalogue_documents=local_roots["catalogue"],
+                    ) if token.target_type == "work" or media_policy_available else "missing_gallery"
+                reason = catalogue_reasons[key]
                 if reason:
                     entries.append({
                         "issue_type": "semantic_token",

@@ -16,7 +16,7 @@ def install_summary_rule(renderer: Any, *, summary_html: str) -> None:
     """Expand exact standalone blocks after parsing, preserving literal contexts.
 
     The caller supplies completed restricted Summary markup. This rule wraps it
-    without reparsing the authored text or interpreting more semantic tokens.
+    without reparsing the authored text or interpreting more source tokens.
     """
     install_standalone_directive(
         renderer, SUMMARY_DIRECTIVE, "docs_summary",

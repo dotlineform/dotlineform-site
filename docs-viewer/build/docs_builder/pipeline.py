@@ -17,8 +17,8 @@ from .common import (
 )
 from .payloads import PayloadBuilderMixin
 from .rendering import ContentRenderingMixin
-from .semantic_tokens import SemanticTokensMixin
 from .source import DocRecord, SourceLoadingMixin
+from .source_tokens import SourceTokensMixin
 from .write_plan import ItemProjection, WritePlanMixin
 from docs_workspace_config import DocsWorkspaceConfig
 
@@ -27,7 +27,7 @@ class DocsDataBuilder(
     SourceLoadingMixin,
     PayloadBuilderMixin,
     ContentRenderingMixin,
-    SemanticTokensMixin,
+    SourceTokensMixin,
     WritePlanMixin,
 ):
     def __init__(
@@ -62,7 +62,6 @@ class DocsDataBuilder(
         self.skip_recent = skip_recent is True
         rendering_inputs = RenderingInputs.load(self.repo_root) if rendering_inputs is None else rendering_inputs
         self.site_config = rendering_inputs.site_config
-        self.semantic_token_registry = rendering_inputs.semantic_token_registry
         self.inline_icons = rendering_inputs.inline_icons
         self.rendering_inputs = rendering_inputs
         self.related_links_dir = related_links_dir or generated_documents_path(config) / "links-by-id"

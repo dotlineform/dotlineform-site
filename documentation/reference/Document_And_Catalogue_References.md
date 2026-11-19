@@ -3,13 +3,13 @@ draft: false
 doc_id: d-20260725-153656-516b61
 title: Semantic Tokens
 added_date: "2026-07-25 15:36:56"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 summary: Explain current Catalogue media and image tokens, authoring, document relationships, and the public boundary.
 parent_id: d-20260424-000000-50b63f
 ---
 # Document and Catalogue References
 
-Source stores exact targets and the author's presentation choices. Use **Insert doc link** for an ordinary Markdown document link, **Add Media View link** for a Work or Gallery opener, **Add Catalogue image** for an inline Work image and **Add image** for a Docs-owned image. “Semantic tokens” is the older name still visible in source code and configuration. [Source editor](Source_Editing.md#directives) · [Related Links](Related_Links.md)
+Source stores exact targets and the author's presentation choices. Use **Insert doc link** for an ordinary Markdown document link, **Add Media View link** for a Work or Gallery opener, **Add Catalogue image** for an inline Work image and **Add image** for a Docs-owned image. [Source editor](Source_Editing.md#directives) · [Related Links](Related_Links.md)
 
 ## Supported Source Forms
 
@@ -43,13 +43,13 @@ Use the exact registered `img` or `svg` logical path under the document's owner.
 
 Invoke the matching Add action with the caret strictly inside a supported token or with its exact range selected to open Edit. Editing loads stored fields. The Catalogue picker can select another exact target, retaining authored text choices and updating untouched defaults. Apply uses the captured range, buffer revision and mounted editor to update only the dirty source. Cancel leaves the buffer intact. Save writes the complete source and awaits exact generation and fresh display. Inline, fenced and indented code, preformatted HTML and comments are inactive. Unsupported forms remain literal. [Catalogue modal](../../docs-viewer/runtime/js/management/source-editor/catalogue-media-modal.js) · [Source editor ownership](Source_Editing.md)
 
-## Registry and Lookups
+## Catalogue Target Lookup
 
-The active `docs-viewer/config/semantic-tokens/registry.json` declares the Catalogue family and Work/Gallery identifier rules. Python Build, Broken Links and the Source picker load it. Manage's `/docs/catalogue-media-targets` returns Work IDs/titles from the Working Catalogue `manage-manifest.json` and Gallery IDs/titles from the generated Gallery index. Its active payload schema is `docs_semantic_token_target_lookup_v2`. The picker uses those loaded IDs and titles for selection and Apply. Thumbnail previews use the shared rendition policy. The former persisted `semantic-tokens/target-lookup.json`, its builder and browser loader were retired. [Registry](../../docs-viewer/config/semantic-tokens/registry.json) · [Picker support](../../docs-viewer/runtime/js/management/source-editor/catalogue-media-support.js)
+Manage's `/docs/catalogue-media-targets` returns exact Work IDs and titles from the Working Catalogue `manage-manifest.json` and Gallery IDs and titles from the generated Gallery index, using `docs_catalogue_media_targets_v1`. The browser searches those targets, ranks Gallery ahead of Work for equal scores and uses the selected identity on Apply. Thumbnail previews use the shared rendition policy. The Source editor and Build parsers define the supported forms and exact ID syntax. [Lookup service](../../docs-viewer/services/docs_catalogue_media.py) · [Picker search](../../docs-viewer/runtime/js/management/source-editor/catalogue-media-targets.js) · [Source editor parser](../../docs-viewer/runtime/js/management/source-editor/source-token-parser.js)
 
 ## Build and Runtime Resolution
 
-Regenerate owns the identity-only Entry. Build permits one Entry in the matching Catalogue Work document. Entry has no Source action. Build prepares ordered Catalogue references and rendering slots using adopted Work data, and the reader activates exact Work or Gallery presentations on demand. Visible Gallery tokens emit an inline slot. Hidden Gallery tokens still supply the authored Gallery ID and label to Build. Export uses prepared static content. [Generated data contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) · [Media View](Catalogue_Media_View.md) · [Token parser and renderer](../../docs-viewer/build/docs_builder/semantic_tokens.py)
+Regenerate owns the identity-only Entry. Build permits one Entry in the matching Catalogue Work document. Entry has no Source action. Build prepares ordered Catalogue references and rendering slots using adopted Work data, and the reader activates exact Work or Gallery presentations on demand. Visible Gallery tokens emit an inline slot. Hidden Gallery tokens still supply the authored Gallery ID and label to Build. Export uses prepared static content. [Generated data contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) · [Media View](Catalogue_Media_View.md) · [Token parser and renderer](../../docs-viewer/build/docs_builder/source_tokens.py)
 
 ## Catalogue Identity and Document Associations
 
