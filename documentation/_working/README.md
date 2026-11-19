@@ -16,6 +16,5 @@ Use the [development workflow](../development/Development_Workflow.md) when a ch
 ## Follow-on Reviews
 
 - [Cloud Environments](Cloud_Environments.md) records the iPad setup handoff, the unresolved settings issue and the checks needed to resume.
-- [Documentation code findings](Documentation_Code_Follow_Ups.md): concrete implementation/configuration issues identified during the documentation review.
 
 Other work is found by reviewing the directory and following its domain owners. A link or old planning status alone does not authorise implementation. Historical parent metadata is navigation, not a requirement to recreate the former planning hierarchy.

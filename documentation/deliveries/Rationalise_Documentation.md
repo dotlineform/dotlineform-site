@@ -48,7 +48,7 @@ The user chose the live site as the design reference and authorised retirement o
 
 ## Code and file follow-ups
 
-Open findings now live in [Documentation Code Follow Ups](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups). The separate [site test retirement](Review_Test_Policy_And_Checks.md) resolved the stale test findings.
+The follow-up delivery records how the code and file findings were resolved. The separate site test retirement resolved the stale test findings. [Documentation Code Follow Ups](Documentation_Code_Follow_Ups.md#code-and-file-follow-ups) · [Site test retirement](Review_Test_Policy_And_Checks.md)
 
 ## Data Model And Rule Review Retirement
 

@@ -25,7 +25,7 @@ The Word adapter's fixed map reserves H1 for Title and reports Heading 6 clampin
 
 Older Review pages described v1/v2 manifests with scope/stage provenance, canonical links containing a stage parameter and a guarantee that failed rebuilding preserved the previous preview. The current service requires v4 provenance, exact selected membership and collection identity. Explicit Build writes package-generated output in place, while initial materialization exposes a completed temporary package by rename. The reference now describes those separate failure boundaries. [Current Review](../reference/Docs_Review.md)
 
-The original reference listed package, materialization, edited-source and smoke files as coverage. The Python fixtures still used v1 manifests or scope/stage requests when they were retired with the site suite. Review's authority boundary and the missing named-collection canonical shortcut are recorded in the tracker. [Code follow-ups](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+The original reference listed package, materialization, edited-source and smoke files as coverage. The Python fixtures still used v1 manifests or scope/stage requests when they were retired with the site suite. The completed follow-ups record the fix for Review's named-collection canonical shortcut. [Code follow-ups](Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
 
 ## Broken Links evidence
 

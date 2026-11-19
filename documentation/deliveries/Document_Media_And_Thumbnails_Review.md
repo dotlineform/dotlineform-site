@@ -21,7 +21,7 @@ The full dated implementation evidence is retained in Git at `c76f6608ef:documen
 
 ## Remaining follow-up
 
-Old flat media and partial-write orphans are manual review. The current R2 report lists findings and leaves decisions and deletion to the operator. The scope-era staged-media tests need a separately scoped retirement or replacement review. [Current lifecycle](../reference/Media_And_Asset_Handling.md) · [Code and file follow-ups](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+Old flat media and partial-write orphans are manual review. The current R2 report lists findings and leaves decisions and deletion to the operator. The scope-era staged-media tests were retired with the site suite. The completed follow-ups record the staged-file CLI's ordinary-target fix and local Working boundary. [Current lifecycle](../reference/Media_And_Asset_Handling.md) · [Site test retirement](Review_Test_Policy_And_Checks.md) · [Code and file follow-ups](Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
 
 ## Later Thumbnail Acceptance
 

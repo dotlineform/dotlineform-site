@@ -30,4 +30,4 @@ On 18 November 2026 the user confirmed Related Links Delivery was done and reque
 
 The proposal for media entries and Media View → Links return was stopped before implementation when the direction changed to document relationships and pinning. It concerned the former Links view. The reviewed records contain no scheduled follow-on to put the full document relationship list on Work Media View. [Stopped proposal](Links_View_Semantic_Tokens_Delivery.md#superseded) · [Design decisions](../design/Media_View_And_Document_Relationships.md)
 
-Related Links and Related Galleries are complete as recorded above. Code naming, registry ownership and out-of-date tests are tracked as separate [code and file follow-ups](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups).
+Related Links and Related Galleries are complete as recorded above. The follow-up delivery records the code naming and registry ownership changes. The separate site test retirement resolved the outdated test findings. [Code and file follow-ups](Documentation_Code_Follow_Ups.md#code-and-file-follow-ups) · [Site test retirement](Review_Test_Policy_And_Checks.md)

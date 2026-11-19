@@ -4,19 +4,17 @@ doc_id: d-20261118-235400-e94831
 title: Documentation Code Follow Ups
 added_date: "2026-11-18 23:50:00"
 last_updated: "2026-11-19"
-summary: Concrete code and file review findings preserved from documentation rationalisation.
-parent_id: d-20261118-235100-64ad2e
-ui_status: proposed
+summary: Completed code and file follow-ups from documentation rationalisation.
+parent_id: d-20261118-151521-a0f9c3
+ui_status: done
 ---
 # Documentation Code Follow Ups
 
-These findings came from the completed [documentation review](../deliveries/Rationalise_Documentation.md). Resolve each open finding through its domain owner. The [site test retirement](../deliveries/Review_Test_Policy_And_Checks.md) closed the stale test and audit findings. The pre-retirement revision preserves their original entries.
+This delivery records the resolution of all 17 code and file findings from the documentation review. The separate site test retirement closed the stale test and audit findings, whose original entries remain in Git history. [Documentation review](Rationalise_Documentation.md) · [Site test retirement](Review_Test_Policy_And_Checks.md)
 
 ## Code and file follow-ups
 
-When a batch finds stale terminology, a questionable configuration file or an apparently retired path, trace its current consumers. Record concrete review work here with the owning files and the decision it needs. Implementation and test changes have their own delivery scope.
-
-| Status | Review | Evidence and question |
+| Status | Review | Resolution and evidence |
 | --- | --- | --- |
 | Done | **Catalogue token naming and registry ownership** | Retired the registry, its picker fetch and duplicate ID checks. Source token parsers enforce exact IDs, active Markdown ranges and canonical authored fields. The browser ranks exact generated Catalogue targets with `docs_catalogue_media_targets_v1`. Build checks Entry against its owning document, and Broken Links uses `semantic_token` for saved findings. Focused lint passed. Four selected documents produced zero changes in dry runs, and the picker code loaded the real lookup response. Browser interaction remains for manual review. [Source tokens and lookup](../reference/Document_And_Catalogue_References.md#catalogue-target-lookup) · [Broken Links](../reference/Broken_Links.md#inputs-and-destination-checks) |
 | Done | **Full Working Build setup and repair boundary** | Full Working Build regenerates a missing management tree from canonical source. The exact build still needs that tree to merge unselected rows. Full maintenance caches its required prepared public views ahead of writes and requires the saved queue. The tree read retains path confinement and accepts only file absence for this repair. In a disposable workspace, the real CLI regenerated tree contents and completed, stopped at inputs for a missing Works public manifest, and rejected an exact build with the tree absent. Focused lint passed. [Builder](../reference/Builder.md#working-rebuild) · [Workspace restore](../reference/Local_Setup.md#restore-the-docs-workspace) |

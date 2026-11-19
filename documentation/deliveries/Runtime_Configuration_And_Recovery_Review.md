@@ -25,7 +25,7 @@ The approved 2026-10-24 selection passed all six cases in 0.04 seconds. Focused 
 
 ## Current review and remaining work
 
-Source inspection traced runner bindings, environment precedence, workspace loading, served routes, capability responses, browser projection and static public loading. It found a disabled-Studio supervisor failure and the standalone Docs runner's workspace-environment gap. The tracker retains those code follow-ups. The later suite retirement resolved the stale Settings, scope configuration and public-boundary test findings. [Follow-up tracker](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups) · [Site test retirement](Review_Test_Policy_And_Checks.md)
+Source inspection traced runner bindings, environment precedence, workspace loading, served routes, capability responses, browser projection and static public loading. It found a disabled-Studio supervisor failure and the standalone Docs runner's workspace-environment gap. The completed follow-ups record both fixes. The later suite retirement resolved the stale Settings, scope configuration and public-boundary test findings. [Code follow-ups](Documentation_Code_Follow_Ups.md#code-and-file-follow-ups) · [Site test retirement](Review_Test_Policy_And_Checks.md)
 
 This documentation batch checked redirected paths, headings, identities and whitespace. It did not start services, exercise browser flows, change configuration, run runtime tests or write to the external workspace.
 

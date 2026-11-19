@@ -33,7 +33,7 @@ On 2026-10-25, Work `02014`, an sRGB 3024×3024 JPEG, reproduced a green cast in
 
 The report's v3 metadata conversion used the complete private generator and direct saved-reader/browser-data diagnostics, preserving empty queues and lifecycle timestamps. The later local transport change exercised the production dispatcher against saved metadata. The Source image change regenerated private metadata and checked literal path composition and five/seven-column TSV through the production data owner.
 
-Recorded user review covers Work title Save, expanded presentation, sorting, links and improved search responsiveness. Pagination toggle, detailed clipboard/resize/restore behavior and failure scenarios retain manual evidence gaps. The old contract test still asserts canonical API reads and a retired navigation fragment and is logged for separate review. [Current report](../reference/Catalogue_Works.md) · [Follow-up tracker](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+Recorded user review covers Work title Save, expanded presentation, sorting, links and improved search responsiveness. Pagination toggle, detailed clipboard/resize/restore behavior and failure scenarios retain manual evidence gaps. The retired site suite included a contract test that asserted canonical API reads and a retired navigation fragment. [Current report](../reference/Catalogue_Works.md) · [Site test retirement](Review_Test_Policy_And_Checks.md)
 
 ## Current verification
 
