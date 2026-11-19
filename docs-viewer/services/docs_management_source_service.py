@@ -166,28 +166,37 @@ def finish_source_candidate(
     resolved: ManagedDocumentTarget, candidate: SourceCandidate, body: str, *, dry_run: bool,
 ) -> tuple[source_model.SourceDoc, bool]:
     """Assemble validated fields and the adopted body without parsing them again."""
+    document = resolved.document
     updates = dict(candidate.updates)
-    next_metadata = candidate.metadata
-    header_newline = "\r\n" if resolved.document.source_text.splitlines(keepends=True)[0].endswith("\r\n") else "\n"
+    removed = list(candidate.removed)
+    next_metadata = dict(candidate.metadata)
+    if "last_updated" in document.front_matter:
+        next_metadata["last_updated"] = document.front_matter["last_updated"]
+    else:
+        next_metadata.pop("last_updated", None)
 
-    def assembled_source() -> str:
-        prefix = rewrite_front_matter_fields(
-            candidate.parts.prefix, updates, remove_fields=candidate.removed, fields=candidate.parts.fields,
+    if not dry_run:
+        previous_body = document.body
+        if previous_body != body:
+            previous_body = normalize_source_body_for_write(previous_body)
+        next_metadata = source_model.advance_front_matter_for_recent_edit(
+            document.front_matter, previous_body, next_metadata, body,
         )
-        prefix = normalize_source_body(prefix).replace("\n", header_newline)
-        return (prefix if prefix.endswith("\n") else prefix + header_newline) + body
+    for key in ("added_date", "last_updated"):
+        if key in next_metadata and next_metadata[key] != candidate.metadata.get(key):
+            updates[key] = next_metadata[key]
+    if "last_updated" in candidate.metadata and "last_updated" not in next_metadata:
+        removed.append("last_updated")
 
-    next_source_text = assembled_source()
-    source_changed = next_source_text != resolved.document.source_text
-    if source_changed and not dry_run:
-        next_metadata = source_model.advance_doc_front_matter(next_metadata)
-        updates.update({key: next_metadata[key] for key in ("added_date", "last_updated")})
-        next_source_text = assembled_source()
+    header_newline = "\r\n" if document.source_text.splitlines(keepends=True)[0].endswith("\r\n") else "\n"
+    prefix = rewrite_front_matter_fields(candidate.parts.prefix, updates, remove_fields=removed, fields=candidate.parts.fields)
+    prefix = normalize_source_body(prefix).replace("\n", header_newline)
+    next_source_text = (prefix if prefix.endswith("\n") else prefix + header_newline) + body
     return replace(
-        resolved.document, source_text=next_source_text, front_matter=next_metadata,
+        document, source_text=next_source_text, front_matter=next_metadata,
         body=body, title=next_metadata["title"],
         ui_status=source_model.normalize_ui_status(next_metadata.get("ui_status")), report=candidate.report, parts=None,
-    ), source_changed
+    ), next_source_text != document.source_text
 
 
 def save_source_document(

@@ -15,7 +15,7 @@ The 2026-11-18 review consolidated fourteen Studio pages into five Reference own
 
 The repository ID/date migration preserved explicit times, used Git addition time when a date-only value agreed with the Git date, and otherwise used midnight. Deliberately authored historical dates stayed in place. External Notes used midnight for date-only metadata because repository history did not establish its source creation time.
 
-The later Recent seed followed renames and selected the latest Git author time at which body, Title or Summary changed. It updated the bounded union needed by edited projections, with actual write times for dirty qualifying edits. These were migration decisions. Current managed operations own dates at their write boundary. The existing Source Save timestamp discrepancy remains logged. [Current date behavior](../reference/Document_Identity.md#date-provenance)
+The later Recent seed followed renames and selected the latest Git author time at which body, Title or Summary changed. It updated the bounded union needed by edited projections, with actual write times for dirty qualifying edits. These were migration decisions. Current managed operations own dates at their write boundary. The documentation review logged the then-current Source Save timestamp discrepancy. [Current date behavior](../reference/Document_Identity.md#date-provenance)
 
 ## Conversion and diagrams
 

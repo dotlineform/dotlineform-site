@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260715-094411-2b6e65
 title: Document Identity
 added_date: "2026-07-15 09:44:11"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: d-20260424-000000-50b63f
 summary: Immutable document codes, timestamp provenance, creation boundaries, and the distinction between identity and human navigation.
 ---
@@ -61,9 +61,9 @@ The relationship builder retains unique directed endpoints keyed by collection a
 
 ## Date Provenance
 
-`added_date` records creation. `last_updated` records an edit. Full lifecycle timestamps use `YYYY-MM-DD HH:MM:SS`; legacy date-only source remains readable. `date` and `date_display` are authored content rendered by `[[date]]`. Lists project an ISO display date, while edited Recent requires a full timestamp. [Reader dates](Reader_Discovery_And_Return.md)
+`added_date` records creation. `last_updated` records an edit. Full lifecycle timestamps use `YYYY-MM-DD HH:MM:SS`. Legacy date-only source remains readable. `date` and `date_display` are authored content rendered by `[[date]]`. Lists project an ISO display date. [List dates](Generated_Data_Contracts.md#list-date-projections)
 
-The intended Recent-edit basis is body, Title or Summary. Current Source Save advances `last_updated` when the assembled Markdown changes, including a metadata-only edit. Dedicated Draft and exact Rebuild preserve dates. For an external content edit, supply the intended timestamp and explicitly rebuild the document. The timestamp discrepancy remains logged for code review. [Save phases](Source_Editing.md#if-save-stops) · [Timestamp follow-up](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+Source Save sets `last_updated` to the save time when the normalized body, Title or Summary changes. Status, Draft and date-field edits by themselves preserve the saved timestamp. Dedicated Draft and exact Rebuild preserve saved dates. For a deliberate timestamp correction or an external content edit, set the intended timestamp in the Markdown and run exact Rebuild. [Source Save](Source_Editing.md#post-docssourcesave)
 
 ## Diagrams
 

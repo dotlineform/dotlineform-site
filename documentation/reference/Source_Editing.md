@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: d-20260607-222033-647b52
 ---
 # Source editing
@@ -56,7 +56,7 @@ For a new native file selection, send the exact target, `media_kind` and basenam
 
 Every Save uses multipart. `metadata` contains the exact target, string `source_text` and `media` array. Each item supplies `media_kind` and boolean `replace` and `preserve_resolution`. Ordered `file_0`, `file_1` and subsequent parts supply bytes and basenames. A text-only edit sends an empty media array. Limits are 64 MiB per file and combined, 1 MiB metadata and 1 MiB multipart overhead. [Upload parsing](../../docs-viewer/services/docs_source_media_upload.py)
 
-Candidate validation binds the parsed front matter to the fixed request identity, checks readiness and report rules, normalizes supported metadata and retains field spans. The configured owner decides collection membership. Ordinary Index placement belongs to the separate order file. Save can adopt active foreign document-owned media and use the rewritten body without parsing the front matter again. It compares the prior saved body with the final body to select media effects. Any change to the assembled source currently sets `last_updated` to the save time, including changes limited to front matter. A same-identity media replacement can leave the assembled text and timestamp unchanged. The documented narrower Recent-edit rule is tracked for reconciliation. [Timestamp and identity](Document_Identity.md#date-provenance) · [Media adoption](Media_And_Asset_Handling.md#source-save-media-adoption) · [Follow-up](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+Candidate validation binds the parsed front matter to the fixed request identity, checks readiness and report rules, normalizes supported metadata and retains field spans. The configured owner decides collection membership. Ordinary Index placement belongs to the separate order file. Save can adopt active foreign document-owned media and use the rewritten body without parsing the front matter again. It compares the prior saved body with the final body to select media effects. Save sets `last_updated` when the normalized body, Title or Summary changes. Edits to other fields and same-identity media replacements preserve the saved timestamp when those content values stay the same. [Timestamp and identity](Document_Identity.md#date-provenance) · [Media adoption](Media_And_Asset_Handling.md#source-save-media-adoption)
 
 The success payload includes `source_text`, `source_saved`, `generation_complete`, `publication_handoff_complete`, `committed_document` and `rebuild`, with media notes/effects where applicable. Generation uses completed source/metadata and selected effects. Search and Recent retain their saved files. Publish later applies queued effects. [Exact generation and queue](Builder.md#docs-build-flow)
 
