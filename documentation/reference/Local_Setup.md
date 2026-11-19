@@ -49,13 +49,22 @@ Set `DOCS_VIEWER_MANAGEMENT_ENABLED=1` for Manage authoring and `DOCS_VIEWER_REV
 
 ## Restore The Docs Workspace
 
-Clone the private `dotlineform/docs-viewer-data` repository into a separate folder. In the site checkout's `.env.local`, set `DOTLINEFORM_DOCS_BASE_DIR` to the absolute path of the data checkout itself. The checkout supplies `working/source/` and document media under `working/assets/media/`. [Data repository](https://github.com/dotlineform/docs-viewer-data) · [Source version history](Source_Organisation.md#source-version-history)
+**Publish** transfers queued public changes and then pushes both Git backups. The backups also run when the queues are empty. Review the site with `bin/site-preview` before running **Deploy Public** manually. [Publish and deploy](../guide/Publish_And_Deploy.md)
+
+| Recovery source | What it supplies |
+| --- | --- |
+| Private `docs-viewer-data` repo | Saved Docs source, including drafts, document media, and all three Working queues. |
+| `dotlineform-site` repo | The five canonical Studio Catalogue JSON files and the exact published Docs, Catalogue and Search data in `site/`, including Work thumbnails. |
+| R2 | Published document media and Work srcsets and downloads. Matching published files can supply missing Working copies. |
+| Time Machine | The rest of the local workspace, including Work assets, generated output, Preview, and the kept-downloaded Projects tree with originals and Catalogue staging. |
+
+For a Git-based restore, clone `dotlineform-site` and the private `dotlineform/docs-viewer-data` repository into separate folders. In the site checkout's `.env.local`, set `DOTLINEFORM_DOCS_BASE_DIR` to the absolute path of the data checkout itself. [Data repository](https://github.com/dotlineform/docs-viewer-data) · [Source version history](Source_Organisation.md#source-version-history)
 
 For a full workspace restore, use the same Time Machine recovery point for Docs and Projects. Include the saved source, document media, `working/assets/works/`, `working/generated/`, `preview/`, the Working queues, and Catalogue media staging under Projects. Keep the iCloud Drive Projects tree downloaded on the laptop so the backup has the local files.
 
 The last pushed commit in the private data repository supplies fallback copies of `working/catalogue-updates-pending.json`, `working/catalogue-publish-pending.json` and `working/docs-publish-pending.json`. If a queue and the restored workspace come from different recovery points, check its selected writes against the restored prepared output and staged or Working media. Check removals against the intended source and current published state. Recover missing inputs, rerun the owning preparation for changes still needed, and reconcile stale selections before resuming Refresh, Regenerate or Publish.
 
-Use Full Working Build when the restored document, Search, and Recent output needs refreshing. It requires ready media, the prepared public membership and the Docs publication queue, and can regenerate a missing ordinary management tree. Catalogue Work output has its own Refresh and Regenerate workflow. For missing primary renditions, the matching published files in R2 can also provide recovery copies. [Full Working Build](Builder.md#working-rebuild) · [Catalogue workflow and media destinations](Catalogue_Save_And_Refresh.md#storage-and-selection)
+Use Full Working Build when the restored document, Search, and Recent output needs refreshing. It requires ready media, the prepared public membership and the Docs publication queue, and can regenerate a missing ordinary management tree. Catalogue Work output has its own Refresh and Regenerate workflow. [Full Working Build](Builder.md#working-rebuild) · [Catalogue workflow and media destinations](Catalogue_Save_And_Refresh.md#storage-and-selection)
 
 ## Service Health And Capabilities
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-647b52
 title: Endpoint Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Local Service Map
@@ -30,7 +30,7 @@ Generated reads, management and Review have independent process gates. Managemen
 | Read/refresh an operational report | Report-specific API; Broken Links uses GET saved / POST Refresh | [Reports](Reports.md), [Broken Links](Broken_Links.md#saved-local-report) |
 | Import, Export or prepare/return a package | Native multipart Import, staged Import, static HTML Export and `/docs/packages/…` | [Import](Docs_Import.md), [Export](Export.md), [Packages](Document_Packages.md) |
 | Adopt refreshed Catalogue facts | `POST /docs/catalogue/regenerate` | [Save, Refresh and Regenerate](Catalogue_Save_And_Refresh.md) |
-| Apply prepared publication selections | `POST /docs/publish` with `{}` | [Build/queue/Publish](Builder.md#preview-and-deployment-boundary) |
+| Apply prepared publication selections and back up saved Docs data and site content | `POST /docs/publish` with `{}` | [Publish and backup](Builder.md#preview-and-deployment-boundary) |
 | Inspect or build a returned package | Independently gated `/docs-review/packages/…` | [Review authority and API](Docs_Review.md#api-surface) |
 | Open a canonical local target | `POST /docs/open-local-target` with `{target}` | [Local folder links](Source_Mutation_Endpoints.md#local-folder-links) |
 
@@ -44,7 +44,7 @@ The HTTP owner checks management/origin/body framing. Dispatch selects [set_draf
 
 Generation owns document/Links output and eligible public selections or withdrawals. It preserves saved Search/Recent. The response supplies the exact target, committed record and separate source/generation completion. The browser projects that record into retained lists and controls; a later generation failure still carries saved readiness for projection. [Mutation completion](Source_Mutation_Endpoints.md#completion-and-recovery)
 
-Publish is a later explicit request over the completed Docs/Catalogue queues. It transfers selected files/removals, verifies completion and removes successful units. It trusts upstream eligibility and does no source read or generation. Browser metadata projection and public transfer remain separate completion effects.
+Publish is a later explicit request over the completed Docs/Catalogue queues. Its transfer phase uses upstream eligibility, verifies selected writes and removals, and clears successful units. After that phase succeeds, the request awaits the private Docs and site content Git backups. The response keeps publication `complete` and uses `backup_error` to identify any failed backup. The browser displays that message as an error. [Publish and backup](Builder.md#preview-and-deployment-boundary)
 
 ## Failure And Cache Boundaries
 

@@ -495,7 +495,8 @@ export function createDocsViewerManagementActionController(options) {
     try {
       var result = await publishManagedDocs(managementClientOptions());
       if (result.complete !== true) throw new Error(result.summary_text || "Publish is incomplete.");
-      setManagementMessage("", false);
+      var backupError = result.backup_error || "";
+      setManagementMessage(backupError, Boolean(backupError));
       return result;
     } catch (error) {
       var payload = error && error.payload;

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: d-20260424-000000-50b63f
 ---
 # Working generation and publication
@@ -64,9 +64,15 @@ Completed generation can persist document/shared effects before later phases run
 
 ## Preview And Deployment Boundary
 
-**Actions → Publish** invokes one awaited empty-object `POST /docs/publish`. Publish reads both queues and applies Catalogue Work units, Docs document/media and shared effects, then Catalogue shared output. For selected Catalogue rendering it uses adopted Working Work data. Each unit applies its supplied files/removals to Preview and repository/R2 destinations and clears after successful verification. A missing selected media file blocks its write unit. An already absent removal target is complete. An empty queue returns before artifact work. Build, eligibility and discovery have their own owners upstream.
+**Actions → Publish** invokes one awaited empty-object `POST /docs/publish`. The publication phase reads both queues and applies Catalogue Work units, Docs document/media and shared effects, then Catalogue shared output. For selected Catalogue rendering it uses adopted Working Work data. Each unit applies its supplied files/removals to Preview and repository/R2 destinations and clears after successful verification. A missing selected media file blocks its write unit. An already absent removal target is complete. Empty queues skip transfers and proceed to the Git backups. Build, eligibility and discovery have their own owners upstream.
 
-A failure stops at the reported phase and target. Completed effects stay in place, and failed or unprocessed selections stay pending. Correct the owning input or destination and rerun Publish for the remaining selections. R2 effects occur during Publish. Review the repository with `bin/site-preview`, then commit, push and run Deploy Public separately. [Publish owner](../../docs-viewer/services/docs_publish.py) · [Docs transfers](../../docs-viewer/services/docs_selected_publication.py) · [Catalogue transfers](Catalogue_Save_And_Refresh.md#per-work-publish)
+A transfer failure stops at the reported phase and target. Completed effects stay in place, and failed or unprocessed selections stay pending. Correct the owning input or destination and rerun Publish for the remaining selections. R2 effects occur during Publish. Review the site repository with `bin/site-preview` before running Deploy Public manually. [Publish owner](../../docs-viewer/services/docs_publish.py) · [Docs transfers](../../docs-viewer/services/docs_selected_publication.py) · [Catalogue transfers](Catalogue_Save_And_Refresh.md#per-work-publish)
+
+After successful publication, Publish stages changes under `working/source/` and `working/assets/media/` and in the three Working queues. This covers saved drafts. It commits and pushes those changes to `main` in the private Docs data repository.
+
+The site backup separately commits and pushes changes to the five canonical Studio Catalogue JSON files and the published output under `site/assets/data/docs/`, `site/assets/data/catalogue/` and `site/assets/data/search/`. This includes Work thumbnails. The site backup checks outgoing commits and stops if they touch other paths. Site code and runtime releases follow the ordinary review workflow.
+
+Publish awaits both backups, including when the publication queues are empty. Successful backups are silent. Each Git failure is reported separately after publication and identifies a new commit kept locally when its push failed. The next Publish attempts to push eligible local backup commits even without new file changes. [Backup owner](../../docs-viewer/services/docs_publish_backup.py) · [Workspace restore](Local_Setup.md#restore-the-docs-workspace)
 
 ## Source Contract
 

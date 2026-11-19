@@ -1,4 +1,4 @@
-"""One awaited queue-only publication operation."""
+"""Publish the selected effects, then back up saved Docs and site content."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ from typing import Any, Iterable, Mapping
 from docs_catalogue_publication import publish_catalogue_shared, publish_catalogue_works
 from docs_catalogue_projection import catalogue_preparation_inputs
 from docs_catalogue_media_transfer import CatalogueMediaTransfers
+from docs_publish_backup import PublishBackupError, backup_docs_workspace, backup_site_content
 from docs_publication_queue import has_selections, read_queue
 from docs_publication_transfer import SelectedTransfers
 from docs_selected_publication import publish_selected_documents
@@ -26,19 +27,30 @@ def publish_docs(repo_root: Path, body: dict[str, Any], *, client: object | None
         docs = read_queue(workspace)
         path = pending_path(repo_root, FILENAME, workspace=workspace)
         catalogue = load_pending_queue(path)
-        if not has_selections(docs) and not any(catalogue[family] for family in ("current_works", "deleted_works", *SHARED_FIELDS)):
-            result.update(ok=True, complete=True, phase="complete", summary_text="Nothing queued for publication.")
-            return result
-        transfers = SelectedTransfers(repo_root, client=client, env_files=env_files, environ=environ)
-        inputs = catalogue_preparation_inputs(repo_root, workspace)
-        work_media = CatalogueMediaTransfers(repo_root, workspace, transfers, result)
-        publish_catalogue_works(repo_root, workspace, catalogue, path, work_media, inputs, result)
-        publish_selected_documents(repo_root, workspace, docs, transfers, work_media, inputs, result)
-        publish_catalogue_shared(repo_root, workspace, catalogue, path, result)
+        queued = has_selections(docs) or any(catalogue[family] for family in ("current_works", "deleted_works", *SHARED_FIELDS))
+        if queued:
+            transfers = SelectedTransfers(repo_root, client=client, env_files=env_files, environ=environ)
+            inputs = catalogue_preparation_inputs(repo_root, workspace)
+            work_media = CatalogueMediaTransfers(repo_root, workspace, transfers, result)
+            publish_catalogue_works(repo_root, workspace, catalogue, path, work_media, inputs, result)
+            publish_selected_documents(repo_root, workspace, docs, transfers, work_media, inputs, result)
+            publish_catalogue_shared(repo_root, workspace, catalogue, path, result)
     except Exception as error:
         detail = str(error) or type(error).__name__
         result.update(error=detail, summary_text=f"Publish stopped during {result['phase']} ({result.get('target', 'queue')}): {detail}. Completed effects were retained.")
         return result
-    result.update(ok=True, complete=True, phase="complete", summary_text="Publish complete.")
+    summary = "Publish complete." if queued else "Nothing queued for publication."
+    result.update(ok=True, complete=True, phase="complete", summary_text=summary)
     result.pop("target", None)
+    failures = []
+    for label, backup, root in (
+        ("Docs workspace", backup_docs_workspace, workspace.workspace_root.path),
+        ("Site", backup_site_content, repo_root),
+    ):
+        try:
+            backup(root)
+        except PublishBackupError as error:
+            failures.append(f"{label} backup failed. {error}")
+    if failures:
+        result["backup_error"] = f"{summary} {' '.join(failures)}"
     return result
