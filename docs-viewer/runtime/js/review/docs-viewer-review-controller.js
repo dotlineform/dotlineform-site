@@ -63,11 +63,14 @@ export function createDocsViewerReviewControlRenderers() {
 }
 
 export function reviewCanonicalDocumentHref(packageManifest, docId) {
-  var sourceCollection = String(packageManifest && packageManifest.source_collection || "").trim();
   var selectedDocId = String(docId || "").trim();
-  return selectedDocId && !sourceCollection
-    ? "/docs/?doc=" + encodeURIComponent(selectedDocId)
-    : "";
+  if (!selectedDocId) return "";
+
+  var sourceCollection = String(packageManifest && packageManifest.source_collection || "").trim();
+  var params = new URLSearchParams();
+  if (sourceCollection) params.set("collection", sourceCollection);
+  params.set("doc", selectedDocId);
+  return "/docs/?" + params.toString();
 }
 
 export function createDocsViewerReviewController(options) {

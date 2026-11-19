@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260711-214307-b4c800
 title: Docs Review
 added_date: 2026-07-11 21:43:07
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 summary: Durable product, workflow, persistent package, explicit Build, source-open, and authority contract for the local returned-package review route.
 parent_id: d-20260424-000000-50b63f
 
@@ -60,7 +60,7 @@ A Build error can leave incomplete generated files because explicit rebuilding w
 
 The capability response always reports `canonical_write`, `management` and `publish` as false. Healthy Review output establishes what the package renders. The Import planner establishes which canonical fields and existing IDs can change. [Review dispatcher](../../docs-viewer/services/docs_review_service.py) · [Import fields and recovery](Document_Packages.md#what-a-return-can-overwrite)
 
-The current **Open canonical** control is produced only when the manifest's `source_collection` is empty. Named collection packages, including Concepts returns, currently lack that shortcut. Compare through the normal Manage route with the exact collection and ID. This gap is recorded for code review. [Control owner](../../docs-viewer/runtime/js/review/docs-viewer-review-controller.js) · [Follow-ups](../_working/Documentation_Code_Follow_Ups.md#code-and-file-follow-ups)
+**Open canonical** opens the selected document's current saved version in Manage in a separate tab. The link uses the selected document ID and includes the package manifest's `source_collection` for named collection returns such as Concepts. [Control owner](../../docs-viewer/runtime/js/review/docs-viewer-review-controller.js)
 
 ## Optional Edited-Source Round Trip
 
