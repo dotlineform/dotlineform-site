@@ -47,7 +47,9 @@ python3 studio/services/media/publish_media_to_r2.py --scope docs --docs-doc-id 
 python3 studio/services/media/publish_media_to_r2.py --scope docs --docs-collection <collection> --docs-doc-id <doc-id> --kind files --staged-filename document.pdf
 ```
 
-`--write` applies the local file change; differing local bytes require `--force`. It authors no link, creates no publication selection and sends nothing to R2. Ordinary Source Save and Import retain the normal linked-media workflow. This CLI has no Docs remote deletion or batch mode.
+Use this command for manual maintenance of one local Working file. `--write` applies and verifies the copy. Replacing differing Working bytes requires `--force`. The terminal report identifies the operation as **Docs Working media materialization**.
+
+For a new attachment, use **Add image** or **Add file** and **Save** to add the source reference and queue eligible media. For a file the saved document already references, **Edit doc → Rebuild** selects the current referenced media for an eligible document. **Publish** reads the current Working bytes of each selected file, including a file that was already queued when the CLI replaced it. [Add a new image or download](Media_And_Asset_Handling.md#add-a-new-image-or-download) · [Build and Publish flow](Builder.md#docs-build-flow)
 
 ## Credentials, Reports And Verification
 

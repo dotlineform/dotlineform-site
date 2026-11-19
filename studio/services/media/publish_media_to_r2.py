@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish approved local media derivatives to Cloudflare R2."""
+"""Maintain Catalogue media on R2 and materialize staged Docs media locally."""
 
 from __future__ import annotations
 
@@ -154,13 +154,13 @@ class RemoteClient(Protocol):
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     ap = argparse.ArgumentParser(
-        description="Publish approved media derivatives to Cloudflare R2. Defaults to dry-run.",
+        description="Maintain Catalogue media on R2 or copy one staged file into local Docs Working media.",
     )
     ap.add_argument("--scope", choices=["catalogue", "docs"], default="catalogue")
     ap.add_argument(
         "--kind",
         choices=sorted({*CATALOGUE_KINDS, "files", "img"}),
-        help="Catalogue kind or Docs media class to publish",
+        help="Catalogue media kind or Docs Working media class",
     )
     ap.add_argument("--id", dest="item_id", help="Specific Work ID")
     ap.add_argument("--docs-collection", help="Optional configured Docs collection for --scope docs")
@@ -171,9 +171,9 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     ap.add_argument("--all", action="store_true", help="Publish every selected kind")
     ap.add_argument("--changed-only", action="store_true", help="Omit unchanged objects from logs and JSON reports")
-    ap.add_argument("--force", action="store_true", help="Overwrite changed remote objects")
+    ap.add_argument("--force", action="store_true", help="Replace a differing Catalogue R2 object or Docs Working file")
     ap.add_argument("--allow-partial", action="store_true", help="Allow uploads when an item is missing size variants")
-    ap.add_argument("--write", action="store_true", help="Upload objects; without this flag the command is a dry-run")
+    ap.add_argument("--write", action="store_true", help="Apply the selected change. The default is a dry run.")
     ap.add_argument("--delete", action="store_true", help="Delete selected remote primary variants instead of uploading")
     ap.add_argument("--report-json", help="Optional JSON report path")
     ap.add_argument("--env-file", action="append", default=[], help="Additional local env file to load")
@@ -186,17 +186,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     repo_root = Path(args.repo_root).expanduser().resolve() if args.repo_root else REPO_ROOT
     if args.scope == "docs":
         if args.delete:
-            raise SystemExit("Error: Docs media publishing does not support remote deletion.")
+            raise SystemExit("Error: --delete is a Catalogue-only option.")
         if args.all or args.item_id:
-            raise SystemExit("Error: Docs media publishing requires one --staged-filename, not --all or --id.")
+            raise SystemExit("Error: --all and --id are Catalogue-only options. Use --staged-filename for Docs media.")
         if args.allow_partial or args.changed_only:
             raise SystemExit("Error: --allow-partial and --changed-only are catalogue-only options.")
         if args.kind not in {"files", "img"}:
-            raise SystemExit("Error: Docs media publishing requires --kind img or --kind files.")
+            raise SystemExit("Error: Docs materialization requires --kind img or --kind files.")
         if not args.staged_filename:
-            raise SystemExit("Error: Docs media publishing requires --staged-filename <filename>.")
+            raise SystemExit("Error: Docs materialization requires --staged-filename <filename>.")
         if not args.docs_doc_id:
-            raise SystemExit("Error: Docs media publishing requires --docs-doc-id <doc_id>.")
+            raise SystemExit("Error: Docs materialization requires --docs-doc-id <doc_id>.")
         from docs_media_storage import run_docs_staged_media_publish
 
         env_files = [repo_root / path for path in DEFAULT_ENV_FILES]
@@ -885,21 +885,23 @@ def print_report(report: Mapping[str, object]) -> None:
 
 
 def print_docs_report(report: Mapping[str, object]) -> None:
-    print(f"R2 Docs media publish {report['mode']}: {report.get('collection') or 'documents'}")
+    status_labels = {"would_upload": "would_copy", "uploaded": "copied"}
+    print(f"Docs Working media materialization ({report['mode']}) for {report.get('collection') or 'ordinary documents'}")
     counts = report.get("counts", {})
     if isinstance(counts, Mapping) and counts:
-        print("Counts: " + ", ".join(f"{key}={counts[key]}" for key in sorted(counts)))
+        print("Counts: " + ", ".join(f"{status_labels.get(key, key)}={counts[key]}" for key in sorted(counts)))
     else:
-        print("Counts: no matching objects")
+        print("No matching files.")
     objects = report.get("objects", [])
     if not isinstance(objects, list):
         return
     for item in objects:
         if not isinstance(item, Mapping):
             continue
+        status = item.get("status")
         reason = f" - {item.get('reason')}" if item.get("reason") else ""
         print(
-            f"{item.get('status')}: {item.get('media_class')}/{item.get('filename')}"
+            f"{status_labels.get(status, status)}: {item.get('media_class')}/{item.get('filename')}"
             f"{reason}"
         )
 
