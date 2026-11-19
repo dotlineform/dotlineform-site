@@ -123,8 +123,8 @@ def generate_documents(
         publication = load_preparation(builder.repo_root, builder.workspace, navigation=previous_tree,
                                        navigation_text=previous_tree_text, changes_only=not builder.targeted_build)
     if not collection:
-        if previous_tree is None and publication is not None:
-            previous_tree = publication.metadata.read_management("")
+        if not builder.targeted_build and publication is not None:
+            previous_tree = publication.metadata.management.get("")
             previous_tree_text = publication.metadata.navigation_text
         navigation = builder.index_tree_payload(identities, previous_payload=previous_tree)
     if update_selected and selected_payload is None:

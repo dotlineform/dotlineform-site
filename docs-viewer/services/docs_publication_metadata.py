@@ -26,13 +26,13 @@ class PublicMetadata:
     authoritative hierarchy, Draft and reader fields; no document/source reads.
     """
 
-    def __init__(self, workspace: Any, ignored: frozenset[str], *, navigation: dict[str, Any], navigation_text: str | None) -> None:
+    def __init__(self, workspace: Any, ignored: frozenset[str], *, navigation: dict[str, Any] | None, navigation_text: str | None) -> None:
         self.workspace = workspace
         self.ignored = ignored
         self.public: dict[str, dict[str, Any]] = {}
         self.public_members: dict[str, set[str]] = {}
         self.projected: dict[str, dict[str, Any]] = {}
-        self.management: dict[str, dict[str, Any]] = {"": navigation}
+        self.management: dict[str, dict[str, Any]] = {"": navigation} if navigation is not None else {}
         self.navigation_text = navigation_text
         self.eligible: dict[str, set[str]] = {}
         self.restored: dict[str, str] = {}

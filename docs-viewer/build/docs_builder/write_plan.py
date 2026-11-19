@@ -54,7 +54,7 @@ class WritePlanMixin:
         item_payloads: dict[str, dict[str, Any]],
         *,
         stale_item_ids: list[str],
-        existing_tree_text: str | None = None,
+        existing_tree_text: str | None,
         project_item: ItemProjection | None = None,
     ) -> dict[str, Any]:
         """Return exact writes and removals without mutating generated output.
@@ -65,8 +65,6 @@ class WritePlanMixin:
         """
 
         index_tree_text = json_text(index_tree_payload)
-        if existing_tree_text is None:
-            existing_tree_text = read_text(self.output_dir / "index-tree.json")
         recent_text = json_text(recent_payload) if recent_payload is not None else ""
         item_text_by_id, changed_item_ids = self.plan_item_writes(item_payloads, project_item)
         return {

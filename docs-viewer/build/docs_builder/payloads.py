@@ -89,13 +89,12 @@ class PayloadBuilderMixin:
         return docs
 
     def effective_generated_at_for_payload(
-        self, path: Path, comparable_payload: dict[str, Any], *, existing_payload: dict[str, Any] | None = None,
+        self, comparable_payload: dict[str, Any], existing_payload: Any,
     ) -> str:
-        existing = read_json(path) if existing_payload is None else existing_payload
-        if not isinstance(existing, dict):
+        if not isinstance(existing_payload, dict):
             return utc_timestamp()
-        generated_at = str(existing.get("generated_at") or "").strip()
-        comparable_existing = {key: value for key, value in existing.items() if key != "generated_at"}
+        generated_at = str(existing_payload.get("generated_at") or "").strip()
+        comparable_existing = {key: value for key, value in existing_payload.items() if key != "generated_at"}
         if comparable_existing == comparable_payload and generated_at:
             return generated_at
         return utc_timestamp()
@@ -117,8 +116,9 @@ class PayloadBuilderMixin:
 
     def index_tree_payload(
         self, docs_by_id: Mapping[str, DocRecord | OrdinaryDocumentSummary],
-        *, previous_payload: dict[str, Any] | None = None,
+        *, previous_payload: dict[str, Any] | None,
     ) -> dict[str, Any]:
+        """Project the supplied records using the already loaded comparison, if present."""
         included_docs = list(docs_by_id.values())
         included_by_parent: dict[str, list[DocRecord | OrdinaryDocumentSummary]] = {}
         for doc in included_docs:
@@ -152,9 +152,7 @@ class PayloadBuilderMixin:
             "docs": tree,
         }
         return {
-            "generated_at": self.effective_generated_at_for_payload(
-                self.output_dir / "index-tree.json", comparable, existing_payload=previous_payload,
-            ),
+            "generated_at": self.effective_generated_at_for_payload(comparable, previous_payload),
             **comparable,
         }
 
@@ -170,5 +168,5 @@ class PayloadBuilderMixin:
             exclusions=read_recent_exclusions(self.config),
         )
         comparable = {key: value for key, value in payload.items() if key != "generated_at"}
-        payload["generated_at"] = self.effective_generated_at_for_payload(output_path, comparable)
+        payload["generated_at"] = self.effective_generated_at_for_payload(comparable, read_json(output_path))
         return payload

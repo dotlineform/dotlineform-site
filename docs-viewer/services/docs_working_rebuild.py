@@ -12,7 +12,6 @@ from docs_book_tree import book_order_path, read_book_order
 from docs_discovery_selection import read_discovery_galleries, select_built_discovery_documents
 from docs_discovery_refresh import write_recent
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
-from docs_publication_ignore import read_publication_ignore_ids
 from docs_selected_documents import read_selected, refresh_workspace_selected
 from docs_publication_preparation import load_preparation
 from docs_generation import generate_documents, prepare_dependencies, prepare_restored
@@ -51,9 +50,8 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
     try:
         workspace = load_docs_workspace_config(repo_root)
         config = select_workspace_stage(workspace, "working")
-        publication = load_preparation(repo_root, workspace, ignored_ids=read_publication_ignore_ids(repo_root, config=config), changes_only=True)
         require_document_authoring(config)
-        remove_build_manifest(repo_root, config)
+        publication = load_preparation(repo_root, workspace, changes_only=True, allow_missing_management_tree=True)
         rendering_inputs = RenderingInputs.load(repo_root)
         ordinary = DocsDataBuilder(
             repo_root=repo_root, config=config, workspace=workspace, rendering_inputs=rendering_inputs,
@@ -65,6 +63,9 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
                 rendering_inputs=rendering_inputs, skip_media_builds=True,
             ) for owner in config.collections if owner.collection != "catalogue"
         }}
+        for name in builders:
+            publication.metadata.read_public(name)
+        remove_build_manifest(repo_root, config)
         parents = tree_parent_ids(read_index_order(index_order_path(config)))
         selected = read_selected(config)
         documents = {}

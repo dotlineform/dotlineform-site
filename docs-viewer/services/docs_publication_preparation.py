@@ -194,12 +194,22 @@ class PublicationPreparation:
         save_queue(self.workspace, self.pending)
 
 
-def load_preparation(repo_root: Path, workspace: Any, *, ignored_ids: frozenset[str] | None = None, navigation: dict[str, Any] | None = None, navigation_text: str | None = None, changes_only: bool = False) -> PublicationPreparation:
-    """Read the queue, current policy and required saved management metadata."""
+def load_preparation(
+    repo_root: Path, workspace: Any, *, navigation: dict[str, Any] | None = None,
+    navigation_text: str | None = None, changes_only: bool = False,
+    allow_missing_management_tree: bool = False,
+) -> PublicationPreparation:
+    """Read the queue, current policy and previous management tree for generation."""
     working = select_workspace_stage(workspace, "working")
-    ignored = read_publication_ignore_ids(repo_root, config=working) if ignored_ids is None else ignored_ids
+    ignored = read_publication_ignore_ids(repo_root, config=working)
     if navigation is None:
-        navigation_text = confined(generated_documents_path(working), "index-tree.json").read_text(encoding="utf-8")
-        navigation = json.loads(navigation_text)
+        path = confined(generated_documents_path(working), "index-tree.json")
+        try:
+            navigation_text = path.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            if not allow_missing_management_tree:
+                raise
+        else:
+            navigation = json.loads(navigation_text)
     metadata = PublicMetadata(workspace, ignored, navigation=navigation, navigation_text=navigation_text)
     return PublicationPreparation(repo_root, workspace, read_queue(workspace), metadata, changes_only=changes_only)
