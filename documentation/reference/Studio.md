@@ -23,7 +23,7 @@ The sole registered route is `catalogue_work_editor`, with template `catalogue-w
 
 `studio-config.json` owns `app.routes`. Each record declares label, title, path, template, script, nav, shell type and ready-state ID. `studio_app_config.py` validates required fields, unique paths, `/studio/` containment, `html-template` shell type and template/script existence. The source JSON currently contains only the Work editor route. [Validator and projector](../../studio/app/server/studio/studio_app_config.py)
 
-The served `/studio/runtime-config.json` adds the asset version, media URLs, pipeline variants/encoding, local site bases and runtime route copies. `studio-config.js` caches that browser payload and exposes `app.routes`. The editor consumes projected media and pipeline values. Edit the checked registry or its server input when changing these settings. [Browser loader](../../studio/app/frontend/js/studio-config.js) · [Media configuration](Catalogue_Media_Pipeline_Config.md) · [Configuration owners](Configuration_And_Extension_Points.md#find-the-owner)
+The served `/studio/runtime-config.json` carries the checked `app.routes` registry and supplies the editor's media URLs, pipeline variants and encoding under `app.runtime`. `studio-config.js` caches that browser payload. The HTML shell supplies the asset version. [Browser loader](../../studio/app/frontend/js/studio-config.js) · [Media configuration](Catalogue_Media_Pipeline_Config.md) · [Configuration owners](Configuration_And_Extension_Points.md#find-the-owner)
 
 ## Browser Responsibility
 

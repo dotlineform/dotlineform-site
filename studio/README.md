@@ -49,7 +49,7 @@ For standalone Docs startup, export the local environment first. Docs Viewer ser
 | [_data/pipeline.json](../_data/pipeline.json) | Logical Work-media source roots, staging layout, image variants and encoding policy. |
 | [docs-viewer/config/workspace/docs-workspace.json](../docs-viewer/config/workspace/docs-workspace.json) | Working/Preview reader output, Work asset locations and public destinations. |
 
-The checked Studio JSON is not the complete browser payload. The server supplies `/studio/runtime-config.json`; `studio-config.js` loads it for the shell and route. Runtime values are not copied back into the source JSON. Route copy, controls, service endpoints and executable behavior remain with their code owners. [Studio Config JSON](../documentation/reference/Studio.md#configuration-and-routes) describes the projection contract.
+The checked Studio JSON supplies `app.routes`. The server adds media URLs and pipeline settings in `/studio/runtime-config.json`, which `studio-config.js` loads for the shell and editor. The HTML shell supplies the asset version. [Studio Config JSON](../documentation/reference/Studio.md#configuration-and-routes)
 
 Canonical sources are the repository files `works.json`, `series.json`, `galleries.json`, `galleries-by-work.json` and `series-galleries.json` beneath `data/canonical/catalogue/`. A Work belongs to exactly one Series and may belong to multiple Galleries. Definitions may be empty. Exact IDs and explicit memberships own these relationships. [Catalogue Source Model](../documentation/reference/Catalogue_Source_Model.md) owns their schemas.
 

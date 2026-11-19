@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
+from typing import cast
 from urllib.parse import urlsplit
 
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
@@ -50,9 +50,6 @@ def studio_media_config(repo_root: Path) -> dict[str, object]:
         "staged": {"works_images": staging.url(staging.work_primary), "works_thumbs": staging.url(staging.work_thumbnails),
                    "works_files": staging.url(staging.work_files)},
     }
-
-
-PRODUCTION_SITE_BASE = "https://dotlineform.com"
 
 
 def load_studio_config(repo_root: Path) -> dict[str, object]:
@@ -192,10 +189,9 @@ def asset_version(repo_root: Path) -> str:
     return str(int(max(mtimes))) if mtimes else "1"
 
 
-def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
+def runtime_config(repo_root: Path) -> dict[str, object]:
     pipeline_path = repo_root / "_data" / "pipeline.json"
     payload = load_studio_config(repo_root)
-    views = studio_route_registry(repo_root, payload)
     try:
         pipeline_payload = json.loads(pipeline_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -207,57 +203,12 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     if not isinstance(pipeline_encoding, dict):
         pipeline_encoding = {}
 
-    payload.setdefault("app", {})
-    app_config = payload["app"]
-    if not isinstance(app_config, dict):
-        app_config = {}
-        payload["app"] = app_config
+    app_config = cast("dict[str, object]", payload["app"])
     app_config["runtime"] = {
-        "host": "local-studio-app",
-        "asset_version": version,
-        "routes": {
-            "health": "/health",
-            "runtime_config": "/studio/runtime-config.json",
-        },
-        "sites": runtime_site_bases(),
         "media": studio_media_config(repo_root),
         "pipeline": {
             "variants": pipeline_variants,
             "encoding": pipeline_encoding,
         },
-        "views": [
-            {"id": view_id, **view}
-            for view_id, view in views.items()
-        ],
     }
     return payload
-
-def runtime_site_bases() -> dict[str, object]:
-    public_site_host = os.environ.get("SITE_HOST", "127.0.0.1").strip() or "127.0.0.1"
-    public_site_port = os.environ.get("SITE_PORT", "4000").strip() or "4000"
-    public_preview_base = os.environ.get("SITE_PREVIEW_BASE", "").strip()
-    if not public_preview_base:
-        public_preview_base = f"http://{public_site_host}:{public_site_port}"
-    docs_viewer_host = os.environ.get("DOCS_VIEWER_HOST", "127.0.0.1").strip() or "127.0.0.1"
-    docs_viewer_port = os.environ.get("DOCS_VIEWER_PORT", "8776").strip() or "8776"
-    docs_viewer_base = os.environ.get("DOCS_VIEWER_BASE_URL", "").strip()
-    if not docs_viewer_base:
-        docs_viewer_base = f"http://{docs_viewer_host}:{docs_viewer_port}"
-    production_base = os.environ.get("PRODUCTION_SITE_BASE", PRODUCTION_SITE_BASE).strip() or PRODUCTION_SITE_BASE
-
-    return {
-        "docs_viewer": {
-            "base": normalize_base_url(docs_viewer_base),
-        },
-        "public_preview": {
-            "base": normalize_base_url(public_preview_base),
-        },
-        "production": {
-            "base": normalize_base_url(production_base),
-        },
-    }
-
-
-def normalize_base_url(value: str) -> str:
-    normalized = value.strip().rstrip("/")
-    return normalized or "/"

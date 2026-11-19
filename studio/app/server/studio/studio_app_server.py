@@ -100,7 +100,7 @@ class StudioAppRequestHandler(IgnoreEarlyDisconnectMixin, QuietErrorLoggingMixin
             self.send_json({"status": "ok", "app": "studio"})
             return
         if path == "/studio/runtime-config.json":
-            self.send_json(runtime_config(self.repo_root, self.version))
+            self.send_json(runtime_config(self.repo_root))
             return
         if self.is_catalogue_media_path(path):
             self.send_catalogue_media(path)

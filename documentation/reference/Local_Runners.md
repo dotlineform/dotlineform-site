@@ -30,7 +30,7 @@ Use the individual owner for a focused session and the supervisor for a cross-ap
 | Docs Viewer | `http://127.0.0.1:8776/docs/` |
 | Docs Review | `http://127.0.0.1:8776/docs-review/`, when enabled. |
 
-Each service owns its pages and APIs. Studio links can point to the Docs reader or public preview through configured site bases. Changing one binding also requires keeping its consumer links aligned. [Configuration owners](Configuration_And_Extension_Points.md#find-the-owner)
+Each service owns its pages and APIs. When changing a binding, keep Docs Viewer's links to Studio and public preview aligned. [Configuration owners](Configuration_And_Extension_Points.md#find-the-owner)
 
 ## All-Services Runner
 
@@ -40,7 +40,7 @@ Each service owns its pages and APIs. Studio links can point to the Docs reader 
 
 Studio uses `STUDIO_APP_HOST`, `STUDIO_APP_PORT`, `STUDIO_APP_ENABLED` and `STUDIO_APP_ACCESS_LOG`. Preview uses `SITE_HOST`, `SITE_PORT`, `SITE_ROOT`, `SITE_PYTHON` and `SITE_VALIDATE`; `SITE_ENABLED` controls supervisor inclusion. Docs uses `DOCS_VIEWER_HOST`, `DOCS_VIEWER_PORT` and `DOCS_VIEWER_BASE_URL` plus the process flags described in Local Setup.
 
-`SITE_PREVIEW_BASE` can override the preview cross-link base. Studio's runtime projection derives its Docs link from the Docs host/port or explicit base URL. Docs derives its Studio link from the Studio host/port. Runner/service source owns the exact defaults and argument parsing. Access logging is opt-in. Ordinary successful requests are quiet, while error logging retains service, method, path and status. [Studio runner](../../bin/local-studio) · [Preview runner](../../bin/site-preview) · [Docs service](../../docs-viewer/services/docs_viewer_service.py) · [Studio projection](../../studio/app/server/studio/studio_app_config.py)
+Docs Viewer uses `SITE_PREVIEW_BASE` to override the preview link base and derives its Studio links from the Studio host and port. Runner and service code own the exact defaults and argument parsing. Access logging is opt-in. Ordinary successful requests are quiet, while error logging retains service, method, path and status. [Studio runner](../../bin/local-studio) · [Preview runner](../../bin/site-preview) · [Docs service](../../docs-viewer/services/docs_viewer_service.py)
 
 ## Early Browser Disconnects
 
