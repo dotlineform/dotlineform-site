@@ -26,20 +26,19 @@
 
 ## Processing Project Boundary
 
-- `processing/` is tracked in this Git repository but is currently a separate Java/Processing project, not a module of the website or the deployed `site/` artifact.
-- Durable Processing documentation belongs to its project owner under `documentation/Processing/`. Any Docs Viewer document collection needs its own explicit configuration and does not define the Processing project's build or test lifecycle. Do not apply website runtime, build, test, or release assumptions to Processing implicitly; treat integration with the website as an explicit cross-project change.
+- The standalone [dotlineform-processing](https://github.com/dotlineform/dotlineform-processing) repository owns the Java/Processing sketchbook, documentation, checks and render lifecycle. Any Docs Viewer document collection needs its own explicit configuration. Treat integration with the website as an explicit cross-project change.
 - Processing work media belongs under the explicitly configured `$DOTLINEFORM_PROJECTS_BASE_DIR/processing/<project-id>/` boundary. A GUI-launched sketch must use its project-local portable configuration, validate the exact project identity, and fail visibly without falling back to the sketch or repository.
 
 ## Native Application Boundary
 
-- `app/` is the tracked Swift native-application project, separate from the website runtime, `site/` deployment artifact, and `processing/` project. Read `app/AGENTS.md` before changing it.
+- `app/` is the tracked Swift native-application project, separate from the website runtime, `site/` deployment artifact, and the standalone Processing project. Read `app/AGENTS.md` before changing it.
 - The maintained project and scheme are `app/dotlineform.xcodeproj` and `dotlineform`. One Swift 6 app target supports native Mac and iPad destinations only, with minimum macOS and iPadOS 26.0; iPhone and Apple Vision are outside the target boundary.
 - Run App commands from the repository root and place repeatable command-line build products under the ignored `var/app/DerivedData/` boundary. Retain the selected Personal Team identifier in `project.pbxproj`; Apple-account credentials, certificates and private keys, Xcode-managed provisioning artifacts, device state, and `xcuserdata` remain local.
 - Native Mac and physical-iPad presentation remain manual review gates. Signing, device installation, paid cloud activation, deployment, commit, and push require their own explicit action.
 
 ## Documentation And Generated Payloads
 
-- Put current behaviour and ownership under `documentation/reference/`, design rationale and concepts under `documentation/design/`, and useful completed work records under `documentation/deliveries/`. Active or proposed deliveries and writing in progress live under `documentation/_working/`. Live development guidance lives under `documentation/development/`; Processing uses `documentation/Processing/`. The Studio documentation migration is complete. Link to useful delivery evidence when it answers a concrete question, while keeping current behaviour independently described in Reference. Use concise Markdown filenames with underscores, retain each existing `doc_id` and `title` in front matter, and update links when moving files.
+- Put current behaviour and ownership under `documentation/reference/`, design rationale and concepts under `documentation/design/`, and useful completed work records under `documentation/deliveries/`. Active or proposed deliveries and writing in progress live under `documentation/_working/`. Live development guidance lives under `documentation/development/`. The Studio documentation migration is complete. Link to useful delivery evidence when it answers a concrete question, while keeping current behaviour independently described in Reference. Use concise Markdown filenames with underscores, retain each existing `doc_id` and `title` in front matter, and update links when moving files.
 - For repository documentation edits, read the current file and edit it directly with `apply_patch`. Repository documentation does not use the Docs source service or Docs/Search rebuilds.
 - When writing or updating Markdown source documents, do not apply a fixed-column source wrap. Each paragraph is one source line, each list item is one source line. Code blocks, tables, headings, and front matter retain their required structure.
 - The single Docs workspace stores canonical input in `$DOTLINEFORM_DOCS_BASE_DIR/working/source/`, replaceable output in `working/generated/` and selected prepared publication artifacts in `preview/`. Pre-publish, local Published, scope nesting and repository storage fallbacks remain retired.

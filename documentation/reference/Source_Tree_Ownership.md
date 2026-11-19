@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260524-214228-7247ef
 title: Source Tree Ownership
 added_date: "2026-05-24 21:42:28"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 parent_id: ""
 
 ---
@@ -21,7 +21,6 @@ Use this map to choose the source owner before following its domain reference. T
 | `site/` | Tracked Pages deploy artifact: public shells/assets, published data and explicit runtime projection |
 | `site-tools/` | Deploy-root validation, runtime projection command/inventory and site-level tooling config |
 | `app/` | Separate native Mac/iPad project; [App README](../../app/README.md) and [instructions](../../app/AGENTS.md) own its lifecycle |
-| `processing/` | Separate Java/Processing source, project libraries/scripts and project-owned checks |
 | `tooling/lint/` | Repository lint pins, rules and adopted source boundaries |
 | `var/` | Ignored local logs, caches, reports and working output |
 
@@ -43,9 +42,9 @@ The legacy Catalogue snapshot and its dedicated R2 copy were retired; the live s
 
 ### Processing
 
-Processing is hosted in this repository but remains a separate Java/Processing project. Its development, build, test, render and export lifecycle belongs to that project. A document collection has its own configured ownership, independently of the project lifecycle.
+The standalone Processing repository owns the Java sketches, documentation, checks, renders and exports. A Docs Viewer document collection has its own configured ownership. [Dotlineform Processing](https://github.com/dotlineform/dotlineform-processing)
 
-Processing work media belongs beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/processing/<project-id>/`. A selected output reaches the public reader through the configured Catalogue Work/Series media workflow. Repository co-location does not make Processing or the native App part of the website runtime or Pages artifact. [Media-source identities](Catalogue_Media_Pipeline_Config.md#work-media-sources) · [Processing integration note](../Processing/README.md)
+Processing work media belongs beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/processing/<project-id>/`. In Studio, choose the `processing` media source to select a finished render for a Work. The existing Catalogue workflow prepares and publishes that selection. [Media-source identities](Catalogue_Media_Pipeline_Config.md#work-media-sources) · [Catalogue workflow](Catalogue_Save_And_Refresh.md)
 
 ### Retired Analytics Boundary
 

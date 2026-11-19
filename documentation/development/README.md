@@ -10,7 +10,7 @@ parent_id: ""
 ---
 # Dev Home
 
-Use the [workflow guide](../guide/README.md) to understand the site, [Reference](../reference/Source_Tree_Ownership.md) to find its current owners, and this folder for development practice. The native [App](../../app/AGENTS.md) and [Processing](../Processing/README.md) retain their separate project lifecycles.
+Use the [workflow guide](../guide/README.md) to understand the site, [Reference](../reference/Source_Tree_Ownership.md) to find its current owners, and this folder for development practice. The native [App](../../app/AGENTS.md) and [Processing](https://github.com/dotlineform/dotlineform-processing) have separate project lifecycles.
 
 ## Start A Change
 
@@ -33,6 +33,6 @@ Use the [workflow guide](../guide/README.md) to understand the site, [Reference]
 
 ## Documentation Shape
 
-`reference/` explains current behaviour; `design/` preserves reusable rationale; `deliveries/` records useful completed evidence. `development/` owns live development guidance. `_working/` holds active/proposed work and writing in progress; review that directory when choosing work rather than maintaining a second feature register. Processing uses its own [folder](../Processing/README.md). Purposeful links to delivery evidence are useful when they answer a concrete question; avoid duplicating its history in current references.
+`reference/` explains current behaviour; `design/` preserves reusable rationale; `deliveries/` records useful completed evidence. `development/` owns live development guidance. `_working/` holds active/proposed work and writing in progress; review that directory when choosing work rather than maintaining a second feature register. Purposeful links to delivery evidence are useful when they answer a concrete question; avoid duplicating its history in current references.
 
 The [Codex Cloud setup](../_working/Cloud_Environments.md) remains open.

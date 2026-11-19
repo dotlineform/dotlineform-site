@@ -11,6 +11,8 @@ These apps are tightly connected and designed to support my personal workflows. 
 
 [Site Workflow Guide](documentation/guide/README.md) describes how these apps prepare and release the public site.
 
+The Processing sketchbook has its own repository. Studio can use selected renders from the external Processing media workspace as Catalogue originals. [Dotlineform Processing](https://github.com/dotlineform/dotlineform-processing) · [Work media sources](documentation/reference/Catalogue_Media_Pipeline_Config.md#work-media-sources)
+
 ## External Libraries And Resources
 
 Key projects used by the website and local tools:

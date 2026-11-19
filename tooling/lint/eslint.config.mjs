@@ -10,7 +10,6 @@ export default [
       "docs-viewer/scopes/**/published/**",
       "logs/**",
       "node_modules/**",
-      "processing/**",
       "site/assets/data/**",
       "site/docs-viewer/runtime/vendor/**",
       "studio/data/canonical/**",
