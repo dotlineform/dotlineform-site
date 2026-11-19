@@ -50,9 +50,9 @@ Set `DOCS_VIEWER_MANAGEMENT_ENABLED=1` for Manage authoring and `DOCS_VIEWER_REV
 
 ## Restore The Docs Workspace
 
-Clone the private `dotlineform/docs-viewer-data` repository into a separate folder. In the site checkout's `.env.local`, set `DOTLINEFORM_DOCS_BASE_DIR` to the absolute path of the data checkout itself. The checkout supplies `working/source/`. [Data repository](https://github.com/dotlineform/docs-viewer-data) · [Source version history](Source_Organisation.md#source-version-history)
+Clone the private `dotlineform/docs-viewer-data` repository into a separate folder. In the site checkout's `.env.local`, set `DOTLINEFORM_DOCS_BASE_DIR` to the absolute path of the data checkout itself. The checkout supplies `working/source/` and document media under `working/assets/media/`. [Data repository](https://github.com/dotlineform/docs-viewer-data) · [Source version history](Source_Organisation.md#source-version-history)
 
-For a full workspace restore, bring back `working/assets/`, `working/generated/`, `preview/`, and the Working queue files from a matching workspace backup. Use Full Working Build when the restored document, Search, and Recent output needs refreshing. It requires ready media, the saved management tree and public membership, and the Docs publication queue. Catalogue Work output has its own Refresh and Regenerate workflow. [Full Working Build](Builder.md#working-rebuild) · [Catalogue workflow](Catalogue_Save_And_Refresh.md)
+For a full workspace restore, bring back `working/assets/works/`, `working/generated/`, `preview/`, and the Working queue files from a matching workspace backup. Use Full Working Build when the restored document, Search, and Recent output needs refreshing. It requires ready media, the saved management tree and public membership, and the Docs publication queue. Catalogue Work output has its own Refresh and Regenerate workflow. [Full Working Build](Builder.md#working-rebuild) · [Catalogue workflow](Catalogue_Save_And_Refresh.md)
 
 ## Service Health And Capabilities
 
