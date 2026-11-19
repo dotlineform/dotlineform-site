@@ -13,6 +13,7 @@ from docs_document_packages.returned_common import (
     RETURN_IMPORT_CAPABILITY,
 )
 from docs_document_packages.returned_parser import parse_staged_import
+from docs_document_packages.workspace import IMPORT_STAGING_SUBDIR
 from docs_import_document_package import (
     COLLECTION_SOURCE_FORMAT,
     EXPORT_ONLY_COLLECTION_SOURCE_FORMAT,
@@ -41,7 +42,7 @@ NO_TARGET_MODE = "none"
 TRUSTED_SOURCE_STAGING_CODE = "trusted_source_requires_import_staging"
 TRUSTED_SOURCE_STAGING_MESSAGE = (
     "Trusted document packages and edited review sources must be selected from "
-    "data-sharing/import-staging."
+    f"{IMPORT_STAGING_SUBDIR}."
 )
 
 

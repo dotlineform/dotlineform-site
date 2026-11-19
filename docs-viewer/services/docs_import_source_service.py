@@ -63,7 +63,7 @@ from docs_source_model import (
     allocate_doc_id,
     current_doc_timestamp,
 )
-from docs_document_packages.workspace import configured_workspace_paths
+from docs_document_packages.workspace import DATA_SHARING_SUBDIR, configured_workspace_paths
 from studio.shared.python.projects_directories import (
     ProjectsDirectory,
     resolve_projects_directory,
@@ -72,7 +72,6 @@ from studio.shared.python.projects_directories import (
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
-IMPORT_SOURCE_ROOT = "data-sharing"
 
 
 @dataclass(frozen=True)
@@ -85,7 +84,7 @@ class ImportSourceDependencies:
 
 
 def resolve_import_source_directory(source_directory: str) -> ProjectsDirectory:
-    return resolve_projects_directory(source_directory, lower_root=IMPORT_SOURCE_ROOT)
+    return resolve_projects_directory(source_directory, lower_root=DATA_SHARING_SUBDIR)
 
 
 def handle_import_source_files(

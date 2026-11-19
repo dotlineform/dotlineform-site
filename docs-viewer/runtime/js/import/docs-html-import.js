@@ -679,12 +679,8 @@ export async function initDocsHtmlImport(options = {}) {
 
     root.hidden = false;
     bootStatus.hidden = true;
-    state.serviceAvailable = await fetchManagementJson(
-      "/health",
-      "GET",
-      undefined,
-      managementOptionsForState(state)
-    ).then(() => true).catch(() => false);
+    const importCapability = options.importCapability;
+    state.serviceAvailable = Boolean(importCapability);
     if (!state.serviceAvailable) {
       syncImportInputControls(state);
       setStatus(state.statusNode, "error", DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE);
@@ -693,6 +689,8 @@ export async function initDocsHtmlImport(options = {}) {
     }
 
     state.sourceSelection = createDocsImportSourceSelection({
+      rootDirectory: importCapability.source_root,
+      stagingDirectory: importCapability.staging_root,
       loadDirectory: ({ directory }) => fetchManagementJson(
         `/docs/import-source-directories?source_directory=${encodeURIComponent(directory)}`,
         "GET",

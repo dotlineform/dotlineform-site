@@ -11,6 +11,7 @@ from typing import Mapping
 
 PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 PROJECTS_BASE_DIR_MARKER = f"${PROJECTS_BASE_DIR_ENV}"
+SITE_WORKSPACE_SUBDIR = Path("dotlineform-site")
 
 
 @dataclass(frozen=True)

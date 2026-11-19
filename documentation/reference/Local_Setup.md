@@ -35,6 +35,8 @@ Media workflows can additionally need `ffmpeg`, `heif-convert` or macOS `sips`. 
 
 Keep machine-specific roots, runner flags and credentials in gitignored `.env.local`. Use platform environment variables and secret stores in cloud sessions. `DOTLINEFORM_DOCS_BASE_DIR` points to the existing Docs workspace. `DOTLINEFORM_PROJECTS_BASE_DIR` independently points to the existing Projects workspace. Root availability and read/write access belong to the operation that uses them. [Storage roles](Source_Organisation.md#storage-and-roles)
 
+Under the Projects root, the site uses `dotlineform-site/catalogue/media-staging/`, `dotlineform-site/data-sharing/` and `dotlineform-site/docs-export/`. Studio looks for original media under the Projects root's separate `projects/` and `processing/` directories. Select files from the Library inbox with the native picker for single-file imports. [Catalogue media configuration](Catalogue_Media_Pipeline_Config.md) · [Docs Import](Docs_Import.md)
+
 The shell runners for Studio, public preview and `local-all` source `.env.local` and export it to their children. The standalone Docs runner selects Python and launches its service. That service reads `.env.local` for binding and capability settings, but the workspace loader reads process environment. Export the local file before starting Docs on its own.
 
 ```bash

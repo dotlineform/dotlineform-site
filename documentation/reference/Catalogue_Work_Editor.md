@@ -61,4 +61,4 @@ Work Delete confirms the exact saved Work or selected batch. It removes canonica
 
 ### Persistent Media
 
-The picker resolves the configured Projects original. Save prepares renditions and native downloads under Projects `catalogue/media-staging/`. The editor follows the supplied staging flags and media version for display. Refresh completes the handoff to `working/assets/works/`. Open resource labels in a new tab. **Edit** changes a managed download's label and **Add file** with the same normalized identity replaces its bytes. [Work media authoring and queue](Catalogue_Save_And_Refresh.md#work-media-authoring)
+The picker resolves the configured Projects original. Save prepares renditions and native downloads under Projects `dotlineform-site/catalogue/media-staging/`. The editor follows the supplied staging flags and media version for display. Refresh completes the handoff to `working/assets/works/`. Open resource labels in a new tab. **Edit** changes a managed download's label and **Add file** with the same normalized identity replaces its bytes. [Work media authoring and queue](Catalogue_Save_And_Refresh.md#work-media-authoring)

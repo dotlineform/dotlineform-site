@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 from docs_document_packages.returned_parser import parse_staged_import as _parse_staged_import
+from docs_document_packages.workspace import IMPORT_STAGING_ROOT
 
 
 def detect_repo_root(explicit_root: str | None = None) -> Path:
@@ -40,7 +41,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--file",
         required=True,
-        help="Staged JSON or JSONL filename under $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/",
+        help=f"Staged JSON or JSONL filename under {IMPORT_STAGING_ROOT}/",
     )
     parser.add_argument("--repo-root", default="", help="Override repo root")
     parser.add_argument("--no-records", action="store_true", help="Omit normalized records from the printed report")

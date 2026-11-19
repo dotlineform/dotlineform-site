@@ -7,6 +7,7 @@ import copy
 from pathlib import Path
 from typing import Any, Callable
 
+from docs_document_packages.workspace import WORKSPACE_ROOT_MARKER
 from docs_import_collection_plan import DocumentsCollectionPlan, collection_issue
 from docs_import_collection_result import (
     safe_generation_result,
@@ -179,7 +180,7 @@ def _resolve_collection_apply_request(
 def _safe_error_message(error: Exception, repo_root: Path, workspace_root: Path) -> str:
     return (
         _clean_text(error)
-        .replace(str(workspace_root.resolve()), "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing")
+        .replace(str(workspace_root.resolve()), WORKSPACE_ROOT_MARKER)
         .replace(str(repo_root.resolve()), ".")
     ) or error.__class__.__name__
 

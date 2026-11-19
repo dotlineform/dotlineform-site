@@ -17,19 +17,21 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
         break
 
 from studio.shared.python.external_workspace_paths import (  # noqa: E402
+    PROJECTS_BASE_DIR_ENV,
+    SITE_WORKSPACE_SUBDIR,
     path_is_relative_to,
     resolve_external_workspace_root,
-    resolve_workspace_path,
-    workspace_marker_path,
+    workspace_marker,
 )
 
 
-PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
-WORKSPACE_DIR_NAME = "data-sharing"
-WORKSPACE_ROOT_MARKER = f"${PROJECTS_BASE_DIR_ENV}/{WORKSPACE_DIR_NAME}"
+DATA_SHARING_SUBDIR = (SITE_WORKSPACE_SUBDIR / "data-sharing").as_posix()
+IMPORT_STAGING_DIR_NAME = "import-staging"
+IMPORT_STAGING_SUBDIR = f"{DATA_SHARING_SUBDIR}/{IMPORT_STAGING_DIR_NAME}"
+WORKSPACE_ROOT_MARKER = workspace_marker(DATA_SHARING_SUBDIR)
 
 EXPORT_ROOT = f"{WORKSPACE_ROOT_MARKER}/exports"
-IMPORT_STAGING_ROOT = f"{WORKSPACE_ROOT_MARKER}/import-staging"
+IMPORT_STAGING_ROOT = workspace_marker(IMPORT_STAGING_SUBDIR)
 IMPORT_PREVIEW_ROOT = f"{WORKSPACE_ROOT_MARKER}/import-preview"
 META_ROOT = f"{WORKSPACE_ROOT_MARKER}/meta"
 
@@ -50,7 +52,7 @@ def _environment(environ: Mapping[str, str] | None) -> Mapping[str, str]:
 def resolve_workspace_root(*, environ: Mapping[str, str] | None = None) -> Path:
     try:
         return resolve_external_workspace_root(
-            WORKSPACE_DIR_NAME,
+            DATA_SHARING_SUBDIR,
             environ=_environment(environ),
             require_exists=True,
         ).root
@@ -92,29 +94,20 @@ def resolve_marker_path(
     environ: Mapping[str, str] | None = None,
 ) -> Path:
     relative = safe_workspace_marker_path(value, field=field)
-    root = (workspace_root or resolve_workspace_root(environ=environ)).resolve()
-    workspace = resolve_external_workspace_root(
-        WORKSPACE_DIR_NAME,
-        environ={PROJECTS_BASE_DIR_ENV: str(root.parent)},
-        require_exists=True,
-    )
-    try:
-        return resolve_workspace_path(workspace, relative)
-    except ValueError as exc:
-        raise ValueError(f"Document package path field {field} resolves outside {WORKSPACE_ROOT_MARKER}") from exc
+    root = workspace_root.resolve() if workspace_root is not None else resolve_workspace_root(environ=environ)
+    resolved = (root / relative).resolve()
+    if not path_is_relative_to(resolved, root):
+        raise ValueError(f"Document package path field {field} resolves outside {WORKSPACE_ROOT_MARKER}")
+    return resolved
 
 
 def marker_path(path: Path, *, workspace_root: Path | None = None) -> str:
-    root = (workspace_root or resolve_workspace_root()).resolve()
-    workspace = resolve_external_workspace_root(
-        WORKSPACE_DIR_NAME,
-        environ={PROJECTS_BASE_DIR_ENV: str(root.parent)},
-        require_exists=True,
-    )
+    root = workspace_root.resolve() if workspace_root is not None else resolve_workspace_root()
     try:
-        return workspace_marker_path(path, workspace)
+        relative = path.resolve().relative_to(root)
     except ValueError as exc:
         raise ValueError(f"Document package artifact path is outside {WORKSPACE_ROOT_MARKER}: {path}") from exc
+    return WORKSPACE_ROOT_MARKER if not relative.parts else f"{WORKSPACE_ROOT_MARKER}/{relative.as_posix()}"
 
 
 def workspace_paths(*, environ: Mapping[str, str] | None = None) -> DocumentPackageWorkspacePaths:
@@ -122,7 +115,7 @@ def workspace_paths(*, environ: Mapping[str, str] | None = None) -> DocumentPack
     return DocumentPackageWorkspacePaths(
         root=root,
         exports=root / "exports",
-        import_staging=root / "import-staging",
+        import_staging=root / IMPORT_STAGING_DIR_NAME,
         import_preview=root / "import-preview",
         meta=root / "meta",
     )
@@ -181,10 +174,12 @@ def workspace_status(
 
 
 __all__ = [
+    "DATA_SHARING_SUBDIR",
     "DocumentPackageWorkspacePaths",
     "EXPORT_ROOT",
     "IMPORT_PREVIEW_ROOT",
     "IMPORT_STAGING_ROOT",
+    "IMPORT_STAGING_SUBDIR",
     "META_ROOT",
     "PROJECTS_BASE_DIR_ENV",
     "WORKSPACE_ROOT_MARKER",

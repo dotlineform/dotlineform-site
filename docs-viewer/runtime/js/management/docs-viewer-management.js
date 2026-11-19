@@ -729,6 +729,7 @@ export function initDocsViewerManagement(context) {
       managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl
     },
     callbacks: {
+      getImportCapability: () => management.managementCapabilities?.docs_import,
       getModalController: function () {
         return modalController;
       },

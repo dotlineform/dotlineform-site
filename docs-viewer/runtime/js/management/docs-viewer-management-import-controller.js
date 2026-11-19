@@ -114,6 +114,7 @@ export function createDocsViewerManagementImportController(options = {}) {
           bootStatus: refs.bootStatus,
           initialDestination: activeOpen.destination,
           initialDestinationLabel: activeOpen.destinationLabel,
+          importCapability: callbacks.getImportCapability(),
           docsViewerConfigUrl: context.docsViewerConfigUrl || context.root && context.root.dataset.docsViewerConfigUrl || DEFAULT_CONFIG_URL,
           managementBaseUrl: context.managementBaseUrl,
           routePath: IMPORT_ROUTE_PATH,

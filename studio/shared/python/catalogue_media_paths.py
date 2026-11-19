@@ -9,6 +9,7 @@ from typing import Any, Mapping
 try:
     from .external_workspace_paths import (
         ExternalWorkspaceRoot,
+        SITE_WORKSPACE_SUBDIR,
         resolve_external_workspace_root,
         resolve_workspace_path,
     )
@@ -17,6 +18,7 @@ try:
 except ImportError:  # pragma: no cover - direct sys.path import fallback
     from external_workspace_paths import (
         ExternalWorkspaceRoot,
+        SITE_WORKSPACE_SUBDIR,
         resolve_external_workspace_root,
         resolve_workspace_path,
     )
@@ -37,7 +39,7 @@ def configured_catalogue_media_workspace(
     config = load_pipeline_config(repo_root=repo_root) if config is None else config
     values = dict(environ) if environ is not None else runtime_env(repo_root=repo_root)
     return resolve_external_workspace_root(
-        media_root_subdir(config),
+        SITE_WORKSPACE_SUBDIR / media_root_subdir(config),
         environ=values,
         require_exists=False,
     )

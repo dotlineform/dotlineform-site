@@ -10,7 +10,7 @@ parent_id: d-20260423-000000-d015e6
 
 # Catalogue Media Pipeline Config
 
-`_data/pipeline.json` owns logical Work-media roots, Projects staging subpaths, rendition names and encoding. `studio/shared/python/pipeline_config.py` loads that policy. The Docs workspace separately owns Working/Preview assets and public destinations. [Pipeline source](../../_data/pipeline.json) · [Loader](../../studio/shared/python/pipeline_config.py) · [Destination configuration](../../docs-viewer/config/workspace/docs-workspace.json)
+`_data/pipeline.json` owns logical Work-media roots, staging subpaths, rendition names and encoding. `studio/shared/python/pipeline_config.py` loads that policy. The Catalogue resolver applies `paths.media.root_subdir` relative to `$DOTLINEFORM_PROJECTS_BASE_DIR/dotlineform-site/`. The Docs workspace separately owns Working/Preview assets and public destinations. [Pipeline source](../../_data/pipeline.json) · [Loader](../../studio/shared/python/pipeline_config.py) · [Destination configuration](../../docs-viewer/config/workspace/docs-workspace.json)
 
 ## Work Media Sources
 

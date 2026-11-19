@@ -29,6 +29,7 @@ from docs_workspace_config import (
 from studio.shared.python.external_workspace_paths import (
     ExternalWorkspaceRoot,
     PROJECTS_BASE_DIR_ENV,
+    SITE_WORKSPACE_SUBDIR,
     resolve_external_workspace_root,
 )
 
@@ -46,7 +47,7 @@ WINDOWS_RESERVED_FOLDER_NAMES = frozenset(
     {"CON", "PRN", "AUX", "NUL", *(f"COM{index}" for index in range(1, 10)), *(f"LPT{index}" for index in range(1, 10))}
 )
 MAX_SNAPSHOT_LABEL_BYTES = 180
-DOCS_EXPORT_WORKSPACE_SUBDIR = "docs-export"
+DOCS_EXPORT_WORKSPACE_SUBDIR = SITE_WORKSPACE_SUBDIR / "docs-export"
 IGNORED_HOST_METADATA_FILENAMES = frozenset({".DS_Store"})
 
 
@@ -384,7 +385,7 @@ def plan_static_html_snapshot(
     destination_root = export_root / folder_name
     validate_destination_path(destination_root, export_root=export_root)
     default_doc_id = doc_ids[0]
-    destination_label_value = f"/docs-export/{folder_name}/"
+    destination_label_value = f"/{DOCS_EXPORT_WORKSPACE_SUBDIR.as_posix()}/{folder_name}/"
     target_state, target_revision = inspect_snapshot_destination(destination_root)
     plan_revision = _snapshot_plan_revision(
         collection=collection,

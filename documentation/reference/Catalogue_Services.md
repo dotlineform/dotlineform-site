@@ -27,7 +27,7 @@ For an existing Work such as `00008`, change a field or confirm a replacement im
 
 [Save controller](../../studio/app/frontend/js/catalogue-work-actions.js) · [Write dispatcher](../../studio/services/catalogue/catalogue_write_service.py) · [Save completion](../../studio/services/catalogue/catalogue_output_service.py) · [Refresh owner](../../studio/services/catalogue/catalogue_refresh_service.py)
 
-Projects `catalogue/media-staging/` holds Save's prepared bytes. Refresh transfers them to Docs `working/assets/works/` and writes reader JSON under `working/generated/catalogue/`. A ready Work remains queued for Docs Viewer Regenerate. The browser adopts Refresh's returned records so its preview follows the cleared staging flags. [Queue fields, reader timing and publication](Catalogue_Save_And_Refresh.md)
+Projects `dotlineform-site/catalogue/media-staging/` holds Save's prepared bytes. Refresh transfers them to Docs `working/assets/works/` and writes reader JSON under `working/generated/catalogue/`. A ready Work remains queued for Docs Viewer Regenerate. The browser adopts Refresh's returned records so its preview follows the cleared staging flags. [Queue fields, reader timing and publication](Catalogue_Save_And_Refresh.md)
 
 ## Follow A Shared Definition Change
 

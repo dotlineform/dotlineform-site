@@ -23,7 +23,7 @@ After import, review the converted body and media in the new document. Set it re
 
 ## Choose The Source Folder
 
-**Collection Actions → Import docs…** starts in `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`. **Choose folder…** browses only `data-sharing/` and its descendants. It remembers an accepted source folder. **Use import staging** restores the default. Changing folders leaves the destination fixed.
+**Collection Actions → Import docs…** starts in `$DOTLINEFORM_PROJECTS_BASE_DIR/dotlineform-site/data-sharing/import-staging/`. **Choose folder…** browses Data Sharing and its descendants. The local service supplies both directories to the picker, which remembers an accepted source folder. **Use import staging** restores the default. Changing folders leaves the destination fixed.
 
 Select one direct-child candidate. Ordinary inputs are the native file types or a folder containing one Markdown document with its local images or attachments. Use this path for separate local assets. HTML has an **Include obvious prompt/meta blocks** option, checked by default. Ordinary staged intake shares the native conversion and creates a new draft. Source files are left in place.
 

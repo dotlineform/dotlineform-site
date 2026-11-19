@@ -1,5 +1,3 @@
-export const DOCS_IMPORT_DEFAULT_SOURCE_DIRECTORY = "data-sharing/import-staging";
-export const DOCS_IMPORT_SOURCE_ROOT_DIRECTORY = "data-sharing";
 export const DOCS_IMPORT_SOURCE_DIRECTORY_STORAGE_KEY = "dotlineform-docs-import-source-directory";
 
 function text(value) {
@@ -10,6 +8,7 @@ export function createDocsImportSourceSelection(options = {}) {
   if (typeof options.loadDirectory !== "function" || typeof options.loadCandidates !== "function") {
     throw new Error("Docs Import source selection configuration is incomplete.");
   }
+  const { rootDirectory, stagingDirectory } = options;
   let storage = options.storage || null;
   try {
     storage = storage || window.localStorage;
@@ -56,17 +55,17 @@ export function createDocsImportSourceSelection(options = {}) {
 
   async function initialize() {
     let remembered = storageValue("read");
-    if (remembered && remembered !== DOCS_IMPORT_SOURCE_ROOT_DIRECTORY && !remembered.startsWith(DOCS_IMPORT_SOURCE_ROOT_DIRECTORY + "/")) {
+    if (remembered && remembered !== rootDirectory && !remembered.startsWith(rootDirectory + "/")) {
       storageValue("remove");
       remembered = "";
     }
     let accepted;
     try {
-      accepted = await validate(remembered || DOCS_IMPORT_DEFAULT_SOURCE_DIRECTORY);
+      accepted = await validate(remembered || stagingDirectory);
     } catch (error) {
       if (!remembered) throw error;
       storageValue("remove");
-      accepted = await validate(DOCS_IMPORT_DEFAULT_SOURCE_DIRECTORY);
+      accepted = await validate(stagingDirectory);
     }
     await refresh(accepted);
     return accepted;
@@ -87,7 +86,7 @@ export function createDocsImportSourceSelection(options = {}) {
     }
     return Promise.resolve(options.openFolderPicker({
       initialDirectory: current,
-      rootDirectory: DOCS_IMPORT_SOURCE_ROOT_DIRECTORY,
+      rootDirectory,
       loadDirectory,
       onSubmit: acceptDirectory,
       restoreFocus: restoreFocus || null
@@ -95,7 +94,7 @@ export function createDocsImportSourceSelection(options = {}) {
   }
 
   async function useImportStaging(restoreFocus) {
-    const accepted = await validate(DOCS_IMPORT_DEFAULT_SOURCE_DIRECTORY);
+    const accepted = await validate(stagingDirectory);
     await refresh(accepted);
     storageValue("remove");
     if (restoreFocus && typeof restoreFocus.focus === "function") {

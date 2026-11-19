@@ -24,7 +24,7 @@ Docs Review displays a validated returned package at `/docs-review/?package=<pac
 
 ## Package Contract
 
-Packages live under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<package_id>/`.
+Packages live under `$DOTLINEFORM_PROJECTS_BASE_DIR/dotlineform-site/data-sharing/import-preview/<package_id>/`.
 
 ```text
 manifest.json

@@ -55,7 +55,7 @@ Canonical sources are the repository files `works.json`, `series.json`, `galleri
 
 Set the independent external roots in `.env.local`:
 
-- `DOTLINEFORM_PROJECTS_BASE_DIR` owns original project media and `catalogue/media-staging/`. The pipeline registers logical `projects` and `processing` media-source identities beneath this root.
+- `DOTLINEFORM_PROJECTS_BASE_DIR` owns original project media and `dotlineform-site/catalogue/media-staging/`. The pipeline registers logical `projects` and `processing` media-source identities beneath this root.
 - `DOTLINEFORM_DOCS_BASE_DIR` selects the existing Docs workspace directly. Refresh writes Catalogue reader JSON under `working/generated/catalogue/` and selected Work media under `working/assets/works/`. Publish retains a separate `preview/` snapshot and `preview/assets/works/`.
 
 Neither root is a fallback for the other. Configured source identities and confined paths are validated; unavailable storage fails without manufacturing a replacement workspace. Local operational reports, logs and caches belong under ignored `var/` or the configured external owners. Remote credentials remain local and outside tracked configuration. [Catalogue Media Pipeline Config](../documentation/reference/Catalogue_Media_Pipeline_Config.md) and [Media And Asset Handling](../documentation/reference/Media_And_Asset_Handling.md#workspace-configuration-and-storage) own media policy.

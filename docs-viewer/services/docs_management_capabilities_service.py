@@ -16,7 +16,7 @@ from docs_workspace_config import (
     generated_search_path,
     resolve_workspace_path,
 )
-from docs_document_packages.workspace import workspace_status
+from docs_document_packages.workspace import DATA_SHARING_SUBDIR, IMPORT_STAGING_SUBDIR, workspace_status
 
 
 def workspace_capabilities(repo_root: Path, config: Any) -> dict[str, Any]:
@@ -64,11 +64,8 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "docs_import": {
                 "available": docs_import_workspace["available"],
                 "message": docs_import_workspace["message"],
-                "staging_root": (
-                    docs_import_workspace.get("paths", {}).get("import_staging")
-                    if docs_import_workspace["available"]
-                    else docs_import_workspace["root"]
-                ),
+                "source_root": DATA_SHARING_SUBDIR,
+                "staging_root": IMPORT_STAGING_SUBDIR,
             },
             "docs_review": {
                 "available": data_sharing_workspace["available"],

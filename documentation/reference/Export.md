@@ -18,7 +18,7 @@ The service reads the Working collection's generated `manage-manifest.json` and 
 
 ## Destination And Replacement
 
-The snapshot lives under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-export/`. A single document uses `<document title> - YYYY-MM-DD`. Multiple documents use `<collection title> - YYYY-MM-DD` for a complete selection or `<collection title> selection - YYYY-MM-DD` for a partial one. Labels are confined and normalized for filenames. The date is the server's local date.
+The snapshot lives under `$DOTLINEFORM_PROJECTS_BASE_DIR/dotlineform-site/docs-export/`. A single document uses `<document title> - YYYY-MM-DD`. Multiple documents use `<collection title> - YYYY-MM-DD` for a complete selection or `<collection title> selection - YYYY-MM-DD` for a partial one. Labels are confined and normalized for filenames. The date is the server's local date.
 
 Preview shows the destination and counts of packaged media and unchanged external dependencies. **Create snapshot** writes an absent destination. An existing directory requires explicit **Replace**, including a user-owned directory with the same name. Replacement removes other contents and preserves ordinary `.DS_Store` files. A non-directory blocks the operation. A changed selection payload, media file or destination requires a fresh preview.
 

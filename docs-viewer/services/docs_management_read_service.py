@@ -9,6 +9,7 @@ from docs_book_copy import read_copied_flags
 import docs_catalogue_media
 from docs_catalogue_works_report import read_catalogue_works_report
 from docs_series_galleries_report import read_series_galleries_report
+from docs_document_packages.workspace import DATA_SHARING_SUBDIR
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_media_metadata
@@ -150,7 +151,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         if not source_directory:
             raise ValueError("source_directory is required")
         if path == routes.IMPORT_SOURCE_DIRECTORIES_PATH:
-            return list_projects_directory(source_directory, lower_root=import_source_service.IMPORT_SOURCE_ROOT)
+            return list_projects_directory(source_directory, lower_root=DATA_SHARING_SUBDIR)
         return import_source_service.handle_import_source_files(
             repo_root,
             source_directory=source_directory,
