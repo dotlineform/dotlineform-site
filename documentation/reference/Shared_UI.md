@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260505-181739-bb5223
 title: Shared UI
 added_date: "2026-05-05 18:17:39"
-last_updated: "2026-11-18"
+last_updated: "2026-11-19"
 summary: Caller-owned state and reusable search, list and picker boundaries across Docs Viewer and Studio.
 parent_id: ""
 ---
@@ -68,7 +68,7 @@ File Picker and Folder Picker serve different navigation and output needs. Compo
 
 [`createSelectableList`](../../shared/frontend/js/selectable-list.js) and its [CSS](../../shared/frontend/css/selectable-list.css) retain id-based single/multiple selection, optional parent/child order, collapse, cascading and indeterminate state. No active production adapter currently imports the module. Current Collection Actions selection has its own [mounted report owner](Collections_And_Books.md); the ordinary Index has no checkbox selection.
 
-Do not infer supported application behaviour from the retained primitive. Review its actual adopter and required contract before reuse, or decide separately whether the unused implementation should remain.
+Selectable List is retained for possible future reuse. Review its fit against the adopting workflow and its requirements before integrating it.
 
 ## Extension And Serving
 
