@@ -29,6 +29,7 @@ from studio.shared.python.local_browser_assets import (
     render_local_browser_icon_links,
 )
 from studio.shared.python.local_http_logging import IgnoreEarlyDisconnectMixin, QuietErrorLoggingMixin
+from studio.shared.python.media_files import content_type_for
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
@@ -695,7 +696,7 @@ class DocsViewerRequestHandler(IgnoreEarlyDisconnectMixin, QuietErrorLoggingMixi
                 etag, http_cache.media_cache_control(path, work_primary, query), cors=True,
             ):
                 return
-            self.send_header("Content-Type", media_storage.safe_content_type(path))
+            self.send_header("Content-Type", content_type_for(path))
             self.send_header("X-Content-Type-Options", "nosniff")
             if media_class == "files":
                 self.send_header("Content-Disposition", f"attachment; filename*=UTF-8''{quote(path.name, safe='')}")

@@ -9,7 +9,7 @@ parent_id: d-20260423-000000-d015e6
 ---
 # Publish Media To R2
 
-[The media module](../../studio/services/media/publish_media_to_r2.py) owns both an explicit maintenance CLI and the R2 credential/client primitives reused by [artifact adapters](../../docs-viewer/services/docs_artifact_locations.py). Its CLI planning and normal publication have different workflow owners.
+The maintenance CLI plans Catalogue R2 operations and Docs Working file copies. The shared R2 client owns credential loading, request signing and object transport for the CLI and the artifact adapters. Docs and Catalogue use shared helpers for file checksums and content types. [Maintenance CLI](../../studio/services/media/publish_media_to_r2.py) · [R2 client](../../studio/shared/python/r2_client.py) · [Artifact adapters](../../docs-viewer/services/docs_artifact_locations.py) · [File helpers](../../studio/shared/python/media_files.py)
 
 ## Transport Ownership
 
@@ -23,7 +23,7 @@ Studio local media completion owns canonical `media_version`; Refresh and Regene
 
 ## Catalogue Maintenance
 
-The CLI reads configured Working primary files, currently `working/assets/works/primary/` beneath the Docs workspace. Pipeline widths/suffix/format and site media prefixes select keys such as `works/img/<work_id>-primary-<width>.webp`. Selection is rendition-file based rather than a canonical Work read. It lists that local primary directory, confines files to it and computes selected sizes/MD5. It does not list the remote bucket; planning HEADs the exact keys.
+Each Catalogue upload or delete plan loads the selected repository's pipeline widths, suffix, output format and site media prefixes once. Those settings select keys such as `works/img/<work_id>-primary-<width>.webp`. Upload discovery lists the configured Working primary directory, currently `working/assets/works/primary/` beneath the Docs workspace. It confines selected files to that directory and computes their sizes and MD5 checksums. Both plans use HEAD for the exact remote keys.
 
 From the repository root, plan one Work and deliberately apply its reviewed maintenance selection:
 
@@ -55,6 +55,6 @@ For a new attachment, use **Add image** or **Add file** and **Save** to add the 
 
 Catalogue CLI credentials come from `.env.local`, optional `--env-file` inputs and the environment. Missing configuration reports variable names. Keep credentials and signed request details local.
 
-Results print to stdout. `--report-json <path>` deliberately writes a report, including during dry-run; no report file is written by default. Exact supported flags/statuses remain code-owned. The module's R2 client is live through normal publication adapters; retaining or changing the CLI requires tracing those consumers independently.
+Results print to stdout. `--report-json <path>` deliberately writes a report, including during dry-run; no report file is written by default. Exact supported flags/statuses remain code-owned.
 
-Dry runs using temporary staging verified target resolution and local media planning for an ordinary document and a Concepts document. Catalogue maintenance was reviewed through source and callers.
+Dry runs using temporary staging verified target resolution and local media planning for an ordinary document and a Concepts document. Local Catalogue plans for Work `01007` produced the same upload and deletion keys before and after the R2 transport extraction. Import checks exercised shared client construction with sample credentials.

@@ -138,8 +138,8 @@ def authenticated_remote_client_for_locations(
 
     A supplied client is preserved and no client is created for locations that
     need no authentication. Automatic authentication currently supports only
-    R2 and obtains its credentials and client from the integrated Studio media
-    service; credential exits are exposed to callers as ``RuntimeError``.
+    R2 and uses the shared transport module. Credential exits are exposed to
+    callers as ``RuntimeError``.
     """
 
     if client is not None:
@@ -155,7 +155,7 @@ def authenticated_remote_client_for_locations(
         providers = ", ".join(sorted(authenticated_providers))
         raise ValueError(f"no authenticated artifact client is available for providers: {providers}")
 
-    from studio.services.media.publish_media_to_r2 import (  # noqa: PLC0415
+    from studio.shared.python.r2_client import (  # noqa: PLC0415
         DEFAULT_ENV_FILES,
         R2Client,
         load_r2_credentials,

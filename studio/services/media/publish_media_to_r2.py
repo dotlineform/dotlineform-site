@@ -4,18 +4,9 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import datetime as dt
-import hashlib
-import hmac
-import http.client
 import json
-import mimetypes
 import sys
-import urllib.error
-import urllib.parse
-import urllib.request
-import xml.etree.ElementTree as ET
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, Protocol, Sequence
@@ -33,29 +24,9 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 from catalogue.catalogue_output_paths import catalogue_workspace_config
-from pipeline_config import (
-    load_pipeline_config,
-)
-from local_env import SITE_ENV_REL_PATH, runtime_env
-
-
-PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
-PRIMARY_SUFFIX = str(PIPELINE_CONFIG["variants"]["primary"]["suffix"])
-OUTPUT_FORMAT = str(PIPELINE_CONFIG["encoding"]["format"])
-PRIMARY_WIDTHS = [int(v) for v in PIPELINE_CONFIG["variants"]["primary"]["widths"]]
-
-R2_ENV_VARS = (
-    "R2_ACCOUNT_ID",
-    "R2_ACCESS_KEY_ID",
-    "R2_SECRET_ACCESS_KEY",
-    "R2_BUCKET",
-    "R2_ENDPOINT",
-)
-
-DEFAULT_ENV_FILES = (
-    SITE_ENV_REL_PATH,
-)
-
+from studio.shared.python.local_env import runtime_env
+from studio.shared.python.media_files import content_type_for, file_md5
+from studio.shared.python.r2_client import DEFAULT_ENV_FILES, R2Client, RemoteObject, load_r2_credentials
 
 @dataclass(frozen=True)
 class CatalogueKind:
@@ -69,25 +40,9 @@ CATALOGUE_KINDS: Dict[str, CatalogueKind] = {
 
 
 @dataclass(frozen=True)
-class R2Credentials:
-    account_id: str
-    access_key_id: str
-    secret_access_key: str
-    bucket: str
-    endpoint: str
-
-
-@dataclass(frozen=True)
-class RemoteObject:
-    size: int | None
-    etag: str
-
-
-@dataclass(frozen=True)
-class RemoteListObject:
-    key: str
-    size: int
-    etag: str
+class CataloguePrimaryPolicy:
+    remote_prefixes: Mapping[str, str]
+    rendition_suffixes: tuple[tuple[int, str], ...]
 
 
 @dataclass(frozen=True)
@@ -321,8 +276,9 @@ def run_catalogue_upload(
     if remote_client is None:
         remote_client = R2Client(load_r2_credentials(env_files=selected_env_files, environ=environ))
 
+    policy = load_catalogue_primary_policy(resolved_root)
     objects, missing = discover_catalogue_primary_objects(
-        repo_root=resolved_root,
+        policy=policy,
         media_root=media_root,
         kinds=[kind] if kind else sorted(CATALOGUE_KINDS),
         item_id=item_id,
@@ -392,11 +348,12 @@ def run_catalogue_upload_targets(
     if remote_client is None:
         remote_client = R2Client(load_r2_credentials(env_files=selected_env_files, environ=environ))
 
+    policy = load_catalogue_primary_policy(resolved_root)
     objects: list[LocalMediaObject] = []
     missing: list[MissingVariant] = []
     for kind_name, item_id in normalized_targets:
         target_objects, target_missing = discover_catalogue_primary_objects(
-            repo_root=resolved_root,
+            policy=policy,
             media_root=media_root,
             kinds=[kind_name],
             item_id=item_id,
@@ -460,11 +417,12 @@ def run_catalogue_remote_delete(
     if remote_client is None:
         remote_client = R2Client(load_r2_credentials(env_files=selected_env_files, environ=environ))
 
+    policy = load_catalogue_primary_policy(resolved_root)
     objects = [
         obj
         for kind_name, item_id in normalized_targets
         for obj in build_catalogue_remote_objects(
-            repo_root=resolved_root,
+            policy=policy,
             kind_name=kind_name,
             item_id=item_id,
         )
@@ -496,59 +454,27 @@ def validate_item_id(item_id: str) -> None:
         raise SystemExit(f"Error: invalid id: {item_id!r}")
 
 
-def load_r2_credentials(
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
-) -> R2Credentials:
-    try:
-        combined = runtime_env(environ=environ, env_files=env_files)
-    except ValueError as exc:
-        raise SystemExit(f"Error: {exc}") from exc
-
-    missing = [name for name in R2_ENV_VARS if not str(combined.get(name, "")).strip()]
-    if missing:
-        names = ", ".join(missing)
-        raise SystemExit(
-            "Error: missing R2 configuration: "
-            f"{names}. Add them to .env.local for local runs or provide cloud environment variables."
-        )
-
-    endpoint = str(combined["R2_ENDPOINT"]).strip().rstrip("/")
-    parsed = urllib.parse.urlparse(endpoint)
-    if parsed.scheme not in {"https", "http"} or not parsed.netloc or parsed.username or parsed.password:
-        raise SystemExit("Error: R2_ENDPOINT must be an http(s) endpoint without credentials.")
-
-    return R2Credentials(
-        account_id=str(combined["R2_ACCOUNT_ID"]).strip(),
-        access_key_id=str(combined["R2_ACCESS_KEY_ID"]).strip(),
-        secret_access_key=str(combined["R2_SECRET_ACCESS_KEY"]).strip(),
-        bucket=str(combined["R2_BUCKET"]).strip(),
-        endpoint=endpoint,
-    )
-
-
 def discover_catalogue_primary_objects(
     *,
-    repo_root: Path,
+    policy: CataloguePrimaryPolicy,
     media_root: Path,
     kinds: Sequence[str],
     item_id: str | None = None,
     allow_partial: bool = False,
 ) -> tuple[List[LocalMediaObject], List[MissingVariant]]:
-    prefixes = load_media_prefixes(repo_root)
     objects: List[LocalMediaObject] = []
     missing: List[MissingVariant] = []
 
     for kind_name in kinds:
         kind = CATALOGUE_KINDS[kind_name]
         source_root = media_root
-        groups = collect_primary_groups(source_root, item_id=item_id)
-        remote_prefix = prefixes[kind.config_prefix_key]
+        groups = collect_primary_groups(source_root, policy.rendition_suffixes, item_id=item_id)
+        remote_prefix = policy.remote_prefixes[kind.config_prefix_key]
 
         for current_id in sorted(groups):
             variants = groups[current_id]
             present_widths = sorted(variants)
-            missing_widths = [width for width in PRIMARY_WIDTHS if width not in variants]
+            missing_widths = [width for width, _ in policy.rendition_suffixes if width not in variants]
             blocked_reason = ""
             if missing_widths:
                 missing.append(
@@ -582,30 +508,33 @@ def discover_catalogue_primary_objects(
 
     return objects, missing
 
-def build_catalogue_remote_objects(*, repo_root: Path, kind_name: str, item_id: str) -> List[RemoteMediaObject]:
+def build_catalogue_remote_objects(*, policy: CataloguePrimaryPolicy, kind_name: str, item_id: str) -> List[RemoteMediaObject]:
     kind = CATALOGUE_KINDS[kind_name]
-    prefixes = load_media_prefixes(repo_root)
-    remote_prefix = prefixes[kind.config_prefix_key]
+    remote_prefix = policy.remote_prefixes[kind.config_prefix_key]
     return [
         RemoteMediaObject(
             scope="catalogue",
             kind=kind_name,
             item_id=item_id,
             width=width,
-            object_key=f"{remote_prefix}/{item_id}-{PRIMARY_SUFFIX}-{width}.{OUTPUT_FORMAT}",
+            object_key=f"{remote_prefix}/{item_id}{suffix}",
         )
-        for width in PRIMARY_WIDTHS
+        for width, suffix in policy.rendition_suffixes
     ]
 
 
-def collect_primary_groups(source_root: Path, item_id: str | None = None) -> Dict[str, Dict[int, Path]]:
+def collect_primary_groups(
+    source_root: Path,
+    rendition_suffixes: tuple[tuple[int, str], ...],
+    item_id: str | None = None,
+) -> Dict[str, Dict[int, Path]]:
     groups: Dict[str, Dict[int, Path]] = {}
     if not source_root.exists():
         return groups
     for path in sorted(source_root.iterdir()):
         if not path.is_file():
             continue
-        parsed = parse_primary_filename(path.name)
+        parsed = parse_primary_filename(path.name, rendition_suffixes)
         if parsed is None:
             continue
         current_id, width = parsed
@@ -615,9 +544,8 @@ def collect_primary_groups(source_root: Path, item_id: str | None = None) -> Dic
     return groups
 
 
-def parse_primary_filename(filename: str) -> tuple[str, int] | None:
-    for width in PRIMARY_WIDTHS:
-        suffix = f"-{PRIMARY_SUFFIX}-{width}.{OUTPUT_FORMAT}"
+def parse_primary_filename(filename: str, rendition_suffixes: tuple[tuple[int, str], ...]) -> tuple[str, int] | None:
+    for width, suffix in rendition_suffixes:
         if filename.endswith(suffix):
             item_id = filename[: -len(suffix)]
             if item_id:
@@ -643,6 +571,22 @@ def is_relative_to(path: Path, root: Path) -> bool:
         return False
 
 
+def load_catalogue_primary_policy(repo_root: Path) -> CataloguePrimaryPolicy:
+    from pipeline_config import load_pipeline_config
+
+    pipeline = load_pipeline_config(repo_root=repo_root)
+    primary = pipeline["variants"]["primary"]
+    suffix = str(primary["suffix"])
+    output_format = str(pipeline["encoding"]["format"])
+    return CataloguePrimaryPolicy(
+        remote_prefixes=load_media_prefixes(repo_root),
+        rendition_suffixes=tuple(
+            (width, f"-{suffix}-{width}.{output_format}")
+            for width in map(int, primary["widths"])
+        ),
+    )
+
+
 def load_media_prefixes(repo_root: Path) -> Dict[str, str]:
     config_path = repo_root / "site-tools" / "config" / "site-tools.json"
     payload = json.loads(config_path.read_text(encoding="utf-8"))
@@ -661,14 +605,6 @@ def normalize_remote_prefix(prefix: str) -> str:
     if cleaned == "archive" or cleaned.startswith("archive/"):
         raise SystemExit("Error: active Catalogue media cannot write the frozen archive.")
     return cleaned
-
-
-def file_md5(path: Path) -> str:
-    digest = hashlib.md5(usedforsecurity=False)
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def plan_and_publish(
@@ -820,11 +756,6 @@ def delete_result_for(
     )
 
 
-def content_type_for(path: Path) -> str:
-    content_type, _encoding = mimetypes.guess_type(path.name)
-    return content_type or "application/octet-stream"
-
-
 def build_report(
     *,
     results: Sequence[PublishResult],
@@ -904,229 +835,6 @@ def print_docs_report(report: Mapping[str, object]) -> None:
             f"{status_labels.get(status, status)}: {item.get('media_class')}/{item.get('filename')}"
             f"{reason}"
         )
-
-
-class R2Client:
-    """Small S3-compatible client for the artifact operations Docs Viewer needs."""
-
-    def __init__(self, credentials: R2Credentials) -> None:
-        self.credentials = credentials
-
-    def head_object(self, key: str) -> RemoteObject | None:
-        request = self._request("HEAD", key, body=b"")
-        try:
-            with urllib.request.urlopen(request, timeout=30) as response:
-                return RemoteObject(
-                    size=int(response.headers.get("Content-Length", "0") or "0"),
-                    etag=response.headers.get("ETag", ""),
-                )
-        except urllib.error.HTTPError as exc:
-            if exc.code == 404:
-                return None
-            raise RuntimeError(f"HEAD {key} failed with HTTP {exc.code}") from exc
-
-    def get_object(self, key: str) -> bytes:
-        request = self._request("GET", key, body=b"")
-        try:
-            with urllib.request.urlopen(request, timeout=120) as response:
-                return response.read()
-        except urllib.error.HTTPError as exc:
-            if exc.code == 404:
-                raise FileNotFoundError(f"R2 object not found: {key}") from exc
-            raise RuntimeError(f"GET {key} failed with HTTP {exc.code}") from exc
-
-    def list_objects(self, prefix: str) -> list[RemoteListObject]:
-        objects: list[RemoteListObject] = []
-        continuation_token = ""
-        while True:
-            query = {"list-type": "2", "prefix": prefix}
-            if continuation_token:
-                query["continuation-token"] = continuation_token
-            request = self._request("GET", "", body=b"", query=query)
-            try:
-                with urllib.request.urlopen(request, timeout=120) as response:
-                    payload = response.read()
-            except urllib.error.HTTPError as exc:
-                raise RuntimeError(f"LIST {prefix} failed with HTTP {exc.code}") from exc
-            root = ET.fromstring(payload)
-            namespace = root.tag.partition("}")[0].lstrip("{")
-            qualify = (lambda name: f"{{{namespace}}}{name}") if namespace else (lambda name: name)
-            for item in root.findall(qualify("Contents")):
-                key = str(item.findtext(qualify("Key")) or "")
-                if not key:
-                    continue
-                objects.append(
-                    RemoteListObject(
-                        key=key,
-                        size=int(item.findtext(qualify("Size")) or "0"),
-                        etag=str(item.findtext(qualify("ETag")) or ""),
-                    )
-                )
-            if str(root.findtext(qualify("IsTruncated")) or "").lower() != "true":
-                break
-            continuation_token = str(root.findtext(qualify("NextContinuationToken")) or "")
-            if not continuation_token:
-                raise RuntimeError("R2 LIST response was truncated without a continuation token")
-        return objects
-
-    def put_object(self, key: str, path: Path, content_type: str) -> None:
-        body = path.read_bytes()
-        request = self._request("PUT", key, body=body, content_type=content_type)
-        try:
-            with urllib.request.urlopen(request, timeout=120) as response:
-                if response.status not in {200, 201, 204}:
-                    raise RuntimeError(f"PUT {key} failed with HTTP {response.status}")
-        except urllib.error.HTTPError as exc:
-            raise RuntimeError(f"PUT {key} failed with HTTP {exc.code}") from exc
-
-    def copy_objects(self, objects: Sequence[Mapping[str, object]]) -> None:
-        """Copy a bounded batch using one connection and exact source conditions."""
-        parsed = urllib.parse.urlparse(self.credentials.endpoint)
-        connection_type = http.client.HTTPSConnection if parsed.scheme == "https" else http.client.HTTPConnection
-        connection = connection_type(parsed.hostname, parsed.port, timeout=120)
-        try:
-            for item in objects:
-                source, destination = str(item["source"]), str(item["destination"])
-                request = self._request("PUT", destination, body=b"", extra_headers={
-                    "X-Amz-Copy-Source": urllib.parse.quote(f"/{self.credentials.bucket}/{source}", safe="/"),
-                    "X-Amz-Copy-Source-If-Match": str(item["etag"]),
-                    "X-Amz-Metadata-Directive": "COPY",
-                    "Cf-Copy-Destination-If-None-Match": "*",
-                })
-                connection.request("PUT", request.selector, body=b"", headers=dict(request.header_items()))
-                response = connection.getresponse()
-                body = response.read()
-                if response.status != 200:
-                    raise RuntimeError(f"COPY {source} to {destination} failed with HTTP {response.status}")
-                payload = ET.fromstring(body)
-                if payload.tag.rsplit("}", 1)[-1] != "CopyObjectResult":
-                    raise RuntimeError(f"COPY {source} to {destination} failed: invalid CopyObject result")
-        finally:
-            connection.close()
-
-    def delete_objects(self, keys: Sequence[str]) -> None:
-        """Delete an explicit batch of at most 1000 keys; propagate per-key errors."""
-        if not keys or len(keys) > 1000 or len(set(keys)) != len(keys):
-            raise ValueError("R2 deletion requires 1–1000 distinct keys")
-        root = ET.Element("Delete", xmlns="http://s3.amazonaws.com/doc/2006-03-01/")
-        for key in keys:
-            ET.SubElement(ET.SubElement(root, "Object"), "Key").text = key
-        ET.SubElement(root, "Quiet").text = "true"
-        body = ET.tostring(root, encoding="utf-8")
-        request = self._request("POST", "", body=body, query={"delete": ""}, content_type="application/xml",
-                                extra_headers={"Content-MD5": base64.b64encode(hashlib.md5(body, usedforsecurity=False).digest()).decode("ascii")})
-        try:
-            with urllib.request.urlopen(request, timeout=120) as response:
-                payload = ET.fromstring(response.read())
-                errors = [node for node in payload.iter() if node.tag.rsplit("}", 1)[-1] == "Error"]
-                if payload.tag.rsplit("}", 1)[-1] != "DeleteResult" or errors:
-                    raise RuntimeError(f"R2 batch deletion failed: {len(errors)} object error(s)")
-        except urllib.error.HTTPError as exc:
-            raise RuntimeError(f"R2 batch deletion failed with HTTP {exc.code}") from exc
-
-    def delete_object(self, key: str) -> None:
-        request = self._request("DELETE", key, body=b"")
-        try:
-            with urllib.request.urlopen(request, timeout=30) as response:
-                if response.status not in {200, 202, 204}:
-                    raise RuntimeError(f"DELETE {key} failed with HTTP {response.status}")
-        except urllib.error.HTTPError as exc:
-            raise RuntimeError(f"DELETE {key} failed with HTTP {exc.code}") from exc
-
-    def _request(
-        self,
-        method: str,
-        key: str,
-        *,
-        body: bytes,
-        content_type: str = "",
-        query: Mapping[str, str] | None = None,
-        extra_headers: Mapping[str, str] | None = None,
-    ) -> urllib.request.Request:
-        parsed = urllib.parse.urlparse(self.credentials.endpoint)
-        encoded_key = "/".join(urllib.parse.quote(part, safe="") for part in key.split("/"))
-        path = f"/{urllib.parse.quote(self.credentials.bucket, safe='')}/{encoded_key}"
-        canonical_query = urllib.parse.urlencode(
-            sorted((query or {}).items()),
-            quote_via=urllib.parse.quote,
-            safe="-_.~",
-        )
-        url = urllib.parse.urlunparse((parsed.scheme, parsed.netloc, path, "", canonical_query, ""))
-        now = dt.datetime.now(dt.timezone.utc)
-        amz_date = now.strftime("%Y%m%dT%H%M%SZ")
-        date_stamp = now.strftime("%Y%m%d")
-        payload_hash = hashlib.sha256(body).hexdigest()
-
-        headers = {
-            "Host": parsed.netloc,
-            "X-Amz-Content-Sha256": payload_hash,
-            "X-Amz-Date": amz_date,
-        }
-        if method in {"PUT", "POST"}:
-            headers["Content-Length"] = str(len(body))
-            if content_type:
-                headers["Content-Type"] = content_type
-        headers.update(extra_headers or {})
-
-        authorization = self._authorization(
-            method=method,
-            canonical_uri=path,
-            canonical_query=canonical_query,
-            headers=headers,
-            payload_hash=payload_hash,
-            amz_date=amz_date,
-            date_stamp=date_stamp,
-        )
-        headers["Authorization"] = authorization
-        return urllib.request.Request(url, data=body if method in {"PUT", "POST"} else None, headers=headers, method=method)
-
-    def _authorization(
-        self,
-        *,
-        method: str,
-        canonical_uri: str,
-        canonical_query: str = "",
-        headers: Mapping[str, str],
-        payload_hash: str,
-        amz_date: str,
-        date_stamp: str,
-    ) -> str:
-        canonical_headers = "".join(f"{key.lower()}:{headers[key]}\n" for key in sorted(headers, key=str.lower))
-        signed_headers = ";".join(key.lower() for key in sorted(headers, key=str.lower))
-        canonical_request = "\n".join(
-            [
-                method,
-                canonical_uri,
-                canonical_query,
-                canonical_headers,
-                signed_headers,
-                payload_hash,
-            ]
-        )
-        credential_scope = f"{date_stamp}/auto/s3/aws4_request"
-        string_to_sign = "\n".join(
-            [
-                "AWS4-HMAC-SHA256",
-                amz_date,
-                credential_scope,
-                hashlib.sha256(canonical_request.encode("utf-8")).hexdigest(),
-            ]
-        )
-        signing_key = sigv4_signing_key(self.credentials.secret_access_key, date_stamp)
-        signature = hmac.new(signing_key, string_to_sign.encode("utf-8"), hashlib.sha256).hexdigest()
-        return (
-            "AWS4-HMAC-SHA256 "
-            f"Credential={self.credentials.access_key_id}/{credential_scope}, "
-            f"SignedHeaders={signed_headers}, "
-            f"Signature={signature}"
-        )
-
-
-def sigv4_signing_key(secret_access_key: str, date_stamp: str) -> bytes:
-    key_date = hmac.new(("AWS4" + secret_access_key).encode("utf-8"), date_stamp.encode("utf-8"), hashlib.sha256).digest()
-    key_region = hmac.new(key_date, b"auto", hashlib.sha256).digest()
-    key_service = hmac.new(key_region, b"s3", hashlib.sha256).digest()
-    return hmac.new(key_service, b"aws4_request", hashlib.sha256).digest()
 
 
 if __name__ == "__main__":

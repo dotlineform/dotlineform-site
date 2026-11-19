@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import datetime as dt
-import mimetypes
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
@@ -32,7 +31,7 @@ from docs_workspace_config import (
     require_document_authoring,
 )
 from docs_document_packages.workspace import configured_workspace_paths
-from studio.services.media.publish_media_to_r2 import content_type_for, file_md5
+from studio.shared.python.media_files import content_type_for, file_md5
 
 
 DOCS_MEDIA_CLASSES = set(MANAGED_MEDIA_TYPES)
@@ -379,10 +378,6 @@ def local_asset_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
     return path, media_type
 
 
-def safe_content_type(path: Path) -> str:
-    return mimetypes.guess_type(path.name)[0] or "application/octet-stream"
-
-
 __all__ = [
     "DOCS_MEDIA_CLASSES",
     "DOCS_MEDIA_ROUTE_CLASSES",
@@ -398,5 +393,4 @@ __all__ = [
     "plan_and_publish_docs_media",
     "publish_docs_media_files",
     "run_docs_staged_media_publish",
-    "safe_content_type",
 ]
