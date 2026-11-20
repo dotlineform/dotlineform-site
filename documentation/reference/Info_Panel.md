@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260623-000000-c99cef
 title: Info Panel
 added_date: "2026-06-23 00:00:00"
-last_updated: "2026-11-18"
+last_updated: "2026-11-20"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -13,7 +13,9 @@ A reader opens Info with **Pin related links** beside a non-empty generated [Rel
 
 ## Reader workflow
 
-The linked title returns to the pinned document in the current viewer. Following a list link or navigating elsewhere leaves the capture open. Another document's pin replaces it, repeating the same pin leaves it open, and Close releases it. Entering Source or reloading clears the capture. Source editing uses the complete Markdown buffer and its own controls. Above 820px the panel sticks below the top controls, aligned with Index. Long lists scroll within the panel beneath the title and Close. [Source editor](Source_Editing.md) · [CSS ownership](CSS_Ownership.md)
+The linked title returns to the pinned document in the current viewer. Following a list link or navigating elsewhere leaves the capture open. Another document's pin replaces it, repeating the same pin leaves it open, and Close releases it. Entering Source or reloading clears the capture. Source editing uses the complete Markdown buffer and its own controls. [Source editor](Source_Editing.md)
+
+In the wide public layout and in Manage above 820px, Info sticks to the right of the document below the top controls. On public tablet widths with room for two columns, Info sticks below Index in the left column, and the document keeps its width when Info opens. Long lists in a sticky panel scroll beneath its title and Close. In the single-column tablet layout, Info comes immediately after Index. On narrower public screens, it follows the document. [CSS ownership](CSS_Ownership.md)
 
 Gallery rows keep their Media View controls. Activation uses the document displayed at that moment, so Media View's Back returns there. Closing Info after the Gallery opens leaves the active view usable. Public and Manage share pinning. Export and Docs Review show the static list. [Media View](Catalogue_Media_View.md)
 

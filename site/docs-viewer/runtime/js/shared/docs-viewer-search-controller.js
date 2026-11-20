@@ -297,6 +297,7 @@ export function initDocsViewerSearchController(context) {
       if (event.key !== "ArrowDown") return;
       event.preventDefault();
       event.stopPropagation();
+      context.revealIndex();
       if (searchRecent.searchDebounceId != null) {
         cancelSearchDebounce();
         renderSearchMode();
@@ -343,6 +344,7 @@ export function initDocsViewerSearchController(context) {
   function handleRecentControl() {
     if (!enabled("recent")) return;
     context.hideContextMenu();
+    if (context.revealIndex() && recentActive()) return;
     cancelSearchDebounce();
     var viewId = recentActive() ? "index-tree" : "recent-results";
     searchRecent.searchQuery = "";
@@ -366,6 +368,7 @@ export function initDocsViewerSearchController(context) {
     setView(viewId);
     routeCommands.updateIndexHistory(query);
     if (viewId === "index-tree") return;
+    context.revealIndex();
     renderSearchPendingState();
     searchRecent.searchDebounceId = window.setTimeout(function () {
       searchRecent.searchDebounceId = null;
@@ -378,6 +381,7 @@ export function initDocsViewerSearchController(context) {
     if (!local) return;
     portfolioSelected = currentScope(local) !== PORTFOLIO_SEARCH_SCOPE;
     if (context.hasActiveQuery()) {
+      context.revealIndex();
       cancelSearchDebounce();
       searchRecent.searchScope = preferredScope(local);
       searchRecent.searchVisibleCount = context.searchBatchSize;
@@ -409,8 +413,10 @@ export function initDocsViewerSearchController(context) {
     searchRecent.searchScope = nextQuery ? (validScope ? scope : preferredScope(collectionScope(target))) : "";
     searchRecent.searchVisibleCount = context.searchBatchSize;
     context.setSearchInput(nextQuery);
-    if (normalizeSearchText(nextQuery)) renderSearchMode();
-    else setView("index-tree");
+    if (normalizeSearchText(nextQuery)) {
+      context.revealIndex();
+      renderSearchMode();
+    } else setView("index-tree");
   }
 
   /** Explicit management reload invalidates lists; changing visibility never does. */

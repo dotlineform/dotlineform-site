@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260511-200845-2a03a0
 title: CSS Ownership
 added_date: "2026-05-11 20:08:45"
-last_updated: "2026-11-18"
+last_updated: "2026-11-20"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -29,9 +29,11 @@ Public and Manage load palette, reader and public report styles. Manage adds its
 
 Rendered content uses `.docsViewer__content`. The public shell uses `docs-viewer-shell`/`docsViewerShell__container`; local service shells supply their own framing. Reader CSS owns the common top inset, document width and toolbar alignment. An opening collection report omits its own extra top margin. Standard prose rules stay scoped to content, with low-specificity list defaults so reports retain their spacing. Moments poetry, modern figure captions, Catalogue content and expanded detail retain their specialised owners.
 
+The public reader lays out authored left and right image figures by measuring the document pane. Below 36rem it stacks the image and caption. At 36rem and above it uses the authored side-by-side proportions. Wrapped figures use the same pane width threshold for text flow. [Reader stylesheet](../../docs-viewer/static/css/docs-viewer.css)
+
 Heading sizes use the four `--docs-viewer-font-heading-*` tokens. H2 dividers and horizontal rules consume `--docs-viewer-border-strong`. Reader typography has its own font/spacing tokens. Change the owner rather than adding host-token fallbacks. Raw authored HTML can still supply local presentation; inspect the actual content when a prose rule appears ineffective.
 
-Public and Manage use an 18px top inset and ordinary 2rem reader controls. Above 820px their controls stick at the top; the shell observes their border-box height and supplies the offset for sticky Index/Info panels and document anchors. Lists scroll in the remaining height. Narrow layout remains a separate public/manual review concern.
+Public and Manage use an 18px top inset and ordinary 2rem reader controls. Above 820px their controls stick at the top. The shell observes their border-box height and supplies the offset for sticky Index/Info panels and document anchors. In the compact public document layout the controls scroll with the page, including at short landscape widths above 820px. [Index layout and navigation](Reader_Discovery_And_Return.md#retained-index-views)
 
 Moments documents use a centred maximum 50ch width keyed to the resolved collection on each document mount. A retained hidden Moments mount cannot narrow another collection or list. Content Detail and Source keep their own width owners. Authored `pre.moment-text` separately selects poetry typography, compact title spacing and the 47% word axis.
 

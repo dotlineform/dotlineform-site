@@ -1,4 +1,28 @@
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+
 const INDEX_PANEL_MOUNT_SELECTOR = "[data-docs-viewer-index-panel-mount]";
+
+function mountIndexDisclosure(documentRef, header, body) {
+  const button = documentRef.createElement("button");
+  button.type = "button";
+  button.className = "docsViewer__toolbarIconButton docsViewer__indexDisclosure";
+  button.setAttribute("aria-controls", body.id);
+  button.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--chevron-right"));
+
+  function isExpanded() {
+    return button.getAttribute("aria-expanded") === "true";
+  }
+
+  function setExpanded(expanded) {
+    button.setAttribute("aria-expanded", expanded ? "true" : "false");
+    button.setAttribute("aria-label", expanded ? "Hide Index" : "Show Index");
+  }
+
+  setExpanded(false);
+  button.addEventListener("click", function () { setExpanded(!isExpanded()); });
+  header.appendChild(button);
+  return { isExpanded, setExpanded };
+}
 
 export function indexPanelMount(root) {
   if (!root) return null;
@@ -59,11 +83,22 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   resultsView.append(resultsStatus, results, more);
 
   header.append(listControls, viewControls);
-  inner.append(header, nav, resultsView, placeholder);
+  inner.appendChild(header);
+  let disclosure = null;
+  if (options.indexDisclosure) {
+    const body = documentRef.createElement("div");
+    body.className = "docsViewer__indexBody";
+    body.id = "docsViewerIndexBody";
+    body.append(nav, resultsView, placeholder);
+    inner.appendChild(body);
+    disclosure = mountIndexDisclosure(documentRef, header, body);
+  } else {
+    inner.append(nav, resultsView, placeholder);
+  }
   aside.appendChild(inner);
   mount.replaceChildren(aside);
 
-  return findDocsViewerIndexPanelRefs({ document: documentRef, root: mount });
+  return { ...findDocsViewerIndexPanelRefs({ document: documentRef, root: mount }), disclosure };
 }
 
 export function findDocsViewerIndexPanelRefs(options = {}) {

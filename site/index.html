@@ -22,7 +22,7 @@
     })();
   </script>
   <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-theme.css?v=docs-viewer-root-20261015a">
-  <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer.css?v=docs-viewer-root-20261115">
+  <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer.css?v=docs-viewer-root-20261120-4">
   <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-reports.css?v=docs-viewer-root-20261115-3">
 </head>
 <body class="docs-viewer-shell">
@@ -46,11 +46,13 @@
         ></div>
         <p class="docsViewer__status muted small" id="docsViewerStatus" hidden></p>
       </div>
-      <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+      <div class="docsViewer__sidePanels">
+        <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+        <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+      </div>
       <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount>
         <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
       </div>
-      <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
     </section>
     <script type="module" src="/docs-viewer/runtime/js/public/docs-viewer-public.js?v=docs-viewer-root-20261015a"></script>
   </main>

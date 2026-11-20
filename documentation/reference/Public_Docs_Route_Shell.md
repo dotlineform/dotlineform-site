@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260613-115624-3d377c
 title: Docs Viewer Public Route Shell Template
 added_date: "2026-06-13 11:56:24"
-last_updated: "2026-11-18"
+last_updated: "2026-11-20"
 summary: The tracked root public Docs Viewer shell, configuration ownership, and maintenance boundary.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -19,7 +19,7 @@ Site owns the installed HTML shell and 404. Docs Viewer owns reader boot, naviga
 
 ## Shell Contract
 
-The shell loads the palette, reader and public report CSS, applies stored theme in its head before first paint, and mounts header controls plus Index, Main and Info beneath the viewer root. It identifies the route and public configuration URL, starts ready/busy false, and loads [the public entrypoint](../../docs-viewer/runtime/js/public/docs-viewer-public.js). Public composition excludes management/Import/Review runtime and local service URLs. The [404](../../site/404.html) uses the shared palette, its own stylesheet/theme script and a home link to the root.
+The shell loads the palette, reader and public report CSS, applies stored theme in its head before first paint, and mounts header controls and Main beneath the viewer root. Index and Info share a wrapper so the reader CSS can place them in one sticky column at tablet widths. It identifies the route and public configuration URL, starts ready/busy false, and loads the public entrypoint. Public composition excludes management/Import/Review runtime and local service URLs. The 404 uses the shared palette, its own stylesheet/theme script and a home link to the root. [Public entrypoint](../../docs-viewer/runtime/js/public/docs-viewer-public.js) · [Info panel](Info_Panel.md) · [404](../../site/404.html)
 
 ## Maintenance
 

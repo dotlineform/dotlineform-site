@@ -69,6 +69,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   async function capture() {
     return { document: context.captureDocument(), hash: displayedHash, catalogueSearch: displayedCatalogueSearch,
+      indexExpanded: context.indexDisclosure?.isExpanded(),
       positions: capturePositions(), x: window.scrollX, y: window.scrollY,
       focus: context.root.ownerDocument.activeElement,
       focusHref: context.root.ownerDocument.activeElement && context.root.ownerDocument.activeElement.href || "" };
@@ -77,6 +78,7 @@ export function initDocsViewerRouteWorkflow(context) {
     if (!record) throw new Error("This navigation entry is unavailable.");
     displayedHash = record.hash;
     displayedCatalogueSearch = record.catalogueSearch;
+    context.indexDisclosure?.setExpanded(record.indexExpanded);
     await context.restoreDocument(record.document);
     // Keep the panel's current search query when restoring a document.
     var target = selected.documentTarget;
@@ -272,7 +274,13 @@ export function initDocsViewerRouteWorkflow(context) {
       var selectedFromIndex = anchor.classList.contains("docsViewer__navLink");
       loadDoc(route.target, { hash: route.hash, catalogueSearch: route.catalogueSearch,
         collectionSequence: collectionSequenceForLink(anchor) })
-        .then(function (target) { if (target && selectedFromIndex) context.selectIndexTarget(target); })
+        .then(function (target) {
+          if (!target) return;
+          if (selectedFromIndex) context.selectIndexTarget(target);
+          if (selectedFromIndex || anchor.hasAttribute("data-result-doc-id")) {
+            context.onIndexDocumentOpened(route.hash);
+          }
+        })
         .catch(function (error) { setStatus(error.message, true); });
     });
   }

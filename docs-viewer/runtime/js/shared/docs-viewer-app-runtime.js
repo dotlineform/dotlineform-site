@@ -72,6 +72,9 @@ export function startDocsViewerRuntime(options) {
   var infoPanelRefs = appShellRefs.infoPanel;
   var mainViewToolbar = mainViewRefs.toolbar;
   var content = mainViewRefs.content;
+  var indexDisclosure = settings.appShellResult?.indexPanel.disclosure;
+  var compactViewport = indexDisclosure ? window.matchMedia("(width <= 820px), (width <= 960px) and (height < 35rem)") : null;
+  var toolbarHeaderMount = mainViewToolbar?.parentElement;
   var searchInput = null;
   var resultsStatus = indexPanelRefs.resultsStatus;
   var results = indexPanelRefs.results;
@@ -177,6 +180,32 @@ export function startDocsViewerRuntime(options) {
   }
 
   function documentActionContext() { return documentController ? documentController.actionContext() : {}; }
+
+  function revealIndex() {
+    if (!indexDisclosure || indexDisclosure.isExpanded()) return false;
+    indexDisclosure.setExpanded(true);
+    return compactViewport.matches;
+  }
+
+  function collapseIndexAfterOpeningDocument(hash) {
+    if (!compactViewport?.matches || !indexDisclosure.isExpanded()) return;
+    var focusWasInIndex = indexPanelRefs.sidebar.contains(document.activeElement);
+    indexDisclosure.setExpanded(false);
+    if (hash) documentController.scrollToHash(hash);
+    if (focusWasInIndex) {
+      var heading = content.querySelector("h1") || mainViewRefs.main;
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
+  }
+
+  function placeCollectionToolbar() {
+    if (!compactViewport || !mainViewRefs.collectionIndex) return;
+    var mount = compactViewport.matches && !mainViewRefs.collectionIndex.hidden ? mainViewRefs.main : toolbarHeaderMount;
+    if (mainViewToolbar.parentElement !== mount) mount.prepend(mainViewToolbar);
+  }
+
+  compactViewport?.addEventListener("change", placeCollectionToolbar);
 
   function openSourceFromLink(target, options) {
     if (!sourceEditingEnabled || !sourceService || !managementUiEnabled) return false;
@@ -446,6 +475,8 @@ export function startDocsViewerRuntime(options) {
       if (searchController) searchController.applyRoute(query, scope, target);
     },
     selectIndexTarget: function (target) { searchController?.selectIndexTarget(target); },
+    indexDisclosure: indexDisclosure,
+    onIndexDocumentOpened: collapseIndexAfterOpeningDocument,
     confirmDocumentNavigation: documentViewCoordinator.confirmDocumentNavigation,
     activeViewState: documentViewCoordinator.activeViewState,
     managedDocumentContext: function () { return latestCollectionReportState; },
@@ -510,6 +541,7 @@ export function startDocsViewerRuntime(options) {
     workspaceConfig: appSession.domains.workspaceConfig,
     more: more,
     setIndexView: panelLayout.setActiveIndexView,
+    revealIndex: revealIndex,
     resultsView: indexPanelRefs.resultsView,
     resultsStatus: resultsStatus,
     results: results,
@@ -783,6 +815,7 @@ export function startDocsViewerRuntime(options) {
       var indexLabel = bookChapter ? "Table of contents" : "index";
       mainViewRefs.collectionIndex.title = indexLabel;
       mainViewRefs.collectionIndex.setAttribute("aria-label", indexLabel);
+      placeCollectionToolbar();
     }
     var mount = mainViewRefs.collectionActions;
     if (mount) {

@@ -122,6 +122,7 @@ export function initDocsViewerAppShell(options) {
   var indexPanel = renderDocsViewerIndexPanelShell({
     document: documentRef,
     root: root,
+    indexDisclosure: routeContext?.appContext.kind === "public",
     mount: settings.indexPanelMount || indexPanelMount(root)
   });
   var infoPanel = renderDocsViewerInfoPanelShell({
