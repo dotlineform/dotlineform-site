@@ -135,8 +135,8 @@ function directionMultiplier(state) {
 }
 
 function measureColumnWidths(state) {
-  return state.headers.map(function (header) {
-    return clampWidth(header.getBoundingClientRect().width);
+  return state.resizeCells.map(function (cell) {
+    return clampWidth(cell.getBoundingClientRect().width);
   });
 }
 
@@ -174,7 +174,7 @@ function ensureManagedColgroup(state) {
   if (state.colgroup) return state.colgroup;
   var colgroup = state.document.createElement("colgroup");
   colgroup.setAttribute("data-docs-viewer-managed-table-widths", "");
-  state.headers.forEach(function () {
+  state.resizeCells.forEach(function () {
     colgroup.appendChild(state.document.createElement("col"));
   });
   var reference = state.table.tHead || state.table.tBodies[0] || state.table.tFoot || state.table.firstChild;
@@ -282,20 +282,20 @@ function directColgroup(table) {
   }) || null;
 }
 
-function headerCells(table) {
-  var headerRow = table.tHead && table.tHead.rows.length
-    ? table.tHead.rows[table.tHead.rows.length - 1]
-    : null;
-  return headerRow ? Array.from(headerRow.cells) : [];
+function columnResizeCells(table) {
+  var row = table.classList.contains("docsViewerTable--noHeader")
+    ? table.rows[0]
+    : table.tHead?.rows[table.tHead.rows.length - 1];
+  return row ? Array.from(row.cells) : [];
 }
 
-function simpleHeadersMatch(state, headers) {
+function hasResizableCells(state, cells) {
   var existingColgroup = directColgroup(state.table);
   return Boolean(
-    headers.length
+    cells.length
     && (!existingColgroup || existingColgroup === state.colgroup)
-    && headers.every(function (header) {
-      return positiveSpan(header.colSpan) === 1 && positiveSpan(header.rowSpan) === 1;
+    && cells.every(function (cell) {
+      return positiveSpan(cell.colSpan) === 1 && positiveSpan(cell.rowSpan) === 1;
     })
   );
 }
@@ -325,9 +325,9 @@ function exactReportColumnsMatch(state, headers) {
 }
 
 function refreshEligibility(state) {
-  state.headers = headerCells(state.table);
-  state.resizable = simpleHeadersMatch(state, state.headers)
-    && (!state.columns || exactReportColumnsMatch(state, state.headers));
+  state.resizeCells = columnResizeCells(state.table);
+  state.resizable = hasResizableCells(state, state.resizeCells)
+    && (!state.columns || exactReportColumnsMatch(state, state.resizeCells));
 }
 
 function createPresentationState(context, options) {
@@ -345,7 +345,7 @@ function createPresentationState(context, options) {
     document: documentRef,
     handleCleanup: [],
     handles: [],
-    headers: [],
+    resizeCells: [],
     originalTableWidth: table.style.width,
     projectControlState: null,
     released: false,
@@ -360,10 +360,10 @@ function createPresentationState(context, options) {
 
 function mountResizeHandles(state) {
   if (!state.resizable) return;
-  state.headers.forEach(function (header, index) {
+  state.resizeCells.forEach(function (cell, index) {
     var declaredColumn = state.columns && state.columns[index];
     var columnLabel = cleanText(declaredColumn && declaredColumn.label)
-      || cleanText(header.textContent)
+      || (state.table.tHead && cleanText(cell.textContent))
       || "Column " + (index + 1);
     var handle = state.document.createElement("span");
     handle.className = "docsViewer__tableResizeHandle";
@@ -382,8 +382,8 @@ function mountResizeHandles(state) {
       handle.removeEventListener("pointerdown", onPointerDown);
       handle.removeEventListener("keydown", onKeyDown);
     });
-    header.classList.add("docsViewer__tableResizeHeader");
-    header.appendChild(handle);
+    cell.classList.add("docsViewer__tableResizeCell");
+    cell.appendChild(handle);
     state.handles.push(handle);
   });
 }
@@ -392,7 +392,7 @@ function clearResizeHandles(state) {
   cleanupActivePointer(state);
   state.handleCleanup.splice(0).forEach(function (cleanup) { cleanup(); });
   state.handles.forEach(function (handle) { handle.remove(); });
-  state.headers.forEach(function (header) { header.classList.remove("docsViewer__tableResizeHeader"); });
+  state.resizeCells.forEach(function (cell) { cell.classList.remove("docsViewer__tableResizeCell"); });
   state.handles = [];
 }
 
@@ -406,7 +406,7 @@ function refreshReportPresentation(state) {
     return;
   }
   mountResizeHandles(state);
-  if (retainedWidths && retainedWidths.length === state.headers.length) {
+  if (retainedWidths && retainedWidths.length === state.resizeCells.length) {
     applyColumnWidths(state, retainedWidths);
   } else if (state.active) {
     updateHandleValues(state, measureColumnWidths(state));

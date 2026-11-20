@@ -11,6 +11,7 @@ from typing import Any, Dict, List
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_core import StateCore
+from markdown_it.token import Token
 
 
 @dataclass(frozen=True)
@@ -32,49 +33,98 @@ TABLE_DETAIL_DIRECTIVE = "<!-- dotlineform:table-detail -->"
 TABLE_DETAIL_DIRECTIVE_PATTERN = re.compile(
     r'<!-- dotlineform:table-detail(?: title="(?P<title>[^"\r\n]*)")? -->(?:\r\n|\r|\n)?'
 )
+TABLE_STYLE_CLASSES = {
+    "shade-first-column": "docsViewerTable--shadedFirstColumn",
+    "small-text": "docsViewerTable--smallText",
+    "horizontal-rules": "docsViewerTable--horizontalRules",
+    "no-header": "docsViewerTable--noHeader",
+}
+TABLE_OPTIONS_DIRECTIVE_PATTERN = re.compile(
+    r'<!-- dotlineform:table(?= [a-z])(?: widths="(?P<widths>[^"\r\n]*)")?'
+    rf'(?P<styles>(?: (?:{"|".join(TABLE_STYLE_CLASSES)}))*) -->(?:\r\n|\r|\n)?'
+)
 TABLE_DETAIL_ATTRIBUTE = "data-docs-content-detail"
 TABLE_DETAIL_TITLE_ATTRIBUTE = "data-docs-content-detail-title"
 
 
-def _source_lines(markdown: str) -> List[str]:
-    return markdown.splitlines(keepends=True)
+def _apply_table_widths(table: Token, cells: list[Token], ratio: str) -> None:
+    parts = ratio.split(":")
+    if len(parts) != len(cells) or any(not re.fullmatch(r"0*[1-9][0-9]*", part) for part in parts):
+        raise ValueError(f'Table widths "{ratio}" must have one positive integer per column ({len(cells)} columns).')
+    weights = [int(part) for part in parts]
+    total = sum(weights)
+    table.attrJoin("class", "docsViewerTable--weightedColumns")
+    for cell, weight in zip(cells, weights):
+        width = f"width:{100 * weight / total:.10g}%"
+        alignment = cell.attrGet("style")
+        cell.attrSet("style", f"{alignment};{width}" if alignment else width)
 
 
-def _table_detail_directive_title(token: Any, lines: List[str]) -> str | None:
-    if token.type != "html_block" or not token.map or len(token.map) != 2:
-        return None
-    start, end = token.map
-    source = "".join(lines[start:end])
-    match = TABLE_DETAIL_DIRECTIVE_PATTERN.fullmatch(source)
-    return unescape(match.group("title") or "") if match else None
+def _format_first_table_row(tokens: list[Token], table_index: int, widths: str | None, has_header: bool) -> None:
+    """Keep the parsed row and its inline content while applying its widths and cell roles."""
+    cells = []
+    head_start = table_index + 1
+    head_end = head_start + 1
+    while tokens[head_end].type != "thead_close":
+        token = tokens[head_end]
+        if token.type == "th_open":
+            cells.append(token)
+        if not has_header and token.tag == "th":
+            token.tag = "td"
+            token.type = "td_open" if token.nesting == 1 else "td_close"
+        head_end += 1
+    if widths is not None:
+        _apply_table_widths(tokens[table_index], cells, widths)
+    if not has_header:
+        group = tokens[head_start]
+        group.type, group.tag, group.map = "tbody_open", "tbody", tokens[table_index].map
+        if tokens[head_end + 1].type == "tbody_open":
+            # Join the first row and the remaining rows into one body.
+            del tokens[head_end:head_end + 2]
+        else:
+            tokens[head_end].type, tokens[head_end].tag = "tbody_close", "tbody"
 
 
-def _blank_source_range(lines: List[str], start: int, end: int) -> bool:
-    return all(not line.strip() for line in lines[start:end])
+def project_table_directives(state: StateCore) -> None:
+    """Apply consecutive standalone table comments to the following parsed table."""
+    if state.md.options.get("content_detail_default_table"):
+        tables = [token for token in state.tokens if token.type == "table_open"]
+        if len(tables) == 1:
+            tables[0].attrSet(TABLE_DETAIL_ATTRIBUTE, "table")
 
-
-def project_table_detail_eligibility(state: StateCore) -> None:
-    """Project explicit table-detail eligibility without altering Markdown source."""
-
-    if not state.tokens:
+    if "<!-- dotlineform:table" not in state.src:
         return
-    lines = _source_lines(state.src)
-    table_tokens = [token for token in state.tokens if token.type == "table_open"]
-    for index, token in enumerate(state.tokens[:-1]):
-        title = _table_detail_directive_title(token, lines)
-        if title is None:
+    lines = state.src.splitlines(keepends=True)
+    for index, table in enumerate(state.tokens):
+        if table.type != "table_open" or not table.map:
             continue
-        table = state.tokens[index + 1]
-        if table.type != "table_open" or table.level != token.level or not table.map:
-            continue
-        if not _blank_source_range(lines, token.map[1], table.map[0]):
-            continue
-        table.attrSet(TABLE_DETAIL_ATTRIBUTE, "table")
-        if title:
-            table.attrSet(TABLE_DETAIL_TITLE_ATTRIBUTE, title)
-
-    if state.md.options.get("content_detail_default_table") and len(table_tokens) == 1:
-        table_tokens[0].attrSet(TABLE_DETAIL_ATTRIBUTE, "table")
+        widths = None
+        has_header = True
+        boundary = table.map[0]
+        for previous in range(index - 1, -1, -1):
+            comment = state.tokens[previous]
+            if comment.type != "html_block" or comment.level != table.level or not comment.map:
+                break
+            start, end = comment.map
+            if any(line.strip() for line in lines[end:boundary]):
+                break
+            source = "".join(lines[start:end])
+            if detail := TABLE_DETAIL_DIRECTIVE_PATTERN.fullmatch(source):
+                table.attrSet(TABLE_DETAIL_ATTRIBUTE, "table")
+                if title := detail.group("title"):
+                    table.attrSet(TABLE_DETAIL_TITLE_ATTRIBUTE, unescape(title))
+            elif options := TABLE_OPTIONS_DIRECTIVE_PATTERN.fullmatch(source):
+                if options["widths"] is not None:
+                    widths = options["widths"]
+                for style in options["styles"].split():
+                    table.attrJoin("class", TABLE_STYLE_CLASSES[style])
+                    if style == "no-header":
+                        has_header = False
+            else:
+                break
+            boundary = start
+        if widths is not None or not has_header:
+            _format_first_table_row(state.tokens, index, widths, has_header)
 
 
 def normalize_plain_text(value: str | None) -> str:
@@ -370,7 +420,7 @@ def build_markdown_renderer(options: MarkdownRenderOptions | None = None) -> Mar
     if not render_options.allow_raw_html:
         renderer.disable("html_block")
         renderer.disable("html_inline")
-    renderer.core.ruler.after("block", "table_detail_eligibility", project_table_detail_eligibility)
+    renderer.core.ruler.after("block", "table_directives", project_table_directives)
     return renderer
 
 
@@ -420,5 +470,7 @@ def markdown_renderer_contract(options: MarkdownRenderOptions | None = None) -> 
         "allow_raw_html": render_options.allow_raw_html,
         "content_detail_default_table": render_options.content_detail_default_table,
         "table_detail_directive": TABLE_DETAIL_DIRECTIVE,
+        "table_widths_directive": '<!-- dotlineform:table widths="1:2:2" -->',
+        "table_style_options": list(TABLE_STYLE_CLASSES),
         "sanitizes_html": False,
     }

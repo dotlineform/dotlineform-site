@@ -1380,8 +1380,18 @@ body.docs-viewer-service{
   vertical-align: top;
 }
 
-.docsViewer__content th{
+.docsViewer__content th,
+.docsViewer__content .docsViewerTable--shadedFirstColumn > tbody > tr > :first-child{
   background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__content .docsViewerTable--smallText:not(.docsViewer__tableDetailTable){
+  --docs-viewer-font-body: var(--docs-viewer-font-small);
+  font-size: var(--docs-viewer-font-body);
+}
+
+.docsViewer__content .docsViewerTable--horizontalRules > :is(thead, tbody) > tr > :is(th, td){
+  border-inline: 0;
 }
 
 .docsViewer__content .docsViewerTable{
@@ -1679,6 +1689,12 @@ body.docs-viewer-service{
   outline-offset: 2px;
 }
 
+.docsViewer__tableDetailViewport:has(> .docsViewerTable--horizontalRules){
+  border-inline: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
 .docsViewer__content table.docsViewer__tableDetailTable{
   display: table;
   width: max-content;
@@ -1689,6 +1705,18 @@ body.docs-viewer-service{
   border-collapse: separate;
   border-spacing: 0;
   table-layout: auto;
+}
+
+.docsViewer__content table.docsViewerTable--weightedColumns{
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  overflow-wrap: anywhere;
+}
+
+.docsViewerTable--weightedColumns > thead > tr > th,
+.docsViewerTable--weightedColumns.docsViewerTable--noHeader > tbody > tr:first-child > td{
+  box-sizing: border-box;
 }
 
 .docsViewer__tableDetailTable th,

@@ -39,10 +39,23 @@ The menu captures the current adapter, selection and revision before moving focu
 | **Add image** / **Add file** | Insert or edit an exact body-media reference. New selection holds the File until Save. [Media intake](Media_And_Asset_Handling.md#add-a-new-image-or-download) |
 | **Add Media View link** / **Edit Media View link** | When Directives opens, the item reads **Edit Media View link** if the caret is inside an authored Media View token or the selection covers that token exactly. Edit restores its saved fields. Every other selection shows **Add Media View link**. Choose a Work and its destination, then **Image**, **Inline link** or **Hidden**. Selecting a Gallery directly offers Inline link or Hidden. [Catalogue source forms](Document_And_Catalogue_References.md#supported-source-forms) |
 | **Insert doc link** | Insert the selected exact document route and escaped literal title. [Picker request](#get-docsdocument-link-targets) |
-| **Table detail** / **Image detail** | Insert the comment before the selected standalone Markdown table or image. Table detail starts with an editable `title="Table"`. [Image detail](Document_Image_Detail.md) |
+| **Table options** | Edit the selected table’s column widths, rules, header row, shading, text size and detail view. [Table options](#table-options) |
+| **Image detail** | Insert the comment before the selected standalone image. [Image detail](Document_Image_Detail.md) |
 | **Insert related links**, **Insert icon**, **Summary** | Insert `[[links|]]`, an editable icon stem, or a standalone `[[summary]]`. [Related Links](Related_Links.md#authoring-decision) · [Icons](Icon_Tokens.md) · [Summary](Builder.md#summary-block) |
 
 [Directives owner](../../docs-viewer/runtime/js/management/source-editor/directive-actions.js)
+
+### Table options
+
+In Source, place the caret anywhere in a standalone Markdown table or select the table, then choose **Directives → Table options**. The dialog opens with the table’s existing settings. For **Relative widths**, enter one positive whole number per column, separated by spaces. Both `20 40 40` and `1 2 2` give the last two columns equal space. A blank field uses automatic widths.
+
+**First row is a header** starts on. Turn it off when the first row contains data. The builder renders that row as ordinary cells in the table body, preserving its text, inline formatting and column widths. In Table Detail it scrolls vertically with the other rows. **Horizontal rules only** keeps the horizontal lines and removes vertical borders, including the outside edges, in either view.
+
+**Shade first column** shades the first cell in each body row, including the first row when the header is off. **Small text** uses the reader’s small type size (0.875rem) for the inline table. Table Detail uses normal body size. Horizontal rules, shading and small text are independent and start off.
+
+Select **Enable detail view** to give the reader an Open button. This enables **Table title**. A blank title uses “Table”. **Apply** updates the comments above this table in the current buffer. Restoring all defaults removes the table options. **Cancel** discards the modal edits. **Save** persists the buffer and rebuilds the document.
+
+For hand editing, place a comment such as `<!-- dotlineform:table horizontal-rules no-header -->` above the table. Include `widths="20:40:40"` first if needed, followed by any selected flags from `shade-first-column`, `small-text`, `horizontal-rules` and `no-header`. The separate `<!-- dotlineform:table-detail title="Theorems" -->` comment can go immediately before or after it. The local editor loads the bundled markdown-it 15.0.3 block parser when Table options opens to locate the table and count its columns in unsaved text. The shared Python renderer owns generated output. Manage places its temporary resize handles on the first data row when the header is off. [Table options](../../docs-viewer/runtime/js/management/source-editor/table-options.js) · [Shared Markdown renderer](../../studio/shared/python/markdown_renderer.py)
 
 ### `GET /docs/document-link-targets`
 

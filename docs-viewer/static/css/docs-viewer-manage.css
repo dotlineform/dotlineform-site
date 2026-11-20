@@ -1020,11 +1020,12 @@ select.docsViewer__positionTargets{
   max-inline-size: none;
 }
 
-.docsViewer__tableResizeHeader{
+.docsViewer__tableResizeCell{
   padding-inline-end: calc(var(--docs-viewer-space-3) + 0.5rem);
 }
 
-.docsViewer__contentDetail--report .docsViewer__tableResizeHeader{
+.docsViewer__contentDetail--report .docsViewer__tableResizeCell,
+.docsViewerTable--noHeader .docsViewer__tableResizeCell:not(:first-child){
   position: relative;
 }
 

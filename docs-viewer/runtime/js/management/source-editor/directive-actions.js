@@ -8,7 +8,7 @@ export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
 const ICON_DIRECTIVE_SOURCE = "[[icon:refresh-cw]]";
 const LINKS_DIRECTIVE_SOURCE = "[[links|]]";
-const TABLE_DETAIL_DIRECTIVE_SOURCE = '<!-- dotlineform:table-detail title="Table" -->';
+const TABLE_OPTIONS = { id: "table-options", label: "Table options", artwork: "docsViewer__icon--table" };
 
 const SOURCE_ACTIONS = [
   { actionId: ACTION_IDS.SOURCE_ADD_IMAGE, artwork: "docsViewer__icon--image", label: "Add image" },
@@ -19,16 +19,6 @@ const SOURCE_ACTIONS = [
 ];
 
 export const DIRECTIVE_ACTIONS = Object.freeze([
-  Object.freeze({
-    artwork: "docsViewer__icon--table",
-    id: "table-detail",
-    label: "Table detail",
-    source: TABLE_DETAIL_DIRECTIVE_SOURCE,
-    placeholder: Object.freeze({
-      start: '<!-- dotlineform:table-detail title="'.length,
-      end: TABLE_DETAIL_DIRECTIVE_SOURCE.length - '" -->'.length
-    })
-  }),
   Object.freeze({
     artwork: "docsViewer__icon--image",
     id: "image-detail",
@@ -247,6 +237,7 @@ export function directiveActionsControlRenderer(context) {
     separator.className = "docsViewer__actionMenuSeparator";
     separator.setAttribute("role", "separator");
     menu.appendChild(separator);
+    menu.appendChild(menuItem(context.document, TABLE_OPTIONS));
     DIRECTIVE_ACTIONS.forEach(function (directive) {
       menu.appendChild(menuItem(context.document, directive));
     });
@@ -310,7 +301,7 @@ function runSourceAction(context, controller, actionId) {
   return true;
 }
 
-function insertDirective(context, controller, directiveId) {
+function applyDirective(context, controller, directiveId) {
   var adapter = controller.adapter;
   var capture = controller.capture;
   closeMenu(controller);
@@ -323,6 +314,14 @@ function insertDirective(context, controller, directiveId) {
   ) {
     focusEditor(adapter);
     return false;
+  }
+  if (directiveId === TABLE_OPTIONS.id) {
+    import("./table-options.js").then(function ({ openTableOptionsModal }) {
+      if (adapter.isCurrent()) return openTableOptionsModal(context.root, adapter, capture);
+    }).catch(function (error) {
+      if (adapter.isCurrent()) adapter.setStatus(error.message || "Table options could not open.", true);
+    });
+    return true;
   }
   var plan = createDirectiveInsertionPlan({
     capture: capture,
@@ -364,7 +363,7 @@ export function createDirectiveActionsMainViewControlHandlers() {
       );
       if (action && controller.root.contains(action)) {
         if (action.disabled) return false;
-        return insertDirective(context, controller, action.dataset.docsViewerDirectiveAction);
+        return applyDirective(context, controller, action.dataset.docsViewerDirectiveAction);
       }
       if (!controller.menu.hidden) {
         closeMenu(controller);
