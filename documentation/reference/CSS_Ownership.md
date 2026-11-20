@@ -37,7 +37,7 @@ Heading sizes use the four `--docs-viewer-font-heading-*` tokens. H2 dividers an
 
 Public and Manage use an 18px top inset and ordinary 2rem reader controls. Above 820px their controls stick at the top. The shell observes their border-box height and supplies the offset for sticky Index/Info panels and document anchors. In the compact public document layout the controls scroll with the page, including at short landscape widths above 820px. [Index layout and navigation](Reader_Discovery_And_Return.md#retained-index-views)
 
-Moments documents use a centred maximum 50ch width keyed to the resolved collection on each document mount. A retained hidden Moments mount cannot narrow another collection or list. Content Detail and Source keep their own width owners. Authored `pre.moment-text` separately selects poetry typography, compact title spacing and the 47% word axis.
+Moments documents use a centred maximum 50ch width keyed to the resolved collection on each document mount. A retained hidden Moments mount cannot narrow another collection or list. Content Detail and Source keep their own width owners. Authored `pre.moment-text` separately selects poetry typography and compact title spacing. Axis-aligned verse gives each authored line its own row with a 47% split. In Public at viewport widths up to 40rem, text can wrap within each side of that split. A title or date marked for axis alignment flows as ordinary text in its own block at those widths.
 
 ## Themes And Shared Fields
 

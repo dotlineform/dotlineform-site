@@ -89,8 +89,20 @@ On the phone, document body text grew when rotated to landscape, while headings 
 The Work and text patch passed the projection check and site validation. Local preview served the updated stylesheet.
 
 - [x] Gallery layout accepted on the physical iPhone in landscape.
+- [x] Document prose sizing accepted on the physical iPhone in landscape. The user also confirmed that the iPad layout still looks right.
 - [x] Work detail layout accepted on the physical iPhone in portrait.
-- [ ] Check Work metadata placement and the `cat.` line at normal page zoom on the phone in landscape. Rotate to portrait and back, compare document paragraph sizing, and check reader-controlled zoom. Open a Work and return to the Gallery to verify the return path.
+- [ ] Check Work metadata placement and the `cat.` line at normal page zoom on the phone in landscape. Check reader-controlled zoom and the return path from a Work to the Gallery.
+
+### Moments verse on narrow viewports
+
+The original phone tests for *all the little cracks* (`d-20260215-000000-f5f727`) showed the authored axis in landscape and continuous text within each stanza in portrait. The iPad presentation was accepted. The portrait issue came from the public stylesheet’s 40rem media query, which made verse rows inline and inserted spaces between them. [Moments typography](../reference/CSS_Ownership.md#layout-and-prose)
+
+The public stylesheet now uses the authored rows and their shared 47% alignment point in portrait. At widths up to 40rem, each half can wrap within its column. The title and date both carry the alignment class. The narrow rule now displays them in separate blocks, with their split words flowing as ordinary text within each block. [Reader stylesheet](../../docs-viewer/static/css/docs-viewer.css)
+
+Projection and site validation passed. Local preview served the updated stylesheet and the poem with eight authored lines across three stanzas.
+
+- [x] The Safari phone portrait preset shows the longer phrase wrapping within its column. The user accepted the verse layout in that preset.
+- [ ] Check the date placement, stanza spacing and horizontal fit on the physical iPhone in portrait. Rotate to landscape and compare the verse alignment.
 
 ## Catalogue And Media View
 

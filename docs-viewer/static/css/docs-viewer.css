@@ -1236,23 +1236,30 @@ body.docs-viewer-service{
 }
 
 @media (max-width: 40rem){
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content
-    :is(.moment-axis-line, .moment-text--axis .axis-line){
-    display: inline;
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .moment-axis-line{
+    display: block;
     white-space: normal;
   }
 
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content
-    :is(.moment-axis-line, .moment-text--axis .axis-line) > :is(.axis-before, .axis-after){
+    .moment-axis-line > :is(.axis-before, .axis-after){
     display: inline;
     padding: 0;
     text-align: left;
   }
 
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content
-    :is(.moment-axis-line, .moment-text--axis .axis-line) > .axis-before::after,
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .moment-text--axis .axis-line:not(:last-child)::after{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .moment-axis-line > .axis-before::after{
     content: " ";
+  }
+
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .moment-text--axis .axis-line{
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .moment-text--axis .axis-line > .axis-before{
+    justify-self: stretch;
+    width: auto;
   }
 }
 
