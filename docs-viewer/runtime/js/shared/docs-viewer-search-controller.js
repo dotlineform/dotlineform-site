@@ -101,7 +101,8 @@ export function initDocsViewerSearchController(context) {
   }
 
   function setResultsStatus(message, isError) {
-    resultsStatus.textContent = String(message || "");
+    var text = String(message || "");
+    if (resultsStatus.textContent !== text) resultsStatus.textContent = text;
     resultsStatus.hidden = !message;
     resultsStatus.classList.toggle("is-error", Boolean(isError));
   }
@@ -223,13 +224,6 @@ export function initDocsViewerSearchController(context) {
     renderedView = "recent-results";
     resultsView.scrollTop = 0;
     syncSelection();
-  }
-
-  function renderSearchPendingState() {
-    if (!enabled("search") || !context.hasActiveQuery()) return;
-    setView("search-results");
-    clearRows("", false);
-    resultsView.scrollTop = 0;
   }
 
   function renderSearchMode() {
@@ -359,17 +353,23 @@ export function initDocsViewerSearchController(context) {
   function handleSearchInput(value) {
     if (!enabled("search")) return;
     var query = String(value || "").trim();
+    var normalizedQuery = normalizeSearchText(query);
+    var keepEmptyResults = renderedView === "search-results" && searchMatches.length === 0
+      && context.activeIndexViewId() === "search-results";
     cancelSearchDebounce();
     if (!searchRecent.searchQuery && query) searchRecent.searchScope = preferredScope();
-    if (!normalizeSearchText(query)) searchRecent.searchScope = "";
+    if (!normalizedQuery) searchRecent.searchScope = "";
     searchRecent.searchQuery = query;
     searchRecent.searchVisibleCount = context.searchBatchSize;
-    var viewId = normalizeSearchText(query) ? "search-results" : "index-tree";
+    var viewId = normalizedQuery ? "search-results" : "index-tree";
     setView(viewId);
     routeCommands.updateIndexHistory(query);
     if (viewId === "index-tree") return;
     context.revealIndex();
-    renderSearchPendingState();
+    if (!keepEmptyResults) {
+      clearRows("", false);
+      resultsView.scrollTop = 0;
+    }
     searchRecent.searchDebounceId = window.setTimeout(function () {
       searchRecent.searchDebounceId = null;
       renderSearchMode();

@@ -43,6 +43,8 @@ Discovery projects ordinary eligibility by pruning Draft and publication-exclude
 
 Search loads one index per visited scope and reuses it for queries in the mounted reader. **More** reveals another batch of 50. Down from the search field applies a pending query and focuses the first result. Arrow keys move within results, Enter opens the focused item, and Escape or Up from the first result returns to the field. Recent replaces the tree and clears the active query. Typing a query switches back to Search. Known Manage deletions are suppressed in the visible saved results.
 
+Search keeps the **No results.** message visible while the reader continues refining a query with no matches. The next completed query replaces it if the outcome changes.
+
 Search scope and query use `search-scope` and `q` in the URL. Changing them replaces the current browser entry. Following a result keeps the current view, scope, query, paging and result scroll. Back changes the main document and aligns result selection to that document. The restored URL carries the current Index query. A fresh open or reload can reapply the URL query, beginning with the first batch. Recent mode and its scroll belong to the mounted panel. [Search controls](../../docs-viewer/runtime/js/shared/docs-viewer-search-controller.js)
 
 ### Query And Ranking
