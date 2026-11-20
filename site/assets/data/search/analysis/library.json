@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-29970d146b99cfc5c035426605ec0f88",
-    "generated_at_utc": "2026-11-19T23:07:25Z",
+    "version": "blake2b-0ab2b1c63fea72b6d0401962686606a4",
+    "generated_at_utc": "2026-11-20T22:19:13Z",
     "count": 153
   },
   "fields": [
@@ -121,8 +121,8 @@
     {
       "id": "d-20261016-235314-073b44",
       "title": "5 aspects of memory",
-      "last_updated": "2026-10-16",
-      "display_meta": "2026-10-16 • Library",
+      "last_updated": "2026-11-20",
+      "display_meta": "2026-11-20 • Library",
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
@@ -1354,8 +1354,8 @@
     {
       "id": "d-20261114-163605-1eeb31",
       "title": "Gödel Theory — Importance & Relevance",
-      "last_updated": "2026-11-14",
-      "display_meta": "2026-11-14 • Library",
+      "last_updated": "2026-11-20",
+      "display_meta": "2026-11-20 • Library",
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
@@ -1381,8 +1381,8 @@
     {
       "id": "d-20261117-221004-d9269a",
       "title": "The Halting Problem — Computation and the Limits of Knowledge",
-      "last_updated": "2026-11-17",
-      "display_meta": "2026-11-17 • Library",
+      "last_updated": "2026-11-20",
+      "display_meta": "2026-11-20 • Library",
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
