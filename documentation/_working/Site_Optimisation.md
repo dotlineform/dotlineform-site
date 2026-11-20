@@ -23,4 +23,4 @@ Understand what the public site loads to open a page and what it fetches as the 
 - [ ] Agree the representative routes, devices, connection conditions and cache states for a baseline. Use the baseline to identify which payloads and requests matter to the reader.
 - [ ] Choose the first improvement and how to check it. Visible-thumbnail loading, request priority, thumbnail renditions and cache policy are candidates. Set targets after seeing the measurements.
 
-Pane width and touch behaviour have their own review. [Mobile Layouts](Mobile_Layouts.md)
+The mobile layout delivery records the reader changes and representative device checks. [Mobile Layouts](../deliveries/Mobile_Layouts.md)

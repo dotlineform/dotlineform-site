@@ -9,7 +9,7 @@ parent_id: d-20260419-000000-d2e47b
 ---
 # Public Mobile Experience
 
-Earlier mobile exploration. Its reader journeys were carried into Mobile Layouts. It preserves the original public/mobile and local-desktop boundaries. [Current reference](../reference/CSS_Ownership.md)
+Earlier mobile exploration. Its reader journeys informed the completed Mobile Layouts delivery. This record preserves the original public/mobile and local-desktop boundaries. [Mobile Layouts](Mobile_Layouts.md) · [Current reference](../reference/CSS_Ownership.md)
 
 ## Purpose
 
