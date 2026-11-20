@@ -34,6 +34,8 @@ Choose **Directives → Add Media View link** in Source. Selecting a Work defaul
 
 A Gallery reads one exact `gallery_record_v3` via `/docs/catalogue-gallery?gallery_id=…` in Working or the configured Gallery records base in Public. The browser orders the loaded members by natural, case-insensitive title with exact Work ID as the tie-breaker. Only the active page of thumbnails is mounted, with up to 64 per page. Empty Galleries show an empty state. A Work's full presentation is read by exact ID when selected. Previous and Next follow the invoking Gallery sequence. The invoking Gallery link returns to the page containing the selected Work. An unavailable or superseded selection leaves the current view in place. [Shared Media View](../../docs-viewer/runtime/js/shared/docs-viewer-media-detail.js)
 
+In Public, Gallery thumbnails wrap to the available column width at their normal size. From 36rem of space inside the Media View panel, the Gallery title and related links sit alongside the grid. In a narrower panel they follow the thumbnails. The layout uses the active page in its existing order. [Reader stylesheet](../../docs-viewer/static/css/docs-viewer.css)
+
 The Content Detail host owns the outer **Back** and **Open in new tab** controls. Back restores the invoking document or result context, scroll and focus. A link from a pinned Related Links list opens against the document displayed when selected. [Info Panel](Info_Panel.md) · [Reader return rules](../guide/Find_And_Read_Things.md)
 
 ## Discovery Grid

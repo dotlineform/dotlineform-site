@@ -26,7 +26,7 @@ In desktop Safari’s 1180 × 820 iPad landscape viewport, Context’s “3 symb
 
 The updated public layout is ready in local preview. It uses two columns above 820px and below 94rem, and puts Info after Index in the single column above 760px through 820px. Both rules require at least 35rem of viewport height. The two-column layout reuses the measured toolbar offset and existing scrollable lists. It limits Index to half the available sidebar height when Info is open so the pinned links stay within reach.
 
-The projected stylesheet passed `bin/site-code-update --check` and `bin/site-validate`. The running preview served the updated shell and stylesheet. The landscape and physical-device checks remain open.
+The projected stylesheet passed `bin/site-code-update --check` and `bin/site-validate`. The running preview served the updated shell and stylesheet. The user accepted the layout on the physical iPad Air. The detailed checks below cover additional navigation and overflow cases.
 
 - [ ] In iPad landscape at 1180 × 820, check that “3 symbols” uses the space to the right of Index up to the desktop reading width. Open and close Info and check that the document stays in place at the same width. Scroll with both panels open and check that long Index and Info lists remain usable.
 - [ ] Check keyboard navigation with Info open in the MacBook, iPad and iPhone layouts.
@@ -40,7 +40,8 @@ The opening figure in “3 symbols” fills the left column of an image-and-capt
 The compact layout reuses the existing Index state and toolbar. The stylesheet scopes figure measurement to documents with authored figure layouts. Focused JavaScript lint, projection and site validation passed, and the local preview served the updated files.
 
 - [x] Desktop Safari at 820 × 1180 shows “3 symbols” with the Index collapsed, pinned links directly below it, the collection button above the document, and the half-width image beside its caption. The user accepted this portrait arrangement.
-- [ ] On the deployed site, check the layouts on the physical iPad Air and iPhone 15 Pro. Rotate the iPad with Index open and then closed to check that the portrait state is restored.
+- [x] The user reported that the deployed layout is fine on the physical iPad Air.
+- [ ] Rotate the iPad with Index open and then closed to check that the portrait state is restored.
 - [ ] Compare iPhone portrait and iPad landscape. Check that the caption stacks below the image on the narrow phone pane and that authored image proportions are visible in the wider pane.
 
 ## Index Disclosure In The Single-Column Reader
@@ -71,7 +72,20 @@ The landscape change extends the existing viewport condition and reuses the same
 
 - [x] Phone rotation accepted in Safari.
 - [ ] Choose a document in phone landscape at 874 × 402 and check that the Index collapses after navigation.
-- [x] Media View accepted in both phone orientations. The landscape screenshot of “sea - detail 4” shows the image, details and navigation controls clearly. Keep the current layout for the range of supported image aspect ratios.
+- [x] Media View Work detail accepted in both phone orientations in desktop Safari. The landscape screenshot of “sea - detail 4” shows the image, details and navigation controls clearly.
+
+### Physical iPhone landscape findings
+
+In the deployed test, the iPhone 15 Pro in landscape placed the “3 symbols” Media View gallery title and related document link below the thumbnails. Desktop Safari’s 874 × 402 preset showed them alongside. The deployed shell uses Safari’s default safe-area insets. The phone screenshot is consistent with an inset viewport below the former 760px Gallery breakpoint. The exact CSS viewport width awaits measurement. [WebKit safe areas](https://webkit.org/blog/7929/designing-websites-for-iphone-x/) · [Safari Responsive Design Mode](https://developer.apple.com/documentation/safari-developer-tools/responsive-design-mode)
+
+The public Gallery layout in local preview uses a CSS container query. At an inner panel width of 36rem, a narrower metadata column fits beside at least five standard thumbnails at the default font size. The existing thumbnail grid wraps in the available width and keeps its page membership. The container applies to Gallery presentations, including Discovery grids. [Gallery presentations](../reference/Catalogue_Media_View.md#gallery-presentations)
+
+The projection check and site validation passed. Local preview served the updated shell and stylesheet. At the estimated 734px landscape viewport, the CSS dimensions allow six 64px thumbnails per row beside the metadata. Physical iPhone acceptance is still open.
+
+The same “3 symbols” paragraph wraps noticeably sooner on the phone. The narrower pane explains part of that difference. Compare at the default Safari page zoom before testing for Safari’s automatic text resizing. The stylesheet already sets the prose size to 1rem. [Safari text sizing](https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/AdjustingtheTextSize/AdjustingtheTextSize.html)
+
+- [ ] Check the “3 symbols” Media View gallery on the real iPhone in landscape and portrait. Check that the landscape title and links remain beside the grid and that the thumbnails wrap at their current size. Open a Work and return to the gallery.
+- [ ] Proposed prose check. Measure the actual phone viewport and compare the same paragraph at normal page zoom. If automatic text resizing explains the remaining difference, try `-webkit-text-size-adjust: 100%` on public document prose and check that reader-controlled zoom still works.
 
 ## Catalogue And Media View
 
