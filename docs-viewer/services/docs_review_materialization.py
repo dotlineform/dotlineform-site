@@ -132,15 +132,16 @@ def publish_review_package(
         )
     )
     try:
-        sources = [dict(record) for record in source_records]
+        sources = {}
         source_dir = temporary_path / "source"
         source_dir.mkdir()
-        for record in sources:
+        for record in source_records:
             filename = _safe_source_filename(record.get("filename"))
             source_text = record.get("source_text")
             if not isinstance(source_text, str):
                 raise ValueError("review source_text must be a string")
             (source_dir / filename).write_text(source_text, encoding="utf-8")
+            sources[record["doc_id"]] = record
 
         assets = [dict(record) for record in asset_records]
         build = build_review_package(
@@ -149,6 +150,7 @@ def publish_review_package(
             source_dir=source_dir,
             generated_dir=temporary_path / "generated",
             default_doc_id=default_doc_id,
+            source_records=(sources[doc_id] for doc_id in manifest["selected_doc_ids"]),
             asset_records=assets,
         )
         if int(build.get("document_count") or 0) != len(sources):

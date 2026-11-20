@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260711-214307-b4c800
 title: Docs Review
 added_date: 2026-07-11 21:43:07
-last_updated: "2026-11-19"
+last_updated: "2026-11-20"
 summary: Durable product, workflow, persistent package, explicit Build, source-open, and authority contract for the local returned-package review route.
 parent_id: d-20260424-000000-50b63f
 
@@ -11,7 +11,7 @@ parent_id: d-20260424-000000-50b63f
 
 # Docs Review
 
-Docs Review displays a validated returned package at `/docs-review/?package=<package_id>&doc=<doc_id>`. It reuses the reader with a package provider. The package service validates a staged return and materializes its local source and generated preview. Review's operations stay within that package. [Prepare and return](Document_Packages.md)
+Docs Review is a content review tool for reading returned prose, headings and summaries. It displays a validated package at `/docs-review/?package=<package_id>&doc=<doc_id>`. The package service prepares its local Markdown and preview. Choose **Open canonical** to see the saved document in Manage with its full presentation. [Prepare and return](Document_Packages.md)
 
 ## Open And Inspect A Package
 
@@ -45,7 +45,9 @@ Materialized source carries `review_folder_id`, `review_source_export_id`, `revi
 
 Initial materialization builds in a temporary sibling directory and exposes the completed package with a rename. Explicit **Build** renders the complete retained `source/` into that package's `generated/`. Ordinary reads reuse healthy generated JSON and rebuild package-local output when the requested JSON is absent or malformed. Source edits require explicit Build to refresh otherwise readable output. [Materialization](../../docs-viewer/services/docs_review_materialization.py) · [Review builder](../../docs-viewer/services/docs_review_build.py)
 
-The synthetic builder preserves package-record identity and package-rooted routes. Media resolves through its declared inventory. Interactive HTML runs in a sandboxed iframe with scripts allowed. Source-open launches VS Code for the exact package/document member. The shared renderer and configured asset boundary own the resulting preview.
+When package Markdown contains a Catalogue token, an inline link contributes its literal label and a Work image contributes its authored summary. A hidden token, a Catalogue Entry or a Work image with only an automatic title caption contributes no text. Review needs no Catalogue lookup, Work image files or Media View controls. These display choices preserve the package Markdown for editing. Source-open launches VS Code for the selected package document.
+
+A Docs-owned image token displays its image if the package inventory supplies the file. Otherwise Review shows any authored caption and summary. Package asset reads stay confined to the declared inventory. The interactive HTML renderer uses a sandboxed iframe with scripts allowed. [Review builder](../../docs-viewer/services/docs_review_build.py) · [Source-token rendering](../../docs-viewer/build/docs_builder/source_tokens.py)
 
 A Build error can leave incomplete generated files because explicit rebuilding writes in place. Correct the package source or output problem and retry Build on the same package. Canonical comparison and Import retain their independent owners.
 

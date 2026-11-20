@@ -405,6 +405,7 @@ def _rebuild_generated_package(
         source_dir=package_path / "source",
         generated_dir=package_path / "generated",
         default_doc_id=default_doc_id,
+        source_records=(records[doc_id] for doc_id in manifest["selected_doc_ids"]),
         asset_records=_asset_records(package_path),
     )
 

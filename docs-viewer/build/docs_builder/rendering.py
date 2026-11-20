@@ -211,8 +211,8 @@ class ContentRenderingMixin:
         media_base = str(media.get("base") if isinstance(media, dict) else "").strip()
         return f"/{clean_path}" if not media_base else f"{media_base.rstrip('/')}/{clean_path}"
 
-    def image_token_media_url(self, media_path: str) -> str:
-        """Resolve an exact current-owner image role, with encoded asset identity."""
+    def image_token_media_url(self, media_path: str) -> str | None:
+        """Resolve an exact image URL. A Review package may omit the referenced file."""
         if self.published_media_type_for_reference(media_path) not in {"img", "svg"}:
             raise ValueError(f"Image token has no configured image owner: {media_path}")
         return self.resolve_media_url(encode_image_path(media_path))

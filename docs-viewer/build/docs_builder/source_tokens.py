@@ -6,7 +6,7 @@ from uuid import uuid4
 from dataclasses import dataclass, replace
 from typing import Any, Callable, Iterable
 
-from .summary_formatting import render_summary_inline
+from .summary_formatting import render_summary_inline, render_summary_paragraphs
 from docs_image_tokens import (
     FIGURE_NATURAL_WIDTH_CLASS,
     FIGURE_PLACEMENT_CLASSES,
@@ -307,8 +307,11 @@ def catalogue_reference_slot(reference: dict[str, Any]) -> str:
     return f'<{tag} data-docs-catalogue-ref="{reference["reference_id"]}"></{tag}>'
 
 
-def render_image_reference(token: SourceTokenOccurrence, src: str) -> str:
+def render_image_reference(token: SourceTokenOccurrence, src: str | None) -> str:
     """Render static Docs-owned image presentation without media writes or lookups."""
+    if src is None:
+        caption = f"<p>{html.escape(token.caption)}</p>" if token.caption else ""
+        return caption + render_summary_paragraphs(token.summary)
     modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
     if not token.fill_width:
         modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
@@ -350,6 +353,10 @@ class SourceTokensMixin:
                 fragment = render_image_reference(
                     token, self.image_token_media_url(token.media_path),
                 )
+            elif self.config.stage == "review":
+                if not token.visible:
+                    return ""
+                fragment = render_summary_paragraphs(token.summary) if token.presentation == "image" else html.escape(token.title)
             else:
                 if token.target_type == "work":
                     self.related_works.add(token.target_id)
@@ -366,6 +373,8 @@ class SourceTokensMixin:
                 reference = catalogue_reference(token, f"c{len(self.catalogue_references) + 1}")
                 self.catalogue_references.append(reference)
                 fragment = catalogue_reference_slot(reference)
+            if not fragment:
+                return ""
             marker_id = uuid4().hex
             # Comments start HTML blocks at line beginnings; inline references must not.
             marker = (

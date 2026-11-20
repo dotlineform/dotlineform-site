@@ -598,14 +598,8 @@ def create_review_source_folder(
                 body = ""
             else:
                 raise RuntimeError(f"unsupported import content intent: {record.content_intent}")
-            source_text = source_markdown(
-                body,
-                review_front_matter(
-                    projection_row,
-                    metadata=metadata,
-                    folder_id=folder_id,
-                    date_value=date_value,
-                ),
+            front_matter = review_front_matter(
+                projection_row, metadata=metadata, folder_id=folder_id, date_value=date_value,
             )
             source_files.append(
                 {
@@ -619,7 +613,9 @@ def create_review_source_folder(
                 {
                     "doc_id": doc_id,
                     "filename": filename,
-                    "source_text": source_text,
+                    "source_text": source_markdown(body, front_matter),
+                    "front_matter": front_matter,
+                    "source_body": body,
                 }
             )
         issues.extend(validate_materialized_sources(materialized_sources))

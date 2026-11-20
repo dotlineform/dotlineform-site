@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 import html
 import sys
 from pathlib import Path
@@ -14,8 +15,8 @@ if str(BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(BUILD_DIR))
 
 from docs_builder.pipeline import DocsDataBuilder  # noqa: E402
-from docs_builder.source import DocRecord  # noqa: E402
 from docs_artifact_locations import ArtifactLocation, EXTERNAL_LOCAL_PROVIDER  # noqa: E402
+from docs_publication_paths import confined  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
     DocsGeneratedConfig,
     DocsMediaConfig,
@@ -33,11 +34,6 @@ class DocsReviewDataBuilder(DocsDataBuilder):
         self.package_id = package_id
         self.asset_records = asset_records
         super().__init__(**kwargs)
-
-    def validate_canonical_doc_ids(self, docs: list[DocRecord]) -> None:
-        # Review documents retain package record identity until Docs Import maps
-        # a create to a new local identity or an overwrite to an existing one.
-        return None
 
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
         url = f"/docs-review/?package={quote(self.package_id)}&doc={quote(str(doc_id))}"
@@ -73,9 +69,10 @@ class DocsReviewDataBuilder(DocsDataBuilder):
             raise RuntimeError(f"Review package media asset is not inventoried: {relative_path}")
         return self._asset_url(str(record.get("package_path") or ""))
 
-    def image_token_media_url(self, media_path: str) -> str:
-        """Review resolves the decoded identity against its existing asset inventory."""
-        return self.resolve_media_url(media_path)
+    def image_token_media_url(self, media_path: str) -> str | None:
+        """Only a bundled Docs image has a URL in the Review reader."""
+        record = self._asset_record(media_path, kind="media")
+        return self._asset_url(record["package_path"]) if record is not None else None
 
     def html_media_iframe(self, raw_body: str) -> str:
         token = self.parse_html_media_token(raw_body)
@@ -155,25 +152,45 @@ def build_review_package(
     source_dir: Path,
     generated_dir: Path,
     default_doc_id: str,
+    source_records: Iterable[dict[str, Any]],
     asset_records: list[dict[str, Any]],
 ) -> dict[str, Any]:
+    """Render the supplied package members and their tree from package-local source."""
+    confined(generated_dir, "index-tree.json")
     config = synthetic_review_config(
         source_dir=source_dir,
         generated_dir=generated_dir,
         default_doc_id=default_doc_id,
     )
-    result = DocsReviewDataBuilder(
+    builder = DocsReviewDataBuilder(
         repo_root=repo_root,
         config=config,
+        source_dir=source_dir,
+        output_dir=generated_dir,
+        related_links_dir=generated_dir / "links-by-id",
         package_id=package_id,
         asset_records=asset_records,
         viewer_base_url="/docs-review/",
         skip_media_builds=True,
-    ).run(write=True)
-    diagnostics = result.get("diagnostics") if isinstance(result.get("diagnostics"), dict) else {}
+    )
+    documents = []
+    for record in source_records:
+        doc_id = record["doc_id"]
+        fields = record["front_matter"]
+        documents.append(builder.document_record(
+            path=source_dir / f"{doc_id}.md", front_matter=fields, body_markdown=record["source_body"],
+            doc_id=doc_id, title=fields["title"], parent_id=fields.get("parent_id", ""), thumbnail=False,
+        ))
+    identities = {doc.doc_id: doc for doc in documents}
+    result = builder.run(
+        write=True, documents=documents, document_identities=identities,
+        index_tree_payload=builder.index_tree_payload(identities, previous_payload=None),
+        previous_tree_text=None, recent_payload=None, stale_item_ids=[], related_documents={},
+    )
+    diagnostics = result["diagnostics"]
     return {
-        "document_count": len(result.get("item_payloads") or {}),
+        "document_count": len(documents),
         "asset_count": len(asset_records),
-        "warnings": list(diagnostics.get("warnings") or []),
+        "warnings": diagnostics["warnings"],
         "diagnostics": diagnostics,
     }

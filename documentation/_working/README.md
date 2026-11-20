@@ -16,6 +16,5 @@ Use the [development workflow](../development/Development_Workflow.md) when a ch
 ## Follow-on Reviews
 
 - [Cloud Environments](Cloud_Environments.md) records the iPad setup handoff, the unresolved settings issue and the checks needed to resume.
-- [Docs Review package generation and Catalogue images](Media_View_Link_Authoring.md#docs-review-follow-up) records the retired builder call and the missing image handoff for preserved source tokens.
 
 Other work is found by reviewing the directory and following its domain owners. A link or old planning status alone does not authorise implementation. Historical parent metadata is navigation, not a requirement to recreate the former planning hierarchy.
