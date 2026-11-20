@@ -78,14 +78,19 @@ The landscape change extends the existing viewport condition and reuses the same
 
 In the deployed test, the iPhone 15 Pro in landscape placed the “3 symbols” Media View gallery title and related document link below the thumbnails. Desktop Safari’s 874 × 402 preset showed them alongside. The deployed shell uses Safari’s default safe-area insets. The phone screenshot is consistent with an inset viewport below the former 760px Gallery breakpoint. The exact CSS viewport width awaits measurement. [WebKit safe areas](https://webkit.org/blog/7929/designing-websites-for-iphone-x/) · [Safari Responsive Design Mode](https://developer.apple.com/documentation/safari-developer-tools/responsive-design-mode)
 
-The public Gallery layout in local preview uses a CSS container query. At an inner panel width of 36rem, a narrower metadata column fits beside at least five standard thumbnails at the default font size. The existing thumbnail grid wraps in the available width and keeps its page membership. The container applies to Gallery presentations, including Discovery grids. [Gallery presentations](../reference/Catalogue_Media_View.md#gallery-presentations)
+The public Gallery layout uses a CSS container query. At an inner panel width of 36rem, a narrower metadata column fits beside at least five standard thumbnails at the default font size. The existing thumbnail grid wraps in the available width and keeps its page membership. Gallery presentations include Discovery grids. [Gallery presentations](../reference/Catalogue_Media_View.md#gallery-presentations)
 
-The projection check and site validation passed. Local preview served the updated shell and stylesheet. At the estimated 734px landscape viewport, the CSS dimensions allow six 64px thumbnails per row beside the metadata. Physical iPhone acceptance is still open.
+The projection check and site validation passed. Local preview served the updated shell and stylesheet. The physical iPhone screenshot confirms six thumbnails per row with the Gallery title and related document link beside them.
 
-The same “3 symbols” paragraph wraps noticeably sooner on the phone. The narrower pane explains part of that difference. Compare at the default Safari page zoom before testing for Safari’s automatic text resizing. The stylesheet already sets the prose size to 1rem. [Safari text sizing](https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/AdjustingtheTextSize/AdjustingtheTextSize.html)
+The first Work detail test on the physical iPhone stacked the metadata below the image in landscape because Work detail still used the 760px viewport breakpoint. The same Work looked right in portrait. Work detail now uses the same 36rem panel-width query as Gallery, with metadata alongside the image when the panel has room. The stylesheet supplies the shared columns for Work, Gallery and Discovery. The Media View runtime owns data and navigation. [Reader stylesheet](../../docs-viewer/static/css/docs-viewer.css)
 
-- [ ] Check the “3 symbols” Media View gallery on the real iPhone in landscape and portrait. Check that the landscape title and links remain beside the grid and that the thumbnails wrap at their current size. Open a Work and return to the gallery.
-- [ ] Proposed prose check. Measure the actual phone viewport and compare the same paragraph at normal page zoom. If automatic text resizing explains the remaining difference, try `-webkit-text-size-adjust: 100%` on public document prose and check that reader-controlled zoom still works.
+On the phone, document body text grew when rotated to landscape, while headings and captions stayed the same size. The `cat.` line in Work detail also grew. This pattern points to Safari’s automatic text sizing. Local preview sets `text-size-adjust` and `-webkit-text-size-adjust` to 100% on public document paragraphs outside figure captions and on the catalogue-number line in short landscape viewports. [Safari text sizing](https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/AdjustingtheTextSize/AdjustingtheTextSize.html)
+
+The Work and text patch passed the projection check and site validation. Local preview served the updated stylesheet.
+
+- [x] Gallery layout accepted on the physical iPhone in landscape.
+- [x] Work detail layout accepted on the physical iPhone in portrait.
+- [ ] Check Work metadata placement and the `cat.` line at normal page zoom on the phone in landscape. Rotate to portrait and back, compare document paragraph sizing, and check reader-controlled zoom. Open a Work and return to the Gallery to verify the return path.
 
 ## Catalogue And Media View
 

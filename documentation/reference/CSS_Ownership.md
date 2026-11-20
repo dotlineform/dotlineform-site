@@ -31,6 +31,8 @@ Rendered content uses `.docsViewer__content`. The public shell uses `docs-viewer
 
 The public reader lays out authored left and right image figures by measuring the document pane. Below 36rem it stacks the image and caption. At 36rem and above it uses the authored side-by-side proportions. Wrapped figures use the same pane width threshold for text flow. [Reader stylesheet](../../docs-viewer/static/css/docs-viewer.css)
 
+In short public landscape viewports up to 960px wide and below 35rem high, the stylesheet sets text-size adjustment to 100% on document paragraphs outside figure captions and the Work catalogue-number line. This gives Safari the CSS text size for those paragraphs. [Reader stylesheet](../../docs-viewer/static/css/docs-viewer.css)
+
 Heading sizes use the four `--docs-viewer-font-heading-*` tokens. H2 dividers and horizontal rules consume `--docs-viewer-border-strong`. Reader typography has its own font/spacing tokens. Change the owner rather than adding host-token fallbacks. Raw authored HTML can still supply local presentation; inspect the actual content when a prose rule appears ineffective.
 
 Public and Manage use an 18px top inset and ordinary 2rem reader controls. Above 820px their controls stick at the top. The shell observes their border-box height and supplies the offset for sticky Index/Info panels and document anchors. In the compact public document layout the controls scroll with the page, including at short landscape widths above 820px. [Index layout and navigation](Reader_Discovery_And_Return.md#retained-index-views)

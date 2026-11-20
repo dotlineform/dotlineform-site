@@ -919,6 +919,16 @@ body.docs-viewer-service{
   line-height: var(--docs-viewer-line-loose);
 }
 
+@media (orientation: landscape) and (width <= 960px) and (height < 35rem){
+  .docsViewer[data-docs-viewer-app-kind="public"] :is(
+    .docsViewer__documentMount:not([data-docs-content-detail-active="true"]) p:not(figcaption p),
+    .docsViewer__mediaDetailCatalogueNumber
+  ){
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}
+
 .docsViewer__collectionNavigation{
   --docs-viewer-content-link: var(--docs-viewer-muted);
   --docs-viewer-content-link-visited: var(--docs-viewer-muted);
@@ -1460,16 +1470,16 @@ body.docs-viewer-service{
   margin: 0;
 }
 
-.docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__mediaDetailViewport:has(> .docsViewer__mediaDetailFigure > .docsViewer__mediaDetailGalleryPane){
-  container: media-gallery / inline-size;
+.docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__mediaDetailViewport{
+  container: media-detail / inline-size;
 }
 
-.docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__mediaDetailFigure:has(> .docsViewer__mediaDetailGalleryPane){
+.docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__mediaDetailFigure{
   grid-template-columns: minmax(0, 1fr);
 }
 
-@container media-gallery (min-width: 36rem){
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__mediaDetailFigure:has(> .docsViewer__mediaDetailGalleryPane){
+@container media-detail (min-width: 36rem){
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__mediaDetailFigure{
     grid-template-columns: minmax(0, 1fr) clamp(12rem, 30%, var(--docs-viewer-media-metadata-width));
   }
 }
@@ -1641,10 +1651,6 @@ body.docs-viewer-service{
 @media (max-width: 760px){
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__mediaDetailViewport{
     padding: var(--docs-viewer-space-3);
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__mediaDetailFigure:has(> .docsViewer__mediaDetailImagePane){
-    grid-template-columns: minmax(0, 1fr);
   }
 }
 
