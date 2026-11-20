@@ -9,7 +9,7 @@
   "has_thumbnail": true,
   "content_html": "<h1>blue sky</h1>\n<p class=\"momentDate\">c. 2012?</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<pre class=\"moment-text\">\nperhaps it is an alchemical truth\nthat the sky is always blue\nbut most of the time purity is hidden from us\n \nand then when we find the blue\nit is only gas molecules scattering the sun\nthe atmosphere thins to a layer\nbeyond which there is only emptiness\n \nwhich is not really empty\nno matter how far you look or travel\nthere is no emptiness to be found\n</pre>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",

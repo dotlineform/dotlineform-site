@@ -7,7 +7,7 @@
   "has_thumbnail": true,
   "content_html": "<h1>a doll story</h1>\n<div data-docs-catalogue-ref=\"c1\"></div>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",

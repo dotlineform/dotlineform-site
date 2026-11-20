@@ -9,7 +9,7 @@
   "has_thumbnail": true,
   "content_html": "<h1>13 moments in october</h1>\n<p class=\"momentDate\">23 Oct 2024</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<pre class=\"moment-text\">\nwe should be sleeping\nallow the winter to heal\nbut instead we see everything falling apart in clear sight\n \nthere is an internal swell\nwhen everything on the outside is turning cold\nshivers\n \nalways fighting doubt until the light goes out\n</pre>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",

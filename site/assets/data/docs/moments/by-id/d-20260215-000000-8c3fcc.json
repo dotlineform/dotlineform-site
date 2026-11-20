@@ -9,7 +9,7 @@
   "has_thumbnail": true,
   "content_html": "<h1>a feeling of free will</h1>\n<p class=\"momentDate\">23 Oct 2024</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<pre class=\"moment-text\">\nan\nunrealisable\nfeeling\nof\nfree\nwill\nthat\nstretches\nfor\nhours\nand\nyears\nbefore\nbeing\ncrushed\nunder\nits\nown\nweight\nof\nexpectation\nwhich\nit\nhad\nfailed\nto\nproperly\nunderstand\nand\nso\nconsequently\nwas\nunprepared\nfor\nwhen\na\npreviously\nunknowable\ninfluence\nappeared\nas\nan\nuncertainty\nthat\ni\nfound\nimpossible\nto\nreconcile\nleading\nto\na\ncondition\nof\nexponentially\nincreasing\ndoubt\nthat\nultimately\nmade\nthe\nwhole\nconcept\nmeaningless\nresulting\nin\nan\nunresolvable\nfeeling\nof\nfree\nwill\nthat\nmay\npossibly\nlast\nforever\n</pre>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",

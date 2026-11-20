@@ -7,7 +7,7 @@
   "has_thumbnail": true,
   "content_html": "<h1>a theory of happiness</h1>\n<p>digital composites\n2008</p>\n<p>original composite 2008\n64° added 2010</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<div data-docs-catalogue-ref=\"c2\"></div>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",

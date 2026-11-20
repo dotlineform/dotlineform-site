@@ -6,7 +6,7 @@
   "draft": false,
   "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n<p style=\"text-align: center\">\ncollected work 1989 - 2026<br>\n© 2026 michael davies\n</p>\n<p style=\"text-align: center\">\n<small>\n<a href=\"https://www.behance.net/dotlineform\" target=\"_blank\" rel=\"noopener\">behance</a><br>\n<a href=\"https://vimeo.com/dotlineform\" target=\"_blank\" rel=\"noopener\">vimeo</a><br>\n<a href=\"https://www.youtube.com/@dotlineform/videos\" target=\"_blank\" rel=\"noopener\">youtube</a><br>\n<a href=\"https://dotlineform.bandcamp.com/\" target=\"_blank\" rel=\"noopener\">bandcamp</a>\n</small>\n</p>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",

@@ -7,7 +7,7 @@
   "has_thumbnail": true,
   "content_html": "<h1>bird wing</h1>\n<p class=\"momentDate\">2023</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<pre class=\"moment-text\">\nwhen our codes become disassembled\nlike dripping water from a tap\nwhere do we end up?\n<p>conscious of the unraveling\nbut at same time\nnot knowing what is happening</p>\n<p>as if we were within a frame\nbut the frame isn’t there anymore</p>\n<p>in front of failing eyes\nand all memories are a blur</p>\n<p>every new memory dissolves\nleaving only a bird wing\n</pre></p>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",

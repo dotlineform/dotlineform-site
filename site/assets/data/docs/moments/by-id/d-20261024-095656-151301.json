@@ -7,7 +7,7 @@
   "has_thumbnail": true,
   "content_html": "<h1>moments in an unfinished painting</h1>\n<p class=\"momentDate\">Jun 29 2025</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<pre class=\"moment-text\">\na painting is a living thing\nit flows from life and reveals life\nwhilst being outside of life\nit is born but it never breathes\nas if it is constantly in the process of birth\n<p>yet it bares many scars, already\nscratched, dissolved, scrubbed\nyet every violent act is done with love\nand hope\nthat the layers will reveal an impermanence</p>\n<p>many years pass… it is still not yet ready\nit is still of the unnameable\nand when it becomes time\nit will rest, still\nbeyond the reach of clocks\n</pre></p>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",

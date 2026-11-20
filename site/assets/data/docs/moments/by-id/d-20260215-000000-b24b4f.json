@@ -9,7 +9,7 @@
   "has_thumbnail": true,
   "content_html": "<h1>will we leave residues</h1>\n<p class=\"momentDate\">c. 2022</p>\n<div data-docs-catalogue-ref=\"c1\"></div>\n<pre class=\"moment-text\">\nwill we leave residues\nlike the plants do\ntiny particles of soil in water\npresence on a little plate\n \nwill we forget\nand others too\nour life\nwhen we go\n \nwhat records will we leave\nwill they be patterns\nor just evidence with no meaning\nthat someone was here\nalive and colourful\n \nthere is mist\nit’s not a fog\nbut it’s purpose is the same\nto hide and protect\n \ncolours are like ghosts\nwe think they’re real and have substance\nlike all the things we can touch\n \nand so with painting\nlayers upon layers\nalways looking for a truth\n \nwaiting\n</pre>\n",
   "catalogue": {
-    "schema": "docs_catalogue_presentation_v1",
+    "schema": "docs_catalogue_presentation_v2",
     "references": [
       {
         "reference_id": "c1",
