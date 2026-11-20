@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20260910-081839-4b43d2
 title: Catalogue Images In Export And Review
 added_date: "2026-09-10 08:18:39"
-last_updated: "2026-09-10 08:18:39"
+last_updated: "2026-11-20"
 summary: Resolve Catalogue Work and Detail images for HTML export and Docs Review, proposing packaged image files for export and direct R2 URLs for preview.
 ui_status: planned
 parent_id: d-20260902-102745-8379ea
 ---
 # Catalogue Images In Export And Review
 
-Earlier proposal for Work and Detail presentation in static consumers. It keeps the proposed export/Review tradeoffs before the shared adopted-Work contract shipped. [Current reference](../reference/Catalogue_Media_View.md)
+This earlier proposal considered loading Catalogue images in both HTML Export and Docs Review. The accepted delivery packages the pictured Work for HTML Export and shows authored text from Catalogue tokens in Docs Review. [Accepted delivery](Media_View_Link_Authoring.md#docs-review) · [Current Media View reference](../reference/Catalogue_Media_View.md)
 
 ## Requirements
 
