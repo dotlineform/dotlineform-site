@@ -113,7 +113,7 @@ export function openDocumentThumbModal(options) {
       function loadCatalogue() {
         if (catalogueRequested) return;
         catalogueRequested = true;
-        loadCatalogueMediaTargets(() => readCatalogueMediaTargets(options.clientOptions)).then((targets) => {
+        loadCatalogueMediaTargets(() => readCatalogueMediaTargets(options.clientOptions)).then(({ targets }) => {
           if (state.disposed) return;
           state.works = targets.filter((work) => work.targetType === "work");
           if (!form.dataset.busy) search.disabled = false;

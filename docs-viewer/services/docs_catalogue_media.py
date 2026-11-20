@@ -117,13 +117,14 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
             "title": work["title"],
             "meta": [],
         })
-    galleries = _read_generated(repo_root, "galleries/galleries_index.json", workspace=workspace.catalogue.working)["galleries"]
-    for gallery_id, record in galleries.items():
+    report = read_catalogue_gallery_report_search(repo_root, workspace=workspace.catalogue.working)
+    for gallery_id, title in report["galleries"].items():
         targets.append({
             "family": "catalogue", "target_type": "gallery", "target_id": gallery_id,
-            "title": record["title"], "meta": [],
+            "title": title, "meta": [],
         })
-    return {"ok": True, "schema_version": "docs_catalogue_media_targets_v1", "targets": targets}
+    return {"ok": True, "schema_version": "docs_catalogue_media_targets_v2", "targets": targets,
+            "gallery_ids_by_work": report["gallery_ids_by_work"]}
 
 
 def read_catalogue_work(repo_root: Path, work_id: str, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:

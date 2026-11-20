@@ -12,7 +12,7 @@ export function catalogueImagePresentationHtml(options = {}) {
     : "docsViewerCatalogueImage";
   return "" +
     '<label class="docsViewer__field docsViewer__field--checkbox">' +
-      '<input class="docsViewer__checkboxInput" data-role="catalogue-image-title-caption" type="checkbox" tabindex="-1" checked>' +
+      '<input class="docsViewer__checkboxInput" data-role="catalogue-image-title-caption" type="checkbox" checked>' +
       '<span class="docsViewer__fieldLabel">Title caption</span>' +
     "</label>" +
     '<label class="docsViewer__field docsViewer__field--textarea" for="' + idPrefix + 'Summary">' +
@@ -24,32 +24,32 @@ export function catalogueImagePresentationHtml(options = {}) {
       '<div class="docsViewerCatalogueImageModal__layoutControls">' +
         '<div class="docsViewerSourceEditorMedia__placementOptions" role="radiogroup" aria-labelledby="' + idPrefix + 'PlacementLabel">' +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="full" tabindex="-1" checked>' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="full" checked>' +
             '<span>Full</span>' +
           "</label>" +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="left" tabindex="-1">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="left">' +
             '<span>Left</span>' +
           "</label>" +
           '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="right" tabindex="-1">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="image-placement" type="radio" name="' + idPrefix + 'Placement" value="right">' +
             '<span>Right</span>' +
           "</label>" +
         "</div>" +
         '<label class="docsViewer__field docsViewer__field--checkbox">' +
-          '<input class="docsViewer__checkboxInput" data-role="catalogue-image-fill-width" type="checkbox" tabindex="-1" checked>' +
+          '<input class="docsViewer__checkboxInput" data-role="catalogue-image-fill-width" type="checkbox" checked>' +
           '<span class="docsViewer__fieldLabel">Fill available width</span>' +
         "</label>" +
       "</div>" +
       '<label class="docsViewer__field docsViewer__field--compactLabel docsViewerCatalogueImageModal__leftSize" hidden>' +
         '<span class="docsViewer__fieldLabel">Image width</span>' +
-        '<select class="docsViewer__fieldInput" data-role="catalogue-image-left-size" tabindex="-1">' +
+        '<select class="docsViewer__fieldInput" data-role="catalogue-image-left-size">' +
           '<option value="">50%</option>' +
           '<option value="third">33%</option>' +
           '<option value="thumbnail">Thumbnail</option>' +
         "</select>" +
       "</label>" +
-      imageWrapCheckboxHtml({ tabStop: false }) +
+      imageWrapCheckboxHtml() +
     "</div>";
 }
 

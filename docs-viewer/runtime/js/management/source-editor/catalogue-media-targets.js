@@ -1,4 +1,4 @@
-const CATALOGUE_MEDIA_TARGETS_SCHEMA = "docs_catalogue_media_targets_v1";
+const CATALOGUE_MEDIA_TARGETS_SCHEMA = "docs_catalogue_media_targets_v2";
 const TARGET_TYPE_ORDER = { gallery: 0, work: 1 };
 
 function cleanString(value) {
@@ -32,40 +32,13 @@ function prepareCatalogueMediaTarget({ target_type: targetType, target_id: targe
   };
 }
 
-function resolveCatalogueTargetHref(href, publicPreviewBase) {
-  var targetHref = cleanString(href);
-  var previewBase = cleanString(publicPreviewBase).replace(/\/+$/, "");
-  if (!targetHref || !previewBase) return targetHref;
-  try {
-    return new URL(targetHref, previewBase + "/").href;
-  } catch (_error) {
-    return targetHref;
-  }
-}
-
-export function mountCatalogueTargetLinks(root, publicPreviewBase) {
-  if (!root || typeof root.querySelectorAll !== "function") return 0;
-  var mounted = 0;
-  root.querySelectorAll("a[data-semantic-token-family][href]").forEach(function (link) {
-    if (cleanString(link.getAttribute("data-semantic-token-family")) !== "catalogue") return;
-    var resolved = resolveCatalogueTargetHref(
-      link.getAttribute("href"),
-      publicPreviewBase
-    );
-    if (!resolved) return;
-    link.setAttribute("href", resolved);
-    mounted += 1;
-  });
-  return mounted;
-}
-
 /** Read exact generated Catalogue identities and prepare their search terms once. */
 export async function loadCatalogueMediaTargets(readTargets) {
   const payload = await readTargets();
   if (payload?.schema_version !== CATALOGUE_MEDIA_TARGETS_SCHEMA || !Array.isArray(payload.targets)) {
     throw new Error("Generated Catalogue targets are unavailable.");
   }
-  return payload.targets.map(prepareCatalogueMediaTarget);
+  return { targets: payload.targets.map(prepareCatalogueMediaTarget), galleryIdsByWork: payload.gallery_ids_by_work };
 }
 
 export function collectCatalogueMediaTargetMatches(targets, query, limit) {

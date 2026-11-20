@@ -163,13 +163,13 @@ class CatalogueDocumentProjection:
             if own is None:
                 previous = json.loads(previous_text) if previous_text is not None else payload
                 own = self.prepare(doc_id, catalogue_work_from_document(doc_id, previous))
-            envelope = payload.setdefault("catalogue", {"schema": "docs_catalogue_presentation_v1", "references": []})
+            envelope = payload.setdefault("catalogue", {"schema": "docs_catalogue_presentation_v2", "references": []})
             envelope["work"] = own
             self.loaded[doc_id] = own
         if envelope is not None:
             for reference in envelope["references"]:
                 if reference["presentation"] == "image":
-                    work_id = reference["target"]["id"]
+                    work_id = reference.get("work_id", reference["target"]["id"])
                     image = self.work(work_id)["image"]
                     reference["render"] = self.reference_image(work_id, image, reference["options"].get("left_size", ""))
 

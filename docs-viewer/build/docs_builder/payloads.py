@@ -36,7 +36,7 @@ class PayloadBuilderMixin:
         return entry
 
     def catalogue_reference_envelope(self) -> dict[str, Any]:
-        return {"schema": "docs_catalogue_presentation_v1", "references": self.catalogue_references}
+        return {"schema": "docs_catalogue_presentation_v2", "references": self.catalogue_references}
 
     def document_content_html(
         self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity],

@@ -15,8 +15,13 @@ class DocumentSummary:
     title: str
 
 
+@dataclass(frozen=True)
+class OutgoingLink(DocumentSummary):
+    explicit_doc_link: bool
+
+
 @dataclass
 class DocumentLinks:
     document: DocumentSummary
-    outgoing: dict[DocumentTarget, DocumentSummary] = field(default_factory=dict)
+    outgoing: dict[DocumentTarget, OutgoingLink] = field(default_factory=dict)
     incoming: dict[DocumentTarget, DocumentSummary] = field(default_factory=dict)

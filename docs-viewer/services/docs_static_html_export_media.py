@@ -120,7 +120,7 @@ class _HtmlUrlAttributeRewriter(HTMLParser):
                     attrs.append(("href", self.catalogue[target]))
                 else:
                     tag = "span"
-            if tag == "img" and target.startswith("catalogue-work:") and "data-docs-media-image" in fields:
+            if tag == "img" and "data-docs-media-image" in fields:
                 attrs = [(name, value) for name, value in attrs if name not in {"srcset", "sizes", "width", "height"}]
             if not closed and source_tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}:
                 self.elements.append((source_tag, target, tag))

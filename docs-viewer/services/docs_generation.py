@@ -157,7 +157,7 @@ def generate_documents(
             item_payloads[doc.doc_id] = builder.item_entry(doc, identities)
             if context_rows is not None:
                 project_context_catalogue_targets(
-                    context_rows[doc.doc_id], builder.catalogue_references, builder.related_galleries,
+                    context_rows[doc.doc_id], builder.related_works, builder.related_galleries,
                 )
 
     if publication is not None:

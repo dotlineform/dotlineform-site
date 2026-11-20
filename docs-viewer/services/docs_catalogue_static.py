@@ -89,7 +89,7 @@ class CatalogueStaticInputs:
         return self.icons.render(name, decorative=True)
 
 
-def image_control(presentation: dict[str, Any], *, entry: bool) -> str:
+def image_control(presentation: dict[str, Any], *, entry: bool, destination_label: str) -> str:
     image = presentation["image"]
     title = html.escape(presentation["label"], quote=True)
     width, height = image["width_px"], image["height_px"]
@@ -99,7 +99,7 @@ def image_control(presentation: dict[str, Any], *, entry: bool) -> str:
     responsive = f'srcset="{html.escape(srcset, quote=True)}" sizes="100vw" ' if srcset else ""
     return (
         f'<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink{frame}"{ratio} '
-        f'data-docs-media-open aria-label="Open {title}">'
+        f'data-docs-media-open aria-label="Open {html.escape(destination_label, quote=True)}">'
         f'<img data-docs-media-image src="{html.escape(resource_url(image["src"]), quote=True)}" '
         f'{responsive}alt="{title}" '
         f'width="{width}" height="{height}" decoding="async">'
@@ -115,7 +115,7 @@ def reference_markup(reference: dict[str, Any], presentation: dict[str, Any] | N
     if mode == "media":
         return (f'<span {attrs}><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>'
                 f'{html.escape(options["label"])}</button></span>')
-    image = image_control(presentation, entry=mode == "entry")
+    image = image_control(presentation, entry=mode == "entry", destination_label=options.get("gallery_label", presentation["label"]))
     if mode == "image":
         modifiers = [FIGURE_PLACEMENT_CLASSES[options["placement"]]]
         if not options["fill_width"]:
@@ -163,39 +163,43 @@ def prepare_catalogue_document(
 
     for reference in envelope["references"]:
         mode = reference["presentation"]
-        work_target = reference["target"]
+        opens_work = reference["target"]["kind"] == "catalogue-work"
         presentation = None
         left_size = reference["options"].get("left_size", "")
-        if work_target["kind"] == "catalogue-work" and (mode != "media" or export):
-            work_id = work_target["id"]
-            work = inputs.projection.work(work_id)
-            image = work["image"]
-            primary_url = ""
-            if export:
-                primary_url = select(inputs.image_asset(image["default"], image["version"]))
-                work_links[f"catalogue-work:{work_id}"] = primary_url
-            if mode != "media":
-                if mode == "image":
-                    image = inputs.projection.reference_image(work_id, image, left_size)
-                media_type = image.get("media_type", "primary")
-                src = primary_url if export and media_type == "primary" else select(inputs.image_asset(
-                    image["default"], image["version"], media_type=media_type,
-                ))
-                candidates = [] if export else [
-                    {"src": inputs.image_asset(candidate["identity"], image["version"]).url,
-                     "width_px": candidate["width_px"]} for candidate in image["candidates"]
-                ]
-                presentation = {"label": image["alt"], "image": {**image, "src": src, "candidates": candidates}}
+        work_id = reference.get("work_id", reference["target"]["id"])
+        primary_url = ""
+        if mode != "media":
             if mode == "entry":
-                entry = work["entry"]
-                presentation["entry"] = {
-                    "metadata_lines": entry["metadata_lines"],
-                    "resources": [
-                        {**resource, "url": select(inputs.download(resource["identity"]))}
-                        if resource["kind"] == "download" else resource
-                        for resource in entry["resources"]
-                    ],
-                }
+                work = envelope["work"] if export else inputs.projection.work(work_id)
+                image = work["image"]
+            elif export:
+                image = reference["render"]
+            else:
+                image = inputs.projection.reference_image(work_id, inputs.projection.work(work_id)["image"], left_size)
+            media_type = image.get("media_type", "primary")
+            src = select(inputs.image_asset(image["default"], image["version"], media_type=media_type))
+            if media_type == "primary":
+                primary_url = src
+            candidates = [] if export else [
+                {"src": inputs.image_asset(candidate["identity"], image["version"]).url,
+                 "width_px": candidate["width_px"]} for candidate in image["candidates"]
+            ]
+            presentation = {"label": image["alt"], "image": {**image, "src": src, "candidates": candidates}}
+        if export and opens_work:
+            if not primary_url:
+                primary = inputs.projection.work(work_id)["image"]
+                primary_url = select(inputs.image_asset(primary["default"], primary["version"]))
+            work_links[f"catalogue-work:{work_id}"] = primary_url
+        if mode == "entry":
+            entry = work["entry"]
+            presentation["entry"] = {
+                "metadata_lines": entry["metadata_lines"],
+                "resources": [
+                    {**resource, "url": select(inputs.download(resource["identity"]))}
+                    if resource["kind"] == "download" else resource
+                    for resource in entry["resources"]
+                ],
+            }
         tag = "span" if mode == "media" else "div"
         slot = f'<{tag} data-docs-catalogue-ref="{reference["reference_id"]}">'
         markup = reference_markup(reference, presentation, inputs)

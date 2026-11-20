@@ -8,6 +8,7 @@ Records are created only when a document relationship needs either endpoint.
 from __future__ import annotations
 
 from collections.abc import Collection, Mapping
+from dataclasses import replace
 import fcntl
 import json
 from pathlib import Path
@@ -15,7 +16,7 @@ from typing import Any, TYPE_CHECKING
 from urllib.parse import unquote, urlsplit
 
 from .common import json_text, render_markdown_to_html
-from .links_model import DocumentLinks, DocumentSummary, DocumentTarget
+from .links_model import DocumentLinks, DocumentSummary, DocumentTarget, OutgoingLink
 from .links_schema import read_relationship_payload, relationship_payload
 from .related_links_directive import RELATED_LINKS_PREFIX, render_without_related_links
 from .source import DocRecord, DocumentIdentity
@@ -146,7 +147,7 @@ class _DocumentRefresh:
         self.records[target] = record
         return record
 
-    def references(self, target: DocumentTarget, doc: DocRecord, href: str) -> dict[DocumentTarget, DocumentSummary]:
+    def references(self, target: DocumentTarget, doc: DocRecord, href: str) -> dict[DocumentTarget, OutgoingLink]:
         """Extract unique document relationships without destination-validity reads.
 
         Work media/image tokens name Catalogue documents directly; Gallery
@@ -154,18 +155,22 @@ class _DocumentRefresh:
         """
         references = {}
 
-        def add_reference(neighbour: DocumentTarget, label: str = "") -> None:
-            if neighbour in references:
+        def add_reference(neighbour: DocumentTarget, label: str, *, explicit: bool) -> None:
+            existing = references.get(neighbour)
+            if existing is not None:
+                if explicit and not existing.explicit_doc_link:
+                    references[neighbour] = replace(existing, explicit_doc_link=True)
                 return
             endpoint = self.initialise_endpoint(neighbour, label=label)
-            references[neighbour] = (endpoint.document if endpoint.document.target == neighbour
-                                     else self.summary(neighbour, self.docs.get(neighbour), label))
+            summary = (endpoint.document if endpoint.document.target == neighbour
+                       else self.summary(neighbour, self.docs.get(neighbour), label))
+            references[neighbour] = OutgoingLink(summary.target, summary.title, explicit)
 
         def token_reference(token: SourceTokenOccurrence) -> str:
             if token.family == "catalogue" and token.target_type == "work":
                 neighbour = DocumentTarget("catalogue", token.target_id)
                 if neighbour != target:
-                    add_reference(neighbour, token.title)
+                    add_reference(neighbour, token.title, explicit=False)
             return ""
 
         markdown = replace_source_tokens(doc.body_markdown, replacer=token_reference)
@@ -198,7 +203,7 @@ class _DocumentRefresh:
                             break
             if neighbour is None:
                 continue
-            add_reference(neighbour, anchor["text"])
+            add_reference(neighbour, anchor["text"], explicit=True)
         return references
 
     def refresh(self, target: DocumentTarget, doc: DocRecord | None) -> tuple[int, int]:
@@ -243,10 +248,10 @@ class _DocumentRefresh:
                     continue
                 other = self.read(neighbour)
                 if other is not None and previous.target in other.outgoing:
-                    other.outgoing.pop(previous.target)
+                    edge = other.outgoing.pop(previous.target)
                     if previous.target != summary.target:
                         record.incoming[neighbour] = other.document
-                    other.outgoing[target] = summary
+                    other.outgoing[target] = replace(edge, target=target, title=summary.title)
         record.outgoing = references
         after = set(record.outgoing)
         return len(after - before), len(before - after)

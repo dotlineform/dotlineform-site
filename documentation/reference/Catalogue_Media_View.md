@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-11-18"
+last_updated: "2026-11-20"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260519-000000-a0da45
@@ -28,7 +28,7 @@ For missing **Gallery links**, check direct Work membership and the separately a
 
 ## Authoring
 
-Use **Add Media View link** for a Work or Gallery opener, or **Add Catalogue image** for an inline Work image that opens Media View. Clear **Show inline link** on a Gallery token to contribute the association without the inline opener. Save or rebuild the document to change its generated references. [Source forms and editing](Document_And_Catalogue_References.md#supported-source-forms)
+Choose **Directives → Add Media View link** in Source. Selecting a Work defaults to its image and **This Work**. Choose a direct Gallery under **Open in Media View** to open its grid while showing the Work image. A directly selected Gallery defaults to **Inline link**. **Hidden** records the selected associations and omits the body control. Save or rebuild the document to update the reader. [Source forms and editing](Document_And_Catalogue_References.md#supported-source-forms)
 
 ## Gallery Presentations
 

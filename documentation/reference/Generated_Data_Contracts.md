@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-11-18"
+last_updated: "2026-11-20"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -17,7 +17,7 @@ Manage and Public compose the same provider with an explicit `docs_viewer_config
 
 ### Catalogue Reference And Presentation
 
-The optional `catalogue` document envelope uses `docs_catalogue_presentation_v1`. Its ordered `references` contain `reference_id`, exact `target: {kind, id}`, `presentation` (`entry`, `image` or `media`) and authored `options` where applicable. Media openers carry the literal label. Images retain caption choice, restricted summary HTML, placement, width and optional left size. Entry is identity-only at source.
+The optional `catalogue` document envelope uses `docs_catalogue_presentation_v2`. Its ordered `references` contain `reference_id`, exact `target: {kind, id}`, `presentation` (`entry`, `image` or `media`) and authored `options` where applicable. The target names what opens. A visible Work/Gallery pair also carries `work_id`. The pictured Work supplies the image `render` data, and the paired image’s `options.gallery_label` supplies the saved Gallery title. Text openers carry the literal label. Images retain caption choice, restricted summary HTML, placement, width and optional left size. Entry is identity-only at source.
 
 A Catalogue document's `catalogue.work` holds its adopted facts, `entry`, `image`, `full_image`, optional `series_id` and ordered `galleries`. Gallery references carry ID, label and direct/Series relation. Entry resources carry label, kind and exact download identity or external URL. Regenerate adopts refreshed Work and Gallery facts. The reader resolves filenames using configured media bases and opens the exact selected Work or Gallery in Media View. Selected publication and static consumers use the same adopted Work inputs. [Projection code](../../docs-viewer/services/docs_catalogue_projection.py) · [Media View](Catalogue_Media_View.md) · [Catalogue lifecycle](Catalogue_Save_And_Refresh.md)
 
@@ -41,7 +41,7 @@ Ordinary Working reads use the [GET dispatcher](../../docs-viewer/services/docs_
 | `GET /docs/doc?doc_id=<id>` | Exact immutable-ID `by-id/<id>.json`; resolution does not consult the tree or follow its `content_url` |
 | `GET /docs/recent` | Saved `recent.json`, currently v3 |
 | `GET /docs/search?search-scope=<scope>` | The configured Search artifact for that discovery scope; default Portfolio |
-| `GET /docs/workspace-links` | Configured saved aggregate for the diagnostic Links report |
+| `GET /docs/workspace-links` | Saved version-5 Links report. Its outgoing rows carry `explicit_doc_link` to distinguish ordinary authored links from Work-only associations. |
 | `GET /docs/generated/external/<collection>/…` | Only `manage-manifest.json` or `by-id/<id>.json` beneath that configured collection output, with collection-specific identity validation |
 
 Ordinary generated requests reject retired workspace selectors and the collection selector; collection output uses its configured artifact route. Ordinary JSON helpers require an object and report missing/malformed files. The collection file route confines the selected existing JSON path and serves its bytes. Source metadata has its separate management read owner. [Local service map](Endpoint_Overview.md)
@@ -50,7 +50,7 @@ Reads preserve saved discovery and document state. Recover missing output throug
 
 ## Collection Manifest Ownership
 
-Working `manage-manifest.json` has the complete saved rows for an owner. Public `manifest.json` carries eligible reader rows. Both have a root `docs` array. Book management also carries its authored order and private edition/provenance fields. Exact builds merge selected rows into saved metadata. Complete collection builds project all current rows. Media presence contributes `has_thumbnail: true`; the field is otherwise omitted. Context rows may carry `catalogue_targets` (`work_ids`, `gallery_ids`) for Media View links. [Collection builder](../../docs-viewer/build/docs_builder/collection.py) · [Public metadata](../../docs-viewer/services/docs_publication_metadata.py) · [Context link inputs](Catalogue_Media_View.md#what-links-appear)
+Working `manage-manifest.json` has the complete saved rows for an owner. Public `manifest.json` carries eligible reader rows. Both have a root `docs` array. Book management also carries its authored order and private edition/provenance fields. Exact builds merge selected rows into saved metadata. Complete collection builds project all current rows. Media presence contributes `has_thumbnail: true`; the field is otherwise omitted. Context rows may carry `catalogue_targets` (`work_ids`, `gallery_ids`) for Media View links. A hidden occurrence contributes its IDs here without creating a visible by-ID reference. [Collection builder](../../docs-viewer/build/docs_builder/collection.py) · [Public metadata](../../docs-viewer/services/docs_publication_metadata.py) · [Context link inputs](Catalogue_Media_View.md#what-links-appear)
 
 ## List Date Projections
 

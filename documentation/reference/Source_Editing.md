@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-11-19"
+last_updated: "2026-11-20"
 parent_id: d-20260607-222033-647b52
 ---
 # Source editing
@@ -37,7 +37,7 @@ The menu captures the current adapter, selection and revision before moving focu
 | Control | Effect in source |
 | --- | --- |
 | **Add image** / **Add file** | Insert or edit an exact body-media reference. New selection holds the File until Save. [Media intake](Media_And_Asset_Handling.md#add-a-new-image-or-download) |
-| **Add Catalogue image** / **Add Media View link** | Choose an exact Work or Gallery as appropriate, or edit a supported occurrence with its saved fields. [Catalogue source forms](Document_And_Catalogue_References.md#supported-source-forms) |
+| **Add Media View link** / **Edit Media View link** | When Directives opens, the item reads **Edit Media View link** if the caret is inside an authored Media View token or the selection covers that token exactly. Edit restores its saved fields. Every other selection shows **Add Media View link**. Choose a Work and its destination, then **Image**, **Inline link** or **Hidden**. Selecting a Gallery directly offers Inline link or Hidden. [Catalogue source forms](Document_And_Catalogue_References.md#supported-source-forms) |
 | **Insert doc link** | Insert the selected exact document route and escaped literal title. [Picker request](#get-docsdocument-link-targets) |
 | **Table detail** / **Image detail** | Insert the comment before the selected standalone Markdown table or image. Table detail starts with an editable `title="Table"`. [Image detail](Document_Image_Detail.md) |
 | **Insert related links**, **Insert icon**, **Summary** | Insert `[[links|]]`, an editable icon stem, or a standalone `[[summary]]`. [Related Links](Related_Links.md#authoring-decision) · [Icons](Icon_Tokens.md) · [Summary](Builder.md#summary-block) |

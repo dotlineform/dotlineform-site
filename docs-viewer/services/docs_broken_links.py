@@ -183,33 +183,37 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
             for token in tokens:
                 if token.family != "catalogue":
                     continue
-                if token.target_type == "gallery" and media_policy_available is None:
-                    try:
-                        read_catalogue_media_config(repo_root, workspace=workspace.catalogue.working)
-                        media_policy_available = True
-                    except ValueError:
-                        media_policy_available = False
-                key = (token.target_type, token.target_id)
-                if key not in catalogue_reasons:
-                    catalogue_reasons[key] = catalogue_target_reason(
-                        repo_root, *key, workspace=workspace.catalogue.working, catalogue_documents=local_roots["catalogue"],
-                    ) if token.target_type == "work" or media_policy_available else "missing_gallery"
-                reason = catalogue_reasons[key]
-                if reason:
-                    entries.append({
-                        "issue_type": "semantic_token",
-                        "source_collection": meta.collection,
-                        "source_doc_id": meta.doc_id,
-                        "source_range": token.source_range,
-                        "raw": token.raw,
-                        "family": token.family,
-                        "target_type": token.target_type,
-                        "target_id": token.target_id,
-                        "reason": reason,
-                        "link_text": token.title,
-                        "link_url": "",
-                        **meta.source_fields(),
-                    })
+                identities = [(token.target_type, token.target_id, token.title)]
+                if token.gallery_id:
+                    identities.append(("gallery", token.gallery_id, token.gallery_label or token.title))
+                for target_type, target_id, label in identities:
+                    if target_type == "gallery" and media_policy_available is None:
+                        try:
+                            read_catalogue_media_config(repo_root, workspace=workspace.catalogue.working)
+                            media_policy_available = True
+                        except ValueError:
+                            media_policy_available = False
+                    key = (target_type, target_id)
+                    if key not in catalogue_reasons:
+                        catalogue_reasons[key] = catalogue_target_reason(
+                            repo_root, *key, workspace=workspace.catalogue.working, catalogue_documents=local_roots["catalogue"],
+                        ) if target_type == "work" or media_policy_available else "missing_gallery"
+                    reason = catalogue_reasons[key]
+                    if reason:
+                        entries.append({
+                            "issue_type": "semantic_token",
+                            "source_collection": meta.collection,
+                            "source_doc_id": meta.doc_id,
+                            "source_range": token.source_range,
+                            "raw": token.raw,
+                            "family": token.family,
+                            "target_type": target_type,
+                            "target_id": target_id,
+                            "reason": reason,
+                            "link_text": label,
+                            "link_url": "",
+                            **meta.source_fields(),
+                        })
             payload_path = document_payload_path(local_roots[collection], meta.doc_id)
             try:
                 payload = read_json(payload_path, "source document payload")

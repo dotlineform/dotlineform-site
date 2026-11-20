@@ -3,9 +3,9 @@ export const IMAGE_PLACEMENTS = new Set(["full", "left", "right", "wrap-left", "
 const PLACEMENT_INPUT = '[data-role="image-placement"]';
 const WRAP_INPUT = '[data-role="image-wrap"]';
 
-export function imageWrapCheckboxHtml({ tabStop = true } = {}) {
+export function imageWrapCheckboxHtml() {
   return '<label class="docsViewer__field docsViewer__field--checkbox docsViewerSourceEditorMedia__wrap" hidden>' +
-    '<input class="docsViewer__checkboxInput" data-role="image-wrap" type="checkbox"' + (tabStop ? "" : ' tabindex="-1"') + '>' +
+    '<input class="docsViewer__checkboxInput" data-role="image-wrap" type="checkbox">' +
     '<span class="docsViewer__fieldLabel">Wrap body text</span>' +
   "</label>";
 }

@@ -96,7 +96,6 @@ function mountCatalogueReferences(context) {
       else catalogueMediaTargetWorkId(target);
     } catch (_error) { return; }
     var inlineImage = control.querySelector("[data-docs-media-image]");
-    if (groupTarget(target) && inlineImage) return;
     var preparedImage = inlineImage && context.preparedImage;
     var placeholder = control.querySelector("[data-docs-media-placeholder]");
     var status = marker.ownerDocument.createElement("span");

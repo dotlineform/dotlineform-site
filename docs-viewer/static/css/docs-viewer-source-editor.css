@@ -314,6 +314,11 @@
   min-height: 0;
 }
 
+.docsViewerCatalogueTokenModal [data-role="image-options"]:not([hidden]){
+  display: grid;
+  row-gap: 0.75rem;
+}
+
 .docsViewer__modalCard--document:has(.docsViewerCatalogueImageModal){
   --docs-viewer-modal-width: 48rem;
 }
@@ -325,10 +330,29 @@
 }
 
 .docsViewerCatalogueTokenModal__selection,
+.docsViewerCatalogueImageModal > .docsViewer__field,
+.docsViewerCatalogueImageModal [data-role="image-options"],
 .docsViewerCatalogueImageModal .docsViewer__field.docsViewer__field--textarea,
 .docsViewerCatalogueImageModal .docsViewerSourceEditorMedia__placement{
   grid-template-columns: 12rem minmax(0, 1fr);
   column-gap: 0.9rem;
+}
+
+.docsViewerCatalogueImageModal select[size]{
+  height: auto;
+}
+
+.docsViewerCatalogueImageModal > [data-role="display"]{
+  align-items: start;
+}
+
+.docsViewerCatalogueImageModal [data-role="image-options"] > *{
+  grid-column: 1 / -1;
+}
+
+.docsViewerCatalogueImageModal [data-role="image-options"] > .docsViewer__field--checkbox{
+  grid-column: 2;
+  justify-self: start;
 }
 
 .docsViewerCatalogueTokenModal__selection > .sharedSearchField{
@@ -400,12 +424,4 @@
 .docsViewerCatalogueTokenModal__results .docsViewerCatalogueTargetPicker__row{
   box-sizing: border-box;
   min-width: 0;
-}
-
-.docsViewerCatalogueTokenModal__selected{
-  border-left: 3px solid var(--docs-viewer-border-strong);
-  padding: 0.35rem 0.55rem;
-  color: var(--docs-viewer-muted);
-  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  overflow-wrap: anywhere;
 }

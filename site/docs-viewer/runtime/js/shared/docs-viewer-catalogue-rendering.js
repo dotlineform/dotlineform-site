@@ -16,13 +16,13 @@ function resourceUrl(value) {
   return value;
 }
 
-function imageControl(presentation, entry) {
+function imageControl(presentation, entry, destinationLabel) {
   var image = presentation.image;
   var title = escape(presentation.label);
   var frame = entry ? " docsViewerCatalogueEntry__frame" : "";
   var ratio = entry ? ' style="aspect-ratio: ' + image.width_px + " / " + image.height_px + ';"' : "";
   return '<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink' + frame + '"' + ratio
-    + ' data-docs-media-open aria-label="Open ' + title + '">'
+    + ' data-docs-media-open aria-label="Open ' + escape(destinationLabel) + '">'
     + '<img data-docs-media-image alt="' + title + '" width="' + image.width_px + '" height="' + image.height_px + '" decoding="async">'
     + '<span data-docs-media-placeholder hidden>' + title + "</span></button>";
 }
@@ -64,7 +64,7 @@ function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
   var options = reference.options;
   if (reference.presentation === "media") return mediaTextLink(reference.target, options.label);
   var attrs = mediaTargetAttributes(reference.target);
-  var image = imageControl(presentation, reference.presentation === "entry");
+  var image = imageControl(presentation, reference.presentation === "entry", options.gallery_label ?? presentation.label);
   if (reference.presentation === "image") {
     var placement = {
       full: "docsViewerFigure--full-column",

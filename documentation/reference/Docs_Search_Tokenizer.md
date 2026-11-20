@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260813-214351-98d3f0
 title: Docs Viewer Search Tokenizer
 added_date: "2026-08-13 21:43:51"
-last_updated: "2026-11-18"
+last_updated: "2026-11-20"
 summary: Durable normalization and term-recognition contract shared by Docs Viewer index generation and browser queries.
 parent_id: d-20260602-160839-6d3cbb
 ---
@@ -31,4 +31,4 @@ Prose terms omit complete immutable document IDs, 64-character hexadecimal diges
 
 Every normalized query term must match the same document. Text terms of at least two characters also match prefixes. Numeric terms use exact Title postings, so `10,000` and `10000` find the same Titles. Exact `identity`/`last_updated` fields use their separate path when enabled by the index. A query without matching normalized terms or exact-field matches returns no results.
 
-Source extraction uses parsed authored content and separate heading/body/code fields. Summary remains its metadata field. Active Summary, Related Links, Docs-image and hidden Gallery forms are handled by their source omission rules. Term changes need matching Python/browser behavior and an explicit Search rebuild. A browser-only prefix rule travels through the public runtime projection. [Source extraction](Reader_Discovery_And_Return.md#source-boundary) · [Build and publication](Reader_Discovery_And_Return.md#build-and-publication)
+Source extraction uses parsed authored content and separate heading/body/code fields. Summary remains its metadata field. Extraction omits active Summary, Related Links and Docs-image forms, and all hidden Catalogue references. Term changes need matching Python/browser behavior and an explicit Search rebuild. A browser-only prefix rule travels through the public runtime projection. [Source extraction](Reader_Discovery_And_Return.md#source-boundary) · [Build and publication](Reader_Discovery_And_Return.md#build-and-publication)

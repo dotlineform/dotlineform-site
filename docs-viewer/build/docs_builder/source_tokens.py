@@ -35,6 +35,8 @@ class SourceTokenOccurrence:
     end: int
     presentation: str
     visible: bool = True
+    gallery_id: str = ""
+    gallery_label: str = ""
     use_work_title_caption: bool | None = None
     summary: str = ""
     placement: str = ""
@@ -89,6 +91,8 @@ def serialize_catalogue_image_token(
     placement: Any,
     fill_width: Any = None,
     left_size: str = "",
+    gallery_id: str = "",
+    gallery_label: str = "",
 ) -> str:
     """Serialize a Work image's caption choice, authored summary and layout."""
     if (
@@ -120,13 +124,19 @@ def serialize_catalogue_image_token(
     ))
     if left_size:
         fields.append(("left_size", left_size))
+    identity = f"work:{target_id}"
+    if gallery_id:
+        if not CATALOGUE_TARGET_ID_PATTERNS["gallery"].fullmatch(gallery_id) or not gallery_label.strip() or re.search(r"[\r\n]", gallery_label):
+            return ""
+        identity += f":gallery:{gallery_id}"
+        fields.append(("gallery_label", gallery_label))
     query = "&".join(
         f"{key}={encode_image_value(value)}" for key, value in fields
     )
-    return f"[[catalogue:image:{target_type}:{target_id}|{query}]]"
+    return f"[[catalogue:image:{identity}|{query}]]"
 
 
-def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[str, Any] | None:
+def parse_catalogue_image_fields(raw_query: str, *, target_id: str, gallery_id: str) -> dict[str, Any] | None:
     if not raw_query:
         return None
     fields: dict[str, str] = {}
@@ -134,7 +144,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         key, separator, encoded_value = pair.partition("=")
         if (
             not separator
-            or key not in {"use_work_title_caption", "summary", "placement", "fill_width", "left_size"}
+            or key not in {"use_work_title_caption", "summary", "placement", "fill_width", "left_size", "gallery_label"}
             or key in fields
             or not encoded_value
         ):
@@ -149,8 +159,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
     if any(fields[key] not in {"true", "false"} for key in ("use_work_title_caption", "fill_width")):
         return None
     token = serialize_catalogue_image_token(
-        target_type=target_type,
-        target_id="00000",
+        target_type="work", target_id=target_id, gallery_id=gallery_id, gallery_label=fields.get("gallery_label", ""),
         use_work_title_caption=fields["use_work_title_caption"] == "true",
         summary=fields.get("summary", ""),
         placement=fields["placement"],
@@ -163,6 +172,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
     if canonical_query != raw_query:
         return None
     return {
+        "gallery_label": fields.get("gallery_label", ""),
         "use_work_title_caption": fields["use_work_title_caption"] == "true",
         "summary": normalize_summary_text(fields.get("summary", "")),
         "placement": normalize_plain_text(fields["placement"], required=True),
@@ -195,16 +205,23 @@ def parse_source_token(raw: str) -> SourceTokenOccurrence | None:
             raw=raw, family=family, target_type=target_type, target_id=target_id, title="",
             start=0, end=len(raw), presentation=presentation,
         )
-    is_image = presentation == "image" and len(parts) == 4 and target_type == "work"
-    gallery_visibility = len(parts) == 5 and target_type == "gallery" and parts[4] in {"visible=true", "visible=false"}
-    is_media = presentation == "media" and (len(parts) == 4 or gallery_visibility)
+    visible = parts[-1] != "visible=false"
+    if presentation == "media" and (not visible or (target_type == "gallery" and parts[-1] == "visible=true")):
+        parts.pop()
+    gallery_id = ""
+    if len(parts) == 6 and target_type == "work" and parts[4] == "gallery" and CATALOGUE_TARGET_ID_PATTERNS["gallery"].fullmatch(parts[5]):
+        gallery_id = parts[5]
+    elif len(parts) != 4:
+        return None
+    is_image = presentation == "image" and target_type == "work"
+    is_media = presentation == "media"
     if not separator or (not is_image and not is_media):
         return None
     id_pattern = CATALOGUE_TARGET_ID_PATTERNS.get(target_type)
     if id_pattern is None or not id_pattern.fullmatch(target_id):
         return None
     image_fields = (
-        parse_catalogue_image_fields(raw_fields, target_type=target_type)
+        parse_catalogue_image_fields(raw_fields, target_id=target_id, gallery_id=gallery_id)
         if is_image
         else None
     )
@@ -220,7 +237,7 @@ def parse_source_token(raw: str) -> SourceTokenOccurrence | None:
         start=0,
         end=len(raw),
         presentation=presentation,
-        visible=not gallery_visibility or parts[4] == "visible=true",
+        visible=visible, gallery_id=gallery_id, gallery_label=image_fields["gallery_label"] if image_fields else "",
         use_work_title_caption=image_fields["use_work_title_caption"] if image_fields else None,
         summary=image_fields["summary"] if image_fields else "",
         placement=image_fields["placement"] if image_fields else "",
@@ -270,11 +287,15 @@ def catalogue_reference(token: SourceTokenOccurrence, reference_id: str) -> dict
         }
         if token.left_size:
             options["left_size"] = token.left_size
+        if token.gallery_id:
+            options["gallery_label"] = token.gallery_label
     elif token.presentation == "media":
         options["label"] = token.title
     return {
         "reference_id": reference_id,
-        "target": {"kind": f"catalogue-{token.target_type}", "id": token.target_id},
+        "target": ({"kind": "catalogue-gallery", "id": token.gallery_id} if token.gallery_id else
+                   {"kind": f"catalogue-{token.target_type}", "id": token.target_id}),
+        **({"work_id": token.target_id} if token.gallery_id else {}),
         "presentation": token.presentation,
         "options": options,
     }
@@ -320,6 +341,7 @@ class SourceTokensMixin:
         self._source_token_html: dict[str, str] = {}
         self.catalogue_references: list[dict[str, Any]] = []
         self.related_galleries: dict[str, str] = {}
+        self.related_works: set[str] = set()
         entry_seen = False
 
         def replace(token: SourceTokenOccurrence) -> str:
@@ -329,10 +351,14 @@ class SourceTokensMixin:
                     token, self.image_token_media_url(token.media_path),
                 )
             else:
-                if token.target_type == "gallery":
+                if token.target_type == "work":
+                    self.related_works.add(token.target_id)
+                    if token.gallery_id:
+                        self.related_galleries.setdefault(token.gallery_id, token.gallery_label or token.title)
+                else:
                     self.related_galleries.setdefault(token.target_id, token.title)
-                    if not token.visible:
-                        return ""
+                if not token.visible:
+                    return ""
                 if token.presentation == "entry":
                     if getattr(self, "collection_id", "") != "catalogue" or token.target_id != document_id or entry_seen:
                         raise ValueError("Catalogue Entry requires one token matching its Catalogue document identity")

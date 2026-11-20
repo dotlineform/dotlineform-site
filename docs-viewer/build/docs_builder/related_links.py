@@ -57,7 +57,10 @@ def render_related_links(
     """Render document relationships and exact authored Gallery targets together."""
     target = DocumentTarget(getattr(builder, "collection_id", ""), doc.doc_id)
     record = builder.related_documents.get(target)
-    entries = {**record.incoming, **record.outgoing} if record is not None else {}
+    entries = {}
+    if record is not None:
+        entries.update(record.incoming)
+        entries.update((key, edge) for key, edge in record.outgoing.items() if edge.explicit_doc_link)
     entries.pop(target, None)
     owners = {owner.collection: owner for owner in builder.config.collections}
     catalogue = owners.get("catalogue")

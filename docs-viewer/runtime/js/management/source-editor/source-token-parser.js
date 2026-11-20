@@ -1,6 +1,6 @@
 import { IMAGE_PLACEMENTS } from "./image-placement.js";
 
-var IMAGE_FIELDS = new Set(["use_work_title_caption", "summary", "placement", "fill_width", "left_size"]);
+var IMAGE_FIELDS = new Set(["use_work_title_caption", "summary", "placement", "fill_width", "left_size", "gallery_label"]);
 var CATALOGUE_TARGET_ID_PATTERNS = { work: /^[0-9]{5}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
 
 function cleanString(value) {
@@ -76,9 +76,11 @@ export function serializeCatalogueMediaToken(options = {}) {
   var title = cleanString(options.title);
   var hidden = options.visible === false;
   if (!title || /[\r\n]/.test(title)) return "";
-  if (hidden && targetType !== "gallery") return "";
   if (!isCatalogueTargetId(targetType, targetId)) return "";
-  return "[[catalogue:media:" + targetType + ":" + targetId + (hidden ? ":visible=false" : "") + "|" + escapedTitle(title) + "]]";
+  var gallery = options.galleryId;
+  if (gallery && (targetType !== "work" || !isCatalogueTargetId("gallery", gallery))) return "";
+  return "[[catalogue:media:" + targetType + ":" + targetId + (gallery ? ":gallery:" + gallery : "")
+    + (hidden ? ":visible=false" : "") + "|" + escapedTitle(title) + "]]";
 }
 
 /** Serialize a Work image's caption choice, authored summary and layout. */
@@ -106,10 +108,15 @@ export function serializeCatalogueImageToken(options = {}) {
   if (summary) fields.push(["summary", summary]);
   fields.push(["placement", placement], ["fill_width", options.fillWidth ? "true" : "false"]);
   if (leftSize) fields.push(["left_size", leftSize]);
+  var gallery = options.galleryId;
+  if (gallery) {
+    if (!isCatalogueTargetId("gallery", gallery) || !options.galleryLabel?.trim() || /[\r\n]/.test(options.galleryLabel)) return "";
+    fields.push(["gallery_label", options.galleryLabel]);
+  }
   var query = fields.map(function (field) {
     return field[0] + "=" + encodeImageValue(field[1]);
   }).join("&");
-  return "[[catalogue:image:" + targetType + ":" + targetId + "|" + query + "]]";
+  return "[[catalogue:image:work:" + targetId + (gallery ? ":gallery:" + gallery : "") + "|" + query + "]]";
 }
 
 function parseCatalogueImageFields(rawQuery, options) {
@@ -137,6 +144,8 @@ function parseCatalogueImageFields(rawQuery, options) {
   var serialized = serializeCatalogueImageToken({
     targetType: options.targetType,
     targetId: options.targetId,
+    galleryId: options.galleryId,
+    galleryLabel: fields.gallery_label,
     useWorkTitleCaption: fields.use_work_title_caption === "true",
     summary: fields.summary || "",
     placement: fields.placement,
@@ -145,6 +154,7 @@ function parseCatalogueImageFields(rawQuery, options) {
   });
   if (!serialized || serialized.slice(serialized.indexOf("|") + 1, -2) !== rawQuery) return null;
   return {
+    galleryLabel: fields.gallery_label || "",
     useWorkTitleCaption: fields.use_work_title_caption === "true",
     summary: summaryText(fields.summary),
     placement: cleanString(fields.placement),
@@ -160,10 +170,13 @@ function parseCatalogueToken(raw, options = {}) {
   var separator = body.indexOf("|");
   if (separator < 0) return null;
   var identity = body.slice(0, separator).split(":");
-  var imagePresentation = identity.length === 4 && identity[1] === "image" && identity[2] === "work";
-  var galleryVisibility = identity.length === 5 && identity[2] === "gallery"
-    && (identity[4] === "visible=true" || identity[4] === "visible=false");
-  var mediaPresentation = (identity.length === 4 || galleryVisibility) && identity[1] === "media";
+  var visible = identity.at(-1) !== "visible=false";
+  if (identity[1] === "media" && (!visible || (identity[2] === "gallery" && identity.at(-1) === "visible=true"))) identity.pop();
+  var paired = identity.length === 6 && identity[2] === "work" && identity[4] === "gallery" && isCatalogueTargetId("gallery", identity[5]);
+  if (identity.length !== 4 && !paired) return null;
+  var galleryId = paired ? identity[5] : "";
+  var imagePresentation = identity[1] === "image" && identity[2] === "work";
+  var mediaPresentation = identity[1] === "media";
   if (identity[0] !== "catalogue" || (!imagePresentation && !mediaPresentation)) return null;
   var targetType = identity[2];
   var targetId = identity[3];
@@ -172,7 +185,7 @@ function parseCatalogueToken(raw, options = {}) {
   var imageFields = imagePresentation
     ? parseCatalogueImageFields(rawFields, {
         targetType: targetType,
-        targetId: targetId
+        targetId: targetId, galleryId: galleryId
       })
     : null;
   var title = imagePresentation
@@ -189,7 +202,9 @@ function parseCatalogueToken(raw, options = {}) {
     start: start,
     end: start + source.length,
     presentation: imagePresentation ? "image" : "media",
-    visible: !galleryVisibility || identity[4] === "visible=true",
+    visible: visible,
+    galleryId: galleryId,
+    galleryLabel: imageFields ? imageFields.galleryLabel : "",
     useWorkTitleCaption: imageFields ? imageFields.useWorkTitleCaption : null,
     summary: imageFields ? imageFields.summary : "",
     placement: imageFields ? imageFields.placement : "",

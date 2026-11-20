@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-11-18"
+last_updated: "2026-11-20"
 summary: Index, Search, Recent and collection data, browsing state and return behaviour.
 parent_id: d-20260424-000000-50b63f
 
@@ -53,7 +53,7 @@ A multi-term query intersects the normalized matches. Text prefixes start at two
 
 ### Source Boundary
 
-Text scopes extract their configured fields from selected Markdown. Supported visible references contribute display text. The producer removes registered media tokens, active Docs image tokens and hidden Gallery tokens before ordinary text extraction. Code examples keep their code-field treatment. The renderer separates readable prose, headings and code. Link destinations, media paths and markup attributes do not become prose terms. Ordinary image alt text and visible HTML text can contribute. [Tokenizer](Docs_Search_Tokenizer.md) · [Reference grammar](Document_And_Catalogue_References.md#supported-source-forms)
+Text scopes extract their configured fields from selected Markdown. Supported visible references contribute display text. The producer removes registered media tokens, active Docs image tokens and hidden Catalogue references before ordinary text extraction. Code examples keep their code-field treatment. The renderer separates readable prose, headings and code. Link destinations, media paths and markup attributes do not become prose terms. Ordinary image alt text and visible HTML text can contribute. [Tokenizer](Docs_Search_Tokenizer.md) · [Reference grammar](Document_And_Catalogue_References.md#supported-source-forms)
 
 ## Build And Publication
 

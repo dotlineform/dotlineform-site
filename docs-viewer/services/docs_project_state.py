@@ -76,11 +76,12 @@ def refresh_project_state_metadata(repo_root: Path) -> dict[str, Any]:
         payload = load_json_object(location_child(
             collection.generated.documents.location, Path("by-id") / f"{record['doc_id']}.json",
         ).path, "Context document")
-        targets = {
-            (target["kind"], target["id"])
-            for reference in payload.get("catalogue", {}).get("references", [])
-            if (target := reference["target"])["kind"] in {"catalogue-work", "catalogue-gallery"}
-        }
+        targets = set()
+        for reference in payload.get("catalogue", {}).get("references", []):
+            target = reference["target"]
+            targets.add((target["kind"], target["id"]))
+            if "work_id" in reference:
+                targets.add(("catalogue-work", reference["work_id"]))
         documents.append({
             "doc_id": record["doc_id"], "title": record["title"],
             "targets": [{"kind": kind, "id": identity} for kind, identity in sorted(targets)],

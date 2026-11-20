@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261118-235100-64ad2e
 title: Working
 added_date: "2026-11-18 23:50:00"
-last_updated: "2026-11-18"
+last_updated: "2026-11-20"
 summary: Active and proposed work, review follow-ons and writing in progress.
 parent_id: d-20260419-000000-d2e47b
 ---
@@ -16,5 +16,6 @@ Use the [development workflow](../development/Development_Workflow.md) when a ch
 ## Follow-on Reviews
 
 - [Cloud Environments](Cloud_Environments.md) records the iPad setup handoff, the unresolved settings issue and the checks needed to resume.
+- [Docs Review package generation and Catalogue images](Media_View_Link_Authoring.md#docs-review-follow-up) records the retired builder call and the missing image handoff for preserved source tokens.
 
 Other work is found by reviewing the directory and following its domain owners. A link or old planning status alone does not authorise implementation. Historical parent metadata is navigation, not a requirement to recreate the former planning hierarchy.

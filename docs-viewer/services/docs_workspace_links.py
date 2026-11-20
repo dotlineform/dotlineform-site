@@ -31,7 +31,7 @@ def write_workspace_links(config: DocsStageConfig, *, report_path: Path) -> dict
         if record["incoming"] or record["outgoing"]:
             documents.append(record)
     payload = {
-        "schema_version": 4,
+        "schema_version": 5,
         "documents": documents,
     }
     text = render_json(payload)

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-11-19"
+last_updated: "2026-11-20"
 parent_id: d-20260424-000000-50b63f
 ---
 # Working generation and publication
@@ -40,7 +40,7 @@ Local by-ID and management output can complete before a failed public handoff. U
 
 ## Document Relationship Maintenance
 
-The Links owner updates the selected document's authored outgoing edges and known neighbours' incoming edges before rendering. Ordinary authored links and supported Catalogue Work references contribute exact `{collection, doc_id}` destinations. Saved version-4 records live in `working/generated/documents/links-by-id/<doc_id>.json`. Each has `schema_version`, `self`, `incoming` and `outgoing`, with `collection`, `doc_id` and `title` on an endpoint. Records appear when relationships need them. Repeated targets are one edge, and deletion removes the saved record and known edge contributions. The separate Links report refresh and Broken Links audit have their own actions.
+The Links owner updates the selected document's authored outgoing edges and known neighbours' incoming edges before rendering. Ordinary authored links and supported Catalogue Work references contribute exact `{collection, doc_id}` destinations. Saved version-5 records live in `working/generated/documents/links-by-id/<doc_id>.json`. Each has `schema_version`, `self`, `incoming` and `outgoing`, with `collection`, `doc_id` and `title` on an endpoint. Outgoing rows also carry `explicit_doc_link`, true when any ordinary authored link reaches the destination. Records appear when relationships need them. Repeated targets are one edge, and deletion removes the saved record and known edge contributions. The separate Links report refresh and Broken Links audit have their own actions.
 
 Related Links renders the already refreshed records into by-ID output. Build can render exact direct neighbours, including a Catalogue document whose incoming links changed. Dependency-only Catalogue documents use the Docs queue. Work media and Work-queue selection stay with Catalogue Regenerate. Public eligibility decides which bodies go out, while authored relation destinations can still be listed. [Related Links](Related_Links.md#generated-data-and-freshness) · [Links builder](../../docs-viewer/build/docs_builder/links_builder.py)
 

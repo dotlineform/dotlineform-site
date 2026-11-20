@@ -1,6 +1,7 @@
 import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
 import { DOCS_VIEWER_ACTION_IDS as ACTION_IDS } from "../docs-viewer-action-definitions.js";
 import { openCatalogueMediaModal } from "./catalogue-media-modal.js";
+import { captureCatalogueTokenAction } from "./catalogue-token-contribution.js";
 import { openDocumentLinkModal } from "./document-link-contribution.js";
 
 export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
@@ -11,9 +12,8 @@ const TABLE_DETAIL_DIRECTIVE_SOURCE = '<!-- dotlineform:table-detail title="Tabl
 
 const SOURCE_ACTIONS = [
   { actionId: ACTION_IDS.SOURCE_ADD_IMAGE, artwork: "docsViewer__icon--image", label: "Add image" },
-  { actionId: ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE, artwork: "docsViewer__icon--book-image", label: "Add Catalogue image" },
+  { actionId: ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE, artwork: "docsViewer__icon--book-image", label: "Add Media View link" },
   { actionId: ACTION_IDS.SOURCE_ADD_FILE, artwork: "docsViewer__icon--paperclip", label: "Add file" },
-  { actionId: ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK, artwork: "docsViewer__icon--image-plus", label: "Add Media View link" },
   { actionId: ACTION_IDS.SOURCE_INSERT_DOC_LINK, artwork: "docsViewer__icon--file-plus-corner", label: "Insert doc link" },
   { actionId: ACTION_IDS.OPEN_VSCODE, artwork: "docsViewer__icon--file-code-corner", label: "Open in VS Code" }
 ];
@@ -128,6 +128,7 @@ export function createDirectiveInsertionPlan(options = {}) {
 function closeMenu(controller, options = {}) {
   if (!controller) return;
   controller.capture = null;
+  controller.catalogueAction = null;
   controller.adapter = null;
   controller.menu.hidden = true;
   controller.button.setAttribute("aria-expanded", "false");
@@ -149,6 +150,8 @@ function createController(root, button, menu) {
     adapter: null,
     button: button,
     capture: null,
+    catalogueAction: null,
+    catalogueItem: menu.querySelector('[data-docs-viewer-action="' + ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE + '"]'),
     disposed: false,
     document: document,
     menu: menu,
@@ -281,16 +284,16 @@ function enabledMenuItems(controller) {
 function runSourceAction(context, controller, actionId) {
   var adapter = controller.adapter;
   var capture = controller.capture;
+  var catalogueAction = controller.catalogueAction;
   closeMenu(controller);
   if (!adapter || !capture || adapter !== activeAdapter(context) || !adapter.isCurrent()) return false;
   Promise.resolve().then(function () {
     if (actionId === ACTION_IDS.SOURCE_ADD_IMAGE || actionId === ACTION_IDS.SOURCE_ADD_FILE) {
       return adapter.addSourceMedia(actionId === ACTION_IDS.SOURCE_ADD_FILE ? "file" : "image", capture);
     }
-    if (actionId === ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE || actionId === ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK) {
+    if (actionId === ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE) {
       return openCatalogueMediaModal({
-        presentation: actionId === ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE ? "image" : "media",
-        adapter: adapter, capture: capture, root: context.root
+        adapter: adapter, action: catalogueAction, root: context.root
       });
     }
     if (actionId === ACTION_IDS.SOURCE_INSERT_DOC_LINK) {
@@ -371,6 +374,9 @@ export function createDirectiveActionsMainViewControlHandlers() {
       if (!adapter || typeof adapter.captureSelection !== "function") return false;
       controller.adapter = adapter;
       controller.capture = adapter.captureSelection();
+      controller.catalogueAction = captureCatalogueTokenAction(adapter.getBufferSnapshot(), controller.capture);
+      controller.catalogueItem.title = controller.catalogueAction.label;
+      controller.catalogueItem.querySelector(".docsViewer__actionMenuLabel").textContent = controller.catalogueAction.label;
       controller.menu.hidden = false;
       controller.button.setAttribute("aria-expanded", "true");
       enabledMenuItems(controller)[0]?.focus({ preventScroll: true });
