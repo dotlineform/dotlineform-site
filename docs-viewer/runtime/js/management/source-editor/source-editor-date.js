@@ -78,6 +78,7 @@ export function handleSourceAddDateControl(context) {
     root: context.root,
     title: editing ? "Edit date" : "Add date",
     size: "compact",
+    submitOnEnter: !editing,
     restoreFocus: { focus: function () { adapter.focus(); } },
     focusSelector: "#docsViewerSourceDateLabel",
     bodyHtml:

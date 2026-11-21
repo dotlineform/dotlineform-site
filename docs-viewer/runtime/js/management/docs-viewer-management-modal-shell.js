@@ -35,7 +35,7 @@ function bodyHtmlFromText(body) {
   }).join("");
 }
 
-function renderActions(actions) {
+function renderActions(actions, submitOnEnter) {
   var orderedActions = Array.from(actions || []).map(function (action, index) {
     var role = normalizeText(action && action.role);
     return {
@@ -49,10 +49,11 @@ function renderActions(actions) {
     return record.action;
   });
   return '<div class="docsViewer__modalActions">' + orderedActions.map(function (action) {
+    var type = submitOnEnter && action.role === "modal-primary" ? "submit" : "button";
     var roleAttr = action.role ? ' data-role="' + escapeHtml(action.role) + '"' : "";
     var toneAttr = action.tone ? ' data-tone="' + escapeHtml(action.tone) + '"' : "";
     var disabledAttr = action.disabled ? " disabled" : "";
-    return '<button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="button"' + roleAttr + toneAttr + disabledAttr + '>' + escapeHtml(action.label) + '</button>';
+    return '<button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="' + type + '"' + roleAttr + toneAttr + disabledAttr + '>' + escapeHtml(action.label) + '</button>';
   }).join("") + '</div>';
 }
 
@@ -72,7 +73,7 @@ function renderModalFrame(options) {
         '<form class="docsViewer__modalForm docsViewer__modalForm--dynamic" data-role="modal-form">' +
           '<div class="docsViewer__modalBody">' + (options.bodyHtml || "") + '</div>' +
           '<p class="docsViewer__modalNote muted small" data-role="modal-status" hidden></p>' +
-          renderActions(options.actions || []) +
+          renderActions(options.actions || [], options.submitOnEnter) +
         '</form>' +
       '</div>' +
     '</div>';
@@ -197,7 +198,7 @@ export function openDocsViewerManagementModal(options = {}) {
       restoreFocus: restoreFocus,
       selectInitialFocus: true
     });
-    if (primary) primary.addEventListener("click", submit);
+    if (primary && primary.type !== "submit") primary.addEventListener("click", submit);
     if (form) {
       form.addEventListener("submit", function (event) {
         event.preventDefault();
