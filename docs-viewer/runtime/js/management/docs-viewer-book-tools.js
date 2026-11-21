@@ -6,6 +6,17 @@ import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.
 import { bookHeadings, isBookMatter } from "./docs-viewer-book-manifest.js";
 
 const editionLabels = { both: "Both", web: "Web only", export: "Export only" };
+const beforeOpeningPlacement = "@before-opening";
+
+function bookIndexBranches(order) {
+  return [
+    ...order.tree.filter(node => node.before_opening),
+    { id: "@front", title: "Opening pages", doc_ids: order.front },
+    { id: "", title: "Root chapters", doc_ids: order.root },
+    ...order.tree.filter(node => !node.before_opening),
+    { id: "@back", title: "Back matter", doc_ids: order.back }
+  ];
+}
 
 function button(document, label, action) {
   const control = document.createElement("button");
@@ -424,28 +435,35 @@ export async function createBookReportTools(options) {
     const selected = bookHeadings(tree).find(node => node.id === headingId);
     if (!selected) return;
     const kind = selected.sections ? "part" : "section";
-    const oldPart = tree.find(node => node.sections?.includes(selected));
-    const parts = selected.sections ? [] : tree.filter(node => node.sections);
+    const oldPartId = tree.find(node => node.sections?.includes(selected))?.id || "";
+    const parts = tree.filter(node => node.sections);
     const body = field(selected.sections ? "Part title" : "Section title", '<input class="docsViewer__fieldInput" data-book-heading type="text" autocomplete="off" value="'
-      + escapeHtml(selected.title) + '">') + (parts.length
-      ? field("Part", '<select class="docsViewer__fieldInput" data-book-parent>' + option("", "Top level")
+      + escapeHtml(selected.title) + '">') + (!selected.sections
+      ? field("Placement", '<select class="docsViewer__fieldInput" data-book-placement>' + option("", "Top level")
+        + option(beforeOpeningPlacement, "Before Opening pages")
         + parts.map(part => option(part.id, part.title)).join("") + "</select>") : "");
     await modal("Edit " + kind, body, async ({ host }) => {
       const title = host.querySelector("[data-book-heading]").value.trim();
       if (!title) throw new Error("Enter a title.");
-      const partId = host.querySelector("[data-book-parent]")?.value || "";
+      const placement = host.querySelector("[data-book-placement]")?.value || "";
+      const beforeOpening = placement === beforeOpeningPlacement;
+      const partId = beforeOpening ? "" : placement;
+      if (title === selected.title && partId === oldPartId && beforeOpening === Boolean(selected.before_opening)) return;
       const next = structuredClone(bookOrder);
-      const from = oldPart ? next.tree.find(node => node.id === oldPart.id).sections : next.tree;
+      const from = oldPartId ? next.tree.find(node => node.id === oldPartId).sections : next.tree;
       const index = from.findIndex(node => node.id === selected.id);
-      from[index].title = title;
-      if (partId !== (oldPart?.id || "")) {
+      const heading = from[index];
+      heading.title = title;
+      if (beforeOpening) heading.before_opening = true;
+      else delete heading.before_opening;
+      if (partId !== oldPartId) {
         const to = partId ? next.tree.find(node => node.id === partId).sections : next.tree;
         to.push(from.splice(index, 1)[0]);
       }
       await saveOrderChange({ book_order: next });
     }, ({ host }) => {
-      const picker = host.querySelector("[data-book-parent]");
-      if (picker) picker.value = oldPart?.id || "";
+      const picker = host.querySelector("[data-book-placement]");
+      if (picker) picker.value = selected.before_opening ? beforeOpeningPlacement : oldPartId;
     });
   }
 
@@ -456,10 +474,7 @@ export async function createBookReportTools(options) {
     const movingToc = selected.has(hostId);
     const resetsEdition = manifest.docs.some(row => selected.has(row.doc_id)
       && isBookMatter(bookOrder, row.doc_id) && editionLabels[row.book_edition] && row.book_edition !== "both");
-    const inside = [
-      { id: "@front", title: "Opening pages", depth: 0, headingId: "@front" },
-      { id: "", title: "Root chapters", depth: 0, headingId: "" }
-    ];
+    const inside = [];
     const beside = [];
     function addDocuments(ids, depth, headingId) {
       for (const docId of ids) {
@@ -473,14 +488,15 @@ export async function createBookReportTools(options) {
       beside.push({ ...row, disabled: true });
       addDocuments(heading.doc_ids, depth + 1, heading.id);
     }
-    addDocuments(bookOrder.front, 0, "@front");
-    addDocuments(bookOrder.root, 0, "");
-    for (const node of bookOrder.tree) {
-      addDestinations(node, 0);
-      for (const section of node.sections || []) addDestinations(section, 1);
+    for (const node of bookIndexBranches(bookOrder)) {
+      if (!node.id || node.id.startsWith("@")) {
+        inside.push({ id: node.id, title: node.title, depth: 0, headingId: node.id });
+        addDocuments(node.doc_ids, 0, node.id);
+      } else {
+        addDestinations(node, 0);
+        for (const section of node.sections || []) addDestinations(section, 1);
+      }
     }
-    inside.push({ id: "@back", title: "Back matter", depth: 0, headingId: "@back" });
-    addDocuments(bookOrder.back, 0, "@back");
     const destinations = new Map([...beside, ...inside].map(row => [row.id, row]));
     await openDocsViewerPositionModal({
       root: options.root,
@@ -636,7 +652,7 @@ export async function createBookReportTools(options) {
         projectControls();
       }
       function readingIds() {
-        return [...bookOrder.front, ...bookOrder.root, ...bookHeadings(bookOrder.tree).flatMap(node => node.doc_ids), ...bookOrder.back];
+        return bookHeadings(bookIndexBranches(bookOrder)).flatMap(node => node.doc_ids);
       }
       function readingRows() {
         return readingIds().map(id => id === hostId ? tocRow : rowForId(id)).filter(Boolean);
@@ -695,10 +711,11 @@ export async function createBookReportTools(options) {
           item.append(body);
           parent.appendChild(item);
         }
-        renderBranch(host, "@front", "Opening pages", bookOrder.front);
-        if (bookOrder.root.length) renderBranch(host, "", null, bookOrder.root);
-        for (const node of bookOrder.tree) renderBranch(host, node.id, node.title, node.doc_ids, node.sections);
-        renderBranch(host, "@back", "Back matter", bookOrder.back);
+        for (const node of bookIndexBranches(bookOrder)) {
+          if (node.id || node.doc_ids.length) {
+            renderBranch(host, node.id, node.id ? node.title : null, node.doc_ids, node.sections);
+          }
+        }
         return Boolean(host.childElementCount);
       }
 

@@ -92,9 +92,12 @@ def validate_book_order(order: Any, book_ids: set[str], host_id: str) -> None:
                 raise ValueError("Each placement must identify one distinct Book document")
             placements.add(doc_id)
 
-    def heading(node: Any, fields: set[str]) -> None:
-        if not isinstance(node, dict) or set(node) != fields | {"id", "title", "doc_ids"}:
+    def heading(node: Any, fields: set[str], *, top_level_section: bool = False) -> None:
+        optional = {"before_opening"} if top_level_section else set()
+        if not isinstance(node, dict) or set(node) - optional != fields | {"id", "title", "doc_ids"}:
             raise ValueError("Book headings require an ID, title and document IDs; Parts also require sections")
+        if top_level_section and type(node.get("before_opening", False)) is not bool:
+            raise ValueError("Before Opening pages must be true or false")
         node_id, title = node["id"], node["title"]
         if not isinstance(node_id, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]*", node_id) or node_id in headings:
             raise ValueError("Book heading IDs must be distinct slugs")
@@ -121,7 +124,7 @@ def validate_book_order(order: Any, book_ids: set[str], host_id: str) -> None:
             for section in node["sections"]:
                 heading(section, set())
         else:
-            heading(node, set())
+            heading(node, set(), top_level_section=True)
     documents(order["back"])
     if placements != book_ids:
         raise ValueError("Book order must place every document")
