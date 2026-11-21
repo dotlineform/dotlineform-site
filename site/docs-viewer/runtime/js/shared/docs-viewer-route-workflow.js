@@ -79,6 +79,7 @@ export function initDocsViewerRouteWorkflow(context) {
     displayedHash = record.hash;
     displayedCatalogueSearch = record.catalogueSearch;
     context.indexDisclosure?.setExpanded(record.indexExpanded);
+    context.clearManagementMessageForDocChange(record.document?.record?.target);
     await context.restoreDocument(record.document);
     // Keep the panel's current search query when restoring a document.
     var target = selected.documentTarget;
@@ -98,6 +99,7 @@ export function initDocsViewerRouteWorkflow(context) {
     displayedCatalogueSearch = destination.catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : "");
     var viewOptions = { catalogueSearch: destination.catalogueSearch, collectionSequence: destination.collectionSequence,
       focusCatalogueSearch: !destination.force && !displayedHash && isCatalogueHost(target) };
+    context.clearManagementMessageForDocChange(target);
     if (!destination.force && await context.restoreRetainedDocument(target, displayedHash, viewOptions)) return target;
     selected.documentTarget = target;
     var request = ++selected.requestId;

@@ -921,9 +921,8 @@ export function startDocsViewerRuntime(options) {
     }
   }
 
-  function clearManagementMessageForDocChange(docId) {
-    var targetDocId = String(docId || "").trim();
-    if (!targetDocId || targetDocId === state.selectedDocId || !state.managementMessage) return;
+  function clearManagementMessageForDocChange(target) {
+    if (!state.managementMessage || !target || documentTargetKey(target) === documentTargetKey(currentDocumentTarget())) return;
     state.managementMessage = "";
     state.managementMessageIsError = false;
   }
