@@ -589,6 +589,9 @@
   overflow: auto;
   overscroll-behavior: contain;
   padding: 0.2rem 0.25rem 0.25rem 0;
+  /* Give focus outlines room without shifting the fields. */
+  margin-inline-start: -4px;
+  padding-inline-start: 4px;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
 }
 
