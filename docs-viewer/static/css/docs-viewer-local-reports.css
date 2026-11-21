@@ -474,6 +474,65 @@
 }
 
 @media (width > 55rem) {
+  .docsViewer[data-book-pane="split"]:is([data-document-display-mode="rendered-document"], [data-document-display-mode="markdown-source"]):not(:has([data-docs-content-detail-active])) .docsViewer__topRow {
+    --docs-viewer-book-index-min-start: calc(2 * var(--docs-viewer-toolbar-icon-size) + 2 * var(--docs-viewer-top-row-gap));
+    --docs-viewer-book-actions-start: var(
+      --docs-viewer-book-document-start,
+      calc(max(var(--docs-viewer-document-start), var(--docs-viewer-book-index-min-start)) + 3 * var(--docs-viewer-control-height))
+    );
+    /* Keep the Index button clear of the document controls on wide screens. */
+    --docs-viewer-book-index-start: clamp(
+      var(--docs-viewer-book-index-min-start),
+      var(--docs-viewer-document-start),
+      calc(var(--docs-viewer-book-actions-start) - var(--docs-viewer-control-height) - var(--docs-viewer-top-row-gap))
+    );
+    grid-template-columns:
+      auto
+      calc(var(--docs-viewer-book-index-start) - var(--docs-viewer-book-index-min-start))
+      calc(var(--docs-viewer-book-actions-start) - var(--docs-viewer-book-index-start) - var(--docs-viewer-top-row-gap))
+      minmax(0, 1fr)
+      auto
+      auto;
+
+    & .docsViewer__topBar {
+      display: contents;
+    }
+
+    & .docsViewer__viewerToolbar {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    & .docsViewer__mainViewToolbar {
+      position: static;
+      display: grid;
+      grid-column: 3 / 5;
+      grid-row: 1;
+      grid-template-columns: subgrid;
+      column-gap: var(--docs-viewer-top-row-gap);
+    }
+
+    & .docsViewer__mainViewToolbarControlGroup {
+      display: flex;
+      grid-column: 2;
+      grid-row: 1;
+      flex-wrap: wrap;
+      align-items: center;
+      min-width: 0;
+      gap: 0.38rem;
+    }
+
+    & .docsViewer__manageToolbarMount {
+      grid-column: 5;
+      grid-row: 1;
+    }
+
+    & > [data-docs-viewer-theme-toggle] {
+      grid-column: 6;
+      grid-row: 1;
+    }
+  }
+
   .docsViewer[data-book-pane="split"] > [data-docs-viewer-main-view-mount] {
     --docs-viewer-book-pane-width: min(40%, 26rem);
     display: grid;

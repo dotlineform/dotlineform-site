@@ -7,6 +7,11 @@ export function createDocsViewerBookPane(options) {
   if (!options.managementService?.baseUrl || !collectionProvider.readBookManifest) return;
   const document = main.ownerDocument;
   const desktop = window.matchMedia("(width > 55rem)");
+  const indexPanel = root.querySelector(".docsViewer__sidebar");
+  const toolbarPosition = new window.ResizeObserver(() => {
+    const start = main.getBoundingClientRect().left - root.getBoundingClientRect().left;
+    root.style.setProperty("--docs-viewer-book-document-start", start + "px");
+  });
   const panes = new Map();
   let book = null;
   let target = null;
@@ -78,7 +83,16 @@ export function createDocsViewerBookPane(options) {
       next = createPane(book);
       panes.set(book.collection, next);
     }
-    if (shown && shown !== next) shown.pane.hidden = true;
+    if (shown !== next) {
+      if (shown) shown.pane.hidden = true;
+      toolbarPosition.disconnect();
+      if (next) {
+        toolbarPosition.observe(next.pane, { box: "border-box" });
+        if (indexPanel) toolbarPosition.observe(indexPanel, { box: "border-box" });
+      } else {
+        root.style.removeProperty("--docs-viewer-book-document-start");
+      }
+    }
     if (next) {
       next.pane.hidden = false;
       next.selectDocument?.(target.doc_id);
