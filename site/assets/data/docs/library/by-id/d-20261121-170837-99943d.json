@@ -1,0 +1,12 @@
+{
+  "doc_id": "d-20261121-170837-99943d",
+  "title": "Impossibility And Incompleteness (Ink Engine)",
+  "added_date": "2026-11-21 17:08:37",
+  "last_updated": "2026-11-21 17:13:48",
+  "date": "2025-01-01",
+  "date_display": "2025",
+  "draft": false,
+  "summary": "Gödel’s Incompleteness Theorem and Turing’s Undecidability represent distinct boundaries on formal capability in proof and computation.",
+  "summary_html": "<p>Gödel’s Incompleteness Theorem and Turing’s Undecidability represent distinct boundaries on formal capability in proof and computation.</p>",
+  "content_html": "<h2>Impossibility and Incompleteness</h2>\n<div class=\"docsViewer__summary\"><p>Gödel’s Incompleteness Theorem and Turing’s Undecidability represent distinct boundaries on formal capability in proof and computation.</p></div>\n<p>Gödel proved that any sufficiently powerful formal system is either incomplete or inconsistent. This means there exist true statements that cannot be proven using the rules of the system itself. Gödel’s paradoxical self-referential statements (e.g., 'This statement is unprovable') expose the limits of deductive certainty.</p>\n<p>Turing demonstrated that no general algorithm can solve all possible instances of the Halting Problem — determining whether an arbitrary program will eventually halt or run forever. This reveals that even in finite, rule-based systems, there are questions that no computation can answer.</p>\n<p>These highlight different edges of expressibility. Each system points beyond itself, toward phenomena it cannot resolve.</p>\n<h3>Ink Engine (Generative Representation)</h3>\n<p>The Ink Engine project introduces a parallel form of impossibility within generative design. It proposes that a system cannot generate truly impossible forms unless it incorporates elements that are fundamentally unknown — not derivable from its internal model. These include entropy, observer-dependent collapse, non-symbolic phenomena, or ontological asymmetry. This manifests as a refusal to generate fully knowable or repeatable forms — embracing instead the aesthetic and philosophical space of the unknowable.</p>\n<p><br><small class=\"muted\">2025</small></p>\n"
+}

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-0ab2b1c63fea72b6d0401962686606a4",
-    "generated_at_utc": "2026-11-20T22:19:13Z",
-    "count": 153
+    "version": "blake2b-beb1586cfa415e2e63246f71c63efe65",
+    "generated_at_utc": "2026-11-21T17:32:42Z",
+    "count": 168
   },
   "fields": [
     "title",
@@ -1386,6 +1386,141 @@
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
+    },
+    {
+      "id": "d-20261117-221331-50d695",
+      "title": "Quantum Computers - Hardware size and complexity",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-135838-136dde",
+      "title": "Heuristics",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-140451-3ed0c8",
+      "title": "Hierarchies of Consistency Strength (From Gödel to Feferman)",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-142007-cb09d2",
+      "title": "Higher‑D Unification",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-143121-a7b71d",
+      "title": "Higher‑Dimensional Brane Interactions",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-143341-b868f3",
+      "title": "Holographic Principle — Information on Boundaries",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-145512-2d06c7",
+      "title": "Homunculus Problem",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-145945-589f50",
+      "title": "How Memories Are Stored",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-155503-59b88f",
+      "title": "How Many Neurons/Synapses for One Memory?",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-155948-49d8d2",
+      "title": "How Mind Knows Itself",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-160859-105931",
+      "title": "Image-Making as Translation",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-165405-e6dc68",
+      "title": "Images as Participating Presences",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-165922-8c6edf",
+      "title": "Imperfect Repetition Is the Condition for Growth",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-170837-99943d",
+      "title": "Impossibility And Incompleteness (Ink Engine)",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261121-171505-93851e",
+      "title": "Incompleteness Theorems",
+      "last_updated": "2026-11-21",
+      "display_meta": "2026-11-21 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
     }
   ],
   "terms": {
@@ -1424,7 +1559,8 @@
     },
     "4d": {
       "summary": [
-        7
+        7,
+        156
       ]
     },
     "5": {
@@ -1444,7 +1580,8 @@
       "summary": [
         18,
         114,
-        137
+        137,
+        155
       ]
     },
     "absolute": {
@@ -1500,6 +1637,11 @@
         43
       ]
     },
+    "accompany": {
+      "summary": [
+        165
+      ]
+    },
     "according": {
       "summary": [
         13
@@ -1508,6 +1650,11 @@
     "account": {
       "summary": [
         43
+      ]
+    },
+    "accurate": {
+      "summary": [
+        154
       ]
     },
     "across": {
@@ -1525,17 +1672,21 @@
         80,
         94,
         97,
-        120
+        120,
+        160,
+        161
       ]
     },
     "act": {
       "summary": [
-        144
+        144,
+        163
       ]
     },
     "acting": {
       "summary": [
-        122
+        122,
+        163
       ]
     },
     "action": {
@@ -1560,7 +1711,8 @@
       "summary": [
         22,
         73,
-        75
+        75,
+        160
       ]
     },
     "actuate": {
@@ -1568,9 +1720,15 @@
         33
       ]
     },
+    "ad": {
+      "summary": [
+        158
+      ]
+    },
     "adapt": {
       "summary": [
-        140
+        140,
+        165
       ]
     },
     "adaptable": {
@@ -1614,6 +1772,11 @@
         76
       ]
     },
+    "ads": {
+      "summary": [
+        158
+      ]
+    },
     "advance": {
       "summary": [
         13
@@ -1648,7 +1811,8 @@
     "agency": {
       "summary": [
         18,
-        141
+        141,
+        164
       ]
     },
     "ai": {
@@ -1723,7 +1887,8 @@
         26,
         64,
         72,
-        101
+        101,
+        154
       ]
     },
     "alter": {
@@ -1735,6 +1900,11 @@
     "altered": {
       "summary": [
         63
+      ]
+    },
+    "always": {
+      "summary": [
+        154
       ]
     },
     "ambitious": {
@@ -1782,6 +1952,11 @@
         60
       ]
     },
+    "anthropology": {
+      "summary": [
+        164
+      ]
+    },
     "anticipation": {
       "title": [
         144
@@ -1799,7 +1974,9 @@
     },
     "any": {
       "summary": [
-        98
+        98,
+        159,
+        167
       ]
     },
     "anything": {
@@ -1841,7 +2018,8 @@
       "summary": [
         50,
         100,
-        139
+        139,
+        162
       ]
     },
     "approach": {
@@ -1887,6 +2065,11 @@
     "architectures": {
       "summary": [
         29
+      ]
+    },
+    "area": {
+      "summary": [
+        158
       ]
     },
     "areas": {
@@ -1938,6 +2121,9 @@
       "title": [
         16,
         144
+      ],
+      "summary": [
+        164
       ]
     },
     "artistic": {
@@ -1983,6 +2169,11 @@
     "asynchronous": {
       "summary": [
         28
+      ]
+    },
+    "attempting": {
+      "summary": [
+        163
       ]
     },
     "attending": {
@@ -2058,6 +2249,11 @@
     "aware": {
       "summary": [
         20
+      ]
+    },
+    "awareness": {
+      "summary": [
+        162
       ]
     },
     "awe": {
@@ -2242,6 +2438,11 @@
         63
       ]
     },
+    "biases": {
+      "summary": [
+        154
+      ]
+    },
     "big": {
       "summary": [
         145
@@ -2249,7 +2450,8 @@
     },
     "billions": {
       "summary": [
-        62
+        62,
+        161
       ]
     },
     "bind": {
@@ -2310,7 +2512,8 @@
         114
       ],
       "summary": [
-        10
+        10,
+        158
       ]
     },
     "blending": {
@@ -2357,11 +2560,13 @@
     "boundaries": {
       "title": [
         114,
-        115
+        115,
+        158
       ],
       "summary": [
         10,
-        114
+        114,
+        166
       ]
     },
     "boundary": {
@@ -2413,7 +2618,8 @@
         75,
         82,
         97,
-        142
+        142,
+        160
       ]
     },
     "brain-inspired": {
@@ -2446,6 +2652,11 @@
     "branch": {
       "summary": [
         101
+      ]
+    },
+    "brane": {
+      "title": [
+        157
       ]
     },
     "breakdown": {
@@ -2547,7 +2758,10 @@
         100,
         113,
         118,
-        127
+        127,
+        154,
+        163,
+        164
       ]
     },
     "cage": {
@@ -2558,6 +2772,11 @@
     "called": {
       "summary": [
         101
+      ]
+    },
+    "camera": {
+      "summary": [
+        162
       ]
     },
     "camus": {
@@ -2578,7 +2797,14 @@
         60,
         62,
         63,
-        100
+        100,
+        154,
+        155
+      ]
+    },
+    "capability": {
+      "summary": [
+        166
       ]
     },
     "capacity": {
@@ -2595,7 +2821,8 @@
     "carry": {
       "summary": [
         47,
-        111
+        111,
+        164
       ]
     },
     "causal": {
@@ -2627,7 +2854,8 @@
     "cells": {
       "summary": [
         78,
-        117
+        117,
+        161
       ]
     },
     "central": {
@@ -2684,7 +2912,8 @@
         94,
         105,
         112,
-        126
+        126,
+        165
       ]
     },
     "changes": {
@@ -2831,7 +3060,8 @@
       "summary": [
         32,
         95,
-        144
+        144,
+        154
       ]
     },
     "coherence": {
@@ -2889,6 +3119,11 @@
         10
       ]
     },
+    "completion": {
+      "summary": [
+        161
+      ]
+    },
     "complex": {
       "summary": [
         50,
@@ -2900,7 +3135,8 @@
     "complexity": {
       "title": [
         49,
-        50
+        50,
+        153
       ],
       "summary": [
         49,
@@ -2929,7 +3165,8 @@
       ],
       "summary": [
         28,
-        30
+        30,
+        166
       ]
     },
     "computational": {
@@ -2953,10 +3190,14 @@
     },
     "computer": {
       "summary": [
-        30
+        30,
+        160
       ]
     },
     "computers": {
+      "title": [
+        153
+      ],
       "summary": [
         107
       ]
@@ -2970,6 +3211,11 @@
         27,
         28,
         32
+      ]
+    },
+    "con": {
+      "summary": [
+        155
       ]
     },
     "concept": {
@@ -3006,7 +3252,16 @@
     "concrete": {
       "summary": [
         13,
-        53
+        53,
+        158
+      ]
+    },
+    "condition": {
+      "title": [
+        165
+      ],
+      "summary": [
+        165
       ]
     },
     "conditional": {
@@ -3055,7 +3310,8 @@
       "summary": [
         38,
         57,
-        73
+        73,
+        160
       ]
     },
     "connects": {
@@ -3101,10 +3357,19 @@
         62
       ]
     },
+    "consistency": {
+      "title": [
+        155
+      ],
+      "summary": [
+        155
+      ]
+    },
     "consistent": {
       "summary": [
         10,
-        73
+        73,
+        155
       ]
     },
     "consolidation": {
@@ -3324,6 +3589,9 @@
     "cosmologies": {
       "title": [
         1
+      ],
+      "summary": [
+        164
       ]
     },
     "cosmology": {
@@ -3393,7 +3661,8 @@
     },
     "creativity": {
       "summary": [
-        127
+        127,
+        165
       ]
     },
     "creatures": {
@@ -3431,7 +3700,13 @@
     },
     "cue": {
       "summary": [
-        22
+        22,
+        161
+      ]
+    },
+    "cue-triggered": {
+      "summary": [
+        161
       ]
     },
     "culminating": {
@@ -3449,7 +3724,8 @@
         47,
         64,
         126,
-        127
+        127,
+        165
       ]
     },
     "culturally": {
@@ -3540,6 +3816,11 @@
       "summary": [
         72,
         127
+      ]
+    },
+    "decisions": {
+      "summary": [
+        154
       ]
     },
     "decode": {
@@ -3691,9 +3972,19 @@
         52
       ]
     },
+    "detail": {
+      "summary": [
+        154
+      ]
+    },
     "determinate": {
       "summary": [
         113
+      ]
+    },
+    "develop": {
+      "summary": [
+        165
       ]
     },
     "developed": {
@@ -3726,7 +4017,8 @@
         64
       ],
       "summary": [
-        139
+        139,
+        165
       ]
     },
     "different": {
@@ -3734,7 +4026,8 @@
         19,
         27,
         38,
-        44
+        44,
+        156
       ]
     },
     "differentiate": {
@@ -3766,8 +4059,12 @@
       ]
     },
     "dimensional": {
+      "title": [
+        157
+      ],
       "summary": [
-        7
+        7,
+        156
       ]
     },
     "dimensions": {
@@ -3775,7 +4072,8 @@
         7
       ],
       "summary": [
-        7
+        7,
+        156
       ]
     },
     "direct": {
@@ -3844,6 +4142,11 @@
         50
       ]
     },
+    "distinct": {
+      "summary": [
+        166
+      ]
+    },
     "distinction": {
       "summary": [
         112
@@ -3871,7 +4174,9 @@
       "summary": [
         23,
         29,
-        30
+        30,
+        160,
+        161
       ]
     },
     "diversity": {
@@ -3933,6 +4238,11 @@
         101,
         103,
         138
+      ]
+    },
+    "doesn": {
+      "summary": [
+        162
       ]
     },
     "domain": {
@@ -4042,13 +4352,15 @@
     },
     "e.g": {
       "summary": [
-        78
+        78,
+        164
       ]
     },
     "each": {
       "summary": [
         21,
-        51
+        51,
+        165
       ]
     },
     "earliest": {
@@ -4071,6 +4383,11 @@
       ],
       "summary": [
         61
+      ]
+    },
+    "ease": {
+      "summary": [
+        154
       ]
     },
     "ecmr": {
@@ -4128,7 +4445,8 @@
     },
     "efficiently": {
       "summary": [
-        60
+        60,
+        154
       ]
     },
     "electrical": {
@@ -4337,6 +4655,11 @@
         32
       ]
     },
+    "engine": {
+      "title": [
+        166
+      ]
+    },
     "engineered": {
       "summary": [
         118
@@ -4348,7 +4671,8 @@
         105
       ],
       "summary": [
-        105
+        105,
+        161
       ]
     },
     "engrams": {
@@ -4368,7 +4692,8 @@
       ],
       "summary": [
         56,
-        107
+        107,
+        158
       ]
     },
     "enter": {
@@ -4405,7 +4730,8 @@
         68
       ],
       "summary": [
-        65
+        65,
+        165
       ]
     },
     "environments": {
@@ -4434,7 +4760,8 @@
         55,
         58,
         111,
-        112
+        112,
+        161
       ]
     },
     "epistemic": {
@@ -4489,7 +4816,8 @@
     },
     "errors": {
       "summary": [
-        139
+        139,
+        154
       ]
     },
     "essay": {
@@ -4500,6 +4828,14 @@
     "essence": {
       "title": [
         98
+      ],
+      "summary": [
+        164
+      ]
+    },
+    "essentially": {
+      "summary": [
+        163
       ]
     },
     "establish": {
@@ -4587,7 +4923,8 @@
         49,
         132,
         133,
-        146
+        146,
+        154
       ]
     },
     "everything": {
@@ -4620,7 +4957,8 @@
         75,
         97,
         118,
-        127
+        127,
+        165
       ]
     },
     "evolutionarily": {
@@ -4737,7 +5075,8 @@
     },
     "explain": {
       "summary": [
-        140
+        140,
+        159
       ]
     },
     "explains": {
@@ -4796,6 +5135,11 @@
         52
       ]
     },
+    "extra": {
+      "summary": [
+        156
+      ]
+    },
     "extraordinary": {
       "summary": [
         107
@@ -4807,6 +5151,11 @@
       ],
       "summary": [
         81
+      ]
+    },
+    "faces": {
+      "summary": [
+        156
       ]
     },
     "factors": {
@@ -4833,7 +5182,8 @@
         126
       ],
       "summary": [
-        57
+        57,
+        154
       ]
     },
     "feature": {
@@ -4871,6 +5221,14 @@
     "feelings": {
       "summary": [
         20
+      ]
+    },
+    "feferman": {
+      "title": [
+        155
+      ],
+      "summary": [
+        155
       ]
     },
     "felt": {
@@ -4915,6 +5273,11 @@
       "summary": [
         135,
         136
+      ]
+    },
+    "files": {
+      "summary": [
+        160
       ]
     },
     "filters": {
@@ -4982,7 +5345,8 @@
         89
       ],
       "summary": [
-        49
+        49,
+        156
       ]
     },
     "foresight": {
@@ -5010,14 +5374,18 @@
         57,
         78,
         87,
-        144
+        144,
+        154
       ]
     },
     "formal": {
       "summary": [
         19,
         20,
-        146
+        146,
+        155,
+        166,
+        167
       ]
     },
     "forms": {
@@ -5050,6 +5418,11 @@
         73
       ]
     },
+    "foundations": {
+      "summary": [
+        155
+      ]
+    },
     "four": {
       "summary": [
         49
@@ -5058,6 +5431,11 @@
     "fragile": {
       "summary": [
         57
+      ]
+    },
+    "fragmented": {
+      "summary": [
+        156
       ]
     },
     "fragments": {
@@ -5261,7 +5639,9 @@
       ],
       "summary": [
         99,
-        145
+        145,
+        156,
+        158
       ]
     },
     "give": {
@@ -5319,6 +5699,14 @@
         151
       ]
     },
+    "growth": {
+      "title": [
+        165
+      ],
+      "summary": [
+        165
+      ]
+    },
     "guide": {
       "summary": [
         144
@@ -5340,11 +5728,14 @@
         147,
         148,
         149,
-        150
+        150,
+        155
       ],
       "summary": [
         146,
-        149
+        149,
+        155,
+        166
       ]
     },
     "habits": {
@@ -5372,6 +5763,9 @@
       ]
     },
     "hardware": {
+      "title": [
+        153
+      ],
       "summary": [
         29
       ]
@@ -5418,16 +5812,52 @@
         65
       ]
     },
+    "hence": {
+      "summary": [
+        155
+      ]
+    },
+    "heuristics": {
+      "title": [
+        154
+      ],
+      "summary": [
+        154
+      ]
+    },
+    "hierarchies": {
+      "title": [
+        155
+      ],
+      "summary": [
+        155
+      ]
+    },
     "higher": {
+      "title": [
+        156,
+        157
+      ],
       "summary": [
         3,
         7,
-        13
+        13,
+        156
+      ]
+    },
+    "highlights": {
+      "summary": [
+        159
       ]
     },
     "highly": {
       "summary": [
         118
+      ]
+    },
+    "hippocampus": {
+      "summary": [
+        161
       ]
     },
     "historical": {
@@ -5440,12 +5870,38 @@
         65
       ]
     },
+    "hold": {
+      "summary": [
+        164
+      ]
+    },
+    "hole": {
+      "summary": [
+        158
+      ]
+    },
     "holes": {
       "title": [
         114
       ],
       "summary": [
         10
+      ]
+    },
+    "holographic": {
+      "title": [
+        158
+      ],
+      "summary": [
+        158
+      ]
+    },
+    "homunculus": {
+      "title": [
+        159
+      ],
+      "summary": [
+        159
       ]
     },
     "honesty": {
@@ -5479,7 +5935,10 @@
         9,
         61,
         62,
-        150
+        150,
+        160,
+        161,
+        162
       ],
       "summary": [
         7,
@@ -5505,7 +5964,9 @@
         132,
         137,
         140,
-        149
+        149,
+        156,
+        158
       ]
     },
     "hubs": {
@@ -5538,6 +5999,11 @@
         15
       ]
     },
+    "hundreds": {
+      "summary": [
+        161
+      ]
+    },
     "hypothesis": {
       "summary": [
         136
@@ -5553,7 +6019,8 @@
         7,
         73,
         77,
-        94
+        94,
+        158
       ]
     },
     "idealist": {
@@ -5566,6 +6033,11 @@
         76
       ]
     },
+    "identical": {
+      "summary": [
+        165
+      ]
+    },
     "if": {
       "summary": [
         17,
@@ -5575,7 +6047,10 @@
         61,
         82,
         87,
-        103
+        103,
+        155,
+        159,
+        165
       ]
     },
     "ignorance": {
@@ -5589,16 +6064,26 @@
       ]
     },
     "image": {
+      "title": [
+        163
+      ],
       "summary": [
         18
       ]
     },
+    "image-making": {
+      "title": [
+        163
+      ]
+    },
     "images": {
       "title": [
-        18
+        18,
+        164
       ],
       "summary": [
-        18
+        18,
+        164
       ]
     },
     "imagination": {
@@ -5619,6 +6104,14 @@
     "immunity": {
       "summary": [
         25
+      ]
+    },
+    "imperfect": {
+      "title": [
+        165
+      ],
+      "summary": [
+        165
       ]
     },
     "implementation": {
@@ -5649,7 +6142,8 @@
     },
     "implies": {
       "summary": [
-        71
+        71,
+        155
       ]
     },
     "imply": {
@@ -5665,6 +6159,11 @@
     "important": {
       "summary": [
         149
+      ]
+    },
+    "impossibility": {
+      "title": [
+        166
       ]
     },
     "impression": {
@@ -5697,7 +6196,23 @@
     },
     "including": {
       "summary": [
-        140
+        140,
+        162
+      ]
+    },
+    "incomplete": {
+      "summary": [
+        167
+      ]
+    },
+    "incompleteness": {
+      "title": [
+        166,
+        167
+      ],
+      "summary": [
+        155,
+        166
       ]
     },
     "incomprehensible": {
@@ -5736,6 +6251,11 @@
         141
       ]
     },
+    "indigenous": {
+      "summary": [
+        164
+      ]
+    },
     "individual": {
       "summary": [
         63,
@@ -5744,7 +6264,8 @@
     },
     "inert": {
       "summary": [
-        78
+        78,
+        164
       ]
     },
     "inevitability": {
@@ -5765,7 +6286,8 @@
     },
     "infinite": {
       "summary": [
-        7
+        7,
+        159
       ]
     },
     "influence": {
@@ -5782,7 +6304,8 @@
       "title": [
         10,
         20,
-        71
+        71,
+        158
       ],
       "summary": [
         10,
@@ -5799,9 +6322,19 @@
         103
       ]
     },
+    "inherently": {
+      "summary": [
+        167
+      ]
+    },
     "inherit": {
       "summary": [
         63
+      ]
+    },
+    "ink": {
+      "title": [
+        166
       ]
     },
     "innate": {
@@ -5811,7 +6344,8 @@
     },
     "inner": {
       "summary": [
-        77
+        77,
+        159
       ]
     },
     "innovations": {
@@ -5902,6 +6436,9 @@
       ]
     },
     "interactions": {
+      "title": [
+        157
+      ],
       "summary": [
         89,
         98
@@ -5929,7 +6466,8 @@
     },
     "internal": {
       "summary": [
-        73
+        73,
+        159
       ]
     },
     "internally": {
@@ -5945,6 +6483,11 @@
     "interpretations": {
       "summary": [
         62
+      ]
+    },
+    "interprets": {
+      "summary": [
+        159
       ]
     },
     "intersubjective": {
@@ -5965,7 +6508,8 @@
         60,
         81,
         127,
-        136
+        136,
+        156
       ]
     },
     "intrinsic": {
@@ -5985,6 +6529,11 @@
       ],
       "summary": [
         63
+      ]
+    },
+    "invisible": {
+      "summary": [
+        163
       ]
     },
     "invoking": {
@@ -6024,16 +6573,21 @@
         62,
         65,
         87,
-        122
+        122,
+        155,
+        158,
+        159
       ]
     },
     "itself": {
       "title": [
-        148
+        148,
+        162
       ],
       "summary": [
         9,
-        56
+        56,
+        162
       ]
     },
     "john": {
@@ -6044,6 +6598,11 @@
     "join": {
       "summary": [
         38
+      ]
+    },
+    "judgments": {
+      "summary": [
+        154
       ]
     },
     "jungian": {
@@ -6097,9 +6656,17 @@
         113
       ]
     },
+    "knows": {
+      "title": [
+        162
+      ]
+    },
     "ladder": {
       "title": [
         97
+      ],
+      "summary": [
+        155
       ]
     },
     "lagged": {
@@ -6136,6 +6703,11 @@
         144
       ]
     },
+    "laws": {
+      "summary": [
+        158
+      ]
+    },
     "layer": {
       "summary": [
         101
@@ -6154,6 +6726,16 @@
         44
       ]
     },
+    "lead": {
+      "summary": [
+        154
+      ]
+    },
+    "leading": {
+      "summary": [
+        159
+      ]
+    },
     "leads": {
       "summary": [
         88
@@ -6165,7 +6747,13 @@
         50,
         55,
         120,
-        139
+        139,
+        165
+      ]
+    },
+    "led": {
+      "summary": [
+        158
       ]
     },
     "left": {
@@ -6214,7 +6802,8 @@
         42,
         49,
         61,
-        99
+        99,
+        164
       ]
     },
     "lifetime": {
@@ -6225,6 +6814,11 @@
     "lifetimes": {
       "summary": [
         63
+      ]
+    },
+    "light": {
+      "summary": [
+        162
       ]
     },
     "lightspeed": {
@@ -6241,7 +6835,9 @@
         97,
         111,
         118,
-        136
+        136,
+        160,
+        162
       ]
     },
     "likely": {
@@ -6280,7 +6876,8 @@
     },
     "links": {
       "summary": [
-        51
+        51,
+        158
       ]
     },
     "list": {
@@ -6458,10 +7055,14 @@
       "summary": [
         27,
         40,
-        56
+        56,
+        154
       ]
     },
     "making": {
+      "title": [
+        163
+      ],
       "summary": [
         113
       ]
@@ -6489,12 +7090,14 @@
     "many": {
       "title": [
         7,
-        61
+        61,
+        161
       ],
       "summary": [
         80,
         104,
-        122
+        122,
+        156
       ]
     },
     "map": {
@@ -6591,6 +7194,11 @@
         135
       ]
     },
+    "measured": {
+      "summary": [
+        155
+      ]
+    },
     "measurement": {
       "title": [
         113
@@ -6630,13 +7238,17 @@
     "membrane": {
       "title": [
         129
+      ],
+      "summary": [
+        163
       ]
     },
     "memories": {
       "title": [
         25,
         143,
-        144
+        144,
+        160
       ],
       "summary": [
         22,
@@ -6646,7 +7258,8 @@
         78,
         111,
         136,
-        144
+        144,
+        160
       ]
     },
     "memory": {
@@ -6677,7 +7290,8 @@
         120,
         121,
         136,
-        137
+        137,
+        161
       ],
       "summary": [
         4,
@@ -6722,12 +7336,15 @@
         136,
         137,
         138,
-        144
+        144,
+        159,
+        161
       ]
     },
     "mental": {
       "summary": [
-        101
+        101,
+        154
       ]
     },
     "merleau": {
@@ -6779,7 +7396,8 @@
     },
     "millions": {
       "summary": [
-        62
+        62,
+        161
       ]
     },
     "milliseconds": {
@@ -6794,7 +7412,8 @@
         41,
         88,
         95,
-        96
+        96,
+        162
       ],
       "summary": [
         39,
@@ -6807,7 +7426,8 @@
         88,
         95,
         97,
-        99
+        99,
+        162
       ]
     },
     "minds": {
@@ -6867,6 +7487,11 @@
         88
       ]
     },
+    "modified": {
+      "summary": [
+        161
+      ]
+    },
     "modifies": {
       "summary": [
         39
@@ -6914,7 +7539,8 @@
       "summary": [
         73,
         107,
-        140
+        140,
+        154
       ]
     },
     "motion": {
@@ -6941,6 +7567,11 @@
       "summary": [
         7,
         127
+      ]
+    },
+    "mysticism": {
+      "summary": [
+        162
       ]
     },
     "myth": {
@@ -7011,7 +7642,13 @@
     },
     "need": {
       "summary": [
-        43
+        43,
+        159
+      ]
+    },
+    "needing": {
+      "summary": [
+        154
       ]
     },
     "negative": {
@@ -7027,6 +7664,11 @@
     "neither": {
       "summary": [
         60
+      ]
+    },
+    "neocortex": {
+      "summary": [
+        161
       ]
     },
     "ness": {
@@ -7047,7 +7689,8 @@
         21,
         22,
         28,
-        73
+        73,
+        161
       ]
     },
     "networks": {
@@ -7106,11 +7749,15 @@
       ]
     },
     "neurons": {
+      "title": [
+        161
+      ],
       "summary": [
         32,
         34,
         49,
-        104
+        104,
+        161
       ]
     },
     "neuroscience": {
@@ -7162,13 +7809,16 @@
     "no": {
       "summary": [
         20,
-        47
+        47,
+        155,
+        165
       ]
     },
     "noise": {
       "summary": [
         23,
-        57
+        57,
+        165
       ]
     },
     "noisy": {
@@ -7239,12 +7889,20 @@
         113,
         114,
         118,
-        127
+        127,
+        154,
+        160,
+        164
       ]
     },
     "note": {
       "summary": [
         26
+      ]
+    },
+    "nothing": {
+      "summary": [
+        165
       ]
     },
     "noticed": {
@@ -7285,7 +7943,8 @@
     },
     "observer": {
       "summary": [
-        114
+        114,
+        159
       ]
     },
     "observers": {
@@ -7320,10 +7979,15 @@
       ],
       "summary": [
         50,
-        87
+        87,
+        155,
+        161
       ]
     },
     "one": {
+      "title": [
+        161
+      ],
       "summary": [
         60,
         62,
@@ -7386,6 +8050,11 @@
         118
       ]
     },
+    "option": {
+      "summary": [
+        154
+      ]
+    },
     "order": {
       "summary": [
         13,
@@ -7397,6 +8066,11 @@
     "ordered": {
       "summary": [
         13
+      ]
+    },
+    "ordinals": {
+      "summary": [
+        155
       ]
     },
     "organic": {
@@ -7470,7 +8144,8 @@
       "summary": [
         21,
         101,
-        111
+        111,
+        155
       ]
     },
     "others": {
@@ -7536,6 +8211,12 @@
         36
       ]
     },
+    "own": {
+      "summary": [
+        155,
+        159
+      ]
+    },
     "packet": {
       "summary": [
         28
@@ -7544,6 +8225,11 @@
     "page": {
       "summary": [
         137
+      ]
+    },
+    "painting": {
+      "summary": [
+        163
       ]
     },
     "parallel": {
@@ -7565,6 +8251,19 @@
     "partial": {
       "summary": [
         22
+      ]
+    },
+    "participate": {
+      "summary": [
+        164
+      ]
+    },
+    "participating": {
+      "title": [
+        164
+      ],
+      "summary": [
+        161
       ]
     },
     "partners": {
@@ -7604,7 +8303,8 @@
     "pattern": {
       "summary": [
         50,
-        100
+        100,
+        161
       ]
     },
     "patterns": {
@@ -7619,12 +8319,14 @@
         76,
         78,
         122,
-        136
+        136,
+        160
       ]
     },
     "people": {
       "summary": [
-        44
+        44,
+        154
       ]
     },
     "perceived": {
@@ -7641,13 +8343,19 @@
         49,
         55,
         77,
-        83
+        83,
+        159
       ]
     },
     "perceptual": {
       "summary": [
         8,
         126
+      ]
+    },
+    "perfectly": {
+      "summary": [
+        165
       ]
     },
     "persist": {
@@ -7707,6 +8415,11 @@
         95
       ]
     },
+    "photograph": {
+      "summary": [
+        163
+      ]
+    },
     "physical": {
       "title": [
         3,
@@ -7740,6 +8453,11 @@
         130,
         132,
         137
+      ]
+    },
+    "picture": {
+      "summary": [
+        159
       ]
     },
     "places": {
@@ -7842,7 +8560,8 @@
         30,
         40,
         82,
-        113
+        113,
+        154
       ]
     },
     "potential": {
@@ -7859,6 +8578,11 @@
     "power": {
       "summary": [
         32
+      ]
+    },
+    "powerful": {
+      "summary": [
+        167
       ]
     },
     "practically": {
@@ -7879,6 +8603,11 @@
         44,
         64,
         76
+      ]
+    },
+    "precision": {
+      "summary": [
+        154
       ]
     },
     "precursors": {
@@ -7917,6 +8646,11 @@
     "preparation": {
       "summary": [
         63
+      ]
+    },
+    "presences": {
+      "title": [
+        164
       ]
     },
     "present": {
@@ -7962,7 +8696,8 @@
         80,
         131,
         139,
-        140
+        140,
+        158
       ],
       "summary": [
         17,
@@ -7994,11 +8729,13 @@
     },
     "problem": {
       "title": [
-        152
+        152,
+        159
       ],
       "summary": [
         38,
-        152
+        152,
+        159
       ]
     },
     "problems": {
@@ -8006,12 +8743,14 @@
         32
       ],
       "summary": [
-        32
+        32,
+        154
       ]
     },
     "process": {
       "summary": [
-        34
+        34,
+        154
       ]
     },
     "processes": {
@@ -8055,7 +8794,14 @@
     },
     "proof": {
       "summary": [
-        146
+        146,
+        155,
+        166
+      ]
+    },
+    "proof-theoretic": {
+      "summary": [
+        155
       ]
     },
     "properties": {
@@ -8103,6 +8849,16 @@
       "summary": [
         13,
         43
+      ]
+    },
+    "prove": {
+      "summary": [
+        155
+      ]
+    },
+    "proves": {
+      "summary": [
+        155
       ]
     },
     "provides": {
@@ -8185,7 +8941,8 @@
         107,
         113,
         125,
-        145
+        145,
+        153
       ],
       "summary": [
         56,
@@ -8204,6 +8961,11 @@
     "quick": {
       "summary": [
         51
+      ]
+    },
+    "quickly": {
+      "summary": [
+        154
       ]
     },
     "quiet": {
@@ -8227,9 +8989,19 @@
         61
       ]
     },
+    "rank": {
+      "summary": [
+        155
+      ]
+    },
     "rapid": {
       "summary": [
         41
+      ]
+    },
+    "rapidly": {
+      "summary": [
+        161
       ]
     },
     "rare": {
@@ -8246,7 +9018,8 @@
     },
     "re": {
       "summary": [
-        27
+        27,
+        164
       ]
     },
     "read": {
@@ -8268,7 +9041,13 @@
       "summary": [
         28,
         32,
-        135
+        135,
+        154
+      ]
+    },
+    "real-world": {
+      "summary": [
+        154
       ]
     },
     "realism": {
@@ -8296,12 +9075,18 @@
         56
       ]
     },
+    "realization": {
+      "summary": [
+        158
+      ]
+    },
     "reasoning": {
       "title": [
         5
       ],
       "summary": [
-        53
+        53,
+        154
       ]
     },
     "rebirth": {
@@ -8315,7 +9100,8 @@
     "recall": {
       "summary": [
         47,
-        55
+        55,
+        161
       ]
     },
     "recalling": {
@@ -8384,6 +9170,11 @@
     "records": {
       "summary": [
         78
+      ]
+    },
+    "recruits": {
+      "summary": [
+        161
       ]
     },
     "recurrent": {
@@ -8461,6 +9252,11 @@
     "register": {
       "summary": [
         33
+      ]
+    },
+    "regress": {
+      "summary": [
+        159
       ]
     },
     "regularities": {
@@ -8565,6 +9361,19 @@
         50
       ]
     },
+    "repeat": {
+      "summary": [
+        165
+      ]
+    },
+    "repetition": {
+      "title": [
+        165
+      ],
+      "summary": [
+        165
+      ]
+    },
     "replace": {
       "summary": [
         44
@@ -8580,6 +9389,11 @@
         47
       ]
     },
+    "represent": {
+      "summary": [
+        166
+      ]
+    },
     "representation": {
       "summary": [
         3
@@ -8592,7 +9406,13 @@
     },
     "representations": {
       "summary": [
-        77
+        77,
+        159
+      ]
+    },
+    "represented": {
+      "summary": [
+        161
       ]
     },
     "reproduce": {
@@ -8791,7 +9611,8 @@
         49,
         50,
         80,
-        100
+        100,
+        154
       ]
     },
     "runaway": {
@@ -8815,7 +9636,8 @@
     "same": {
       "summary": [
         19,
-        72
+        72,
+        163
       ]
     },
     "sand": {
@@ -8920,6 +9742,11 @@
     "seasons": {
       "summary": [
         126
+      ]
+    },
+    "second": {
+      "summary": [
+        155
       ]
     },
     "secrecy": {
@@ -9034,7 +9861,8 @@
     },
     "sense": {
       "summary": [
-        63
+        63,
+        162
       ]
     },
     "sensory": {
@@ -9128,6 +9956,16 @@
         41
       ]
     },
+    "shines": {
+      "summary": [
+        162
+      ]
+    },
+    "shortcuts": {
+      "summary": [
+        154
+      ]
+    },
     "show": {
       "summary": [
         25,
@@ -9181,6 +10019,11 @@
         9
       ]
     },
+    "simply": {
+      "summary": [
+        162
+      ]
+    },
     "simulates": {
       "summary": [
         28
@@ -9217,7 +10060,9 @@
         38,
         50,
         51,
-        117
+        117,
+        156,
+        161
       ]
     },
     "singularity": {
@@ -9238,6 +10083,16 @@
         95
       ]
     },
+    "situations": {
+      "summary": [
+        154
+      ]
+    },
+    "size": {
+      "title": [
+        153
+      ]
+    },
     "skills": {
       "summary": [
         55
@@ -9251,6 +10106,11 @@
     "sleep-dreaming": {
       "summary": [
         83
+      ]
+    },
+    "slight": {
+      "summary": [
+        165
       ]
     },
     "slow": {
@@ -9270,7 +10130,8 @@
     "small": {
       "summary": [
         43,
-        57
+        57,
+        161
       ]
     },
     "snapshots": {
@@ -9309,12 +10170,16 @@
     "solve": {
       "title": [
         32
+      ],
+      "summary": [
+        154
       ]
     },
     "some": {
       "summary": [
         62,
-        100
+        100,
+        164
       ]
     },
     "someone": {
@@ -9392,6 +10257,11 @@
         56
       ]
     },
+    "speed": {
+      "summary": [
+        154
+      ]
+    },
     "spi": {
       "title": [
         28,
@@ -9435,6 +10305,11 @@
         133
       ]
     },
+    "spirit": {
+      "summary": [
+        164
+      ]
+    },
     "spontaneously": {
       "summary": [
         108
@@ -9469,6 +10344,11 @@
       "summary": [
         34,
         105
+      ]
+    },
+    "starts": {
+      "summary": [
+        161
       ]
     },
     "state": {
@@ -9527,6 +10407,14 @@
         22
       ]
     },
+    "stored": {
+      "title": [
+        160
+      ],
+      "summary": [
+        160
+      ]
+    },
     "storing": {
       "summary": [
         136
@@ -9548,6 +10436,14 @@
         8
       ]
     },
+    "strength": {
+      "title": [
+        155
+      ],
+      "summary": [
+        155
+      ]
+    },
     "strengthen": {
       "summary": [
         136
@@ -9560,7 +10456,13 @@
     },
     "strong": {
       "summary": [
-        100
+        100,
+        155
+      ]
+    },
+    "stronger": {
+      "summary": [
+        155
       ]
     },
     "structural": {
@@ -9615,9 +10517,17 @@
         15
       ]
     },
+    "subjects": {
+      "summary": [
+        164
+      ]
+    },
     "subset": {
       "title": [
         151
+      ],
+      "summary": [
+        161
       ]
     },
     "substrate": {
@@ -9638,12 +10548,15 @@
     "such": {
       "summary": [
         47,
-        101
+        101,
+        159
       ]
     },
     "sufficiently": {
       "summary": [
-        8
+        8,
+        155,
+        167
       ]
     },
     "suggests": {
@@ -9659,6 +10572,11 @@
     "supplied": {
       "summary": [
         108
+      ]
+    },
+    "supply": {
+      "summary": [
+        165
       ]
     },
     "support": {
@@ -9739,12 +10657,14 @@
     },
     "synapses": {
       "summary": [
-        104
+        104,
+        161
       ]
     },
     "synaptic": {
       "summary": [
-        117
+        117,
+        165
       ]
     },
     "synchronicity": {
@@ -9772,13 +10692,15 @@
         108,
         111,
         122,
-        146
+        146,
+        167
       ]
     },
     "systematic": {
       "summary": [
         53,
-        146
+        146,
+        154
       ]
     },
     "systems": {
@@ -9795,7 +10717,9 @@
         78,
         118,
         126,
-        140
+        140,
+        155,
+        165
       ]
     },
     "tackles": {
@@ -9806,6 +10730,11 @@
     "taken": {
       "summary": [
         100
+      ]
+    },
+    "taking": {
+      "summary": [
+        163
       ]
     },
     "taoist": {
@@ -9893,7 +10822,8 @@
         28,
         33,
         122,
-        136
+        136,
+        155
       ]
     },
     "their": {
@@ -9905,7 +10835,8 @@
         81,
         107,
         139,
-        140
+        140,
+        164
       ]
     },
     "them": {
@@ -9923,12 +10854,27 @@
       "summary": [
         33,
         50,
-        82
+        82,
+        155
       ]
     },
     "theorem": {
       "title": [
         148
+      ],
+      "summary": [
+        155,
+        166
+      ]
+    },
+    "theorems": {
+      "title": [
+        167
+      ]
+    },
+    "theoretic": {
+      "summary": [
+        155
       ]
     },
     "theoretically": {
@@ -9941,7 +10887,9 @@
         13
       ],
       "summary": [
-        13
+        13,
+        155,
+        159
       ]
     },
     "theory": {
@@ -9955,7 +10903,8 @@
         30,
         53,
         137,
-        149
+        149,
+        155
       ]
     },
     "therapy": {
@@ -9975,7 +10924,8 @@
         27,
         56,
         81,
-        142
+        142,
+        159
       ]
     },
     "therefore": {
@@ -10006,7 +10956,11 @@
         77,
         118,
         142,
-        144
+        144,
+        154,
+        155,
+        160,
+        164
       ]
     },
     "thinking": {
@@ -10068,6 +11022,11 @@
         3
       ]
     },
+    "thousands": {
+      "summary": [
+        161
+      ]
+    },
     "three": {
       "summary": [
         60,
@@ -10092,6 +11051,11 @@
         136
       ]
     },
+    "thumb": {
+      "summary": [
+        154
+      ]
+    },
     "tidy": {
       "summary": [
         118
@@ -10104,7 +11068,8 @@
         53,
         62,
         76,
-        133
+        133,
+        163
       ]
     },
     "timeline": {
@@ -10199,9 +11164,19 @@
         120
       ]
     },
+    "trading": {
+      "summary": [
+        154
+      ]
+    },
     "tradition": {
       "summary": [
         62
+      ]
+    },
+    "traditions": {
+      "summary": [
+        164
       ]
     },
     "trained": {
@@ -10242,10 +11217,17 @@
     },
     "translation": {
       "title": [
-        129
+        129,
+        163
       ],
       "summary": [
-        87
+        87,
+        163
+      ]
+    },
+    "translator": {
+      "summary": [
+        163
       ]
     },
     "transmission": {
@@ -10273,6 +11255,11 @@
         47
       ]
     },
+    "triggered": {
+      "summary": [
+        161
+      ]
+    },
     "trillions": {
       "summary": [
         61
@@ -10288,9 +11275,15 @@
         136
       ]
     },
+    "turing": {
+      "summary": [
+        166
+      ]
+    },
     "turn": {
       "summary": [
-        127
+        127,
+        156
       ]
     },
     "two": {
@@ -10303,7 +11296,8 @@
     },
     "typically": {
       "summary": [
-        126
+        126,
+        161
       ]
     },
     "ultimate": {
@@ -10315,6 +11309,11 @@
       "summary": [
         20,
         65
+      ]
+    },
+    "undecidability": {
+      "summary": [
+        166
       ]
     },
     "under": {
@@ -10341,14 +11340,32 @@
         62
       ]
     },
+    "unending": {
+      "summary": [
+        155
+      ]
+    },
+    "unfold": {
+      "summary": [
+        155
+      ]
+    },
     "unfolds": {
       "summary": [
         49
       ]
     },
     "unification": {
+      "title": [
+        156
+      ],
       "summary": [
         7
+      ]
+    },
+    "unified": {
+      "summary": [
+        156
       ]
     },
     "unifies": {
@@ -10446,7 +11463,9 @@
       "summary": [
         7,
         9,
-        33
+        33,
+        154,
+        165
       ]
     },
     "used": {
@@ -10480,6 +11499,16 @@
         33
       ]
     },
+    "variance": {
+      "summary": [
+        165
+      ]
+    },
+    "variation": {
+      "summary": [
+        165
+      ]
+    },
     "variational": {
       "summary": [
         139
@@ -10510,7 +11539,10 @@
         30,
         41,
         43,
-        76
+        76,
+        155,
+        159,
+        161
       ]
     },
     "view": {
@@ -10574,6 +11606,16 @@
         73
       ]
     },
+    "watch": {
+      "summary": [
+        162
+      ]
+    },
+    "watcher": {
+      "summary": [
+        162
+      ]
+    },
     "water": {
       "summary": [
         89,
@@ -10602,7 +11644,8 @@
         59,
         138,
         144,
-        145
+        145,
+        163
       ]
     },
     "weak": {
@@ -10614,6 +11657,21 @@
     "weave": {
       "summary": [
         55
+      ]
+    },
+    "weights": {
+      "summary": [
+        161
+      ]
+    },
+    "well": {
+      "summary": [
+        154
+      ]
+    },
+    "were": {
+      "summary": [
+        165
       ]
     },
     "wetland": {
@@ -10636,7 +11694,13 @@
         135,
         142,
         144,
-        152
+        152,
+        155
+      ]
+    },
+    "whatever": {
+      "summary": [
+        162
       ]
     },
     "when": {
@@ -10678,7 +11742,8 @@
     },
     "who": {
       "summary": [
-        122
+        122,
+        159
       ]
     },
     "whole": {
@@ -10700,6 +11765,11 @@
         7,
         101,
         142
+      ]
+    },
+    "wider": {
+      "summary": [
+        161
       ]
     },
     "window": {
@@ -10735,7 +11805,8 @@
       "summary": [
         19,
         47,
-        75
+        75,
+        154
       ]
     },
     "word": {
@@ -10756,7 +11827,8 @@
     "work": {
       "summary": [
         73,
-        93
+        93,
+        154
       ]
     },
     "works": {
@@ -10779,13 +11851,16 @@
         56,
         73,
         77,
-        140
+        140,
+        154
       ]
     },
     "would": {
       "summary": [
         30,
-        122
+        122,
+        159,
+        165
       ]
     },
     "years": {

@@ -805,6 +805,42 @@
       "last_updated": "2026-11-14"
     },
     {
+      "doc_id": "d-20261121-135838-136dde",
+      "title": "Heuristics",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-140451-3ed0c8",
+      "title": "Hierarchies of Consistency Strength (From Gödel to Feferman)",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-142007-cb09d2",
+      "title": "Higher‑D Unification",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-143121-a7b71d",
+      "title": "Higher‑Dimensional Brane Interactions",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-143341-b868f3",
+      "title": "Holographic Principle — Information on Boundaries",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-145512-2d06c7",
+      "title": "Homunculus Problem",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
       "doc_id": "d-20261017-221439-845822",
       "title": "Hopfield Attractor Networks — Resilience & Failure Adaptation",
       "added_date": "2026-10-17",
@@ -823,10 +859,58 @@
       "last_updated": "2026-10-18"
     },
     {
+      "doc_id": "d-20261121-155503-59b88f",
+      "title": "How Many Neurons/Synapses for One Memory?",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-145945-589f50",
+      "title": "How Memories Are Stored",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-155948-49d8d2",
+      "title": "How Mind Knows Itself",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
       "doc_id": "d-20261018-203525-da6bae",
       "title": "How often do Buddhas arise?",
       "added_date": "2026-10-18",
       "last_updated": "2026-10-18"
+    },
+    {
+      "doc_id": "d-20261121-160859-105931",
+      "title": "Image-Making as Translation",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-165405-e6dc68",
+      "title": "Images as Participating Presences",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-165922-8c6edf",
+      "title": "Imperfect Repetition Is the Condition for Growth",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-170837-99943d",
+      "title": "Impossibility And Incompleteness (Ink Engine)",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-171505-93851e",
+      "title": "Incompleteness Theorems",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
     },
     {
       "doc_id": "d-20261114-163358-297d16",
@@ -869,6 +953,12 @@
       "title": "PyNN",
       "added_date": "2026-10-17",
       "last_updated": "2026-10-18"
+    },
+    {
+      "doc_id": "d-20261117-221331-50d695",
+      "title": "Quantum Computers - Hardware size and complexity",
+      "added_date": "2026-11-17",
+      "last_updated": "2026-11-21"
     },
     {
       "doc_id": "d-20261017-112923-e02f33",
