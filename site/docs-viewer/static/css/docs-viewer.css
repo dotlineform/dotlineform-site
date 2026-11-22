@@ -1095,6 +1095,11 @@ body.docs-viewer-service{
   word-break: normal;
 }
 
+/* Limit link wrapping to prose to preserve table column sizing and code scrolling. */
+.docsViewer__documentMount :is(p, li) a:not(:where(table *, pre *, code *)){
+  overflow-wrap: anywhere;
+}
+
 .docsViewer__content :where(a:not(.docsViewer__imageDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link,
 .docsViewer__relatedLinksBody :where(a):link,
 .docsViewer__infoPanelTitle :where(a):link{
