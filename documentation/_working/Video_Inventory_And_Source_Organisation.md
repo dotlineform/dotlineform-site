@@ -26,16 +26,16 @@ When you register a distinct cut, give it its own Work ID. A short cut and a lon
 
 Keep the note in the project root using the existing `_<project folder name>.md` convention. For example, `by the river/` contains `_by the river.md`. The underscore makes the note easy to spot in Finder when sorted by name. The note keeps its location as video and soundtrack files move between subfolders. Update the relative paths in its table when files move.
 
-After the source description, use one row per cut under review. Use file names relative to the project folder, including subfolders where needed. Fill the soundtrack column when a separate source audio file exists. Add the Work ID when the cut is registered and link it to the exact dotlineform Catalogue page where available. List the Vimeo and YouTube URLs for that cut in the same cell. Leave unknown fields blank and record the open question in the notes.
+After the source description, use one row per cut under review. Use file names relative to the project folder, including subfolders where needed. Record the video file's dimensions in pixels as width × height, for example `1280 × 720`. Fill the soundtrack column when a separate source audio file exists. Add the Work ID when the cut is registered and link it to the exact dotlineform Catalogue page where available. List the Vimeo and YouTube URLs for that cut in the same cell. Leave unknown fields blank and record the open question in the notes.
 
 ```md
-| Video file | Soundtrack file | Title | Duration | Work ID | External URLs | Publish notes | Source notes |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| | | | | | | | |
+| Video file | Duration | Dimensions | Soundtrack file | Title | Work ID | External URLs | Publish notes | Source notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| | | | | | | | | |
 ```
 
 - **Publish notes** record what readers can actually see or play. For example, “Catalogue Work shows the poster and links to Vimeo” or “Video plays on dotlineform and YouTube.”
-- **Source notes** record the next decision or task for the file or cut. For example, “Needs content review,” “Needs editing,” “Convert for playback” or “Find a local copy that matches the Vimeo cut.” Keep alternate candidate files in the source description until you choose one for the row.
+- **Source notes** record where the file came from, whether it matches the published cut, and any work still needed. For example, “2011 HandBrake export, confirmed match to Vimeo,” “Vimeo-generated download, local original unconfirmed” or “Needs content review and conversion for playback.” Keep alternate candidate files in the source description until you choose one for the row.
 
 ## Review In Manage
 
@@ -65,4 +65,4 @@ Start with the convention already used in *by the river*. Use `<project>/video/`
 
 - [ ] Reconcile the first three projects using the current Projects report and the project-note table. Agree the folder and naming convention and decide whether a video-specific report would help before broadening the review.
 - [ ] Review the remaining local projects and both platform libraries. Keep cut decisions and unresolved sources in the project notes, save confirmed sources and reader-facing links for registered cuts on their own Works, and group related cuts with a Gallery.
-- [ ] Total the bytes of confirmed local sources and the runtime of distinct cuts being considered for hosting. Carry those totals and the unresolved source count into the hosting decision. [Pilot hosting estimates](Catalogue_HLS_Video_Pilot.md#video-inventory-and-hosting-estimates)
+- [ ] Measure the confirmed local source file sizes directly when totalling the inventory. Carry the total bytes, combined runtime of the distinct cuts being considered for hosting and unresolved source count into the hosting decision. [Pilot hosting estimates](Catalogue_HLS_Video_Pilot.md#video-inventory-and-hosting-estimates)
