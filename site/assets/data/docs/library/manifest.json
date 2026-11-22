@@ -103,6 +103,12 @@
       "last_updated": "2026-10-17"
     },
     {
+      "doc_id": "d-20261122-184109-823ee5",
+      "title": "Biological Memories Beyond the Brain",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
       "doc_id": "d-20261017-231122-eeaf16",
       "title": "Biological vs Non‑Organic Memory",
       "added_date": "2026-10-17",
@@ -223,6 +229,12 @@
       "last_updated": "2026-10-18"
     },
     {
+      "doc_id": "d-20261122-191521-c2cebe",
+      "title": "Computational neuroscience & AI",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
       "doc_id": "d-20261018-175456-55e627",
       "title": "Computational Neuroscience Models",
       "added_date": "2026-10-18",
@@ -305,6 +317,12 @@
       "title": "Decoherence, interference and quantum computation",
       "added_date": "2026-10-27",
       "last_updated": "2026-10-27"
+    },
+    {
+      "doc_id": "d-20261122-192029-cdd891",
+      "title": "Default mode network",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
     },
     {
       "doc_id": "d-20261021-215701-5f389c",
@@ -425,6 +443,12 @@
       "title": "Ecology and mind",
       "added_date": "2026-10-25",
       "last_updated": "2026-10-25"
+    },
+    {
+      "doc_id": "d-20261122-192129-8b9fc3",
+      "title": "Ecology of Mind",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
     },
     {
       "doc_id": "d-20261025-104717-53432c",
@@ -1081,10 +1105,166 @@
       "last_updated": "2026-11-21"
     },
     {
+      "doc_id": "d-20261121-224139-e577bc",
+      "title": "Markov theory",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-224324-e32352",
+      "title": "Markov Theory and Memory",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261122-183333-69b294",
+      "title": "Mathematical Platonism",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-181849-9a6b48",
+      "title": "Mathematics After Gödel — From Foundations to Living Systems",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261121-230830-ba12a6",
+      "title": "Mathematics as illusion",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-230030-a29586",
+      "title": "Maths × Poetry",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261121-230541-9ceba9",
+      "title": "Maths × Poetry — A Manifesto",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261122-183657-6b06a9",
+      "title": "Meaning is Relational",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-210105-229d3e",
+      "title": "Memory - Evolutionary Drivers",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-192620-e1ef4e",
+      "title": "Memory - foundational principles",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-185851-06d3f9",
+      "title": "Memory and consciousness",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-190840-0a1918",
+      "title": "Memory and the mind",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-201559-b6f5e1",
+      "title": "Memory as Architecture",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-205345-f6e046",
+      "title": "Memory as Embedded Architecture",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-191052-39d1f0",
+      "title": "Memory as fluid",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-210620-c56f3a",
+      "title": "Memory as Fluid Mechanics",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-191758-67dfca",
+      "title": "Memory as randomness",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
       "doc_id": "d-20261121-191251-f8a269",
       "title": "Memory Concepts",
       "added_date": "2026-11-21",
       "last_updated": "2026-11-21"
+    },
+    {
+      "doc_id": "d-20261122-202033-146000",
+      "title": "Memory Concepts",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-193606-aec47b",
+      "title": "Memory in language",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-201118-fe46f5",
+      "title": "Memory is a void",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-201432-b0bcc7",
+      "title": "Memory of past lives",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-184643-14a8e9",
+      "title": "Memory × Reflection × Persistence in Dementia",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-185423-4e1b86",
+      "title": "Memory × Tao × Dharma",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-202745-bbd874",
+      "title": "Memory — Conclusions",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-203024-f72167",
+      "title": "Memory ↔ Consciousness — Acceleration",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
+    },
+    {
+      "doc_id": "d-20261122-204728-0b2d10",
+      "title": "Memory ↔ Consciousness — Scale, Timeline, and Theory Matrix",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
     },
     {
       "doc_id": "d-20261017-233803-9f11b8",
@@ -1103,6 +1283,12 @@
       "title": "Ontology of Fields",
       "added_date": "2026-10-28",
       "last_updated": "2026-10-28"
+    },
+    {
+      "doc_id": "d-20261121-224841-1ecb90",
+      "title": "Philosophies of Mathematics — Platonism · Formalism · Nominalism · Structuralism (One‑Pager + Bios)",
+      "added_date": "2026-11-21",
+      "last_updated": "2026-11-21"
     },
     {
       "doc_id": "d-20261018-103357-e62ff8",
@@ -1163,6 +1349,12 @@
       "title": "What is a field (physics)?",
       "added_date": "2026-10-27",
       "last_updated": "2026-10-27"
+    },
+    {
+      "doc_id": "d-20261122-210938-b96b52",
+      "title": "What is the Smallest Unit of Memory?",
+      "added_date": "2026-11-22",
+      "last_updated": "2026-11-22"
     },
     {
       "doc_id": "d-20261027-161334-5f5cfe",
