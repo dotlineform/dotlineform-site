@@ -16,21 +16,36 @@ Review the videos project by project before choosing cuts for the Catalogue. Est
 
 | What you are reviewing | Where it belongs |
 | --- | --- |
-| **Source footage, exports and extracts** | Keep the files in their project folders. The proposed video review in Manage lists candidate paths, durations, resolutions and sizes for inspection. |
+| **Source footage, exports and extracts** | Keep the files in their project folders. Start the project note with a short description of the source footage, soundtracks, finished exports and extracts that are available. |
 | **Which file matches which cut or upload** | Use the existing project Markdown note, such as `_by the river.md`, as the working record. Keep the candidate paths, Vimeo and YouTube URLs, confirmed matches, missing sources, cut selection decisions and next actions here. Record a Work ID once the cut is registered. |
 | **What you have registered for readers** | Use `works.json` for each registered cut's Work ID, Series, Medium, Duration and visitor-facing Links. The Work's selected Catalogue image supplies its poster. Use the proposed optional project-relative video source to register the selected local file once confirmed. [Catalogue source model](../reference/Catalogue_Source_Model.md#metadata-and-ordering) · [Film and still records](Catalogue_HLS_Video_Pilot.md#film-and-still-work-records) |
 
 When you register a distinct cut, give it its own Work ID. A short cut and a long cut get separate Works, with their own durations, selected sources and matching platform links. Different exports of the same edit are candidates for the same Work. Use ordinary Gallery membership to group the cuts for readers, and keep them in the same Series where appropriate. [Catalogue identities and relationships](../reference/Catalogue_Source_Model.md#relationships-and-identity) · [Gallery editing](../reference/Catalogue_Work_Editor.md)
 
+## Table In The Project Note
+
+Keep the note in the project root using the existing `_<project folder name>.md` convention. For example, `by the river/` contains `_by the river.md`. The underscore makes the note easy to spot in Finder when sorted by name. The note keeps its location as video and soundtrack files move between subfolders. Update the relative paths in its table when files move.
+
+After the source description, use one row per cut under review. Use file names relative to the project folder, including subfolders where needed. Fill the soundtrack column when a separate source audio file exists. Add the Work ID when the cut is registered and link it to the exact dotlineform Catalogue page where available. List the Vimeo and YouTube URLs for that cut in the same cell. Leave unknown fields blank and record the open question in the notes.
+
+```md
+| Video file | Soundtrack file | Title | Duration | Work ID | External URLs | Publish notes | Source notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| | | | | | | | |
+```
+
+- **Publish notes** record what readers can actually see or play. For example, “Catalogue Work shows the poster and links to Vimeo” or “Video plays on dotlineform and YouTube.”
+- **Source notes** record the next decision or task for the file or cut. For example, “Needs content review,” “Needs editing,” “Convert for playback” or “Find a local copy that matches the Vimeo cut.” Keep alternate candidate files in the source description until you choose one for the row.
+
 ## Review In Manage
 
-Start in the **Projects** report or a video-specific report built from the same project and Catalogue data. The proposed review view would show what exists in source folders, which cuts have been registered as Works and where their publication has been confirmed. It would distinguish a missing file at a saved source path from a Work whose local source is still unconfirmed. Open the project's Markdown note from that view to read and update the detailed decisions and next actions. The current Projects report joins project folders to saved Catalogue inputs. Listing candidate video files and opening the project note are proposed extensions. [Reports and inspection](../reference/Reports.md#inspection-and-consumption-boundaries)
+Start with the current **Projects** report in Docs Viewer Manage. It associates project folders with saved Catalogue data and links to each folder. Follow the folder link and open the underscored note in the project root. Use its table to match exact video files to Works. If the first pass shows that a video-specific report would save work, it could list candidate files, compare them with registered video sources and link directly to the project note. [Reports and inspection](../reference/Reports.md#inspection-and-consumption-boundaries)
 
 Use **Catalogue Medium** to find registered film Works and **Work Links** to review saved platform URLs. Confirm external publication against the Vimeo and YouTube libraries during reconciliation. For dotlineform publication, check the deployed Catalogue page when the release status matters. Keep any outstanding source or publication checks in the project note. [Existing reports](../reference/Reports.md) · [Publish and deploy](../guide/Publish_And_Deploy.md)
 
 ## Reconcile Local Files And Published Cuts
 
-1. Open the project note from Manage and review the local video candidates alongside the Vimeo and YouTube libraries. Include uploads that have no Catalogue link and local films that have no known upload. Use the note to capture questions about identity, source and which cuts to present.
+1. Open the project folder from Manage, then open its note and review the local video candidates alongside the Vimeo and YouTube libraries. Include uploads that have no Catalogue link and local films that have no known upload. Use the note to capture questions about identity, source and which cuts to present.
 2. Match by film and cut. Use titles, durations and variant notes to narrow the candidates, then compare the picture and soundtrack when the match is ambiguous. Confirm the best available local source for each cut, including a finished export where it is the surviving copy. Update the Work for a cut already registered, or create its Work when you decide to register it. A cut published on both platforms can carry both links on its Work.
 3. For a published cut with no confirmed local source, record the open question and platform URLs in the project note. If the cut is registered, keep its reader-facing platform links on the Work and leave the local video source blank. Check the platform's download options and record whether a recovered file is the source upload or a platform-generated copy when known. [Vimeo source file storage](https://help.vimeo.com/hc/en-us/articles/46427284891537-Store-your-source-files-on-Vimeo)
 
@@ -48,6 +63,6 @@ Start with the convention already used in *by the river*. Use `<project>/video/`
 
 ## Completion Gates
 
-- [ ] Reconcile the first three projects and agree the folder and naming convention before broadening the review. Confirm where the video review belongs in Manage and how it opens the project notes.
+- [ ] Reconcile the first three projects using the current Projects report and the project-note table. Agree the folder and naming convention and decide whether a video-specific report would help before broadening the review.
 - [ ] Review the remaining local projects and both platform libraries. Keep cut decisions and unresolved sources in the project notes, save confirmed sources and reader-facing links for registered cuts on their own Works, and group related cuts with a Gallery.
 - [ ] Total the bytes of confirmed local sources and the runtime of distinct cuts being considered for hosting. Carry those totals and the unresolved source count into the hosting decision. [Pilot hosting estimates](Catalogue_HLS_Video_Pilot.md#video-inventory-and-hosting-estimates)
