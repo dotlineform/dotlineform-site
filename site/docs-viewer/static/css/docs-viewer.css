@@ -1719,6 +1719,10 @@ body.docs-viewer-service{
   overflow-wrap: anywhere;
 }
 
+.docsViewerTable--weightedColumns a{
+  overflow-wrap: inherit;
+}
+
 .docsViewerTable--weightedColumns > thead > tr > th,
 .docsViewerTable--weightedColumns.docsViewerTable--noHeader > tbody > tr:first-child > td{
   box-sizing: border-box;
