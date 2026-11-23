@@ -52,6 +52,7 @@ import {
   createDirectiveActionsMainViewControlHandlers,
   directiveActionsControlRenderer
 } from "./source-editor/directive-actions.js";
+import { handleSourceBoldControl, SOURCE_BOLD_CONTROL_ID } from "./source-editor/source-editor-bold.js";
 import { handleSourceAddDateControl } from "./source-editor/source-editor-date.js";
 import {
   mountLocalFolderLinkActivation
@@ -115,7 +116,7 @@ startDocsViewerManageApp({
   mainViewControlHandlerContributions: Object.assign(
     {},
     createDirectiveActionsMainViewControlHandlers(),
-    { "source-add-date": handleSourceAddDateControl },
+    { [SOURCE_BOLD_CONTROL_ID]: handleSourceBoldControl, "source-add-date": handleSourceAddDateControl },
     managedTableTools.controlHandlers()
   ),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),

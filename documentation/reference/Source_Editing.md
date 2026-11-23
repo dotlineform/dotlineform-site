@@ -30,6 +30,12 @@ Use `doc_id` and add `collection` only for a named document. The response carrie
 
 Working resolves the exact owner, confines the direct-child Markdown path and checks the immutable front-matter ID against the request. For ordinary documents it also checks membership and parentage in `index-order.json`. Saved Draft and report rules are validated on Save, so an exactly identified source with a readiness or report problem can still be opened for correction. From the exact source the editor loads its own metadata and body together. [Target resolver](../../docs-viewer/services/docs_management_document_target.py)
 
+## Bold
+
+Select source text and use **Bold**, just before **Add date** on the Source toolbar. If the selection contains complete Markdown bold spans, the button removes their paired markers. It skips literal code and spans that cross a selection boundary. This works across table cells and paragraphs. To add bold, select text within one inline region, such as a paragraph, heading or table cell.
+
+The button is disabled with no selection. After a change, Source focuses the editor and selects the edited range again. **Save** persists the edit. [Bold control](../../docs-viewer/runtime/js/management/source-editor/source-editor-bold.js)
+
 ## Directives
 
 The menu captures the current adapter, selection and revision before moving focus. Apply serializes into the buffer. The source service handles any later persistence.

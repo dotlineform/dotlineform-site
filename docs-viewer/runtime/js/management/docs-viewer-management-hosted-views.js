@@ -4,6 +4,7 @@ import {
 import {
   directiveActionsControlDefinition
 } from "./source-editor/directive-actions.js";
+import { SOURCE_BOLD_CONTROL_ID } from "./source-editor/source-editor-bold.js";
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
@@ -99,6 +100,17 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "markdown-source-save"
       },
       directiveActionsControlDefinition(),
+      {
+        id: SOURCE_BOLD_CONTROL_ID,
+        label: "Bold",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: SOURCE_BOLD_CONTROL_ID
+      },
       {
         id: "source-add-date",
         label: "Add date",

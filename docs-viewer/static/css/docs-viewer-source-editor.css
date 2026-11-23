@@ -2,6 +2,10 @@
   mask-image: url("../icons/calendar.svg");
 }
 
+.docsViewer__icon--bold{
+  mask-image: url("../icons/bold.svg");
+}
+
 .docsViewerSourceEditor{
   display: flex;
   flex-direction: column;

@@ -1,5 +1,6 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { renderDocsViewerEditMenu } from "./docs-viewer-management-edit-menu.js";
+import { SOURCE_BOLD_CONTROL_ID } from "./source-editor/source-editor-bold.js";
 
 function renderDocumentActionButton(context, options) {
   var settings = options || {};
@@ -48,6 +49,9 @@ export function createDocsViewerManagementControlRenderers() {
         id: "docsViewerManageSourceSaveButton",
         artwork: "docsViewer__icon--download"
       });
+    },
+    [SOURCE_BOLD_CONTROL_ID]: function (context) {
+      return renderDocumentActionButton(context, { artwork: "docsViewer__icon--bold" });
     },
     "source-add-date": function (context) {
       var button = renderDocumentActionButton(context, {

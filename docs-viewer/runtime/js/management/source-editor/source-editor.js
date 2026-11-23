@@ -7,6 +7,7 @@ import {
 } from "../docs-viewer-management-document-target.js";
 import { localFolderPasteReplacement } from "./local-folder-links.js";
 import { sourceBodyStart, sourceTitleError } from "./source-buffer.js";
+import { SOURCE_BOLD_CONTROL_ID } from "./source-editor-bold.js";
 import { createPendingSourceMedia } from "./source-editor-pending-media.js";
 
 function cleanString(value) {
@@ -96,6 +97,15 @@ function dirtyNow(state) {
   return source !== state.lastCleanSource || state.pendingMedia.selected(source).length > 0;
 }
 
+function projectBoldControl(state) {
+  if (typeof state.projectMainViewControlState !== "function") return;
+  var disabled = state.busy || !state.loaded || !state.textarea
+    || state.textarea.selectionStart === state.textarea.selectionEnd;
+  if (state.boldControlDisabled === disabled) return;
+  state.boldControlDisabled = disabled;
+  state.projectMainViewControlState(SOURCE_BOLD_CONTROL_ID, { disabled: disabled });
+}
+
 function projectDirty(state) {
   state.dirtyValue = dirtyNow(state);
   setHidden(state.dirty, !state.dirtyValue);
@@ -114,6 +124,7 @@ function projectDirty(state) {
         disabled: state.busy || !state.loaded
       });
     });
+    projectBoldControl(state);
   }
 }
 
@@ -411,6 +422,7 @@ function bindEvents(context, state) {
     state.bufferRevision += 1;
     projectDirty(state);
   };
+  state.onSelectionChange = function () { projectBoldControl(state); };
   state.onPaste = function (event) {
     var capability = typeof services.localFolderLinksCapability === "function" ? services.localFolderLinksCapability() : null;
     if (!state.loaded || state.busy || !capability || capability.authoring !== true) return;
@@ -447,6 +459,7 @@ function bindEvents(context, state) {
 
   if (state.textarea) {
     state.textarea.addEventListener("input", state.onInput);
+    state.textarea.addEventListener("selectionchange", state.onSelectionChange);
     state.textarea.addEventListener("paste", state.onPaste);
   }
   if (state.root) state.root.addEventListener("click", state.onClick);
@@ -458,11 +471,13 @@ function bindEvents(context, state) {
 function unbindEvents(context, state) {
   var root = context && context.root ? context.root : document;
   if (state.textarea && state.onInput) state.textarea.removeEventListener("input", state.onInput);
+  if (state.textarea && state.onSelectionChange) state.textarea.removeEventListener("selectionchange", state.onSelectionChange);
   if (state.textarea && state.onPaste) state.textarea.removeEventListener("paste", state.onPaste);
   if (state.root && state.onClick) state.root.removeEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.removeEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
   if (state.onBeforeUnload) window.removeEventListener("beforeunload", state.onBeforeUnload);
   state.projectMainViewControlState = null;
+  state.boldControlDisabled = null;
   state.sourceActionControlIds = [];
 }
 
@@ -482,6 +497,7 @@ function restoreRenderedContent(context, state) {
 
 export function createDocsViewerSourceEditorMode() {
   var state = {
+    boldControlDisabled: null,
     busy: false,
     saving: false,
     bufferRevision: 0,

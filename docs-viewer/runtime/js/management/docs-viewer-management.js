@@ -39,6 +39,9 @@ import {
   getDocsViewerActionDefinition,
   resolveDocsViewerAction
 } from "./docs-viewer-action-definitions.js";
+import { SOURCE_BOLD_CONTROL_ID } from "./source-editor/source-editor-bold.js";
+
+const SOURCE_ACTION_CONTROL_IDS = ["source-directives", SOURCE_BOLD_CONTROL_ID, "source-add-date"];
 
 export function createDocsViewerManagementActionContext(options = {}) {
   var selectedDocument = options.selectedDocument || {};
@@ -324,7 +327,7 @@ export function initDocsViewerManagement(context) {
         hidden: actionsHidden,
         disabled: actionsDisabled
       });
-      ["source-directives", "source-add-date"].forEach(function (controlId) {
+      SOURCE_ACTION_CONTROL_IDS.forEach(function (controlId) {
         context.projectMainViewControlState(controlId, {
           hidden: actionsHidden || !markdownMode,
           disabled: actionsDisabled
@@ -388,7 +391,7 @@ export function initDocsViewerManagement(context) {
       actionController.handleMarkdownSave();
       return true;
     }
-    if (management.managementBusy && ["source-directives", "source-add-date"].includes(controlId)) return false;
+    if (management.managementBusy && SOURCE_ACTION_CONTROL_IDS.includes(controlId)) return false;
     var contributions = context.mainViewControlHandlerContributions || {};
     var contribution = typeof contributions[controlId] === "function"
       ? contributions[controlId]
