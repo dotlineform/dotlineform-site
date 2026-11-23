@@ -154,6 +154,7 @@ export function createDocsViewerImageDetailAdapter(options) {
     var occurrence = state.nextOccurrence;
     var record = {
       control: decoration.control,
+      frame: decoration.frame,
       handleClick: null,
       id: "image-" + (occurrence - 1),
       label: imageLabel(surface, occurrence),
@@ -163,12 +164,13 @@ export function createDocsViewerImageDetailAdapter(options) {
       surface: surface,
       target: target
     };
-    record.handleClick = function () {
+    record.handleClick = function (event) {
+      if (event.target !== record.surface && !record.control.contains(event.target)) return;
       var targetContext = immutableTargetContext(state, record);
       if (!resolveRecord(state.root, targetContext)) return;
       state.requestContentDetail(targetContext);
     };
-    record.control.addEventListener("click", record.handleClick);
+    record.frame.addEventListener("click", record.handleClick);
     state.records.set(record.id, record);
     return record;
   }
@@ -180,7 +182,7 @@ export function createDocsViewerImageDetailAdapter(options) {
     });
     var released = 0;
     state.records.forEach(function (record) {
-      record.control.removeEventListener("click", record.handleClick);
+      record.frame.removeEventListener("click", record.handleClick);
       record.control.remove();
       released += 1;
     });

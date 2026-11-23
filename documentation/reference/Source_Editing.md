@@ -36,7 +36,8 @@ The menu captures the current adapter, selection and revision before moving focu
 
 | Control | Effect in source |
 | --- | --- |
-| **Add image** / **Add file** | Insert or edit an exact body-media reference. New selection holds the File until Save. [Media intake](Media_And_Asset_Handling.md#add-a-new-image-or-download) |
+| **Add image** / **Edit image** | When Directives opens, the item reads **Edit image** if the caret is inside an authored image token or the selection covers that token exactly. Edit opens the image dialog with the token’s current fields and the **Image detail** setting for a standalone image. Other selections show **Add image**. [Media intake](Media_And_Asset_Handling.md#add-a-new-image-or-download) · [Image detail](Document_Image_Detail.md) |
+| **Add file** | Insert or edit an exact download reference. The editor holds a new File until Save. [Media intake](Media_And_Asset_Handling.md#add-a-new-image-or-download) |
 | **Add Media View link** / **Edit Media View link** | When Directives opens, the item reads **Edit Media View link** if the caret is inside an authored Media View token or the selection covers that token exactly. Edit restores its saved fields. Every other selection shows **Add Media View link**. Choose a Work and its destination, then **Image**, **Inline link** or **Hidden**. Selecting a Gallery directly offers Inline link or Hidden. [Catalogue source forms](Document_And_Catalogue_References.md#supported-source-forms) |
 | **Insert doc link** | Insert the selected exact document route and escaped literal title. [Picker request](#get-docsdocument-link-targets) |
 | **Table options** | Edit the selected table’s column widths, rules, header row, shading, text size and detail view. [Table options](#table-options) |

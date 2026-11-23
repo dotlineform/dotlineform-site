@@ -1,8 +1,9 @@
 import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
 import { DOCS_VIEWER_ACTION_IDS as ACTION_IDS } from "../docs-viewer-action-definitions.js";
 import { openCatalogueMediaModal } from "./catalogue-media-modal.js";
-import { captureCatalogueTokenAction } from "./catalogue-token-contribution.js";
 import { openDocumentLinkModal } from "./document-link-contribution.js";
+import { IMAGE_DETAIL_COMMENT } from "./image-detail-directive.js";
+import { captureMediaTokenActions } from "./media-token-contribution.js";
 
 export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
@@ -23,7 +24,7 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     artwork: "docsViewer__icon--image",
     id: "image-detail",
     label: "Image detail",
-    source: "<!-- dotlineform:image-detail -->",
+    source: IMAGE_DETAIL_COMMENT,
     blankLines: true
   }),
   Object.freeze({
@@ -118,7 +119,7 @@ export function createDirectiveInsertionPlan(options = {}) {
 function closeMenu(controller, options = {}) {
   if (!controller) return;
   controller.capture = null;
-  controller.catalogueAction = null;
+  controller.mediaActions = null;
   controller.adapter = null;
   controller.menu.hidden = true;
   controller.button.setAttribute("aria-expanded", "false");
@@ -140,10 +141,11 @@ function createController(root, button, menu) {
     adapter: null,
     button: button,
     capture: null,
-    catalogueAction: null,
     catalogueItem: menu.querySelector('[data-docs-viewer-action="' + ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE + '"]'),
     disposed: false,
     document: document,
+    imageItem: menu.querySelector('[data-docs-viewer-action="' + ACTION_IDS.SOURCE_ADD_IMAGE + '"]'),
+    mediaActions: null,
     menu: menu,
     observer: null,
     root: root
@@ -196,6 +198,11 @@ function menuItem(document, directive) {
   label.textContent = directive.label;
   item.append(icon, label);
   return item;
+}
+
+function setMenuItemLabel(item, label) {
+  item.title = label;
+  item.querySelector(".docsViewer__actionMenuLabel").textContent = label;
 }
 
 export function directiveActionsControlDefinition() {
@@ -275,16 +282,19 @@ function enabledMenuItems(controller) {
 function runSourceAction(context, controller, actionId) {
   var adapter = controller.adapter;
   var capture = controller.capture;
-  var catalogueAction = controller.catalogueAction;
+  var mediaActions = controller.mediaActions;
   closeMenu(controller);
   if (!adapter || !capture || adapter !== activeAdapter(context) || !adapter.isCurrent()) return false;
   Promise.resolve().then(function () {
-    if (actionId === ACTION_IDS.SOURCE_ADD_IMAGE || actionId === ACTION_IDS.SOURCE_ADD_FILE) {
-      return adapter.addSourceMedia(actionId === ACTION_IDS.SOURCE_ADD_FILE ? "file" : "image", capture);
+    if (actionId === ACTION_IDS.SOURCE_ADD_IMAGE) {
+      return adapter.addSourceMedia("image", mediaActions.image, mediaActions.source);
+    }
+    if (actionId === ACTION_IDS.SOURCE_ADD_FILE) {
+      return adapter.addSourceMedia("file", { capture: capture }, mediaActions.source);
     }
     if (actionId === ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE) {
       return openCatalogueMediaModal({
-        adapter: adapter, action: catalogueAction, root: context.root
+        adapter: adapter, action: mediaActions.catalogue, root: context.root
       });
     }
     if (actionId === ACTION_IDS.SOURCE_INSERT_DOC_LINK) {
@@ -373,9 +383,9 @@ export function createDirectiveActionsMainViewControlHandlers() {
       if (!adapter || typeof adapter.captureSelection !== "function") return false;
       controller.adapter = adapter;
       controller.capture = adapter.captureSelection();
-      controller.catalogueAction = captureCatalogueTokenAction(adapter.getBufferSnapshot(), controller.capture);
-      controller.catalogueItem.title = controller.catalogueAction.label;
-      controller.catalogueItem.querySelector(".docsViewer__actionMenuLabel").textContent = controller.catalogueAction.label;
+      controller.mediaActions = captureMediaTokenActions(adapter.getBufferSnapshot(), controller.capture);
+      setMenuItemLabel(controller.imageItem, controller.mediaActions.image.label);
+      setMenuItemLabel(controller.catalogueItem, controller.mediaActions.catalogue.label);
       controller.menu.hidden = false;
       controller.button.setAttribute("aria-expanded", "true");
       enabledMenuItems(controller)[0]?.focus({ preventScroll: true });

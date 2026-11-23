@@ -163,7 +163,7 @@ function parseCatalogueImageFields(rawQuery, options) {
   };
 }
 
-function parseCatalogueToken(raw, options = {}) {
+export function parseCatalogueToken(raw, options = {}) {
   var source = String(raw || "");
   if (!source.startsWith("[[") || !source.endsWith("]]") || /[\r\n]/.test(source)) return null;
   var body = source.slice(2, -2);
@@ -338,10 +338,6 @@ export function parseSourceTokens(markdown, parseToken) {
     }
   });
   return tokens;
-}
-
-export function parseCatalogueTokens(markdown) {
-  return parseSourceTokens(markdown, parseCatalogueToken);
 }
 
 /** Activate an exact occurrence selection or a caret strictly inside one supported token. */

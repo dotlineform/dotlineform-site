@@ -7,7 +7,8 @@ import {
   mountImagePresentation,
   readImagePresentation
 } from "./source-editor-image-presentation.js";
-import { parseImageTokens, serializeImageToken } from "./image-token-parser.js";
+import { imageDetailAtOccurrence, planImageDetailReplacement } from "./image-detail-directive.js";
+import { serializeImageToken } from "./image-token-parser.js";
 import { parseSourceTokens, sourceTokenAtSelection } from "./source-token-parser.js";
 import { sourceBodyStart } from "./source-buffer.js";
 
@@ -45,9 +46,10 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
         '<input class="docsViewer__fieldInput" id="docsViewerMediaLabel" data-role="media-label" type="text" required>' +
       '</div>' +
       (kind === "image" ? imagePresentationHtml() : "") +
-      (kind === "image" && !editing
+      (kind === "image" && (!editing || draft.imageDetail)
         ? '<label class="docsViewer__field docsViewer__field--checkbox">' +
-            '<input class="docsViewer__checkboxInput" data-role="image-detail" type="checkbox">' +
+            '<input class="docsViewer__checkboxInput" data-role="image-detail" type="checkbox"' +
+              (draft?.imageDetail && draft.imageDetail.directiveStart !== null ? ' checked' : '') + '>' +
             '<span class="docsViewer__fieldLabel">Image detail</span>' +
           '</label>'
         : "") +
@@ -108,7 +110,13 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
         labelEdited = true;
         if (captionInput && !captionEdited) captionInput.value = label.value;
       });
-      if (captionInput) captionInput.addEventListener("input", function () { captionEdited = true; });
+      if (captionInput) {
+        captionInput.addEventListener("input", function () { captionEdited = true; });
+        var captionToggle = api.host.querySelector('[data-role="media-caption"]');
+        captionToggle.addEventListener("change", function () {
+          if (captionToggle.checked && !captionInput.value.trim()) captionInput.value = label.value;
+        });
+      }
     },
     onSubmit: function (api) {
       var label = cleanString(api.host.querySelector('[data-role="media-label"]').value);
@@ -162,6 +170,25 @@ function sourceFileTokens(body) {
   });
 }
 
+function captureSourceFileEdit(source, selection) {
+  var bodyStart = sourceBodyStart(source);
+  var occurrences = sourceFileTokens(source.slice(bodyStart));
+  var start = selection.start - bodyStart;
+  var end = selection.end - bodyStart;
+  var token = sourceTokenAtSelection(occurrences, { start: start, end: end }) || occurrences.find(function (occurrence) {
+    return occurrence.tokenStart === start && occurrence.tokenEnd === end;
+  });
+  return token && {
+    token: token,
+    capture: {
+      start: token.start + bodyStart,
+      end: token.end + bodyStart,
+      text: token.raw,
+      revision: selection.revision
+    }
+  };
+}
+
 /** Retain a native File for Save, or apply presentation to the captured token locally. */
 export async function prepareAndInsertSourceMedia(options = {}) {
   var provider = options.provider || {};
@@ -169,27 +196,17 @@ export async function prepareAndInsertSourceMedia(options = {}) {
   var kind = cleanString(options.mediaKind) === "file" ? "file" : "image";
   var mediaOptions = options.mediaOptions;
   if (!mediaOptions || typeof provider.prepareSourceMedia !== "function"
-      || !adapter || typeof adapter.insertSourceMedia !== "function" || !options.capture) {
+      || !adapter || typeof adapter.insertSourceMedia !== "function" || !options.action?.capture) {
     throw new Error("Native media intake is unavailable on this route.");
   }
   var root = options.root || document.body;
-  var snapshot = adapter.getBufferSnapshot();
-  var bodyStart = sourceBodyStart(snapshot.value);
-  var occurrences = (kind === "image" ? parseImageTokens(snapshot.value.slice(bodyStart)) : sourceFileTokens(snapshot.value.slice(bodyStart)))
-    .map(function (token) {
-      var positioned = Object.assign({}, token, { start: token.start + bodyStart, end: token.end + bodyStart });
-      if (kind === "file") Object.assign(positioned, { tokenStart: token.tokenStart + bodyStart, tokenEnd: token.tokenEnd + bodyStart });
-      return positioned;
-    });
-  var initialToken = sourceTokenAtSelection(occurrences, options.capture);
-  if (!initialToken && kind === "file") initialToken = occurrences.find(function (token) {
-    return token.tokenStart === options.capture.start && token.tokenEnd === options.capture.end;
-  });
-  var capture = initialToken
-    ? { start: initialToken.start, end: initialToken.end, text: initialToken.raw, revision: snapshot.revision }
-    : options.capture;
+  var action = kind === "file" ? captureSourceFileEdit(options.source, options.action.capture) || options.action : options.action;
+  var capture = action.capture;
+  var initialToken = action.token;
+  var imageDetail = kind === "image" && initialToken ? imageDetailAtOccurrence(options.source, capture) : null;
   var draft = initialToken ? Object.assign({}, initialToken, {
-    label: kind === "image" ? initialToken.alt : initialToken.label, addCaption: Boolean(initialToken.caption)
+    label: kind === "image" ? initialToken.alt : initialToken.label, addCaption: Boolean(initialToken.caption),
+    imageDetail: imageDetail
   }) : null;
   var existing = initialToken && adapter.pendingSourceMedia(initialToken.mediaPath);
   if (draft && existing) {
@@ -198,31 +215,27 @@ export async function prepareAndInsertSourceMedia(options = {}) {
   }
   var choice = await chooseSourceMedia(root, kind, mediaOptions, draft);
   if (!choice) return null;
-  if (!choice.file && choice.mediaPath) {
-    var token = kind === "image" ? serializeImageToken({ mediaPath: choice.mediaPath, alt: choice.label,
-      caption: choice.addCaption ? choice.caption : "", summary: choice.summary,
-      placement: choice.placement, fillWidth: choice.fillWidth }) : fileLink(choice.label, choice.mediaPath);
-    if (!token) throw new Error("Image fields are invalid.");
-    var updated = { markdown: token, summary_text: "Media reference updated." };
-    if (!adapter.insertSourceMedia(capture, updated)) throw new Error("The Source occurrence changed.");
-    return updated;
+  var reuse = choice.file && existing && existing.file === choice.file;
+  var mediaPath = choice.mediaPath;
+  if (choice.file) {
+    mediaPath = reuse ? existing.mediaPath : (await provider.prepareSourceMedia(Object.assign({}, options.target, {
+      media_kind: kind, filename: choice.file.name
+    }))).media_identity;
   }
-  var reuse = existing && existing.file === choice.file;
-  var identity = reuse ? { media_identity: existing.mediaPath } : await provider.prepareSourceMedia(Object.assign({}, options.target, {
-    media_kind: kind, filename: choice.file.name
-  }));
-  var mediaPath = identity.media_identity;
   var markdown = kind === "image" ? serializeImageToken({
     mediaPath: mediaPath, alt: choice.label, caption: choice.addCaption ? choice.caption : "",
     summary: choice.summary, placement: choice.placement, fillWidth: choice.fillWidth
   }) : fileLink(choice.label, mediaPath);
   if (!markdown) throw new Error("Image fields are invalid.");
-  if (choice.imageDetail) {
-    var leadingNewlines = snapshot.value.slice(0, capture.start).match(/\n*$/)[0].length;
-    var trailingNewlines = snapshot.value.slice(capture.end).match(/^\n*/)[0].length;
-    markdown = "\n".repeat(capture.start ? Math.max(0, 2 - leadingNewlines) : 0)
-      + "<!-- dotlineform:image-detail -->\n\n" + markdown
-      + "\n".repeat(Math.max(0, 2 - trailingNewlines));
+  if (kind === "image") {
+    var replacement = planImageDetailReplacement(options.source, capture, markdown, imageDetail, choice.imageDetail);
+    capture = replacement.capture;
+    markdown = replacement.markdown;
+  }
+  if (!choice.file) {
+    var updated = { markdown: markdown, summary_text: "Media reference updated." };
+    if (!adapter.insertSourceMedia(capture, updated)) throw new Error("The Source occurrence changed.");
+    return updated;
   }
   var payload = { markdown: markdown, summary_text: "Media reference inserted. Save to store the selected file." };
   if (!adapter.insertSourceMedia(capture, payload, {

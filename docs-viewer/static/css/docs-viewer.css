@@ -1317,6 +1317,10 @@ body.docs-viewer-service{
   margin: 0;
 }
 
+.docsViewer__imageDetailControl + .docsViewer__imageViewport > img{
+  cursor: zoom-in;
+}
+
 .docsViewer__imageDetailControl{
   --docs-viewer-control-height: 2rem;
   display: flex;

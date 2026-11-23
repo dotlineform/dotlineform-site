@@ -173,9 +173,9 @@ function createSourceEditorContextAdapter(context, state) {
     captureSelection: function () {
       return Object.assign(sourceSelection(state), { revision: state.bufferRevision });
     },
-    addSourceMedia: function (mediaKind, capture) {
-      if (!isCurrent() || !capturedRangeIsCurrent(state, capture)) return Promise.resolve(null);
-      return addSourceMedia(context, state, mediaKind, capture);
+    addSourceMedia: function (mediaKind, action, source) {
+      if (!isCurrent() || !capturedRangeIsCurrent(state, action.capture)) return Promise.resolve(null);
+      return addSourceMedia(context, state, mediaKind, action, source);
     },
     focus: function () {
       if (isCurrent()) state.textarea.focus();
@@ -369,7 +369,7 @@ async function confirmNavigation(context, state) {
   return true;
 }
 
-function addSourceMedia(context, state, mediaKind, capture) {
+function addSourceMedia(context, state, mediaKind, action, source) {
   if (state.busy || !state.loaded) return Promise.resolve(null);
   var provider = context.collectionProvider || {};
   setBusy(state, true);
@@ -378,7 +378,8 @@ function addSourceMedia(context, state, mediaKind, capture) {
     .then(function (module) {
       return module.prepareAndInsertSourceMedia({
         adapter: state.sourceEditorAdapter,
-        capture: capture,
+        action: action,
+        source: source,
         mediaKind: mediaKind,
         mediaOptions: state.mediaOptions && state.mediaOptions[mediaKind],
         provider: provider,
