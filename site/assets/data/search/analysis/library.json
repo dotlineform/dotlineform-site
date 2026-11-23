@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-72dcb8af1fc53117f8496d662d90671a",
-    "generated_at_utc": "2026-11-23T12:09:50Z",
-    "count": 291
+    "version": "blake2b-c2dc7a9380d7acd8377f1a3067b0e434",
+    "generated_at_utc": "2026-11-23T13:49:18Z",
+    "count": 306
   },
   "fields": [
     "title",
@@ -2628,6 +2628,141 @@
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-121226-0144f5",
+      "title": "Dependent Origination → No First Cause → Emptiness",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-121511-76ff9d",
+      "title": "From Observer to Participant",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-125939-b61b90",
+      "title": "Open Systems within a Closed Universe",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-130558-2e13fd",
+      "title": "Overlapping Groupings With A Fold",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-130844-bb24f5",
+      "title": "Panarchy",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-131321-2e6952",
+      "title": "Panpsychism vs. Cosmopsychism",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-131934-e57b96",
+      "title": "Parallel processing",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-132546-1ff6d5",
+      "title": "Participating Presences",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-132724-f4111e",
+      "title": "The Observational Participatory Universe",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-133139-67217d",
+      "title": "Pattern separation vs completion",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-133223-a3f2be",
+      "title": "Pattern Separation vs Completion",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-133450-9c0071",
+      "title": "Perception and scale limits",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-133628-b6e4a8",
+      "title": "Perception’s Sweet Spot of Scale",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-134154-4e3a32",
+      "title": "Perfect Repetition Is Impossible",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261123-134746-2ff1f6",
+      "title": "Persistence",
+      "last_updated": "2026-11-23",
+      "display_meta": "2026-11-23 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
     }
   ],
   "terms": {
@@ -2812,7 +2947,9 @@
         184,
         188,
         233,
-        278
+        278,
+        295,
+        299
       ]
     },
     "act": {
@@ -2895,7 +3032,8 @@
         175
       ],
       "summary": [
-        23
+        23,
+        304
       ]
     },
     "adaptive": {
@@ -2903,7 +3041,8 @@
         38,
         58,
         120,
-        175
+        175,
+        295
       ]
     },
     "addiction": {
@@ -3026,7 +3165,8 @@
     },
     "aligns": {
       "summary": [
-        105
+        105,
+        303
       ]
     },
     "alive": {
@@ -3073,7 +3213,8 @@
     "alone": {
       "summary": [
         98,
-        100
+        100,
+        291
       ]
     },
     "also": {
@@ -3098,10 +3239,16 @@
         63
       ]
     },
+    "although": {
+      "summary": [
+        297
+      ]
+    },
     "always": {
       "summary": [
         154,
-        172
+        172,
+        304
       ]
     },
     "ambitious": {
@@ -3264,7 +3411,8 @@
     },
     "approximate": {
       "summary": [
-        30
+        30,
+        304
       ]
     },
     "arc": {
@@ -3288,6 +3436,11 @@
       ],
       "summary": [
         19
+      ]
+    },
+    "archibald": {
+      "summary": [
+        299
       ]
     },
     "architectural": {
@@ -3347,7 +3500,8 @@
       ],
       "summary": [
         98,
-        192
+        192,
+        291
       ]
     },
     "arises": {
@@ -3596,6 +3750,11 @@
         129
       ]
     },
+    "band": {
+      "summary": [
+        303
+      ]
+    },
     "bands": {
       "summary": [
         142
@@ -3651,7 +3810,8 @@
     },
     "because": {
       "summary": [
-        120
+        120,
+        291
       ]
     },
     "become": {
@@ -3740,7 +3900,8 @@
     },
     "best": {
       "summary": [
-        256
+        256,
+        304
       ]
     },
     "better": {
@@ -3759,7 +3920,8 @@
         62,
         88,
         113,
-        191
+        191,
+        304
       ]
     },
     "beyond": {
@@ -3881,7 +4043,8 @@
     },
     "body": {
       "summary": [
-        243
+        243,
+        303
       ]
     },
     "born": {
@@ -3899,7 +4062,8 @@
         192,
         263,
         273,
-        285
+        285,
+        297
       ]
     },
     "bottom": {
@@ -4035,7 +4199,8 @@
         136,
         139,
         140,
-        219
+        219,
+        297
       ]
     },
     "branch": {
@@ -4174,7 +4339,8 @@
         256,
         270,
         272,
-        278
+        278,
+        299
       ]
     },
     "buzzing": {
@@ -4186,6 +4352,11 @@
       "title": [
         48,
         178
+      ]
+    },
+    "call": {
+      "summary": [
+        304
       ]
     },
     "called": {
@@ -4296,7 +4467,8 @@
       "summary": [
         47,
         111,
-        164
+        164,
+        299
       ]
     },
     "categorize": {
@@ -4324,11 +4496,13 @@
     },
     "cause": {
       "title": [
-        290
+        290,
+        291
       ],
       "summary": [
         260,
-        290
+        290,
+        291
       ]
     },
     "causes": {
@@ -4422,7 +4596,9 @@
         165,
         243,
         287,
-        290
+        290,
+        295,
+        304
       ]
     },
     "changed": {
@@ -4577,8 +4753,12 @@
       ]
     },
     "closed": {
+      "title": [
+        293
+      ],
       "summary": [
-        108
+        108,
+        293
       ]
     },
     "closer": {
@@ -4672,7 +4852,8 @@
         95,
         144,
         154,
-        213
+        213,
+        299
       ]
     },
     "coherence": {
@@ -4779,6 +4960,10 @@
       ]
     },
     "completion": {
+      "title": [
+        300,
+        301
+      ],
       "summary": [
         161,
         233
@@ -4790,7 +4975,8 @@
         80,
         117,
         132,
-        170
+        170,
+        295
       ]
     },
     "complexity": {
@@ -4874,7 +5060,8 @@
       ],
       "summary": [
         107,
-        194
+        194,
+        297
       ]
     },
     "computing": {
@@ -5083,9 +5270,15 @@
         241
       ]
     },
+    "conserved": {
+      "summary": [
+        293
+      ]
+    },
     "considered": {
       "summary": [
-        62
+        62,
+        293
       ]
     },
     "consistency": {
@@ -5131,7 +5324,8 @@
     },
     "constitutive": {
       "summary": [
-        113
+        113,
+        299
       ]
     },
     "constrain": {
@@ -5247,7 +5441,8 @@
     },
     "contexts": {
       "summary": [
-        120
+        120,
+        304
       ]
     },
     "contextual": {
@@ -5380,6 +5575,11 @@
         20
       ]
     },
+    "cosmic": {
+      "summary": [
+        303
+      ]
+    },
     "cosmologies": {
       "title": [
         1
@@ -5394,9 +5594,15 @@
         267
       ]
     },
+    "cosmopsychism": {
+      "title": [
+        296
+      ]
+    },
     "cosmos": {
       "summary": [
-        49
+        49,
+        299
       ]
     },
     "cost": {
@@ -5457,7 +5663,8 @@
     "creativity": {
       "summary": [
         127,
-        165
+        165,
+        304
       ]
     },
     "creatures": {
@@ -5478,7 +5685,8 @@
         10,
         63,
         105,
-        171
+        171,
+        295
       ]
     },
     "cross-generational": {
@@ -5487,6 +5695,11 @@
       ],
       "summary": [
         63
+      ]
+    },
+    "cross-scale": {
+      "summary": [
+        295
       ]
     },
     "crossed": {
@@ -5498,6 +5711,11 @@
       "summary": [
         95,
         144
+      ]
+    },
+    "crystallises": {
+      "summary": [
+        299
       ]
     },
     "cue": {
@@ -5586,6 +5804,9 @@
     "cycles": {
       "title": [
         252
+      ],
+      "summary": [
+        295
       ]
     },
     "cyclical": {
@@ -5637,6 +5858,11 @@
     "debated": {
       "summary": [
         281
+      ]
+    },
+    "decades": {
+      "summary": [
+        303
       ]
     },
     "decay": {
@@ -5759,6 +5985,11 @@
         87
       ]
     },
+    "depend": {
+      "summary": [
+        303
+      ]
+    },
     "dependable": {
       "title": [
         74
@@ -5772,7 +6003,8 @@
     "dependent": {
       "title": [
         75,
-        263
+        263,
+        291
       ],
       "summary": [
         25,
@@ -5783,6 +6015,11 @@
         205,
         263,
         285
+      ]
+    },
+    "dependently": {
+      "summary": [
+        291
       ]
     },
     "depending": {
@@ -5824,7 +6061,8 @@
     },
     "describes": {
       "summary": [
-        26
+        26,
+        295
       ]
     },
     "description": {
@@ -5924,7 +6162,8 @@
     "difference": {
       "summary": [
         40,
-        204
+        204,
+        304
       ]
     },
     "differences": {
@@ -5946,7 +6185,8 @@
         156,
         185,
         186,
-        267
+        267,
+        297
       ]
     },
     "differentiate": {
@@ -6017,7 +6257,8 @@
     "directly": {
       "summary": [
         33,
-        226
+        226,
+        303
       ]
     },
     "disciplined": {
@@ -6056,6 +6297,21 @@
     "disorders": {
       "summary": [
         101
+      ]
+    },
+    "dispersion": {
+      "summary": [
+        293
+      ]
+    },
+    "dissipates": {
+      "summary": [
+        304
+      ]
+    },
+    "dissipating": {
+      "summary": [
+        293
       ]
     },
     "dissipation": {
@@ -6187,7 +6443,8 @@
         186,
         206,
         272,
-        281
+        281,
+        297
       ]
     },
     "document": {
@@ -6221,7 +6478,8 @@
         232,
         256,
         272,
-        282
+        282,
+        293
       ]
     },
     "doesn": {
@@ -6436,7 +6694,9 @@
       ],
       "summary": [
         126,
-        127
+        127,
+        295,
+        299
       ]
     },
     "ecology": {
@@ -6465,7 +6725,8 @@
         89,
         90,
         93,
-        287
+        287,
+        299
       ]
     },
     "ecosystems": {
@@ -6675,7 +6936,8 @@
     },
     "emptiness": {
       "title": [
-        103
+        103,
+        291
       ],
       "summary": [
         241,
@@ -6684,7 +6946,8 @@
     },
     "empty": {
       "summary": [
-        103
+        103,
+        291
       ]
     },
     "enables": {
@@ -6758,13 +7021,20 @@
         108,
         120,
         139,
-        140
+        140,
+        293,
+        304
       ]
     },
     "energy-efficient": {
       "summary": [
         28,
         32
+      ]
+    },
+    "engage": {
+      "summary": [
+        297
       ]
     },
     "engine": {
@@ -6842,13 +7112,15 @@
         17,
         20,
         108,
-        140
+        140,
+        293
       ]
     },
     "environment": {
       "summary": [
         63,
-        192
+        192,
+        293
       ]
     },
     "environmental": {
@@ -6970,7 +7242,8 @@
       ],
       "summary": [
         164,
-        204
+        204,
+        291
       ]
     },
     "essences": {
@@ -7079,7 +7352,8 @@
         146,
         154,
         175,
-        265
+        265,
+        304
       ]
     },
     "everything": {
@@ -7122,7 +7396,8 @@
         165,
         175,
         287,
-        290
+        290,
+        304
       ]
     },
     "evolutionarily": {
@@ -7192,6 +7467,11 @@
     "exceptionally": {
       "summary": [
         62
+      ]
+    },
+    "exchanging": {
+      "summary": [
+        293
       ]
     },
     "executive": {
@@ -7301,7 +7581,8 @@
       "summary": [
         76,
         263,
-        267
+        267,
+        295
       ]
     },
     "explanation": {
@@ -7405,6 +7686,9 @@
       "title": [
         119,
         120
+      ],
+      "summary": [
+        304
       ]
     },
     "fail": {
@@ -7431,7 +7715,8 @@
       ],
       "summary": [
         57,
-        154
+        154,
+        295
       ]
     },
     "feature": {
@@ -7588,13 +7873,15 @@
     },
     "first": {
       "title": [
-        290
+        290,
+        291
       ],
       "summary": [
         13,
         168,
         284,
-        290
+        290,
+        291
       ]
     },
     "five": {
@@ -7657,6 +7944,11 @@
     "flux": {
       "summary": [
         88
+      ]
+    },
+    "fold": {
+      "title": [
+        294
       ]
     },
     "following": {
@@ -7827,7 +8119,8 @@
       "summary": [
         29,
         94,
-        105
+        105,
+        295
       ]
     },
     "frameworks": {
@@ -7891,7 +8184,8 @@
     },
     "function": {
       "summary": [
-        122
+        122,
+        297
       ]
     },
     "functional": {
@@ -7919,7 +8213,8 @@
     },
     "fundamentally": {
       "summary": [
-        174
+        174,
+        297
       ]
     },
     "fungi": {
@@ -8050,7 +8345,8 @@
       "summary": [
         28,
         270,
-        276
+        276,
+        293
       ]
     },
     "globally": {
@@ -8122,6 +8418,11 @@
         151
       ]
     },
+    "groupings": {
+      "title": [
+        294
+      ]
+    },
     "groups": {
       "summary": [
         175
@@ -8139,6 +8440,11 @@
         281
       ]
     },
+    "guarantee": {
+      "summary": [
+        304
+      ]
+    },
     "guide": {
       "summary": [
         144
@@ -8152,6 +8458,11 @@
     "guises": {
       "summary": [
         19
+      ]
+    },
+    "gunderson": {
+      "summary": [
+        295
       ]
     },
     "gödel": {
@@ -8369,6 +8680,11 @@
         171
       ]
     },
+    "holling": {
+      "summary": [
+        295
+      ]
+    },
     "holographic": {
       "title": [
         158
@@ -8462,7 +8778,8 @@
         195,
         206,
         219,
-        276
+        276,
+        295
       ]
     },
     "hubs": {
@@ -8490,7 +8807,8 @@
         89,
         101,
         281,
-        282
+        282,
+        303
       ]
     },
     "humble": {
@@ -8545,6 +8863,11 @@
     "idealist": {
       "summary": [
         56
+      ]
+    },
+    "ideally": {
+      "summary": [
+        293
       ]
     },
     "ideas": {
@@ -8730,6 +9053,17 @@
     "impossibility": {
       "title": [
         166
+      ],
+      "summary": [
+        304
+      ]
+    },
+    "impossible": {
+      "title": [
+        304
+      ],
+      "summary": [
+        304
       ]
     },
     "impression": {
@@ -8801,6 +9135,11 @@
     "increases": {
       "summary": [
         43
+      ]
+    },
+    "increasing": {
+      "summary": [
+        293
       ]
     },
     "increasingly": {
@@ -8930,7 +9269,8 @@
         188,
         241,
         273,
-        278
+        278,
+        293
       ]
     },
     "information-preserving": {
@@ -8946,7 +9286,8 @@
     "inherent": {
       "summary": [
         9,
-        103
+        103,
+        291
       ]
     },
     "inherently": {
@@ -9046,6 +9387,11 @@
         41
       ]
     },
+    "instruments": {
+      "summary": [
+        303
+      ]
+    },
     "integrated": {
       "title": [
         173
@@ -9097,7 +9443,8 @@
     "interact": {
       "summary": [
         100,
-        250
+        250,
+        295
       ]
     },
     "interacting": {
@@ -9285,7 +9632,8 @@
     "isolated": {
       "summary": [
         60,
-        263
+        263,
+        293
       ]
     },
     "itinerary": {
@@ -9332,6 +9680,9 @@
       "title": [
         48,
         178
+      ],
+      "summary": [
+        299
       ]
     },
     "join": {
@@ -9396,12 +9747,18 @@
       ],
       "summary": [
         135,
-        269
+        269,
+        295
       ]
     },
     "kierkegaard": {
       "summary": [
         65
+      ]
+    },
+    "kilometers": {
+      "summary": [
+        303
       ]
     },
     "kind": {
@@ -9436,7 +9793,8 @@
     },
     "lack": {
       "summary": [
-        256
+        256,
+        291
       ]
     },
     "ladder": {
@@ -9580,7 +9938,8 @@
         55,
         120,
         139,
-        165
+        165,
+        304
       ]
     },
     "led": {
@@ -9591,6 +9950,11 @@
     "left": {
       "summary": [
         101
+      ]
+    },
+    "legacies": {
+      "summary": [
+        299
       ]
     },
     "less": {
@@ -9650,7 +10014,8 @@
         99,
         164,
         168,
-        213
+        213,
+        293
       ]
     },
     "lifetime": {
@@ -9661,6 +10026,11 @@
     "lifetimes": {
       "summary": [
         63
+      ]
+    },
+    "lifeworld": {
+      "summary": [
+        303
       ]
     },
     "light": {
@@ -9709,7 +10079,8 @@
     "limits": {
       "title": [
         152,
-        228
+        228,
+        302
       ],
       "summary": [
         9,
@@ -9737,6 +10108,11 @@
     "linguistics": {
       "summary": [
         184
+      ]
+    },
+    "linkages": {
+      "summary": [
+        295
       ]
     },
     "linked": {
@@ -9810,7 +10186,8 @@
         80,
         136,
         263,
-        270
+        270,
+        293
       ]
     },
     "locally": {
@@ -9942,6 +10319,11 @@
         276
       ]
     },
+    "magnitude": {
+      "summary": [
+        303
+      ]
+    },
     "main": {
       "summary": [
         34,
@@ -10049,7 +10431,8 @@
         156,
         192,
         202,
-        267
+        267,
+        303
       ]
     },
     "map": {
@@ -10156,6 +10539,11 @@
       ],
       "summary": [
         51
+      ]
+    },
+    "matter": {
+      "summary": [
+        293
       ]
     },
     "maturation": {
@@ -10441,7 +10829,8 @@
         239,
         250,
         269,
-        276
+        276,
+        299
       ]
     },
     "mental": {
@@ -10523,6 +10912,11 @@
         270
       ]
     },
+    "microscopes": {
+      "summary": [
+        303
+      ]
+    },
     "mid": {
       "summary": [
         65
@@ -10538,6 +10932,11 @@
         99
       ]
     },
+    "millimeters": {
+      "summary": [
+        303
+      ]
+    },
     "million": {
       "summary": [
         172
@@ -10551,7 +10950,8 @@
     },
     "milliseconds": {
       "summary": [
-        126
+        126,
+        303
       ]
     },
     "mind": {
@@ -10600,7 +11000,8 @@
         250,
         260,
         269,
-        285
+        285,
+        299
       ]
     },
     "mind-wandering": {
@@ -10904,6 +11305,11 @@
         19
       ]
     },
+    "narrow": {
+      "summary": [
+        303
+      ]
+    },
     "native": {
       "summary": [
         20,
@@ -10960,9 +11366,19 @@
         73
       ]
     },
+    "negentropy": {
+      "summary": [
+        293
+      ]
+    },
     "negotiate": {
       "summary": [
         175
+      ]
+    },
+    "negotiation": {
+      "summary": [
+        304
       ]
     },
     "neighbouring": {
@@ -10992,6 +11408,11 @@
       ],
       "summary": [
         130
+      ]
+    },
+    "nested": {
+      "summary": [
+        295
       ]
     },
     "network": {
@@ -11228,7 +11649,8 @@
     "no": {
       "title": [
         289,
-        290
+        290,
+        291
       ],
       "summary": [
         20,
@@ -11238,7 +11660,8 @@
         192,
         260,
         289,
-        290
+        290,
+        291
       ]
     },
     "noise": {
@@ -11340,7 +11763,8 @@
         272,
         278,
         281,
-        282
+        282,
+        299
       ]
     },
     "note": {
@@ -11350,7 +11774,8 @@
     },
     "nothing": {
       "summary": [
-        165
+        165,
+        291
       ]
     },
     "noticed": {
@@ -11410,12 +11835,30 @@
         15
       ]
     },
+    "observation": {
+      "summary": [
+        299
+      ]
+    },
+    "observational": {
+      "title": [
+        299
+      ]
+    },
     "observe": {
       "title": [
         239
       ]
     },
+    "observed": {
+      "summary": [
+        299
+      ]
+    },
     "observer": {
+      "title": [
+        292
+      ],
       "summary": [
         114,
         159,
@@ -11424,7 +11867,8 @@
     },
     "observers": {
       "summary": [
-        114
+        114,
+        304
       ]
     },
     "occasional": {
@@ -11530,6 +11974,14 @@
         127
       ]
     },
+    "open": {
+      "title": [
+        293
+      ],
+      "summary": [
+        293
+      ]
+    },
     "openness": {
       "summary": [
         43
@@ -11574,12 +12026,18 @@
         13,
         80,
         139,
-        140
+        140,
+        293
       ]
     },
     "ordered": {
       "summary": [
         13
+      ]
+    },
+    "orders": {
+      "summary": [
+        303
       ]
     },
     "ordinals": {
@@ -11619,7 +12077,8 @@
         18,
         130,
         139,
-        287
+        287,
+        293
       ]
     },
     "organization": {
@@ -11659,7 +12118,8 @@
     "origination": {
       "title": [
         75,
-        263
+        263,
+        291
       ],
       "summary": [
         75,
@@ -11701,7 +12161,8 @@
         3,
         192,
         219,
-        239
+        239,
+        303
       ]
     },
     "ourselves": {
@@ -11717,6 +12178,11 @@
     "outcome": {
       "summary": [
         184
+      ]
+    },
+    "outcomes": {
+      "summary": [
+        299
       ]
     },
     "outer": {
@@ -11742,7 +12208,8 @@
         82,
         114,
         205,
-        208
+        208,
+        303
       ]
     },
     "over": {
@@ -11767,6 +12234,11 @@
     "overlap": {
       "summary": [
         111
+      ]
+    },
+    "overlapping": {
+      "title": [
+        294
       ]
     },
     "overly": {
@@ -11816,9 +12288,26 @@
         231
       ]
     },
-    "parallel": {
+    "panarchy": {
+      "title": [
+        295
+      ],
       "summary": [
-        28
+        295
+      ]
+    },
+    "panpsychism": {
+      "title": [
+        296
+      ]
+    },
+    "parallel": {
+      "title": [
+        297
+      ],
+      "summary": [
+        28,
+        297
       ]
     },
     "parallelism": {
@@ -11844,6 +12333,11 @@
         233
       ]
     },
+    "participant": {
+      "title": [
+        292
+      ]
+    },
     "participate": {
       "summary": [
         164
@@ -11851,7 +12345,8 @@
     },
     "participating": {
       "title": [
-        164
+        164,
+        298
       ],
       "summary": [
         161
@@ -11860,7 +12355,16 @@
     "participation": {
       "summary": [
         188,
-        241
+        241,
+        299
+      ]
+    },
+    "participatory": {
+      "title": [
+        299
+      ],
+      "summary": [
+        299
       ]
     },
     "particulars": {
@@ -11887,6 +12391,16 @@
         62
       ]
     },
+    "passes": {
+      "summary": [
+        304
+      ]
+    },
+    "passive": {
+      "summary": [
+        299
+      ]
+    },
     "past": {
       "title": [
         81,
@@ -11906,7 +12420,16 @@
         118
       ]
     },
+    "pathways": {
+      "summary": [
+        295
+      ]
+    },
     "pattern": {
+      "title": [
+        300,
+        301
+      ],
       "summary": [
         50,
         100,
@@ -11945,7 +12468,8 @@
     "perceive": {
       "summary": [
         191,
-        219
+        219,
+        303
       ]
     },
     "perceived": {
@@ -11955,7 +12479,9 @@
     },
     "perception": {
       "title": [
-        139
+        139,
+        302,
+        303
       ],
       "summary": [
         38,
@@ -11975,8 +12501,12 @@
       ]
     },
     "perfect": {
+      "title": [
+        304
+      ],
       "summary": [
-        176
+        176,
+        304
       ]
     },
     "perfectly": {
@@ -12003,11 +12533,17 @@
     },
     "persistence": {
       "title": [
-        206
+        206,
+        305
       ],
       "summary": [
         206,
         281
+      ]
+    },
+    "persists": {
+      "summary": [
+        293
       ]
     },
     "person": {
@@ -12041,7 +12577,8 @@
       "summary": [
         47,
         52,
-        107
+        107,
+        291
       ]
     },
     "phenomenologically": {
@@ -12376,7 +12913,8 @@
     },
     "presences": {
       "title": [
-        164
+        164,
+        298
       ]
     },
     "present": {
@@ -12545,8 +13083,12 @@
       ]
     },
     "processing": {
+      "title": [
+        297
+      ],
       "summary": [
-        278
+        278,
+        297
       ]
     },
     "processor": {
@@ -12558,6 +13100,11 @@
       "summary": [
         118,
         175
+      ]
+    },
+    "productive": {
+      "summary": [
+        304
       ]
     },
     "products": {
@@ -12791,7 +13338,8 @@
         145,
         184,
         194,
-        267
+        267,
+        303
       ]
     },
     "qubits": {
@@ -12956,7 +13504,9 @@
         15,
         56,
         127,
-        265
+        265,
+        299,
+        303
       ]
     },
     "reality-for-us": {
@@ -13114,6 +13664,11 @@
         161
       ]
     },
+    "recurrence": {
+      "summary": [
+        304
+      ]
+    },
     "recurrent": {
       "summary": [
         21,
@@ -13197,7 +13752,8 @@
     "reframes": {
       "summary": [
         72,
-        73
+        73,
+        299
       ]
     },
     "reframing": {
@@ -13373,7 +13929,8 @@
         168
       ],
       "summary": [
-        144
+        144,
+        295
       ]
     },
     "remembered": {
@@ -13395,6 +13952,9 @@
     "renewal": {
       "title": [
         281
+      ],
+      "summary": [
+        295
       ]
     },
     "renews": {
@@ -13409,10 +13969,12 @@
     },
     "repetition": {
       "title": [
-        165
+        165,
+        304
       ],
       "summary": [
-        165
+        165,
+        304
       ]
     },
     "replace": {
@@ -13545,7 +14107,8 @@
       ],
       "summary": [
         23,
-        89
+        89,
+        295
       ]
     },
     "resist": {
@@ -13556,6 +14119,11 @@
     "resonance": {
       "summary": [
         136
+      ]
+    },
+    "resonates": {
+      "summary": [
+        299
       ]
     },
     "respects": {
@@ -13637,6 +14205,11 @@
     "revises": {
       "summary": [
         60
+      ]
+    },
+    "revolt": {
+      "summary": [
+        295
       ]
     },
     "rhythms": {
@@ -13721,6 +14294,11 @@
     "roles": {
       "title": [
         55
+      ]
+    },
+    "roughly": {
+      "summary": [
+        303
       ]
     },
     "rsa": {
@@ -13822,13 +14400,16 @@
     },
     "scale": {
       "title": [
-        223
+        223,
+        302,
+        303
       ],
       "summary": [
         28,
         32,
         57,
-        172
+        172,
+        295
       ]
     },
     "scale-dependent": {
@@ -13843,7 +14424,9 @@
       ],
       "summary": [
         41,
-        127
+        127,
+        295,
+        299
       ]
     },
     "scene": {
@@ -13884,7 +14467,8 @@
       "summary": [
         95,
         173,
-        290
+        290,
+        299
       ]
     },
     "scientific": {
@@ -14079,6 +14663,12 @@
         60
       ]
     },
+    "separation": {
+      "title": [
+        300,
+        301
+      ]
+    },
     "sequence": {
       "summary": [
         13
@@ -14164,7 +14754,8 @@
     },
     "shift": {
       "summary": [
-        60
+        60,
+        304
       ]
     },
     "shifted": {
@@ -14175,7 +14766,8 @@
     },
     "shifts": {
       "summary": [
-        290
+        290,
+        295
       ]
     },
     "shines": {
@@ -14239,6 +14831,11 @@
       "summary": [
         30,
         136
+      ]
+    },
+    "similarity": {
+      "summary": [
+        304
       ]
     },
     "simple": {
@@ -14345,6 +14942,9 @@
     "size": {
       "title": [
         153
+      ],
+      "summary": [
+        303
       ]
     },
     "skills": {
@@ -14373,7 +14973,8 @@
         126
       ],
       "summary": [
-        57
+        57,
+        295
       ]
     },
     "slower": {
@@ -14403,7 +15004,9 @@
     "so": {
       "summary": [
         27,
-        60
+        60,
+        293,
+        297
       ]
     },
     "social": {
@@ -14413,12 +15016,18 @@
         120,
         175,
         195,
-        260
+        260,
+        295
       ]
     },
     "society": {
       "summary": [
         80
+      ]
+    },
+    "socio": {
+      "summary": [
+        295
       ]
     },
     "soils": {
@@ -14480,7 +15089,8 @@
       "summary": [
         53,
         87,
-        193
+        193,
+        304
       ]
     },
     "sources": {
@@ -14509,6 +15119,11 @@
         7,
         99,
         132
+      ]
+    },
+    "spans": {
+      "summary": [
+        303
       ]
     },
     "sparse": {
@@ -14545,6 +15160,11 @@
     "specifies": {
       "summary": [
         175
+      ]
+    },
+    "spectrometers": {
+      "summary": [
+        303
       ]
     },
     "spectrum": {
@@ -14652,6 +15272,11 @@
         108
       ]
     },
+    "spot": {
+      "title": [
+        303
+      ]
+    },
     "spotlight": {
       "summary": [
         208
@@ -14707,6 +15332,11 @@
     "standard": {
       "summary": [
         243
+      ]
+    },
+    "stands": {
+      "summary": [
+        291
       ]
     },
     "starting": {
@@ -14910,7 +15540,8 @@
         42,
         191,
         265,
-        269
+        269,
+        297
       ]
     },
     "structured": {
@@ -15000,6 +15631,11 @@
         159
       ]
     },
+    "sudden": {
+      "summary": [
+        295
+      ]
+    },
     "sufficiently": {
       "summary": [
         8,
@@ -15079,7 +15715,8 @@
     },
     "sustain": {
       "summary": [
-        172
+        172,
+        293
       ]
     },
     "sustained": {
@@ -15092,6 +15729,11 @@
     "swarm": {
       "title": [
         172
+      ]
+    },
+    "sweet": {
+      "title": [
+        303
       ]
     },
     "symbol": {
@@ -15208,7 +15850,8 @@
         202,
         213,
         256,
-        281
+        281,
+        293
       ]
     },
     "systematic": {
@@ -15221,7 +15864,8 @@
     "systems": {
       "title": [
         44,
-        202
+        202,
+        293
       ],
       "summary": [
         29,
@@ -15240,7 +15884,10 @@
         204,
         260,
         273,
-        275
+        275,
+        293,
+        295,
+        299
       ]
     },
     "tackles": {
@@ -15312,6 +15959,11 @@
     "tegmark": {
       "summary": [
         265
+      ]
+    },
+    "telescopes": {
+      "summary": [
+        303
       ]
     },
     "tells": {
@@ -15408,7 +16060,8 @@
         140,
         164,
         278,
-        281
+        281,
+        293
       ]
     },
     "them": {
@@ -15506,12 +16159,14 @@
         142,
         159,
         192,
-        256
+        256,
+        291
       ]
     },
     "therefore": {
       "summary": [
-        113
+        113,
+        293
       ]
     },
     "thermodynamics": {
@@ -15526,7 +16181,8 @@
         53,
         89,
         127,
-        233
+        233,
+        304
       ]
     },
     "they": {
@@ -15545,7 +16201,10 @@
         164,
         275,
         276,
-        285
+        285,
+        291,
+        293,
+        297
       ]
     },
     "thing": {
@@ -15555,7 +16214,8 @@
     },
     "things": {
       "summary": [
-        267
+        267,
+        291
       ]
     },
     "think": {
@@ -15599,7 +16259,10 @@
         194,
         213,
         243,
-        282
+        282,
+        299,
+        303,
+        304
       ]
     },
     "those": {
@@ -15674,7 +16337,8 @@
         136,
         204,
         279,
-        285
+        285,
+        295
       ]
     },
     "thumb": {
@@ -15696,7 +16360,8 @@
         76,
         133,
         163,
-        243
+        243,
+        304
       ]
     },
     "timeline": {
@@ -15949,10 +16614,20 @@
         101
       ]
     },
+    "treated": {
+      "summary": [
+        293
+      ]
+    },
     "treats": {
       "summary": [
         47,
         191
+      ]
+    },
+    "trend": {
+      "summary": [
+        293
       ]
     },
     "triangulate": {
@@ -16026,7 +16701,8 @@
         1
       ],
       "summary": [
-        34
+        34,
+        295
       ]
     },
     "types": {
@@ -16044,7 +16720,8 @@
     "ultimate": {
       "summary": [
         101,
-        290
+        290,
+        291
       ]
     },
     "unattended": {
@@ -16125,6 +16802,11 @@
         267
       ]
     },
+    "unfinished": {
+      "summary": [
+        299
+      ]
+    },
     "unfold": {
       "summary": [
         155
@@ -16191,7 +16873,9 @@
         177,
         188,
         264,
-        265
+        265,
+        293,
+        299
       ],
       "summary": [
         17,
@@ -16200,7 +16884,9 @@
         108,
         145,
         188,
-        265
+        265,
+        293,
+        299
       ]
     },
     "universes": {
@@ -16226,6 +16912,11 @@
     "unquantifiable": {
       "summary": [
         145
+      ]
+    },
+    "until": {
+      "summary": [
+        299
       ]
     },
     "up": {
@@ -16385,7 +17076,8 @@
         155,
         159,
         161,
-        208
+        208,
+        295
       ]
     },
     "view": {
@@ -16460,7 +17152,10 @@
         263,
         274,
         276,
-        282
+        282,
+        296,
+        300,
+        301
       ],
       "summary": [
         194,
@@ -16526,7 +17221,8 @@
       "summary": [
         78,
         175,
-        186
+        186,
+        297
       ]
     },
     "we": {
@@ -16551,7 +17247,9 @@
         239,
         282,
         284,
-        290
+        290,
+        303,
+        304
       ]
     },
     "weak": {
@@ -16607,12 +17305,18 @@
         155,
         208,
         213,
-        284
+        284,
+        304
       ]
     },
     "whatever": {
       "summary": [
         162
+      ]
+    },
+    "wheeler": {
+      "summary": [
+        299
       ]
     },
     "when": {
@@ -16678,7 +17382,8 @@
     },
     "whole": {
       "summary": [
-        89
+        89,
+        293
       ]
     },
     "whorf": {
@@ -16734,12 +17439,14 @@
     },
     "within": {
       "title": [
-        83
+        83,
+        293
       ],
       "summary": [
         34,
         77,
-        83
+        83,
+        293
       ]
     },
     "without": {
@@ -16848,7 +17555,8 @@
         65,
         127,
         231,
-        281
+        281,
+        304
       ]
     },
     "yield": {
