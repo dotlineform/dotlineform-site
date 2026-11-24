@@ -118,9 +118,17 @@ export function createCatalogueGallerySearch(payload) {
 
 export const COLLECTION_TITLE_SORT = "title-asc";
 export const COLLECTION_ADDED_SORT = "last-added-desc";
+export const COLLECTION_RANDOM_SORT = "random";
 
 function compareAdded(left, right) {
   return compareText(right.added, left.added);
+}
+
+function shuffleCollectionRows(rows) {
+  for (let last = rows.length - 1; last > 0; last--) {
+    const index = Math.floor(Math.random() * (last + 1));
+    [rows[last], rows[index]] = [rows[index], rows[last]];
+  }
 }
 
 /**
@@ -181,7 +189,9 @@ export function createCollectionPresentation(options) {
     project(rows, query, sortMode) {
       let ordered = orders.get(sortMode);
       if (!ordered) {
-        ordered = rows.slice().sort((left, right) =>
+        ordered = rows.slice();
+        if (sortMode === COLLECTION_RANDOM_SORT) shuffleCollectionRows(ordered);
+        else ordered.sort((left, right) =>
           (sortMode === COLLECTION_ADDED_SORT ? compareAdded(left, right) : 0) || compareTitle(left, right));
         orders.set(sortMode, ordered);
       }
@@ -229,6 +239,7 @@ export function createCollectionBrowsingData(options) {
       return changed;
     },
     project(query, sortMode) { return presentation.project(rows, query, sortMode); },
+    clearRandomOrder() { presentation.clearOrders(COLLECTION_RANDOM_SORT); },
     clear() {
       rows = []; pendingThumbnails = []; hasThumbnails = false;
       presentation.clearOrders();

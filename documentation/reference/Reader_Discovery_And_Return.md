@@ -65,7 +65,11 @@ Text scopes extract their configured fields from selected Markdown. Supported vi
 
 ## Collection List Preparation
 
-A collection report loads the exact configured manifest, prepares title and date orderings and filters the loaded rows. Opening a direct ordinary or collection document route uses its by-ID payload independently of the list. Manage applies committed document effects to its retained lists. Context pages 20 regular rows and groups matching starred rows above the first regular page. Authored artwork uses the document's assigned thumbnail. Catalogue thumbnails use the Work ID and the configured rendition policy. [Collection report](../../docs-viewer/runtime/js/shared/docs-collection-report.js) · [Collection manifests](Generated_Data_Contracts.md#collection-manifest-ownership) · [Thumbnail assignment](Media_And_Asset_Handling.md#assigned-document-thumbnails)
+A collection report loads the exact configured manifest and sorts and filters the loaded rows. Opening a direct ordinary or collection document route uses its by-ID payload independently of the list. Manage applies committed document effects to its retained lists. Context pages 20 regular rows and groups matching starred rows above the first regular page. Authored artwork uses the document's assigned thumbnail. Catalogue thumbnails use the Work ID and the configured rendition policy. [Collection report](../../docs-viewer/runtime/js/shared/docs-collection-report.js) · [Collection manifests](Generated_Data_Contracts.md#collection-manifest-ownership) · [Thumbnail assignment](Media_And_Asset_Handling.md#assigned-document-thumbnails)
+
+### Library Collection Browsing
+
+Public Library defaults to A–Z. **Shuffle** orders the loaded documents randomly in the browser and returns the list to its first page. The order stays fixed across page turns and when returning from a document to the retained Library list. Switch back to A–Z, then use **Shuffle** again for a new order. A remount can restore Random mode from the tab snapshot and generates a new order in that case. Manage Library offers A–Z and Last added. [Browsing projector](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js)
 
 ### Catalogue Collection Browsing
 
