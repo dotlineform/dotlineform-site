@@ -925,6 +925,7 @@ function captureListControls(state) {
   var captureContribution = contributionCallback(state.contribution, "captureListState");
   return { query: state.query, sort: state.sortMode,
     page: state.searchTimer !== null ? 0 : state.pageIndex,
+    ...(state.sortMode === COLLECTION_RANDOM_SORT ? { shuffleSeed: state.browsingData.shuffleSeed } : {}),
     ...(state.discoveryGrid ? { rollingDiscovery: {
       gallery: state.galleryPreferred,
       list: {
@@ -971,7 +972,14 @@ function restoreListControls(state, saved) {
   if (JSON.stringify(current) === JSON.stringify(saved)) return;
   cancelCollectionSearch(state);
   if (state.filterInputNode && typeof saved.query === "string") state.query = saved.query;
-  state.sortMode = saved.sort === state.alternateSort ? state.alternateSort : COLLECTION_TITLE_SORT;
+  if (state.alternateSort === COLLECTION_RANDOM_SORT) {
+    var seed = saved.sort === COLLECTION_RANDOM_SORT ? saved.shuffleSeed : null;
+    if (!Number.isInteger(seed) || seed < 0 || seed >= 2 ** 32) seed = null;
+    state.browsingData.setShuffleSeed(seed);
+    state.sortMode = seed === null ? COLLECTION_TITLE_SORT : COLLECTION_RANDOM_SORT;
+  } else {
+    state.sortMode = saved.sort === state.alternateSort ? state.alternateSort : COLLECTION_TITLE_SORT;
+  }
   if (typeof state.contribution?.paginationDefault === "boolean" && typeof saved.pagination === "boolean") {
     state.pagedBrowsing = saved.pagination;
   }
@@ -1174,10 +1182,13 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   }
   state.collectionSortNode.addEventListener("click", function () {
     if (!state.mounted || state.collectionSortNode.disabled) return;
-    if (state.sortMode === COLLECTION_RANDOM_SORT) state.browsingData.clearRandomOrder();
     state.sortMode = state.sortMode === COLLECTION_TITLE_SORT ? state.alternateSort : COLLECTION_TITLE_SORT;
+    var shuffleAvailable = state.alternateSort === COLLECTION_RANDOM_SORT;
+    if (shuffleAvailable) {
+      state.browsingData.setShuffleSeed(state.sortMode === COLLECTION_RANDOM_SORT ? Math.floor(Math.random() * 2 ** 32) : null);
+    }
     state.pageIndex = 0;
-    renderListProjectionContained(state, "sort-change", { reusePinnedRows: true });
+    if (renderListProjectionContained(state, "sort-change", { reusePinnedRows: true }) && shuffleAvailable) remembered.save();
   });
   var mountPaginationControl = contributionCallback(contribution, "mountPaginationControl");
   if (mountPaginationControl) {

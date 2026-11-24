@@ -69,7 +69,7 @@ A collection report loads the exact configured manifest and sorts and filters th
 
 ### Library Collection Browsing
 
-Public Library defaults to A–Z. **Shuffle** orders the loaded documents randomly in the browser and returns the list to its first page. The order stays fixed across page turns and when returning from a document to the retained Library list. Switch back to A–Z, then use **Shuffle** again for a new order. A remount can restore Random mode from the tab snapshot and generates a new order in that case. Manage Library offers A–Z and Last added. [Browsing projector](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js)
+Public Library defaults to A–Z. **Shuffle** orders the loaded documents randomly in the browser and returns the list to its first page. The tab snapshot stores the shuffle seed with the current page so returning from a document restores the same order for the same manifest, even when the report is rebuilt. Switch back to A–Z, then use **Shuffle** again for a new order. Manage Library offers A–Z and Last added. [Browsing projector](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js)
 
 ### Catalogue Collection Browsing
 

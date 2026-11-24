@@ -124,9 +124,12 @@ function compareAdded(left, right) {
   return compareText(right.added, left.added);
 }
 
-function shuffleCollectionRows(rows) {
+function shuffleCollectionRows(rows, seed) {
+  let draw = seed;
   for (let last = rows.length - 1; last > 0; last--) {
-    const index = Math.floor(Math.random() * (last + 1));
+    // Advance a 32-bit generator so a saved seed reproduces the same shuffle.
+    draw = (Math.imul(draw, 1664525) + 1013904223) >>> 0;
+    const index = Math.floor(draw / UINT32_RANGE * (last + 1));
     [rows[last], rows[index]] = [rows[index], rows[last]];
   }
 }
@@ -186,11 +189,11 @@ export function createCollectionPresentation(options) {
       if (sortMode) orders.delete(sortMode);
       else orders.clear();
     },
-    project(rows, query, sortMode) {
+    project(rows, query, sortMode, shuffleSeed) {
       let ordered = orders.get(sortMode);
       if (!ordered) {
         ordered = rows.slice();
-        if (sortMode === COLLECTION_RANDOM_SORT) shuffleCollectionRows(ordered);
+        if (sortMode === COLLECTION_RANDOM_SORT) shuffleCollectionRows(ordered, shuffleSeed);
         else ordered.sort((left, right) =>
           (sortMode === COLLECTION_ADDED_SORT ? compareAdded(left, right) : 0) || compareTitle(left, right));
         orders.set(sortMode, ordered);
@@ -218,10 +221,12 @@ export function createCollectionBrowsingData(options) {
   let rows = [];
   let pendingThumbnails = [];
   let hasThumbnails = false;
+  let shuffleSeed = null;
   return {
     get rows() { return rows; },
     get hasThumbnails() { return hasThumbnails; },
     get needsThumbnailSettings() { return pendingThumbnails.length > 0; },
+    get shuffleSeed() { return shuffleSeed; },
     replace(records) {
       presentation.clearOrders();
       pendingThumbnails = []; hasThumbnails = false;
@@ -238,8 +243,12 @@ export function createCollectionBrowsingData(options) {
       pendingThumbnails = [];
       return changed;
     },
-    project(query, sortMode) { return presentation.project(rows, query, sortMode); },
-    clearRandomOrder() { presentation.clearOrders(COLLECTION_RANDOM_SORT); },
+    setShuffleSeed(seed) {
+      if (seed === shuffleSeed) return;
+      shuffleSeed = seed;
+      presentation.clearOrders(COLLECTION_RANDOM_SORT);
+    },
+    project(query, sortMode) { return presentation.project(rows, query, sortMode, shuffleSeed); },
     clear() {
       rows = []; pendingThumbnails = []; hasThumbnails = false;
       presentation.clearOrders();
