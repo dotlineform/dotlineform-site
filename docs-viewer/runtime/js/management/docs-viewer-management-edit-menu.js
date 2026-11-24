@@ -10,7 +10,7 @@ var EDIT_ITEMS = [
   { actionId: ACTION_IDS.SET_DRAFT, label: "Mark as draft", artwork: "docsViewer__icon--circle-check", checked: false, contextAction: true },
   { actionId: ACTION_IDS.SET_SELECTED, label: "Star", artwork: "docsViewer__icon--star", checked: false, contextAction: true },
   { actionId: ACTION_IDS.THUMB, label: "Thumb", artwork: "docsViewer__icon--image", contextAction: true },
-  { actionId: ACTION_IDS.COPY_LINK, label: "Copy link", artwork: "docsViewer__icon--link", fallback: true }
+  { actionId: ACTION_IDS.COPY_LINK, label: "Copy link", artwork: "docsViewer__icon--link" }
 ];
 
 /** Collection contributions retain their own handlers and live availability. */
@@ -54,9 +54,7 @@ export function renderDocsViewerEditMenu(context) {
     menu.setAttribute("role", "menu");
     menu.hidden = true;
     EDIT_ITEMS.forEach(function (item) {
-      var button = createDocsViewerEditMenuItem(documentRef, item);
-      if (item.fallback) button.classList.add("docsViewer__editMenuFallback");
-      menu.appendChild(button);
+      menu.appendChild(createDocsViewerEditMenuItem(documentRef, item));
     });
     var contributions = documentRef.createElement("div");
     contributions.className = "docsViewer__editMenuCollectionActions";
@@ -67,7 +65,7 @@ export function renderDocsViewerEditMenu(context) {
 }
 
 /**
- * Own Edit menu disclosure and ordinary-document dispatch. Mounted collection
+ * Own Edit menu disclosure and displayed-document dispatch. Mounted collection
  * menu items keep their registered exact targets, handlers and async state.
  * Target changes, busy state, Source and expanded views close the menu.
  */
@@ -112,16 +110,14 @@ export function createDocsViewerEditMenuController(options) {
       button.hidden = options.resolveAction(button.dataset.docsViewerAction, state.target).hidden
         || contributionVisibility.get(button)?.() === false;
     });
-    var ordinary = state.available && !state.target.collection;
     EDIT_ITEMS.forEach(function (item) {
       if (item.contextAction) return;
       var button = current.menu.querySelector(':scope > [data-docs-viewer-action="' + item.actionId + '"]');
       var resolution = options.resolveAction(item.actionId, state.target);
-      var enabled = item.actionId === ACTION_IDS.COPY_LINK ? ordinary : state.available;
       button.hidden = resolution.hidden
         || (item.actionId === ACTION_IDS.EDIT_DOCUMENT && Boolean(state.target?.collection));
-      button.disabled = !enabled || resolution.disabled;
-      button.title = resolution.disabledReason || (enabled ? item.label : "This action is unavailable for the displayed document.");
+      button.disabled = !state.available || resolution.disabled;
+      button.title = resolution.disabledReason || (state.available ? item.label : "This action is unavailable for the displayed document.");
     });
   }
   function enabledItems(menu) {
@@ -153,7 +149,7 @@ export function createDocsViewerEditMenuController(options) {
     if (actionId === ACTION_IDS.EDIT_DOCUMENT) options.openSource(state.target);
     else if (actionId === ACTION_IDS.REBUILD_DOCUMENT) options.rebuildDocument(state.target);
     else if (options.contextActions.owns(actionId)) options.contextActions.invoke(actionId);
-    else if (!state.target.collection && actionId === ACTION_IDS.COPY_LINK) options.copyLink(state.target.doc_id);
+    else if (actionId === ACTION_IDS.COPY_LINK) options.copyLink(state.target, state.record);
     return true;
   }
   function handleRootClick(event) {

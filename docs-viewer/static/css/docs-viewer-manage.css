@@ -1250,12 +1250,6 @@ select.docsViewer__positionTargets{
 .docsViewer__editMenu [data-docs-viewer-action="thumb"]{ order: 6; }
 .docsViewer__editMenu [data-docs-viewer-action="open-project-folder"]{ order: 7; }
 
-/* Contribution controls arrive after detail loading and own their live state. */
-.docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="copy-link"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="copy-link"],
-.docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="open-project-folder"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="open-project-folder"]{
-  display: none;
-}
-
 .docsViewer__actionMenuItem{
   display: grid;
   grid-template-columns: var(--docs-viewer-toolbar-icon-size) minmax(0, 1fr);

@@ -30,12 +30,6 @@ function reportCollection(payload) {
   return cleanString(report && report.collection).toLowerCase();
 }
 
-function parentTarget(settings) {
-  return normalizeManagedDocumentTarget({
-    doc_id: cleanString(settings && settings.doc && settings.doc.doc_id)
-  });
-}
-
 function managementClientOptions(settings) {
   var managementService = settings.managementService || null;
   return {
@@ -54,31 +48,7 @@ function configuredCollection(settings,  collection) {
   return settings.workspaceConfigState.activeConfig.collectionsById.get(collection);
 }
 
-function escapeMarkdownLinkText(value) {
-  return String(value == null ? "" : value)
-    .replace(/\\/g, "\\\\")
-    .replace(/\[/g, "\\[")
-    .replace(/\]/g, "\\]");
-}
-
-function markdownLinkForCollectionDocument(settings, parent, collection, target, documentRecord) {
-  var normalized = normalizeManagedDocumentTarget(target);
-  if (
-    normalized.collection !== collection
-    || typeof settings.viewerUrlForDocument !== "function"
-  ) {
-    throw new Error("Copy Link target did not match the mounted collection report.");
-  }
-  var base = settings.viewerUrlForDocument(normalized.doc_id, { collection: normalized.collection });
-  if (!cleanString(base)) throw new Error("Copy Link viewer URL is unavailable.");
-  var url = new URL(base, "http://docs.local");
-  var title = escapeMarkdownLinkText(
-    cleanString(documentRecord && documentRecord.title) || normalized.doc_id
-  );
-  return "[" + title + "](" + url.pathname + url.search + url.hash + ")";
-}
-
-export function loadDocsViewerCollectionContribution(settings, parent, collectionConfig, options) {
+function loadDocsViewerCollectionContribution(settings, collectionConfig, options) {
   var contributionOptions = options || {};
   var clientOptions = managementClientOptions(settings);
   if (!collectionConfig) {
@@ -121,15 +91,6 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
       managementContext: Boolean(settings.managementContext),
       catalogueSearchHostId: settings.managementContext && collection === "catalogue" ? collectionConfig.reportHostDocId : "",
       paginationToggle: collectionConfig.collectionType === "book-collection",
-      markdownLinkForDocument: function (target, documentRecord) {
-        return markdownLinkForCollectionDocument(
-          settings,
-          parent,
-          collection,
-          target,
-          documentRecord
-        );
-      },
       resolveAction: settings.managementDocumentActions.resolveAction,
       startBusyOperation: settings.managementDocumentActions.startBusyOperation,
       commitDocumentChange: settings.collectionProvider.commitDocumentChange,
@@ -183,9 +144,9 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
   });
 }
 
-export async function loadManagedCollectionReportContribution(settings, parent, collectionConfig, options = {}) {
+export async function loadManagedCollectionReportContribution(settings, collectionConfig, options = {}) {
   const [contribution, list] = await Promise.all([
-    loadDocsViewerCollectionContribution(settings, parent, collectionConfig, {
+    loadDocsViewerCollectionContribution(settings, collectionConfig, {
       ...options,
       bookList: true,
       onPreparePackage: settings.managementContext && managementClientOptions(settings).baseUrl
@@ -220,8 +181,7 @@ function openCollectionPreparePackage(settings, request, context) {
 /** Collection documents use the shared reader mount and exact action target. */
 function mountCollectionDocumentActions(settings) {
   var target = normalizeManagedDocumentTarget(settings.documentTarget);
-  var parent = { doc_id: target.doc_id };
-  return loadDocsViewerCollectionContribution(settings, parent, configuredCollection(settings, target.collection)).then(async function (contribution) {
+  return loadDocsViewerCollectionContribution(settings, configuredCollection(settings, target.collection)).then(async function (contribution) {
     var metadata = settings.collectionProvider.readMetadata
       ? await settings.collectionProvider.readMetadata(target) : null;
     var record = metadata && metadata.record ? metadata.record : settings.doc;
@@ -304,9 +264,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
     });
   }
 
-  var parent = parentTarget(settings);
   var collectionConfig = configuredCollection(settings, collection);
-  var contribution = loadManagedCollectionReportContribution(settings, parent, collectionConfig);
+  var contribution = loadManagedCollectionReportContribution(settings, collectionConfig);
   return mountDocsViewerReport({
     appContext: settings.appContext,
     workspaceConfig: settings.workspaceConfigState.activeConfig,

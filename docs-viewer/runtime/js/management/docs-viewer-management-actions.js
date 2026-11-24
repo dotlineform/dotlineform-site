@@ -671,10 +671,9 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleCopyLink(targetDocId) {
-    var doc = targetDocId ? actionTargetDoc(DOCS_VIEWER_ACTION_IDS.COPY_LINK, targetDocId) : null;
-    if (!doc || typeof context.markdownDocLink !== "function") return;
-    var markdownLink = context.markdownDocLink(doc);
+  function handleCopyLink(target, record) {
+    if (!target || record?.doc_id !== target.doc_id || typeof context.markdownDocLink !== "function") return;
+    var markdownLink = context.markdownDocLink(target, record.title);
     if (!markdownLink) return;
 
     hideContextMenu();

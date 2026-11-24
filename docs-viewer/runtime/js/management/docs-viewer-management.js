@@ -613,7 +613,7 @@ export function initDocsViewerManagement(context) {
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.COPY_LINK) {
-          actionController.handleCopyLink(targetDocId);
+          actionController.handleCopyLink({ doc_id: targetDocId }, documentIndex.docsById.get(targetDocId));
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE) {

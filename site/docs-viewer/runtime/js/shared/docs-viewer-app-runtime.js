@@ -886,11 +886,10 @@ export function startDocsViewerRuntime(options) {
       .replace(/\]/g, "\\]");
   }
 
-  function markdownDocLink(doc) {
-    if (!doc || !doc.doc_id) return "";
-    var title = escapeMarkdownLinkText(doc.title || doc.doc_id);
-    var url = viewerUrlForDocument(doc.doc_id, { manage: false });
-    return "[" + title + "](" + url + ")";
+  function markdownDocLink(target, title) {
+    var label = escapeMarkdownLinkText(String(title || "").trim() || target.doc_id);
+    var url = viewerUrlForDocument(target.doc_id, { collection: target.collection });
+    return "[" + label + "](" + url + ")";
   }
 
   function buildTrail(docId) {

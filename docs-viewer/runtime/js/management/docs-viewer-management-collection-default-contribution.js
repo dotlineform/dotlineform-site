@@ -103,9 +103,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   var onRegenerateCatalogue = typeof options.onRegenerateCatalogue === "function"
     ? options.onRegenerateCatalogue
     : null;
-  var markdownLinkForDocument = typeof options.markdownLinkForDocument === "function"
-    ? options.markdownLinkForDocument
-    : null;
   var managementContext = Boolean(options.managementContext);
   var bookTools = options.bookTools;
   var bookRowSelection = bookTools?.rowSelection;
@@ -556,49 +553,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var host = settings.host;
     var target = settings.target;
     if (!host || !target) return;
-
-    var copyResolution = options.resolveAction(DOCS_VIEWER_ACTION_IDS.COPY_LINK, target);
-    if (!copyResolution.hidden && markdownLinkForDocument && typeof settings.registerAction === "function") {
-      var copyRegistration = settings.registerAction({
-        id: DOCS_VIEWER_ACTION_IDS.COPY_LINK,
-        placement: "detail-toolbar",
-        targetKind: "validated-detail",
-        capability: true,
-        emptyState: "omitted",
-        refreshEffect: "none",
-        handler: function (actionTarget) {
-          var resolution = options.resolveAction(DOCS_VIEWER_ACTION_IDS.COPY_LINK, actionTarget);
-          if (resolution.disabled) throw new Error(resolution.disabledReason);
-          var markdownLink = markdownLinkForDocument(
-            actionTarget,
-            settings.document || {}
-          );
-          if (!cleanString(markdownLink)) {
-            throw new Error("Copy Link could not resolve an exact document URL.");
-          }
-          return writeClipboardText(host.ownerDocument, markdownLink);
-        }
-      });
-      var copyButton = createDocsViewerEditMenuItem(host.ownerDocument, {
-        actionId: DOCS_VIEWER_ACTION_IDS.COPY_LINK, label: "Copy link",
-        artwork: "docsViewer__icon--link", contribution: true
-      });
-      copyButton.dataset.docsCollectionCopyLink = "true";
-      copyButton.setAttribute("aria-label", "Copy link");
-      copyButton.title = "Copy link";
-      copyButton.disabled = !copyRegistration.enabled;
-      copyButton.addEventListener("click", function () {
-        copyRegistration.invoke().catch(function (error) {
-          if (typeof options.setStatus === "function") {
-            options.setStatus(
-              error && error.message ? error.message : "Copy Link failed.",
-              true
-            );
-          }
-        });
-      });
-      host.appendChild(copyButton);
-    }
 
     var chapter = settings.document;
     if (options.bookManifest && typeof settings.registerAction === "function") {

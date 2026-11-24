@@ -23,6 +23,7 @@ from docs_management_document_target import (  # noqa: E402
     ManagedDocumentTarget,
     managed_document_target_request,
     normalize_managed_document_target,
+    resolve_managed_document_path,
     resolve_managed_document_target,
 )
 from docs_workspace_config import load_docs_stage, path_label, require_document_authoring  # noqa: E402
@@ -350,38 +351,32 @@ def open_source_path(
 def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     editor = str(body.get("editor") or "default").strip().lower()
 
-    resolved = resolve_managed_document_target(
+    source = resolve_managed_document_path(
         repo_root,
         managed_document_target_request(body),
     )
-    target = resolved.document
     preferred_app = open_source_path(
         repo_root,
-        target.path,
+        source.path,
         editor=editor,
         dry_run=dry_run,
     )
+    label = path_label(repo_root, source.path)
 
     if not dry_run:
-        event_details = {
-            "doc_id": target.doc_id,
+        log_event(repo_root, "docs-open-source", {
+            **source.target,
             "editor": editor,
             "preferred_app": preferred_app if editor == "default" else "",
-            "path": path_label(repo_root, target.path),
-        }
-        if resolved.collection:
-            event_details["collection"] = resolved.collection
-        log_event(repo_root, "docs-open-source", event_details)
+            "path": label,
+        })
 
-    payload = {
+    return {
         "ok": True,
-        **resolved.request_target(),
+        **source.target,
         "editor": editor,
         "preferred_app": preferred_app if editor == "default" else "",
-        "path": path_label(repo_root, target.path),
-        "summary_text": f"Opened {target.doc_id} source.",
+        "path": label,
+        "summary_text": f"Opened {source.target['doc_id']} source.",
         "dry_run": dry_run,
     }
-    if resolved.collection:
-        payload["collection"] = resolved.collection
-    return payload

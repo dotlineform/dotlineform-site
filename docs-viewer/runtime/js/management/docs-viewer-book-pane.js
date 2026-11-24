@@ -55,7 +55,7 @@ export function createDocsViewerBookPane(options) {
 
     const host = { doc_id: config.reportHostDocId, title: config.title };
     const settings = { ...options, content: pane, managementContext: true };
-    const contribution = loadManagedCollectionReportContribution(settings, { doc_id: host.doc_id }, config, {
+    const contribution = loadManagedCollectionReportContribution(settings, config, {
       bookExpandControl: expand,
       onBookSelectionReady(selectDocument) {
         entry.selectDocument = selectDocument;

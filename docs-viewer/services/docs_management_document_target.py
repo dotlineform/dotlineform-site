@@ -64,6 +64,14 @@ class ManagedDocumentCollection:
         return target
 
 
+@dataclass(frozen=True)
+class ManagedDocumentPath:
+    target: dict[str, str]
+    owner: ManagedDocumentCollection
+    path: Path
+    parent_ids: dict[str, str] | None
+
+
 def required_target_text(value: Any, *, field: str, lowercase: bool = False) -> str:
     if not isinstance(value, str):
         raise ValueError(f"{field} must be a non-blank string")
@@ -262,10 +270,11 @@ def source_doc_from_path(
     )
 
 
-def resolve_managed_document_target(
+def resolve_managed_document_path(
     repo_root: Path,
     target: Mapping[str, Any],
-) -> ManagedDocumentTarget:
+) -> ManagedDocumentPath:
+    """Resolve one existing, confined source path using its configured identity."""
     normalized = normalize_managed_document_target(target)
     collection = resolve_managed_document_collection(
         repo_root,
@@ -279,9 +288,19 @@ def resolve_managed_document_target(
                 f"managed source document {normalized['doc_id']!r} was not found"
             )
     path = confined_document_path(collection.source_root, normalized["doc_id"])
-    document = source_doc_from_path(path=path, requested_doc_id=normalized["doc_id"])
+    return ManagedDocumentPath(normalized, collection, path, parent_ids)
+
+
+def resolve_managed_document_target(
+    repo_root: Path,
+    target: Mapping[str, Any],
+) -> ManagedDocumentTarget:
+    source = resolve_managed_document_path(repo_root, target)
+    collection = source.owner
+    document = source_doc_from_path(path=source.path, requested_doc_id=source.target["doc_id"])
+    parent_ids = source.parent_ids
     if parent_ids is not None:
-        document.parent_id = parent_ids[normalized["doc_id"]]
+        document.parent_id = parent_ids[document.doc_id]
     return ManagedDocumentTarget(
         collection=collection.collection,
         doc_id=document.doc_id,
