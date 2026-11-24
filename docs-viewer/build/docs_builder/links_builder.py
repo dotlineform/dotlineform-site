@@ -15,10 +15,10 @@ from pathlib import Path
 from typing import Any, TYPE_CHECKING
 from urllib.parse import unquote, urlsplit
 
-from .common import json_text, render_markdown_to_html
+from .common import json_text
 from .links_model import DocumentLinks, DocumentSummary, DocumentTarget, OutgoingLink
 from .links_schema import read_relationship_payload, relationship_payload
-from .related_links_directive import RELATED_LINKS_PREFIX, render_without_related_links
+from .related_links_directive import render_for_link_collection
 from .source import DocRecord, DocumentIdentity
 from .source_tokens import SourceTokenOccurrence, replace_source_tokens
 from docs_document_identity import is_document_id
@@ -174,7 +174,7 @@ class _DocumentRefresh:
             return ""
 
         markdown = replace_source_tokens(doc.body_markdown, replacer=token_reference)
-        rendered = render_without_related_links(markdown) if RELATED_LINKS_PREFIX in markdown else render_markdown_to_html(markdown)
+        rendered = render_for_link_collection(markdown)
         for anchor in collect_anchors(rendered):
             authored = anchor["href"]
             if not authored or authored.startswith("#"):

@@ -33,7 +33,7 @@ Work image fields use canonical percent encoding and field order. The required f
 
 ### Wrap Body Text
 
-Choose a left or right placement and **Wrap body text** to serialize `wrap-left` or `wrap-right`. Put the token on its own line with a blank line before prose. A new heading starts at full width, and narrow reading columns stack the image and text. The other placements are `full`, `left` and `right`. Both image families render optional summary emphasis and escapes with the restricted summary formatter. Links, HTML and other Markdown in image summaries are literal. [Summary formatter](../../docs-viewer/build/docs_builder/summary_formatting.py)
+Choose a left or right placement and **Wrap body text** to serialize `wrap-left` or `wrap-right`. Put the token on its own line with a blank line before prose. A new heading starts at full width, and narrow reading columns stack the image and text. The other placements are `full`, `left` and `right`. Both image families render optional summary emphasis and escapes with the restricted summary formatter. Docs-owned image summaries also render inline TeX. Links, HTML and other Markdown in image summaries are literal. [Summary formatter](../../docs-viewer/build/docs_builder/summary_formatting.py) · [Math syntax](Source_Editing.md#math)
 
 ### Docs-Owned Images
 

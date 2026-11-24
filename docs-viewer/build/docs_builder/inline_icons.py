@@ -12,11 +12,11 @@ from typing import Any
 
 from markdown_it.rules_inline import StateInline
 
-from .common import render_markdown_to_html
+from .math_rendering import build_docs_markdown_renderer
 from .related_links_directive import RELATED_LINKS_PREFIX, install_related_links_rule
 from .standalone_directive import install_standalone_directive
 from .summary_directive import SUMMARY_DIRECTIVE, install_summary_rule
-from markdown_renderer import build_markdown_renderer, normalize_markdown_blank_lines
+from markdown_renderer import normalize_markdown_blank_lines
 from docs_inline_icon_artwork import InlineIconArtwork
 
 
@@ -77,18 +77,18 @@ class InlineIconRenderer(InlineIconArtwork):
         self, markdown: str, *, related_links: Callable[[str], str] | None = None,
         summary_html: str = "", date_text: str = "", toc_html: Callable[[], str] | None = None,
     ) -> str:
-        """Expand inline icons and document fields, preserving literal code.
+        """Render Docs Markdown with math, inline icons and document fields.
 
         Normal Markdown parsing also protects fences, indented code, comments,
         escaped text and raw HTML attributes. Icon tokens create no relationships.
         """
         has_date = DATE_TOKEN in markdown
         has_toc = toc_html is not None and TOC_DIRECTIVE in markdown
+        renderer = build_docs_markdown_renderer()
         if not has_date and not has_toc and all(
             marker not in markdown for marker in (ICON_TOKEN_PREFIX, RELATED_LINKS_PREFIX, SUMMARY_DIRECTIVE)
         ):
-            return render_markdown_to_html(markdown)
-        renderer = build_markdown_renderer()
+            return renderer.render(normalize_markdown_blank_lines(markdown))
         if has_date:
             install_date_rule(renderer, date_text)
         if SUMMARY_DIRECTIVE in markdown:

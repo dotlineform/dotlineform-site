@@ -311,7 +311,7 @@ def render_image_reference(token: SourceTokenOccurrence, src: str | None) -> str
     """Render static Docs-owned image presentation without media writes or lookups."""
     if src is None:
         caption = f"<p>{html.escape(token.caption)}</p>" if token.caption else ""
-        return caption + render_summary_paragraphs(token.summary)
+        return caption + render_summary_paragraphs(token.summary, math=True)
     modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
     if not token.fill_width:
         modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
@@ -319,7 +319,8 @@ def render_image_reference(token: SourceTokenOccurrence, src: str | None) -> str
     if token.caption:
         blocks.append(f'<span class="docsViewerFigure__caption">{html.escape(token.caption)}</span>')
     if token.summary:
-        blocks.append(f'<span class="docsViewerFigure__summary">{render_summary_inline(token.summary)}</span>')
+        summary_html = render_summary_inline(token.summary, math=True)
+        blocks.append(f'<span class="docsViewerFigure__summary">{summary_html}</span>')
     caption = f'<figcaption>{"".join(blocks)}</figcaption>' if blocks else ""
     return (
         f'<figure class="docsViewerFigure {" ".join(modifiers)}">'

@@ -36,6 +36,12 @@ Select source text and use **Bold**, just before **Add date** on the Source tool
 
 The button is disabled with no selection. After a change, Source focuses the editor and selects the edited range again. **Save** persists the edit. [Bold control](../../docs-viewer/runtime/js/management/source-editor/source-editor-bold.js)
 
+## Math
+
+In the document body or the **Summary** field of a Docs-owned image, write inline TeX between single dollar signs, such as `$x^2$`. For a display equation in the body, put `$$` on the line above and the line below the TeX. Keep the expression together without an intervening blank line. Escape a literal dollar as `\$`. In the body, use ordinary Markdown code spans or fences for examples that should show the TeX source.
+
+In a table cell, use `\lvert` or `\rvert` for vertical bars so the Markdown table can still separate its columns. Save or rebuild the document to generate native MathML for the reader. A conversion failure identifies the document and the expression to review. [Build design](../design/Docs_Viewer_Math_Rendering.md)
+
 ## Directives
 
 The menu captures the current adapter, selection and revision before moving focus. Apply serializes into the buffer. The source service handles any later persistence.

@@ -4,7 +4,9 @@ from collections.abc import Callable
 from typing import Any
 
 from markdown_it.rules_block import StateBlock
-from markdown_renderer import build_markdown_renderer, normalize_markdown_blank_lines
+from markdown_renderer import normalize_markdown_blank_lines
+
+from .math_rendering import build_docs_markdown_renderer
 
 
 RELATED_LINKS_PREFIX = "[[links|"
@@ -38,8 +40,9 @@ def install_related_links_rule(renderer: Any, render_section: Callable[[str], st
     renderer.renderer.rules["docs_related_links"] = render
 
 
-def render_without_related_links(markdown: str) -> str:
-    """Collect authored anchors without interpreting a directive's heading text."""
-    renderer = build_markdown_renderer()
-    install_related_links_rule(renderer, lambda heading: "")
+def render_for_link_collection(markdown: str) -> str:
+    """Render authored anchors while treating related-link headings and TeX as text."""
+    renderer = build_docs_markdown_renderer(typeset_math=False)
+    if RELATED_LINKS_PREFIX in markdown:
+        install_related_links_rule(renderer, lambda heading: "")
     return renderer.render(normalize_markdown_blank_lines(markdown))

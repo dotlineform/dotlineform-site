@@ -25,6 +25,8 @@ The wider metadata-separation proposal was retired because no current authoring 
 
 Word Title becomes the document H1, and Word section headings start at H2. HTML conversion preserves readable structure and warns when a structure has to be simplified. That gives canonical Markdown a defined result from another format. Structured packages use rendered-derived text for external editing. A summary-only return can preserve the canonical body by omitting content. [Import mapping](../reference/HTML_Import_Mapping.md) · [Package fidelity](../reference/Document_Packages.md#package-output)
 
+Docs Viewer keeps TeX editable in Markdown and emits MathML during document generation. [Docs Viewer math rendering](Docs_Viewer_Math_Rendering.md)
+
 ## Inspect before accepting canonical changes
 
 Review retains package-local source and generated output so a person can inspect the edited return independently. Its Build refreshes that projection, and VS Code opens the exact package member. Canonical Import separately establishes destination, prepared membership, source versions and overwrite fields. This keeps visual acceptance and mutation authority with their respective owners. [Review authority](../reference/Docs_Review.md#review-authority)
