@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-b9c522957586e9ccc5bef71833abe208",
-    "generated_at_utc": "2026-11-24T18:40:40Z",
-    "count": 403
+    "version": "blake2b-a9aa776f64b69b0933d80e10f797983a",
+    "generated_at_utc": "2026-11-24T19:06:31Z",
+    "count": 407
   },
   "fields": [
     "title",
@@ -3636,6 +3636,42 @@
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
+    },
+    {
+      "id": "d-20261124-185413-39077b",
+      "title": "TCM × Boundaries × Schemas",
+      "last_updated": "2026-11-24",
+      "display_meta": "2026-11-24 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261124-185751-96e0a3",
+      "title": "Temporal Context Models",
+      "last_updated": "2026-11-24",
+      "display_meta": "2026-11-24 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261124-185909-09ba64",
+      "title": "Temporal Empathy",
+      "last_updated": "2026-11-24",
+      "display_meta": "2026-11-24 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
+    },
+    {
+      "id": "d-20261124-190410-0cd998",
+      "title": "The probabilistic brain",
+      "last_updated": "2026-11-24",
+      "display_meta": "2026-11-24 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
     }
   ],
   "terms": {
@@ -4786,7 +4822,8 @@
     },
     "balance": {
       "summary": [
-        53
+        53,
+        403
       ]
     },
     "balances": {
@@ -5038,7 +5075,8 @@
       "summary": [
         63,
         371,
-        393
+        393,
+        403
       ]
     },
     "biases": {
@@ -5079,7 +5117,8 @@
     },
     "binds": {
       "summary": [
-        60
+        60,
+        403
       ]
     },
     "biohybrid": {
@@ -5246,7 +5285,8 @@
         114,
         115,
         158,
-        370
+        370,
+        403
       ],
       "summary": [
         10,
@@ -5255,7 +5295,8 @@
         171,
         371,
         372,
-        386
+        386,
+        403
       ]
     },
     "boundary": {
@@ -5302,7 +5343,8 @@
         333,
         339,
         357,
-        360
+        360,
+        406
       ],
       "summary": [
         3,
@@ -6809,7 +6851,8 @@
         231,
         275,
         307,
-        381
+        381,
+        403
       ]
     },
     "constant": {
@@ -6952,7 +6995,8 @@
     "context": {
       "title": [
         102,
-        387
+        387,
+        404
       ],
       "summary": [
         18,
@@ -6965,7 +7009,8 @@
         331,
         350,
         363,
-        387
+        387,
+        403
       ]
     },
     "context-sensitive": {
@@ -7043,7 +7088,8 @@
         60,
         213,
         263,
-        348
+        348,
+        403
       ]
     },
     "continuous": {
@@ -8005,6 +8051,11 @@
         88
       ]
     },
+    "discontinuity": {
+      "summary": [
+        403
+      ]
+    },
     "discourse": {
       "title": [
         70
@@ -8314,7 +8365,8 @@
     },
     "drifting": {
       "summary": [
-        60
+        60,
+        403
       ]
     },
     "drive": {
@@ -8775,6 +8827,11 @@
         361
       ]
     },
+    "empathy": {
+      "title": [
+        405
+      ]
+    },
     "emphasise": {
       "summary": [
         192
@@ -9056,7 +9113,8 @@
     },
     "episodes": {
       "summary": [
-        371
+        371,
+        403
       ]
     },
     "episodic": {
@@ -9126,7 +9184,8 @@
         22,
         23,
         60,
-        357
+        357,
+        403
       ]
     },
     "error-correcting": {
@@ -9252,7 +9311,8 @@
         62,
         171,
         371,
-        393
+        393,
+        403
       ]
     },
     "event-driven": {
@@ -9537,7 +9597,8 @@
       "summary": [
         140,
         159,
-        357
+        357,
+        403
       ]
     },
     "explainer": {
@@ -9555,7 +9616,8 @@
         76,
         263,
         267,
-        295
+        295,
+        403
       ]
     },
     "explanation": {
@@ -9758,6 +9820,11 @@
         295
       ]
     },
+    "faster": {
+      "summary": [
+        403
+      ]
+    },
     "feature": {
       "summary": [
         113
@@ -9840,6 +9907,11 @@
     "few": {
       "summary": [
         49
+      ]
+    },
+    "fewer": {
+      "summary": [
+        403
       ]
     },
     "field": {
@@ -10038,7 +10110,8 @@
       ],
       "summary": [
         49,
-        156
+        156,
+        403
       ]
     },
     "foresight": {
@@ -11923,7 +11996,8 @@
         349,
         366,
         383,
-        387
+        387,
+        403
       ]
     },
     "internally": {
@@ -12116,6 +12190,11 @@
       "summary": [
         340,
         341
+      ]
+    },
+    "items": {
+      "summary": [
+        403
       ]
     },
     "itinerary": {
@@ -13891,7 +13970,8 @@
         192
       ],
       "summary": [
-        126
+        126,
+        403
       ]
     },
     "misnaming": {
@@ -13932,7 +14012,8 @@
         193,
         319,
         324,
-        361
+        361,
+        403
       ]
     },
     "modeling": {
@@ -13945,7 +14026,8 @@
     "models": {
       "title": [
         51,
-        255
+        255,
+        404
       ],
       "summary": [
         9,
@@ -13960,7 +14042,8 @@
         275,
         285,
         366,
-        383
+        383,
+        403
       ]
     },
     "modern": {
@@ -14260,6 +14343,11 @@
         28
       ]
     },
+    "nearby": {
+      "summary": [
+        403
+      ]
+    },
     "nearest": {
       "summary": [
         22
@@ -14300,6 +14388,11 @@
     "negotiation": {
       "summary": [
         304
+      ]
+    },
+    "neighbors": {
+      "summary": [
+        403
       ]
     },
     "neighbouring": {
@@ -16235,12 +16328,14 @@
         172,
         275,
         319,
-        357
+        357,
+        403
       ]
     },
     "prediction-error": {
       "summary": [
-        60
+        60,
+        403
       ]
     },
     "predictions": {
@@ -16426,7 +16521,8 @@
         324,
         325,
         326,
-        327
+        327,
+        406
       ],
       "summary": [
         114,
@@ -17169,7 +17265,8 @@
         325,
         350,
         363,
-        366
+        366,
+        403
       ]
     },
     "recalling": {
@@ -17397,6 +17494,11 @@
     "reducible": {
       "summary": [
         98
+      ]
+    },
+    "reducing": {
+      "summary": [
+        403
       ]
     },
     "reduction": {
@@ -17903,6 +18005,11 @@
         226
       ]
     },
+    "reset": {
+      "summary": [
+        403
+      ]
+    },
     "resets": {
       "summary": [
         114
@@ -18401,11 +18508,13 @@
     },
     "schemas": {
       "title": [
-        371
+        371,
+        403
       ],
       "summary": [
         60,
-        371
+        371,
+        403
       ]
     },
     "schemata": {
@@ -18515,6 +18624,9 @@
     "segmentation": {
       "title": [
         371
+      ],
+      "summary": [
+        403
       ]
     },
     "segmented": {
@@ -18673,7 +18785,8 @@
     "separate": {
       "summary": [
         318,
-        349
+        349,
+        403
       ]
     },
     "separates": {
@@ -19104,6 +19217,11 @@
         126
       ]
     },
+    "slowly": {
+      "summary": [
+        403
+      ]
+    },
     "small": {
       "summary": [
         43,
@@ -19370,7 +19488,8 @@
         33,
         272,
         273,
-        278
+        278,
+        403
       ]
     },
     "spiking": {
@@ -19967,7 +20086,8 @@
         120,
         322,
         353,
-        361
+        361,
+        403
       ]
     },
     "suppresses": {
@@ -20291,6 +20411,11 @@
         73
       ]
     },
+    "tcm": {
+      "title": [
+        403
+      ]
+    },
     "technical": {
       "summary": [
         44
@@ -20338,11 +20463,14 @@
     "temporal": {
       "title": [
         115,
-        126
+        126,
+        404,
+        405
       ],
       "summary": [
         126,
-        144
+        144,
+        403
       ]
     },
     "tendencies": {
@@ -21114,7 +21242,8 @@
     },
     "trigger": {
       "summary": [
-        233
+        233,
+        403
       ]
     },
     "triggered": {
@@ -21468,7 +21597,8 @@
       "summary": [
         299,
         331,
-        340
+        340,
+        403
       ]
     },
     "up": {
@@ -21485,7 +21615,8 @@
       "summary": [
         60,
         126,
-        330
+        330,
+        403
       ]
     },
     "updating": {

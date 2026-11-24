@@ -1,0 +1,8 @@
+{
+  "doc_id": "d-20261124-185751-96e0a3",
+  "title": "Temporal Context Models",
+  "added_date": "2026-11-24 18:57:51",
+  "last_updated": "2026-11-24 18:58:27",
+  "draft": false,
+  "content_html": "<h1>Temporal Context Models</h1>\n<p>Temporal Context Models say the brain carries a slowly drifting internal context state while you experience a list or episode. Each item binds to whatever that context is at that moment. At recall, the current context cues items that match it (boosting recency), and retrieving an item reinstates its earlier context - which, in turn, preferentially cues its temporal neighbors (the classic contiguity effect). CMR extends this by letting context also carry source/task/category features, explaining clustering by both time and task.</p>\n<p><strong>Emotion as context (eCMR)</strong></p>\n<p>In retrieved-context models, your internal “context” isn’t just about time or taskit also carries affective features (arousal/valence). During encoding, arousal (e.g., threat, excitement) engages neuromodulatory systems (notably LC–norepinephrine), which strengthens item ↔ context bindings and nudges the context state toward those emotional features. At recall, retrieving an emotional item reinstates its emotional context, which then cues other items encoded under similar affect, producing emotion-dependent clustering, the mixed-list advantage (emotional items outcompete neutral ones), and the emotional oddball effect. This account explains immediate recall patterns (via encoding/retrieval dynamics), while still accommodating delayed benefits often attributed to consolidation.</p>\n"
+}
