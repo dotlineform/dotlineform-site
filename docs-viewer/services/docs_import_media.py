@@ -11,6 +11,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from markdown_it.token import Token
+
 from docs_import_common import (
     INLINE_RASTER_EXTENSIONS,
     MARKDOWN_INLINE_RASTER_IMAGE_PATTERN,
@@ -28,6 +30,7 @@ from docs_media_storage import (
 )
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 from docs_artifact_locations import normalize_artifact_identity
+from studio.shared.python.markdown_renderer import build_markdown_renderer
 from studio.shared.python.projects_directories import projects_path_marker
 
 
@@ -112,6 +115,29 @@ def inline_media_plan(
     return plan
 
 
+def standalone_image_alt_texts(markdown: str, image_pattern: re.Pattern[str]) -> dict[int, str]:
+    """Map standalone image offsets to the alt text rendered by Markdown."""
+    if "![" not in markdown:
+        return {}
+    renderer = build_markdown_renderer()
+    blocks: list[Token] = []
+    # Block parsing locates the paragraph without parsing its potentially large data URL.
+    normalized = markdown.replace("\r\n", "\n").replace("\r", "\n")
+    renderer.block.parse(normalized, renderer, {}, blocks)
+    line_starts = [0, *(match.end() for match in re.finditer(r"\r\n?|\n", markdown))]
+    alt_texts = {}
+    for index, block in enumerate(blocks):
+        if block.type != "paragraph_open" or block.level != 0:
+            continue
+        image = image_pattern.fullmatch(blocks[index + 1].content)
+        if image is None:
+            continue
+        start = markdown.index("![", line_starts[block.map[0]])
+        alt_parts = renderer.parseInline(image["alt"])[0].children
+        alt_texts[start] = renderer.renderer.renderInlineAsText(alt_parts, renderer.options, {})
+    return alt_texts
+
+
 def apply_inline_raster_media_plans(
     preparation: ImportMediaPreparation,
     staging_root: Path,
@@ -121,6 +147,7 @@ def apply_inline_raster_media_plans(
     markdown = str(summary.get("markdown_preview") or "")
     if "data:image/" not in markdown:
         return
+    standalone_alts = standalone_image_alt_texts(markdown, MARKDOWN_INLINE_RASTER_IMAGE_PATTERN)
 
     existing_plans = summary.get("media_plans")
     plans: list[dict[str, Any]] = list(existing_plans) if isinstance(existing_plans, list) else []
@@ -160,7 +187,11 @@ def apply_inline_raster_media_plans(
         plans.append(plan)
         preparation.inline_bytes[("img", filename)] = decoded
         inline_plans.append(plan)
-        return f"![{match.group('alt')}]({plan['media_token']})"
+        token = serialize_image_token(
+            media_path=plan["media_path"], alt=standalone_alts.get(match.start()),
+            placement="full", fill_width=False,
+        )
+        return token or f"![{match.group('alt')}]({plan['media_token']})"
 
     normalized = MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.sub(replace, markdown)
     if inline_plans:

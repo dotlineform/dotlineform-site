@@ -10,6 +10,7 @@ from typing import Any
 from urllib.parse import unquote, urlsplit
 
 from docs_artifact_locations import local_artifact_path
+from docs_image_tokens import serialize_image_token
 from docs_import_common import (
     APPLE_NOTES_CAPTION_SPAN_PATTERN,
     DOCS_VIEWER_CAPTION_FONT_STYLE,
@@ -22,7 +23,7 @@ from docs_import_common import (
     normalize_space,
     slugify,
 )
-from docs_import_media import ImportMediaPreparation, build_media_plan
+from docs_import_media import ImportMediaPreparation, build_media_plan, standalone_image_alt_texts
 from docs_workspace_config import managed_media_config
 from studio.shared.python.projects_directories import projects_path_marker
 
@@ -204,6 +205,7 @@ def rewrite_markdown_package_media_links(
     provenance_label: str = "",
 ) -> None:
     markdown = str(summary.get("markdown_preview") or "")
+    standalone_alts = standalone_image_alt_texts(markdown, MARKDOWN_IMAGE_REWRITE_PATTERN)
     plans: list[dict[str, Any]] = []
     warnings = summary.setdefault("warnings", [])
     used_filenames: set[str] = set()
@@ -211,7 +213,7 @@ def rewrite_markdown_package_media_links(
     unresolved_count = 0
     unsupported_count = 0
 
-    def plan_for_image(target: str, alt: str) -> dict[str, Any] | None:
+    def plan_for_image(target: str) -> dict[str, Any] | None:
         nonlocal unresolved_count, unsupported_count
         source = resolve_package_link_target(package_root, markdown_path, target)
         if source is None:
@@ -286,11 +288,18 @@ def rewrite_markdown_package_media_links(
         target = match.group("target")
         if str(target or "").startswith("data:image/"):
             return match.group(0)
-        plan = plan_for_image(target, match.group("alt"))
+        plan = plan_for_image(target)
         if not plan:
             return match.group(0)
-        title = str(plan.get("title") or "").replace('"', r"\"")
-        return f"![{plan['title']}]({plan['media_token']} \"{title}\")"
+        title = match.group("title") or ""
+        if not title:
+            token = serialize_image_token(
+                media_path=plan["media_path"], alt=standalone_alts.get(match.start()),
+                placement="full", fill_width=False,
+            )
+            if token:
+                return token
+        return f"![{match['alt']}]({plan['media_token']}{title})"
 
     def replace_link(match: re.Match[str]) -> str:
         plan = plan_for_attachment(match.group("target"), match.group("label"))

@@ -35,7 +35,9 @@ Choose the trusted candidate from its owning collection. Inspect the complete ov
 
 ## Import Media Preparation
 
-Native intake sees only the selected file. Converters can extract embedded Word images, inline raster data URLs or supported inline SVG. Markdown folders can supply local images, normally converted to WebP up to 800 px, and supported attachments. Import prepares document-owned references and ready bytes together. Unreadable or unsupported media may be omitted with warnings. Standalone images and downloads are added through the Source editor. [Import materialization](Media_And_Asset_Handling.md#import-materialization)
+Native intake sees only the selected file. Converters can extract embedded Word images, inline raster data URLs or supported inline SVG. Markdown folders can supply local images, normally converted to WebP up to 800 px, and supported attachments. Import prepares document-owned references and ready bytes together. Unreadable or unsupported media may be omitted with warnings. Use Source to add an individual image or download to an existing document. [Import materialization](Media_And_Asset_Handling.md#import-materialization)
+
+Import emits an editable `[[image:…]]` token for a new raster image in its own top-level paragraph. The token preserves the imported alt text and uses the image's natural width. Images in prose and references with empty alt text or an explicit Markdown image title retain their Markdown form. [Image source form](Document_And_Catalogue_References.md#docs-owned-images)
 
 A staged ordinary document may bring a separate HTML companion marked `<meta name="dlf:docs-import-role" content="interactive-html">`. A collision at the configured stable asset name requires explicit replacement confirmation. Use the resulting `html-media` token where it should appear. Native intake rejects that asset when selected on its own. [Interactive assets](Media_And_Asset_Handling.md#svg-and-interactive-assets)
 
