@@ -1,0 +1,8 @@
+{
+  "doc_id": "d-20261124-160757-e3764b",
+  "title": "Synaptic tagging and capture",
+  "added_date": "2026-11-24 16:07:57",
+  "last_updated": "2026-11-24 16:08:23",
+  "draft": false,
+  "content_html": "<h1>Synaptic tagging and capture</h1>\n<p>Synaptic tagging and capture (STC) is a mechanism in neuroscience that explains how weak memory traces can be stabilized if they occur close in time to a strong event. When a synapse is weakly activated (e.g., by a mild stimulus), it cannot by itself trigger long-lasting changes. However, this weak event leaves behind a <em>transient molecular tag</em> at the synapse; the tag acts like a “bookmark” or “flag,” marking the synapse as eligible to receive reinforcement.</p>\n<p>A strong event (e.g., a burst of activity or an emotionally salient experience) triggers gene transcription and protein synthesis in the neuron. A weak input, which normally would fade, gets rescued into long-term potentiation (LTP) - a stabilized trace of memory. At the systems level, this principle scales up: a weak learning event (e.g., exploring a neutral environment) can be consolidated into long-term memory if it happens near a strong experience (e.g., a stressful or novel event). The strong event supplies the “plasticity resources” that the weak event alone would not have elicited, which explains why memories often stick when paired with emotional or novel contexts.</p>\n<p>Memory consolidation is not just about the strength of one event, but about the temporal coordination of weak and strong experiences. The brain uses tags and diffusible proteins to decide which traces are worth keeping.</p>\n"
+}
