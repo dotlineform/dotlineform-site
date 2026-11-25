@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-647b52
 title: Endpoint Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-11-19"
+last_updated: "2026-11-25"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Local Service Map
@@ -23,6 +23,7 @@ Generated reads, management and Review have independent process gates. Managemen
 | Intent | Local boundary | Maintained owner |
 | --- | --- | --- |
 | Read saved reader output | `GET /docs/index-tree`, `/docs/doc`, `/docs/recent`, `/docs/search`, `/docs/workspace-links`; configured collection artifact routes | [Generated reads](Generated_Data_Contracts.md#local-generated-reads) |
+| List, load, save as new or delete a private saved result set | `GET /docs/saved-searches` with optional `name`, `POST /docs/saved-searches`, `POST /docs/saved-searches/delete` | [Saved results in Manage](Reader_Discovery_And_Return.md#saved-results-in-manage) |
 | Read or save the complete source buffer | `GET /docs/source`; multipart `POST /docs/source/save` | [Source editing](Source_Editing.md) |
 | Create, change readiness/Star/order, or delete | Exact-target metadata and mutation requests | [Source mutation endpoints](Source_Mutation_Endpoints.md) |
 | Generate one saved document | `POST /docs/rebuild-document` | [Exact Rebuild](Source_Mutation_Endpoints.md#post-docsrebuild-document) |

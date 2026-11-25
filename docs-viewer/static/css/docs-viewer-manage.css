@@ -2,6 +2,32 @@
   display: contents;
 }
 
+.docsViewer[data-docs-viewer-app-kind="manage"]{
+  --docs-viewer-index-width: 21rem;
+}
+
+.docsViewer__indexListControls .sharedSearchField > .sharedSearchField__text > input.sharedSearchField__input:placeholder-shown{
+  padding-inline-end: 0.25rem;
+}
+
+.docsViewer__icon--list-plus{
+  mask-image: url("../icons/list-plus.svg");
+}
+
+.docsViewer__savedResultsHeading{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.5rem;
+}
+
+.docsViewer__savedResultsHeading > span{
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
 .docsViewer__manageToolbarMount{
   flex: 0 1 auto;
   margin-left: auto;
@@ -748,6 +774,10 @@ select.docsViewer__fieldInput{
   min-height: 2rem;
   padding-top: 0;
   padding-bottom: 0;
+}
+
+select.docsViewer__savedResultsList{
+  height: auto;
 }
 
 select.docsViewer__positionTargets{

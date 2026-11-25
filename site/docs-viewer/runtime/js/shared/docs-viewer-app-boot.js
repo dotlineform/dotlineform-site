@@ -196,6 +196,7 @@ export function resolveDocsViewerAppBootContext(options) {
         viewRegistry: viewRegistry,
         mainViewControlHandlerContributions: settings.mainViewControlHandlerContributions || {},
         mountDocumentExtras: settings.mountDocumentExtras,
+        openSavedResults: settings.openSavedResults,
         reportPresentationAdapter: settings.reportPresentationAdapter,
         sourceEditorActionControlIds: settings.sourceEditorActionControlIds || [],
         tableDetailAdapter: settings.tableDetailAdapter,

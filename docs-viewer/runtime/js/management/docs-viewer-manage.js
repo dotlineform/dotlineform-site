@@ -55,6 +55,7 @@ import {
 } from "./source-editor/directive-actions.js";
 import { handleSourceBoldControl, SOURCE_BOLD_CONTROL_ID } from "./source-editor/source-editor-bold.js";
 import { handleSourceAddDateControl } from "./source-editor/source-editor-date.js";
+import { openSavedResults, renderSavedResultsButton } from "./docs-viewer-saved-searches.js";
 import {
   mountLocalFolderLinkActivation
 } from "./source-editor/local-folder-links.js";
@@ -97,6 +98,7 @@ startDocsViewerManageApp({
     createDocsViewerManagementControlRenderers(),
     createDocsViewerManagedTableToolControlRenderers(),
     {
+      "saved-results-button": renderSavedResultsButton,
       [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
     }
   ),
@@ -122,6 +124,7 @@ startDocsViewerManageApp({
     managedTableTools.controlHandlers()
   ),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
+  openSavedResults: openSavedResults,
   mountDocumentExtras: mountDocsViewerManageExtras,
   reportPresentationAdapter: reportPresentationAdapter,
   sourceEditorActionControlIds: [DIRECTIVE_ACTIONS_CONTROL_ID, "source-add-date"],

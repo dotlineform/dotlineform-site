@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-11-19"
+last_updated: "2026-11-25"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -33,6 +33,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
       recent-exclusions.json
       selected.json
       unpublishable.json
+      saved-searches/<name>.json
       documents/<doc_id>.md
       collections/<collection>/
         documents/<doc_id>.md
@@ -54,6 +55,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
 | Role | Ownership |
 | --- | --- |
 | Working Source | Canonical Markdown, ordinary hierarchy/order, selected membership, media provenance and registered producer input. |
+| Saved Search results | Private, editable document lists in Working source, with one file per list. [Manage workflow](Reader_Discovery_And_Return.md#saved-results-in-manage) |
 | Working Generated | Replaceable document, Search and Catalogue JSON used by the local reader. |
 | Private Catalogue queues | Persisted Working selections/readiness and completed publication progress, with owner-specific timestamps; ordinary document builds do not replace or reset them. |
 | Working document assets | Current ordinary/collection media for local readers, intake, builds, inventory and package/export inputs. |

@@ -8,7 +8,14 @@ import { SOURCE_BOLD_CONTROL_ID } from "./source-editor/source-editor-bold.js";
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
-    views: [],
+    views: [{
+      id: "saved-results",
+      label: "Saved results",
+      panel: "index",
+      renderer: "index-results",
+      appKinds: ["manage"],
+      features: ["management", "search"]
+    }],
     modes: [{
       id: "markdown-source",
       features: ["source-editing"],
@@ -23,6 +30,15 @@ export function createDocsViewerManagementViewDefinitions() {
       }
     }],
     controls: [
+      {
+        id: "saved-results",
+        label: "Saved results",
+        ownerType: "app",
+        surfaceId: "index-lists",
+        appKinds: ["manage"],
+        features: ["management", "search"],
+        renderer: "saved-results-button"
+      },
       {
         id: "open-recent-exclusions",
         label: "Open Recent exclusions in VS Code",

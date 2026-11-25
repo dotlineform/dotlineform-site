@@ -12,6 +12,8 @@ Open a document from Search and use **Previous** or **Next** below it to review 
 
 Opening a document result keeps the Index results in place. Use **browser Back** to return to the previous page and its reading position. The Index panel keeps its current view, query and result scroll. A Gallery result opens Media View over the current document and uses the return controls described below. [Reader history](../reference/Reader_Discovery_And_Return.md#browser-history)
 
+In Manage, use **Saved results** after the Recent clock to **Save as new** from the current Search, **Load** a named list, or **Delete** a list. Open a row in a loaded list and use **Previous** and **Next** to review documents in its saved order. The **X** beside the list name closes the list and its navigation while keeping the current document open. [Saved results and hand-written lists](../reference/Reader_Discovery_And_Return.md#saved-results-in-manage)
+
 ## Browse a collection
 
 Open its landing page from the Index. The collection list reads its saved manifest and sorts or filters those rows. For example, Context puts matching starred documents first on page one. Opening a document there captures that list's order for **Previous** and **Next**. Browser Back can restore the immediate calling list. The document's **index** shortcut reopens the collection with its last visible browsing controls in this tab. [Collection data](../reference/Reader_Discovery_And_Return.md#collection-list-preparation) · [Return paths](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)

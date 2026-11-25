@@ -24,6 +24,7 @@ from docs_management_capabilities_service import capabilities_payload
 from docs_management_document_target import managed_document_metadata
 from docs_management_source_service import read_source_document
 from docs_document_link_targets import read_document_link_targets
+import docs_saved_searches
 from studio.shared.python.projects_directories import list_projects_directory
 
 
@@ -72,6 +73,13 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
+    if path == routes.SAVED_SEARCHES_PATH:
+        if params.keys() - {"name"}:
+            raise ValueError("Saved results accept only an optional name.")
+        config = load_docs_working_config(repo_root)
+        if "name" in params:
+            return docs_saved_searches.read_saved_search(config, docs_api_query_value(params, "name"))
+        return docs_saved_searches.list_saved_searches(config)
     if path == routes.BOOK_COPIED_PATH:
         if params:
             raise ValueError("Library copy flags do not accept parameters")

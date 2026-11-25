@@ -457,6 +457,7 @@ class DocsViewerRequestHandler(IgnoreEarlyDisconnectMixin, QuietErrorLoggingMixi
         if path in {
             routes.SOURCE_PATH, routes.METADATA_PATH, routes.DOCUMENT_LINK_TARGETS_PATH,
             routes.SELECTED_PATH, routes.CATALOGUE_WORKS_REPORT_PATH,
+            routes.SAVED_SEARCHES_PATH,
         }:
             if not self.config.management_enabled:
                 self.send_json({"ok": False, "error": "Docs Viewer management is disabled"}, HTTPStatus.FORBIDDEN)

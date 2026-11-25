@@ -131,6 +131,7 @@ export function startDocsViewerRuntime(options) {
   var panelLayout = composition.panelLayout;
   var managementRuntime = null;
   var searchController = null;
+  var savedResultsModalOpen = false;
   var documentController = null;
   var routeWorkflow = null;
   var documentIndex = null;
@@ -227,12 +228,13 @@ export function startDocsViewerRuntime(options) {
   indexListControlHost = createDocsViewerControlSurfaceHost({
     mount: controlSurfaceRefs.indexLists,
     registry: viewRegistry,
-    renderers: createDocsViewerSharedControlRenderers(),
+    renderers: Object.assign({}, createDocsViewerSharedControlRenderers(), settings.controlRendererContributions || {}),
     surfaceId: "index-lists",
     onDispatch: function (detail) {
       if (!searchController) return;
       if (detail.controlId === "recent" && detail.eventType === "click") searchController.handleRecentControl();
       if (detail.controlId === "portfolio-search" && detail.eventType === "click") searchController.togglePortfolio();
+      if (detail.controlId === "saved-results" && detail.eventType === "click") openSavedResults(detail.target);
       if (detail.controlId === "search" && detail.eventType === "input") {
         searchController.handleSearchInput(detail.event.target.value);
       }
@@ -709,9 +711,34 @@ export function startDocsViewerRuntime(options) {
           pressed: latestIndexProjection && latestIndexProjection.activeViewId === "recent-results"
         },
         "portfolio-search": scope?.scopeButton || { hidden: true },
+        "saved-results": { hidden: !managementUiEnabled || !settings.openSavedResults },
         "search": { label: scope?.label || "Search" }
       }
     });
+  }
+
+  async function openSavedResults(button) {
+    if (savedResultsModalOpen || !managementUiEnabled || !settings.openSavedResults) return;
+    savedResultsModalOpen = true;
+    try {
+      var result = await settings.openSavedResults({
+        root: root,
+        baseUrl: managementBaseUrl,
+        restoreFocus: button,
+        documents: searchController.currentSearchDocuments(),
+        loadedName: searchController.loadedSavedResultsName()
+      });
+      if (result.action === "load") searchController.showSavedResults(result.list);
+      if (result.action === "saved") statusController.setStatus("Saved results: " + result.name + ".");
+      if (result.action === "deleted") {
+        if (searchController.loadedSavedResultsName() === result.name) searchController.closeSavedResults();
+        statusController.setStatus("Deleted saved results: " + result.name + ".");
+      }
+    } catch (error) {
+      statusController.setStatus(error.message || "Could not open saved results.", true);
+    } finally {
+      savedResultsModalOpen = false;
+    }
   }
 
   function projectAppManagementControlState(controlId, controlState) {

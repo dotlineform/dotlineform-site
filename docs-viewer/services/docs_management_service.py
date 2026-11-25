@@ -23,6 +23,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_selected_documents  # noqa: E402
+import docs_saved_searches  # noqa: E402
 import docs_document_thumbnails  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_import_doc  # noqa: E402
@@ -110,6 +111,13 @@ def docs_management_post_response(
         raise ValueError("scope is retired; use an optional collection")
     if "sub_scope" in body:
         raise ValueError("sub_scope is retired; use collection")
+    if path in {routes.SAVED_SEARCHES_PATH, routes.DELETE_SAVED_SEARCH_PATH}:
+        if dry_run:
+            raise ValueError("Saved results do not support dry_run")
+        config = load_docs_working_config(repo_root)
+        if path == routes.SAVED_SEARCHES_PATH:
+            return HTTPStatus.OK, docs_saved_searches.create_saved_search(config, body)
+        return HTTPStatus.OK, docs_saved_searches.delete_saved_search(config, body)
     if path == routes.GENERATED_WORKSPACE_LINKS_PATH:
         if body:
             raise ValueError("Links refresh requires an empty request object")

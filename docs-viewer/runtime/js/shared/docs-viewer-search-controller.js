@@ -1,6 +1,7 @@
 import { renderResultEntry } from "./docs-viewer-render.js";
 import { registerCollectionNavigationLink } from "./docs-viewer-collection-navigation.js";
 import { documentTargetKey } from "./docs-viewer-document-target.js";
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import {
   COLLECTION_SEARCH_SCOPES, PORTFOLIO_SEARCH_SCOPE, REFERENCE_SEARCH_SCOPES,
   collectSearchMatches, normalizeSearchText
@@ -29,7 +30,8 @@ export function initDocsViewerSearchController(context) {
   var renderedQuery = "";
   var renderedCount = 0;
   var searchMatches = [];
-  var searchOrder = null;
+  var resultOrder = null;
+  var savedResults = null;
   var renderedRecent = null;
   var renderedView = "";
   var scopeIndexes = new Map();
@@ -117,6 +119,7 @@ export function initDocsViewerSearchController(context) {
   }
 
   function setView(viewId) {
+    if (viewId !== "saved-results") endSavedResults();
     context.setIndexView(viewId);
   }
 
@@ -124,17 +127,24 @@ export function initDocsViewerSearchController(context) {
     return context.activeIndexViewId() === "recent-results";
   }
 
-  function endSearchOrder() {
-    if (!searchOrder) return;
-    searchOrder = null;
+  function endResultOrder() {
+    if (!resultOrder) return;
+    resultOrder = null;
     context.refreshActiveCollectionNavigation();
+  }
+
+  function endSavedResults() {
+    if (!savedResults) return;
+    savedResults.heading.remove();
+    savedResults = null;
+    endResultOrder();
   }
 
   function setSearchInputs(query, scope) {
     if (query === searchRecent.searchQuery && scope === searchRecent.searchScope) return;
     searchRecent.searchQuery = query;
     searchRecent.searchScope = scope;
-    endSearchOrder();
+    endResultOrder();
   }
 
   function resultHref(docId, collection) {
@@ -142,32 +152,33 @@ export function initDocsViewerSearchController(context) {
   }
 
   /** Build the order on first use. Resolve each destination only when its link is rendered. */
-  function createSearchOrder() {
+  function createResultOrder(entries, ariaLabel) {
     var rows = [];
     var positions = new Map();
-    for (const { entry } of searchMatches) {
+    for (const entry of entries) {
       if (entry.kind === "catalogue-gallery") continue;
-      positions.set(documentTargetKey({ doc_id: entry.id, collection: entry.collection }), rows.length);
-      rows.push({ title: entry.title, get href() { return resultHref(entry.id, entry.collection); } });
+      positions.set(documentTargetKey(entry), rows.length);
+      rows.push({ title: entry.title, get href() { return resultHref(entry.doc_id, entry.collection); } });
     }
-    var order = { positions, sequence: { rows, ariaLabel: "Search result navigation", isActive: () => searchOrder === order } };
+    var order = { positions, sequence: { rows, ariaLabel, isActive: () => resultOrder === order } };
     return order;
   }
 
-  function registerSearchResultLinks() {
+  function registerResultLinks(entries, ariaLabel) {
     results.querySelectorAll("[data-result-doc-id]").forEach(function (link) {
       var key = documentTargetKey({ doc_id: link.dataset.resultDocId, collection: link.dataset.resultCollection });
       registerCollectionNavigationLink(link, function () {
-        searchOrder ??= createSearchOrder();
-        return { ...searchOrder.sequence, position: searchOrder.positions.get(key) };
+        resultOrder ??= createResultOrder(entries, ariaLabel);
+        return { ...resultOrder.sequence, position: resultOrder.positions.get(key) };
       });
     });
   }
 
-  function resultEntry(entry, docId) {
+  function resultEntry(entry) {
     if (entry.kind === "catalogue-gallery") {
       return renderResultEntry({ title: entry.title, galleryId: entry.id });
     }
+    var docId = entry.doc_id;
     var config = context.workspaceConfig.activeConfig;
     var collectionId = entry.collection || "";
     var collection = collectionId
@@ -241,7 +252,7 @@ export function initDocsViewerSearchController(context) {
   async function refreshSearch() {
     if (!enabled("search")) return;
     var scroll = resultsView.scrollTop;
-    endSearchOrder();
+    if (!savedResults) endResultOrder();
     scopeIndexes.clear();
     renderedIndex = null;
     deletedResults.clear();
@@ -258,7 +269,7 @@ export function initDocsViewerSearchController(context) {
   function renderRecentRows() {
     var docs = searchRecent.recentEntries;
     setResultsStatus(docs.length ? "" : "No recent additions.", false);
-    results.innerHTML = docs.map(function (doc) { return resultEntry(doc, doc.doc_id); }).join("");
+    results.innerHTML = docs.map(resultEntry).join("");
     more.replaceChildren();
     more.hidden = true;
     renderedRecent = searchRecent.recentEntries;
@@ -285,25 +296,75 @@ export function initDocsViewerSearchController(context) {
   function renderSearchRows(query, index) {
     var changedQuery = renderedQuery !== query || renderedIndex !== index;
     if (changedQuery) {
-      searchMatches = collectSearchMatches(index, query).filter(function ({ entry }) {
-        return !deletedResults.has(documentTargetKey({ doc_id: entry.id, collection: entry.collection }));
+      searchMatches = collectSearchMatches(index, query).flatMap(function ({ entry }) {
+        if (entry.kind === "catalogue-gallery") return [entry];
+        var row = { doc_id: entry.id, title: entry.title };
+        if (entry.collection) row.collection = entry.collection;
+        return deletedResults.has(documentTargetKey(row)) ? [] : [row];
       });
       renderedQuery = query;
       renderedIndex = index;
     }
     if (!changedQuery && renderedView === "search-results"
       && renderedCount === searchRecent.searchVisibleCount) { syncSelection(); return; }
-    var visible = searchMatches.slice(0, searchRecent.searchVisibleCount);
     var scrollTop = changedQuery ? 0 : resultsView.scrollTop;
     setResultsStatus(searchMatches.length ? "" : "No results.", false);
-    results.innerHTML = visible.map(function (match) { return resultEntry(match.entry, match.entry.id); }).join("");
-    registerSearchResultLinks();
-    more.hidden = searchMatches.length <= visible.length;
-    more.innerHTML = more.hidden ? "" : '<button type="button" class="docsViewer__moreBtn" data-role="more">more</button>';
+    renderOrderedRows(searchMatches, searchRecent.searchVisibleCount, "Search result navigation");
     renderedCount = searchRecent.searchVisibleCount;
     renderedView = "search-results";
     resultsView.scrollTop = scrollTop;
+  }
+
+  function renderOrderedRows(entries, count, ariaLabel) {
+    results.innerHTML = entries.slice(0, count).map(resultEntry).join("");
+    registerResultLinks(entries, ariaLabel);
+    more.hidden = entries.length <= count;
+    more.innerHTML = more.hidden ? "" : '<button type="button" class="docsViewer__moreBtn" data-role="more">more</button>';
     syncSelection();
+  }
+
+  function renderSavedRows() {
+    setResultsStatus(savedResults.docs.length ? "" : "This saved list has no documents.", false);
+    renderOrderedRows(savedResults.docs, savedResults.visibleCount, "Saved result navigation");
+    renderedView = "saved-results";
+  }
+
+  function closeSavedResults() {
+    setView("index-tree");
+    routeCommands.updateIndexHistory("");
+  }
+
+  /** Load the supplied rows in file order and keep the displayed document in place. */
+  function showSavedResults({ name, docs }) {
+    cancelSearchDebounce();
+    endSavedResults();
+    setSearchInputs("", "");
+    context.setSearchInput("");
+
+    var document = results.ownerDocument;
+    var heading = document.createElement("div");
+    heading.className = "docsViewer__savedResultsHeading";
+    var nameNode = document.createElement("span");
+    nameNode.textContent = name;
+    var close = document.createElement("button");
+    close.type = "button";
+    close.className = "docsViewer__toolbarIconButton docsViewer__infoPanelClose";
+    close.setAttribute("aria-label", "Close list");
+    close.title = "Close list";
+    close.append(createDocsViewerToolbarIcon(document, "docsViewer__icon--x"));
+    close.addEventListener("click", function () {
+      closeSavedResults();
+      searchInput.focus({ preventScroll: true });
+    });
+    heading.append(nameNode, close);
+    resultsView.prepend(heading);
+    savedResults = { name, docs: docs.filter(row => !deletedResults.has(documentTargetKey(row))),
+      visibleCount: context.searchBatchSize, heading };
+    setView("saved-results");
+    context.revealIndex();
+    renderSavedRows();
+    resultsView.scrollTop = 0;
+    routeCommands.updateIndexHistory("");
   }
 
   function commitDocumentChange(change) {
@@ -312,9 +373,16 @@ export function initDocsViewerSearchController(context) {
     var scroll = resultsView.scrollTop;
     var key = documentTargetKey(target);
     deletedResults.add(key);
-    if (searchOrder?.positions.has(key)) endSearchOrder();
+    if (resultOrder?.positions.has(key)) endResultOrder();
     renderedIndex = null;
     if (context.activeIndexViewId() === "search-results") renderSearchMode();
+    if (savedResults) {
+      var docs = savedResults.docs.filter(row => documentTargetKey(row) !== key);
+      if (docs.length !== savedResults.docs.length) {
+        savedResults.docs = docs;
+        renderSavedRows();
+      }
+    }
     var entries = searchRecent.recentEntries;
     var remaining = entries.filter(function (entry) {
       return entry.doc_id !== target.doc_id || (entry.collection || "") !== (target.collection || "");
@@ -332,7 +400,7 @@ export function initDocsViewerSearchController(context) {
   function handleResultKeyDown(event) {
     if (event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     if (!["ArrowDown", "ArrowUp", "Escape"].includes(event.key)) return;
-    if (!["search-results", "recent-results"].includes(context.activeIndexViewId())) return;
+    if (!["search-results", "recent-results", "saved-results"].includes(context.activeIndexViewId())) return;
     if (event.target === searchInput) {
       if (event.key !== "ArrowDown") return;
       event.preventDefault();
@@ -375,8 +443,13 @@ export function initDocsViewerSearchController(context) {
     });
     more.addEventListener("click", function (event) {
       if (!event.target.closest("button[data-role='more']")) return;
-      searchRecent.searchVisibleCount += context.searchBatchSize;
-      renderSearchMode();
+      if (savedResults) {
+        savedResults.visibleCount += context.searchBatchSize;
+        renderSavedRows();
+      } else {
+        searchRecent.searchVisibleCount += context.searchBatchSize;
+        renderSearchMode();
+      }
       routeCommands.updateIndexHistory(searchRecent.searchQuery);
     });
   }
@@ -486,6 +559,13 @@ export function initDocsViewerSearchController(context) {
     bind: bind,
     handleRecentControl: handleRecentControl,
     handleSearchInput: handleSearchInput,
+    currentSearchDocuments: function () {
+      return renderedView === "search-results" && context.activeIndexViewId() === "search-results"
+        ? searchMatches.filter(entry => entry.kind !== "catalogue-gallery") : [];
+    },
+    showSavedResults: showSavedResults,
+    loadedSavedResultsName: function () { return savedResults?.name; },
+    closeSavedResults: closeSavedResults,
     renderRecentMode: renderRecentMode,
     refreshRecent: refreshRecent,
     refreshSearch: refreshSearch,
