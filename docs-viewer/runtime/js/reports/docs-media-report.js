@@ -4,6 +4,7 @@ import { buildDocsMediaSnapshot } from "./docs-media-data.js";
 const DEFAULT_SORT_KEY = "type";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["collection", "type", "file", "owner", "documents"]);
+const THUMB_SORT_KEYS = Object.freeze(["file", "documents"]);
 const COLUMN_LABELS = Object.freeze({
   collection: "Collection",
   type: "Type",
@@ -119,7 +120,8 @@ function sortButton(state, key) {
 
 function renderHead(state) {
   clearNode(state.headNode);
-  SORT_KEYS.forEach((key) => state.headNode.appendChild(sortButton(state, key)));
+  const keys = state.thumbs ? THUMB_SORT_KEYS : SORT_KEYS;
+  keys.forEach((key) => state.headNode.appendChild(sortButton(state, key)));
 }
 
 function appendTextCell(rowNode, value) {
@@ -128,21 +130,48 @@ function appendTextCell(rowNode, value) {
   rowNode.appendChild(cell);
 }
 
-function appendFileCell(rowNode, row) {
+function appendThumbnail(state, cell, row, mediaKey) {
+  const owner = row.collection ? ["collections", row.collection] : ["workspace"];
+  const path = [...owner, row.mediaType, ...row.identity.split("/")].map(encodeURIComponent).join("/");
+  const image = document.createElement("img");
+  image.alt = row.filename;
+  image.loading = "lazy";
+  image.decoding = "async";
+  image.src = state.mediaRoot + "/" + path;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "docsViewerReport__imageThumb";
+  button.dataset.docsMediaImage = mediaKey;
+  button.setAttribute("aria-label", "Open image " + row.filename);
+  button.appendChild(image);
+  button.addEventListener("click", () => {
+    if (!state.busy) state.context.requestContentDetail({ kind: "image", reportImageKey: mediaKey });
+  });
+  cell.appendChild(button);
+}
+
+function appendFileCell(state, rowNode, row) {
   const cell = document.createElement("span");
+  const mediaKey = JSON.stringify(row.mediaTarget);
+  if (state.thumbs) {
+    cell.className = "docsViewerReport__imageFile";
+    appendThumbnail(state, cell, row, mediaKey);
+  }
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink docsViewerReport__title";
   link.href = "#";
   link.textContent = row.filename;
   link.title = row.identity;
-  link.dataset.docsMediaTarget = JSON.stringify(row.mediaTarget);
+  link.dataset.docsMediaTarget = mediaKey;
   cell.appendChild(link);
   rowNode.appendChild(cell);
 }
 
-function appendDocumentsCell(rowNode, row) {
+function appendDocumentsCell(state, rowNode, row) {
   const cell = document.createElement("span");
   cell.className = "docsViewerReport__cellStack";
+  if (state.thumbs && !row.documents.length) cell.textContent = "Unreferenced";
   row.documents.forEach((documentRecord) => {
     const link = document.createElement("a");
     link.className = "docsViewerReport__cellLink";
@@ -177,16 +206,20 @@ function currentProjection(state) {
   return state.sortedRows.filter((row) => (
     (state.collectionFilter === "*" || row.collection === state.collectionFilter)
     && (!searchText || row.searchText.includes(searchText))
+    && (!state.thumbs || row.mediaType === "img" || row.mediaType === "svg")
   ));
 }
 
 function renderRows(state) {
   const rows = currentProjection(state);
+  state.context.reportRoot.dataset.docsMediaView = state.thumbs ? "thumbs" : "table";
   renderHead(state);
   clearNode(state.rowsNode);
-  state.emptyNode.hidden = rows.length > 0 || state.sortedRows.length === 0;
+  state.emptyNode.hidden = rows.length > 0 || (!state.thumbs && state.sortedRows.length === 0);
   if (!rows.length) {
-    state.emptyNode.textContent = "No Docs Media rows match the current filters.";
+    state.emptyNode.textContent = state.thumbs
+      ? "No images match the current filters."
+      : "No Docs Media rows match the current filters.";
     return;
   }
   rows.forEach((row) => {
@@ -195,11 +228,13 @@ function renderRows(state) {
     rowNode.dataset.docsMediaType = row.mediaType;
     rowNode.dataset.docsMediaIdentity = row.identity;
     rowNode.dataset.docsMediaCollection = row.collection;
-    appendTextCell(rowNode, row.collectionTitle);
-    appendTextCell(rowNode, row.mediaType);
-    appendFileCell(rowNode, row);
-    appendOwnerCell(rowNode, row);
-    appendDocumentsCell(rowNode, row);
+    if (!state.thumbs) {
+      appendTextCell(rowNode, row.collectionTitle);
+      appendTextCell(rowNode, row.mediaType);
+    }
+    appendFileCell(state, rowNode, row);
+    if (!state.thumbs) appendOwnerCell(rowNode, row);
+    appendDocumentsCell(state, rowNode, row);
     state.rowsNode.appendChild(rowNode);
   });
 }
@@ -251,6 +286,8 @@ function renderCollectionFilter(state) {
 function updateControls(state) {
   state.runButton.disabled = state.busy;
   state.runButton.setAttribute("aria-busy", state.busy ? "true" : "false");
+  state.thumbsButton.disabled = state.busy || !state.snapshot || !state.mediaRoot;
+  state.thumbsButton.setAttribute("aria-pressed", String(state.thumbs));
   state.searchInputNode.disabled = state.busy;
   state.collectionFilterNode.querySelectorAll("[data-docs-media-collection-filter]").forEach((button) => {
     button.disabled = state.busy || !state.snapshot;
@@ -336,6 +373,11 @@ function attachEvents(state) {
   state.runButton.addEventListener("click", () => {
     if (!state.busy) loadMedia(state, true);
   });
+  state.thumbsButton.addEventListener("click", () => {
+    state.thumbs = !state.thumbs;
+    renderRows(state);
+    updateControls(state);
+  });
   state.collectionFilterNode.addEventListener("click", (event) => {
     const button = event.target instanceof Element
       ? event.target.closest("[data-docs-media-collection-filter]")
@@ -388,6 +430,7 @@ function renderShell(root) {
     '    <span class="docsViewerReport__search">',
     '      <input id="docsMediaReportSearch" class="docsViewerReport__searchInput" type="search" placeholder="Search" aria-label="Search Docs Media">',
     "    </span>",
+    '    <button id="docsMediaReportThumbs" type="button" class="docsViewerReport__filter" aria-pressed="false">Thumbs</button>',
     "  </div>",
     '  <div id="docsMediaReportCollection" class="docsViewerReport__collectionFilters" role="group" aria-label="Filter media by collection"></div>',
     "</div>",
@@ -405,6 +448,7 @@ function renderShell(root) {
     headNode: root.querySelector(".docsViewerReport__head"),
     rowsNode: root.querySelector(".docsViewerReport__rows"),
     runButton: root.querySelector("#docsMediaReportRun"),
+    thumbsButton: root.querySelector("#docsMediaReportThumbs"),
     collectionFilterNode: root.querySelector("#docsMediaReportCollection"),
     searchInputNode: root.querySelector("#docsMediaReportSearch"),
     statusNode: root.querySelector(".docsViewerReport__status")
@@ -419,22 +463,28 @@ function mountDocsMediaReport(context) {
     busy: false,
     context,
     collectionFilter: "*",
+    mediaRoot: context.mediaRoot?.replace(/\/+$/, ""),
     snapshot: null,
     resultMessage: "",
     searchText: "",
     sortDir: routeSort.sortDir,
     sortKey: routeSort.sortKey,
     sortedRows: [],
+    thumbs: false,
     collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" })
   }, nodes);
   renderHead(state);
   if (context.registerRetainedView) context.registerRetainedView({
     id: "docs-media",
-    capture: function () { return { query: state.searchText, collection: state.collectionFilter, key: state.sortKey, direction: state.sortDir }; },
+    capture: function () {
+      return { query: state.searchText, collection: state.collectionFilter, key: state.sortKey, direction: state.sortDir, thumbs: state.thumbs };
+    },
     restore: function (saved) {
-      if (state.searchText === saved.query && state.collectionFilter === saved.collection && state.sortKey === saved.key && state.sortDir === saved.direction) return;
+      if (state.searchText === saved.query && state.collectionFilter === saved.collection
+          && state.sortKey === saved.key && state.sortDir === saved.direction && state.thumbs === saved.thumbs) return;
       const sortChanged = state.sortKey !== saved.key || state.sortDir !== saved.direction;
       state.searchText = saved.query; state.collectionFilter = saved.collection; state.sortKey = saved.key; state.sortDir = saved.direction;
+      state.thumbs = saved.thumbs;
       if (sortChanged) updateSort(state);
       state.searchInputNode.value = saved.query;
       if (!state.busy) renderResultStatus(state);

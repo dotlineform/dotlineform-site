@@ -13,7 +13,7 @@ Use a **one-off pass** when it answers a bounded question or makes a finite set 
 | Inline labels | Identify useful sequences and recurring terms in the imported designs. | Start with text conventions. Adopt structured tags when there is a defined use such as filtering or term discovery. |
 | References | The Library extraction and removal pass is complete. Reuse its JSON for per-document shortlisting. | Keep the inventory as Working editorial data. Maintain Selected Reading and any book bibliography as authored pages. |
 | Spelling and grammar | Run a candidate scan by batch and review changes in context. | Follow a small house word list and spelling convention during normal editing. |
-| Images | Use the thumbnail snapshot to select a sample and classify the work. | A thumbnail view in Docs Media is the strongest candidate for recurring cross-document review. Replace or annotate individual images in Source. |
+| Images | Use the thumbnail snapshot to select a sample and classify the work. | Use Thumbs in Docs Media for recurring cross-document review. Replace or annotate individual images in Source. |
 | Tables | Inventory the sizing overrides and check representative dense tables at narrow widths. | Use existing Table options in Source. Consider one default at the agreed scope if small type consistently works. |
 | Index and glossary | Collect subject and term candidates from the selected material. | Curate navigable pages in the Library and in the relevant Book edition. |
 
@@ -87,9 +87,11 @@ EPUB 3.3 supports SVG as a core image format. Package a self-contained SVG with 
 
 ### Browse and Triage Images
 
-The one-off Library contact sheet showed the value of a visual pass without opening each document. The current Docs Media Working report already has a Library filter, filenames, owners and references. Its filename action reveals the source in Finder. A proposed thumbnail view can show the images from those same saved results, open a larger preview and link back to the owning document. Keep the existing explicit refresh and use the saved inventory for the thumbnails. [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3) · [Docs Media inventory](../reference/Media_And_Asset_Handling.md#docs-media-inventory-report)
+The one-off Library contact sheet showed the value of a visual pass without opening each document. Use **Docs Media → Working → Thumbs** with the Library filter to browse the saved results and open larger previews. **Referenced by** links to the documents that use each image. [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3) · [Docs Media inventory](../reference/Media_And_Asset_Handling.md#docs-media-inventory-report)
 
 For the first pass, use a temporary list of images marked **Keep**, **Repair**, **Redraw** or **Remove**. Record a short decision against the owning document and filename as needed. Start with a small batch from chapters likely to be edited. Consider saved review status only if a second pass needs to pick up outstanding decisions across sessions.
+
+The Thumbs code review traced the browser's existing filter, sort and retained-view state through opening and closing a preview. Content Detail copies target data, so the Manage adapter uses the exact saved image identity to find the live thumbnail and reports when that row is no longer available. It reuses the thumbnail image in the larger pane. The report makes its existing inventory read and loads image bytes as they are needed. The existing asset service owns path confinement and serving. A Manage browser check opened an SVG and a WebP, verified the original asset links, and returned to the scrolled SVG row at the same position with keyboard focus restored. Thumbnail fit remains part of visual review.
 
 ## Tables
 
@@ -105,4 +107,4 @@ For *Living Memory*, try a glossary and selective subject index in the back matt
 
 ## First Editorial Pass
 
-Choose a few chapters likely to be used together in *Living Memory*. Give each a prose pass, shortlist its reading where useful, and review its figures and tables at the intended reading width. Use the qubit figures and the denser map to test both the style and the browsing workflow. Record the rules that work across the sample here. The first candidate for a separate implementation is the Docs Media thumbnail view, since image discovery repeats across every chapter and the existing report already owns the inventory.
+Choose a few chapters likely to be used together in *Living Memory*. Give each a prose pass, shortlist its reading where useful, and review its figures and tables at the intended reading width. Use Docs Media Thumbs to find the qubit figures and the denser map for the first image review. Record the rules that work across the sample here.

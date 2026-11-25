@@ -65,6 +65,56 @@
   grid-template-columns: minmax(7rem, 10rem) minmax(4rem, 6rem) minmax(12rem, 1fr) minmax(12rem, 18rem) minmax(12rem, 20rem);
 }
 
+.docsViewerReport[data-report-id="docs_media"][data-docs-media-view="thumbs"]
+  :is(.docsViewerReport__head, .docsViewerReport__row){
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+
+.docsViewerReport[data-docs-media-view="thumbs"] .docsViewerReport__row{
+  align-items: center;
+}
+
+.docsViewerReport__imageFile{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.docsViewerReport__imageFile > .docsViewerReport__cellLink{
+  flex: 1 1 8rem;
+}
+
+.docsViewerReport__imageThumb{
+  flex: 0 1 10rem;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  max-width: 100%;
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+  padding: 0.2rem;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 6px;
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-text);
+  cursor: pointer;
+}
+
+.docsViewerReport__imageThumb > img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+}
+
+.docsViewerReport__imageThumb:focus-visible{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 2px;
+}
+
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__table{
   overflow-x: auto;
 }

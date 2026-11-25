@@ -18,6 +18,7 @@ import {
 import {
   createDocsViewerReportPresentationAdapter
 } from "../reports/docs-viewer-report-presentation.js";
+import { createDocsViewerManagedImageDetailAdapter } from "./docs-viewer-managed-image-detail.js";
 import {
   mountDocsViewerManageDocumentExtras
 } from "./docs-viewer-management-document-reports.js";
@@ -80,6 +81,7 @@ function mountDocsViewerManageExtras(context) {
 }
 
 const managedTableTools = createDocsViewerManagedTableTools();
+const managedImageDetailAdapter = createDocsViewerManagedImageDetailAdapter(docsViewerImageDetailAdapter);
 const managedTableDetailAdapter = createDocsViewerTableDetailAdapter({
   presentationExtension: managedTableTools.presentationExtension
 });
@@ -106,7 +108,7 @@ startDocsViewerManageApp({
     withDocsViewerContentDetailDefinitions(
       createDocsViewerManagementViewDefinitions(),
       {
-        imageDetailAdapter: docsViewerImageDetailAdapter,
+        imageDetailAdapter: managedImageDetailAdapter,
         mediaDetailAdapter: docsViewerMediaDetailAdapter,
         reportPresentationAdapter: reportPresentationAdapter,
         tableDetailAdapter: managedTableDetailAdapter
