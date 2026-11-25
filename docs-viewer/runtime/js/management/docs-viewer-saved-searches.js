@@ -14,6 +14,26 @@ export function renderSavedResultsButton({ document, existingRoot }) {
   return button;
 }
 
+/** Name and save the supplied ordered document rows without opening the saved-list chooser. */
+export function openSaveResults({ baseUrl, root, restoreFocus, documents }) {
+  return openDocsViewerManagementModal({
+    root,
+    restoreFocus,
+    title: "Save results",
+    size: "compact",
+    bodyHtml: `<p class="docsViewer__modalNote muted small">${documents.length} ${documents.length === 1 ? "document" : "documents"}</p>
+      <label class="docsViewer__field" for="newSavedResultsName"><span class="docsViewer__fieldLabel">Name</span>
+      <input class="docsViewer__fieldInput" id="newSavedResultsName" type="text" autocomplete="off"></label>`,
+    focusSelector: "#newSavedResultsName",
+    actions: [{ role: "modal-cancel", label: "Cancel" }, { role: "modal-primary", label: "Save as new" }],
+    async onSubmit(api) {
+      const name = api.host.querySelector("#newSavedResultsName").value.trim();
+      const saved = await fetchManagementJson(SAVED_SEARCHES, "POST", { name, docs: documents }, { baseUrl });
+      return { action: "saved", name: saved.name };
+    }
+  });
+}
+
 /** The chooser owns one filename listing. Its actions read or change only the selected file. */
 export async function openSavedResults({ baseUrl, root, restoreFocus, documents, loadedName }) {
   const request = (method, path, payload) => fetchManagementJson(path, method, payload, { baseUrl });
@@ -50,21 +70,7 @@ export async function openSavedResults({ baseUrl, root, restoreFocus, documents,
   });
 
   if (choice.action === "save") {
-    return openDocsViewerManagementModal({
-      ...modal,
-      title: "Save search results",
-      size: "compact",
-      bodyHtml: `<p class="docsViewer__modalNote muted small">${documents.length} documents</p>
-        <label class="docsViewer__field" for="newSavedResultsName"><span class="docsViewer__fieldLabel">Name</span>
-        <input class="docsViewer__fieldInput" id="newSavedResultsName" type="text" autocomplete="off"></label>`,
-      focusSelector: "#newSavedResultsName",
-      actions: [{ role: "modal-cancel", label: "Cancel" }, { role: "modal-primary", label: "Save as new" }],
-      async onSubmit(api) {
-        const name = api.host.querySelector("#newSavedResultsName").value.trim();
-        const saved = await request("POST", SAVED_SEARCHES, { name, docs: documents });
-        return { action: "saved", name: saved.name };
-      }
-    });
+    return openSaveResults({ ...modal, baseUrl, documents });
   }
   if (choice.action === "delete") {
     return openDocsViewerManagementModal({

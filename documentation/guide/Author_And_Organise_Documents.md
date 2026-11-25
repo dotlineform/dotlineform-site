@@ -25,6 +25,8 @@ Use **Import doc…** to convert a file into a fresh draft. Pick **Import docs�
 
 Choose **Select** and check rows before **Collection Actions → Export…** for a readable HTML snapshot or **Prepare package…** for structured exchange. In Concepts, a complete trusted return can update existing Titles, Summaries and bodies. If you only changed a Summary, keep the prepared IDs and omit the returned body field so the canonical Markdown survives. [HTML snapshot](../reference/Export.md) · [Checked package round trip](../reference/Document_Packages.md#follow-a-checked-document-round-trip)
 
+To save a list for review or analysis, check documents and choose the list-plus **Save results** button beside **Clear** and **Done**. Name the list and save it. You can point an analysis at the JSON or reopen the list later through **Saved results** in the Index. [Collection selection](../reference/Collections_And_Books.md#standard-collection-actions) · [Saved results storage](../reference/Reader_Discovery_And_Return.md#saved-results-in-manage)
+
 ## Add links and media
 
 - Use **Insert doc link** in Source to choose an exact document. The link carries its stable identity, so it survives a title change and opens through the active reader. To show computed incoming and outgoing links, put `[[links|Further reading]]` on its own line. Working renders the list from its saved relationships. Use the **Broken Links** report's explicit **Refresh** to check destinations. [Related Links](../reference/Related_Links.md#authoring-decision) · [Broken Links report](../reference/Broken_Links.md#saved-local-report)

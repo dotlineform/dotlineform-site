@@ -2,6 +2,7 @@ import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.
 import { CATALOGUE_SEARCH_PARAM } from "../shared/docs-viewer-router.js";
 import { createDocsViewerEditMenuItem } from "./docs-viewer-management-edit-menu.js";
 import { mountDocsViewerPaginationControl } from "./docs-viewer-pagination-control.js";
+import { openSaveResults } from "./docs-viewer-saved-searches.js";
 import { isBookMatter } from "./docs-viewer-book-manifest.js";
 import {
   DOCS_VIEWER_ACTION_IDS
@@ -55,8 +56,8 @@ function writeClipboardText(documentRef, text) {
  * Creates the manage-only contribution for the shared collection report.
  *
  * The shared report owns collection identity and navigation. This contribution
- * only projects compact manifest row state and receives explicit lifecycle
- * events; it does not infer targets or load workflows.
+ * projects compact manifest row state and coordinates actions for the checked
+ * documents in the mounted report.
  *
  * @param {Object} options
  * @returns {Object}
@@ -104,6 +105,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     ? options.onRegenerateCatalogue
     : null;
   var managementContext = Boolean(options.managementContext);
+  var canSaveResults = Boolean(managementContext && options.clientOptions?.baseUrl);
   var bookTools = options.bookTools;
   var bookRowSelection = bookTools?.rowSelection;
   var selectionOwner = options.selectionOwner || createDocsViewerCollectionSelectionOwner();
@@ -166,6 +168,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (!listToolbar) return snapshot;
 
     var checkedIds = active ? eligible.filter(id => selected.has(id)) : null;
+    listToolbar.checkedDocIds = checkedIds;
     bookRowSelection?.project(available && listToolbar.selectionReady && !selectionWorkflowActive, checkedIds);
     listToolbar.actionsHost.hidden = hidden;
     listToolbar.actionsButton.disabled = !available || hidden || selectionWorkflowActive;
@@ -178,6 +181,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
     listToolbar.clearButton.disabled = !active || selected.size === 0;
     listToolbar.doneButton.disabled = !active;
+    if (listToolbar.saveResultsButton) {
+      listToolbar.saveResultsButton.disabled = !checkedIds?.length || selectionWorkflowActive;
+    }
     if (listToolbar.bookControls) bookTools.projectSelection(listToolbar.bookControls, checkedIds || []);
 
     listToolbar.menuActions.forEach(function (action, index) {
@@ -199,7 +205,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar.selectButton.disabled = !selectionOwner.available() || !listToolbar.selectionReady || selectionWorkflowActive;
   }
 
-  async function openBookRow(action) {
+  async function runSelectionWorkflow(action) {
     if (!listToolbar?.selectionReady || selectionWorkflowActive) return;
     selectionWorkflowActive = true;
     projectSelection();
@@ -291,7 +297,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       leadingHost.appendChild(checkbox);
       rowSelections.set(docId, {
         checkbox: checkbox,
-        host: leadingHost
+        host: leadingHost,
+        title: doc.title
       });
     }
     if (doc.draft === true) {
@@ -419,12 +426,19 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     selectionControl.setAttribute("aria-label", "Collection selection");
     var selectAllButton = selectionCommandButton(documentRef, "select-all", "All");
     var clearButton = selectionCommandButton(documentRef, "clear", "Clear");
+    var saveResultsButton = canSaveResults ? selectionCommandButton(documentRef, "save-results", "Save results") : null;
+    if (saveResultsButton) {
+      var label = saveResultsButton.textContent;
+      saveResultsButton.setAttribute("aria-label", label);
+      saveResultsButton.title = label;
+      saveResultsButton.replaceChildren(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--list-plus"));
+    }
     var doneButton = selectionCommandButton(documentRef, "done", "Done");
-    selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
+    selectionControl.replaceChildren(...[selectAllButton, clearButton, saveResultsButton, doneButton].filter(Boolean));
     var bookControls = bookTools?.mountSelectionControls(selectionControl, settings.renderList);
     settings.actionHost.replaceChildren(...(regenerateButton ? [regenerateButton] : []));
     if (bookRowSelection) {
-      bookRowSelection.prepare(openBookRow);
+      bookRowSelection.prepare(runSelectionWorkflow);
       bookTools.mountListActions(selectButton, selectionControl, actionsHost);
     } else {
       var root = documentRef.createElement("div");
@@ -455,6 +469,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       menu: menu,
       menuActions: renderedActions,
       regenerateButton: regenerateButton,
+      saveResultsButton: saveResultsButton,
       selectAllButton: selectAllButton,
       selectButton: selectButton,
       selectionChanged: settings.selectionChanged,
@@ -530,6 +545,20 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     clearButton.addEventListener("click", function () {
       selectionOwner.clear();
       projectSelection();
+    });
+    saveResultsButton?.addEventListener("click", function () {
+      if (saveResultsButton.disabled) return;
+      var checkedDocIds = listToolbar.checkedDocIds;
+      runSelectionWorkflow(async function () {
+        var { collection } = selectionOwner.collection();
+        var documents = checkedDocIds.map(docId => ({
+          collection, doc_id: docId, title: rowSelections.get(docId).title
+        }));
+        var result = await openSaveResults({
+          baseUrl: options.clientOptions.baseUrl, root: options.root, restoreFocus: saveResultsButton, documents
+        });
+        if (result.action === "saved") options.setStatus?.("Saved " + result.name + ".json");
+      });
     });
     doneButton.addEventListener("click", function () {
       selectionOwner.done();
