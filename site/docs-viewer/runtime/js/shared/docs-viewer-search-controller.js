@@ -1,4 +1,6 @@
 import { renderResultEntry } from "./docs-viewer-render.js";
+import { registerCollectionNavigationLink } from "./docs-viewer-collection-navigation.js";
+import { documentTargetKey } from "./docs-viewer-document-target.js";
 import {
   COLLECTION_SEARCH_SCOPES, PORTFOLIO_SEARCH_SCOPE, REFERENCE_SEARCH_SCOPES,
   collectSearchMatches, normalizeSearchText
@@ -27,6 +29,7 @@ export function initDocsViewerSearchController(context) {
   var renderedQuery = "";
   var renderedCount = 0;
   var searchMatches = [];
+  var searchOrder = null;
   var renderedRecent = null;
   var renderedView = "";
   var scopeIndexes = new Map();
@@ -121,6 +124,46 @@ export function initDocsViewerSearchController(context) {
     return context.activeIndexViewId() === "recent-results";
   }
 
+  function endSearchOrder() {
+    if (!searchOrder) return;
+    searchOrder = null;
+    context.refreshActiveCollectionNavigation();
+  }
+
+  function setSearchInputs(query, scope) {
+    if (query === searchRecent.searchQuery && scope === searchRecent.searchScope) return;
+    searchRecent.searchQuery = query;
+    searchRecent.searchScope = scope;
+    endSearchOrder();
+  }
+
+  function resultHref(docId, collection) {
+    return routeCommands.viewerUrl(docId, "", searchRecent.searchQuery, { collection });
+  }
+
+  /** Build the order on first use. Resolve each destination only when its link is rendered. */
+  function createSearchOrder() {
+    var rows = [];
+    var positions = new Map();
+    for (const { entry } of searchMatches) {
+      if (entry.kind === "catalogue-gallery") continue;
+      positions.set(documentTargetKey({ doc_id: entry.id, collection: entry.collection }), rows.length);
+      rows.push({ title: entry.title, get href() { return resultHref(entry.id, entry.collection); } });
+    }
+    var order = { positions, sequence: { rows, ariaLabel: "Search result navigation", isActive: () => searchOrder === order } };
+    return order;
+  }
+
+  function registerSearchResultLinks() {
+    results.querySelectorAll("[data-result-doc-id]").forEach(function (link) {
+      var key = documentTargetKey({ doc_id: link.dataset.resultDocId, collection: link.dataset.resultCollection });
+      registerCollectionNavigationLink(link, function () {
+        searchOrder ??= createSearchOrder();
+        return { ...searchOrder.sequence, position: searchOrder.positions.get(key) };
+      });
+    });
+  }
+
   function resultEntry(entry, docId) {
     if (entry.kind === "catalogue-gallery") {
       return renderResultEntry({ title: entry.title, galleryId: entry.id });
@@ -131,12 +174,9 @@ export function initDocsViewerSearchController(context) {
       ? config.collectionsById.get(collectionId)
       : config.collectionsByReportHostId.get(docId);
     var iconUrl = collectionId ? collection.iconUrl : collection ? collection.iconUrl : "";
-    var href = collectionId
-      ? routeCommands.viewerUrl(docId, "", searchRecent.searchQuery, { collection: collectionId })
-      : routeCommands.viewerUrl(docId, "", searchRecent.searchQuery);
     return renderResultEntry({
       docId: docId, title: entry.title, collection: collectionId,
-      iconUrl: iconUrl, href: href
+      iconUrl: iconUrl, href: resultHref(docId, collectionId)
     });
   }
 
@@ -201,6 +241,7 @@ export function initDocsViewerSearchController(context) {
   async function refreshSearch() {
     if (!enabled("search")) return;
     var scroll = resultsView.scrollTop;
+    endSearchOrder();
     scopeIndexes.clear();
     renderedIndex = null;
     deletedResults.clear();
@@ -244,7 +285,9 @@ export function initDocsViewerSearchController(context) {
   function renderSearchRows(query, index) {
     var changedQuery = renderedQuery !== query || renderedIndex !== index;
     if (changedQuery) {
-      searchMatches = collectSearchMatches(index, query).filter(function (match) { return !deletedResults.has((match.entry.collection || "") + ":" + match.entry.id); });
+      searchMatches = collectSearchMatches(index, query).filter(function ({ entry }) {
+        return !deletedResults.has(documentTargetKey({ doc_id: entry.id, collection: entry.collection }));
+      });
       renderedQuery = query;
       renderedIndex = index;
     }
@@ -254,6 +297,7 @@ export function initDocsViewerSearchController(context) {
     var scrollTop = changedQuery ? 0 : resultsView.scrollTop;
     setResultsStatus(searchMatches.length ? "" : "No results.", false);
     results.innerHTML = visible.map(function (match) { return resultEntry(match.entry, match.entry.id); }).join("");
+    registerSearchResultLinks();
     more.hidden = searchMatches.length <= visible.length;
     more.innerHTML = more.hidden ? "" : '<button type="button" class="docsViewer__moreBtn" data-role="more">more</button>';
     renderedCount = searchRecent.searchVisibleCount;
@@ -266,7 +310,9 @@ export function initDocsViewerSearchController(context) {
     if (!change.deleted) return;
     var target = change.target;
     var scroll = resultsView.scrollTop;
-    deletedResults.add((target.collection || "") + ":" + target.doc_id);
+    var key = documentTargetKey(target);
+    deletedResults.add(key);
+    if (searchOrder?.positions.has(key)) endSearchOrder();
     renderedIndex = null;
     if (context.activeIndexViewId() === "search-results") renderSearchMode();
     var entries = searchRecent.recentEntries;
@@ -341,8 +387,7 @@ export function initDocsViewerSearchController(context) {
     if (context.revealIndex() && recentActive()) return;
     cancelSearchDebounce();
     var viewId = recentActive() ? "index-tree" : "recent-results";
-    searchRecent.searchQuery = "";
-    searchRecent.searchScope = "";
+    setSearchInputs("", "");
     searchRecent.searchVisibleCount = context.searchBatchSize;
     context.setSearchInput("");
     setView(viewId);
@@ -357,9 +402,8 @@ export function initDocsViewerSearchController(context) {
     var keepEmptyResults = renderedView === "search-results" && searchMatches.length === 0
       && context.activeIndexViewId() === "search-results";
     cancelSearchDebounce();
-    if (!searchRecent.searchQuery && query) searchRecent.searchScope = preferredScope();
-    if (!normalizedQuery) searchRecent.searchScope = "";
-    searchRecent.searchQuery = query;
+    var scope = searchRecent.searchQuery ? searchRecent.searchScope : preferredScope();
+    setSearchInputs(query, normalizedQuery ? scope : "");
     searchRecent.searchVisibleCount = context.searchBatchSize;
     var viewId = normalizedQuery ? "search-results" : "index-tree";
     setView(viewId);
@@ -383,7 +427,7 @@ export function initDocsViewerSearchController(context) {
     if (context.hasActiveQuery()) {
       context.revealIndex();
       cancelSearchDebounce();
-      searchRecent.searchScope = preferredScope(local);
+      setSearchInputs(searchRecent.searchQuery, preferredScope(local));
       searchRecent.searchVisibleCount = context.searchBatchSize;
       routeCommands.updateIndexHistory(searchRecent.searchQuery);
       renderSearchMode();
@@ -396,7 +440,7 @@ export function initDocsViewerSearchController(context) {
     if (!REFERENCE_SEARCH_SCOPES.has(scope)) return;
     portfolioSelected = false;
     if (context.hasActiveQuery()) {
-      searchRecent.searchScope = scope;
+      setSearchInputs(searchRecent.searchQuery, scope);
       routeCommands.updateIndexHistory(searchRecent.searchQuery);
       renderSearchMode();
     }
@@ -409,8 +453,8 @@ export function initDocsViewerSearchController(context) {
     var validScope = scope === PORTFOLIO_SEARCH_SCOPE
       || COLLECTION_SEARCH_SCOPES.has(scope) && context.workspaceConfig.activeConfig.collectionsById.has(scope);
     portfolioSelected = validScope && scope === PORTFOLIO_SEARCH_SCOPE;
-    searchRecent.searchQuery = nextQuery;
-    searchRecent.searchScope = nextQuery ? (validScope ? scope : preferredScope(collectionScope(target))) : "";
+    var nextScope = nextQuery ? (validScope ? scope : preferredScope(collectionScope(target))) : "";
+    setSearchInputs(nextQuery, nextScope);
     searchRecent.searchVisibleCount = context.searchBatchSize;
     context.setSearchInput(nextQuery);
     if (normalizeSearchText(nextQuery)) {
@@ -429,8 +473,7 @@ export function initDocsViewerSearchController(context) {
       if (record.error) scopeIndexes.delete(scope);
     }
     recentError = "";
-    searchRecent.searchQuery = "";
-    searchRecent.searchScope = "";
+    setSearchInputs("", "");
     context.setSearchInput("");
     setView("index-tree");
   }

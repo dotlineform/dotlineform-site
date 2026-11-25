@@ -16,5 +16,6 @@ Use the [development workflow](../development/Development_Workflow.md) when a ch
 ## Follow-on Reviews
 
 - [Cloud Environments](Cloud_Environments.md) records the iPad setup handoff, the unresolved settings issue and the checks needed to resume.
+- [Library editorial review](Library_Editing/Library_Editorial_Review.md) tracks structural work and scans. The [Library and Book Style Guide](Library_Editing/doc_styles.md) holds the presentation proposals and examples.
 
 Other work is found by reviewing the directory and following its domain owners. A link or old planning status alone does not authorise implementation. Historical parent metadata is navigation, not a requirement to recreate the former planning hierarchy.

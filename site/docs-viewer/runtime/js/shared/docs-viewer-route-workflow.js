@@ -145,16 +145,16 @@ export function initDocsViewerRouteWorkflow(context) {
         displayedHash = hash;
         displayedCatalogueSearch = catalogueSearch ?? displayedCatalogueSearch;
         navigation.replaceUrl(viewerUrl(target.doc_id, hash, search.searchQuery, target, displayedCatalogueSearch));
-        if (options.collectionSequence) context.projectActiveCollectionSequence(options.collectionSequence);
         if ((!hash || catalogueSearch !== undefined) && selected.displayedPayload && selected.displayedPayload.report
           && selected.displayedPayload.report.id === "docs_collection") {
-          await navigation.update();
           await context.restoreRetainedDocument(target, hash, { catalogueSearch: catalogueSearch,
+            collectionSequence: options.collectionSequence,
             focusCatalogueSearch: !hash && isCatalogueHost(target) });
         } else {
+          if (options.collectionSequence) context.projectActiveCollectionSequence(options.collectionSequence);
           context.scrollToHash(hash);
-          await navigation.update();
         }
+        await navigation.update();
         return target;
       })();
     }
@@ -266,9 +266,15 @@ export function initDocsViewerRouteWorkflow(context) {
       var route = routeFromAnchor(anchor);
       if (!route) return;
       if (event.altKey) {
-        if (!route.error && context.openSourceFromLink(route.target, {
-          collectionSequence: collectionSequenceForLink(anchor)
-        })) event.preventDefault();
+        if (route.error) return;
+        var sequence = collectionSequenceForLink(anchor);
+        if (context.openSourceFromLink(route.target, { collectionSequence: sequence })) {
+          event.preventDefault();
+          // Source can open for the displayed document without going through loadDoc.
+          if (sequence && selected.displayedPayload && documentTargetKey(route.target) === documentTargetKey(selected.documentTarget)) {
+            context.projectActiveCollectionSequence(sequence);
+          }
+        }
         return;
       }
       event.preventDefault();

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-11-20"
+last_updated: "2026-11-25"
 summary: Index, Search, Recent and collection data, browsing state and return behaviour.
 parent_id: d-20260424-000000-50b63f
 
@@ -17,8 +17,8 @@ Manage and Public share the reader. Manage reads saved Working data through loca
 | Surface | What it reads | What opening an item does |
 | --- | --- | --- |
 | **Index tree** | Working's complete `index-tree.json` or the eligible public tree, in authored sibling order. | Opens the exact ordinary document or ordinary collection host. The tree highlights an ordinary page by ID and a collection detail by its host. |
-| **Index Search** | One saved Search scope on demand. Manage uses `/docs/search` with `search-scope`. Public reads the corresponding deployed file. | A document row opens its exact document route. A Gallery row opens Media View over the current document. |
-| **Recent** | The saved `recent.json`. It contains up to 20 eligible additions across Context, Concepts, Moments and Catalogue Galleries. | Uses the same document and Gallery activation as Search. |
+| **Index Search** | One saved Search scope on demand. Manage uses `/docs/search` with `search-scope`. Public reads the corresponding deployed file. | A document row opens its exact route and passes the ranked document order. A Gallery row opens Media View over the current document. |
+| **Recent** | The saved `recent.json`. It contains up to 20 eligible additions across Context, Concepts, Moments and Catalogue Galleries. | A document row opens its exact route. A Gallery row opens Media View over the current document. |
 | **Collection host** | The owner's `manage-manifest.json` in Manage or `manifest.json` in Public. Context also reads Selected for first-page stars, and Catalogue uses the prepared Gallery report/search data for Gallery matches. | A Work or other document link opens its by-ID payload. Collection links can carry the invoking document order. Gallery results use Media View. |
 
 The app retains the tree independently of the current Search or Recent list. In the visible tree, it opens the current row's ancestors and moves the row into view when needed. While results cover the tree it tracks the current target without expanding or scrolling it. Clearing Search or toggling Recent off reveals that target. Manage Index Actions and Position are disabled while results occupy the Index. Main-pane document controls follow their own capability rules. [Workspace provider](../../docs-viewer/runtime/js/shared/docs-viewer-workspace-provider.js) · [Recent payload](Generated_Data_Contracts.md#recent-contract) · [Runtime](Docs_Viewer_Runtime.md#document-action-policy)
@@ -46,6 +46,12 @@ Search loads one index per visited scope and reuses it for queries in the mounte
 Search keeps the **No results.** message visible while the reader continues refining a query with no matches. The next completed query replaces it if the outcome changes.
 
 Search scope and query use `search-scope` and `q` in the URL. Changing them replaces the current browser entry. Following a result keeps the current view, scope, query, paging and result scroll. Back changes the main document and aligns result selection to that document. The restored URL carries the current Index query. A fresh open or reload can reapply the URL query, beginning with the first batch. Recent mode and its scroll belong to the mounted panel. [Search controls](../../docs-viewer/runtime/js/shared/docs-viewer-search-controller.js)
+
+### Search Previous And Next
+
+Open an Index Search document result in the same tab to get **Previous** and **Next** below the document. They follow all ranked document matches, including those beyond **More**. Gallery results use Media View, and the document links step past them. Collapsing the Index keeps the links available. Browser Back restores them with a retained document while its invoking results are active. [Search order](../../docs-viewer/runtime/js/shared/docs-viewer-search-controller.js) · [Footer projection](../../docs-viewer/runtime/js/shared/docs-viewer-document-controller.js)
+
+Clearing Search or changing its query or scope ends that navigation and leaves the current document open at its reading position. Switching to Recent, refreshing Search or deleting a matched document also ends the sequence. Select a document in the current results to start a new sequence. A freshly loaded URL opens its exact document and restores any URL query. Selecting a result establishes its sequence in that tab. [Search controller](../../docs-viewer/runtime/js/shared/docs-viewer-search-controller.js)
 
 ### Query And Ranking
 
@@ -91,7 +97,7 @@ The Catalogue query uses `catalogue-search` on its host URL, independently of In
 
 ### Collection Previous And Next
 
-Same-tab collection links capture their invoking order. Previous and Next use that order across report pages, including starred Context documents followed by other matches. Catalogue uses its displayed List, captured rolling grid order or matching Work sequence from its own search. Gallery results activate Media View independently. Book uses the saved Manage Tree or the generated web TOC sequence. The TOC host can supply that sequence on direct entry to the TOC. A document opened directly or through Index Search or Recent starts with just its exact target. [Collection navigation](../../docs-viewer/runtime/js/shared/docs-viewer-collection-navigation.js) · [Book source and placement](Source_Organisation.md#book-source-and-provenance)
+Same-tab collection links capture their invoking order. Previous and Next use that order across report pages, including starred Context documents followed by other matches. Catalogue uses its displayed List, captured rolling grid order or matching Work sequence from its own search. Gallery results activate Media View independently. Book uses the saved Manage Tree or the generated web TOC sequence. The TOC host can supply that sequence on direct entry to the TOC. [Collection navigation](../../docs-viewer/runtime/js/shared/docs-viewer-collection-navigation.js) · [Book source and placement](Source_Organisation.md#book-source-and-provenance)
 
 ### Browser History
 
@@ -99,4 +105,4 @@ The reader retains its active mount and one immediate caller. A new document ope
 
 Each configured collection also saves its latest visible query, sort, page, filters, supported contribution controls and scroll per host and viewer path in tab `sessionStorage`. This snapshot restores controls against the current inventory after a remount. It does not hold payloads or mounts. A heading hash takes precedence over saved scroll. If storage is blocked, restoration is limited to the current page session. Missing targets fail at their exact route; a removed or hidden opener can leave focus on the restored view. [Tab snapshots](../../docs-viewer/runtime/js/shared/docs-collection-report-state.js) · [Media return](Catalogue_Media_View.md#gallery-presentations)
 
-[Design rationale](../design/Reader_Discovery_And_Return.md) · [Accepted navigation evidence](../deliveries/Document_View_And_Return_Navigation_Handoff.md#acceptance-and-separate-work) · [Scoped Search evidence](../deliveries/Public_Index_Search_Scopes.md#3-verify-the-cutover-locally)
+[Design rationale](../design/Reader_Discovery_And_Return.md) · [Accepted navigation evidence](../deliveries/Document_View_And_Return_Navigation_Handoff.md#acceptance-and-separate-work) · [Scoped Search evidence](../deliveries/Public_Index_Search_Scopes.md#3-verify-the-cutover-locally) · [Search result navigation acceptance](../deliveries/Docs_Viewer_Search_Result_Navigation.md#acceptance-and-release)

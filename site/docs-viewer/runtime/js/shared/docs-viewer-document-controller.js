@@ -25,6 +25,8 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function projectCollectionNavigation(record, sequence) {
+    // A retained snapshot can outlive the Search results that supplied its order.
+    if (sequence?.isActive && !sequence.isActive()) sequence = undefined;
     record.invokingSequence = sequence;
     var returnedToBookToc = !record.target.collection && sequence?.bookHostId === record.target.doc_id;
     if (!sequence || returnedToBookToc) sequence = record.bookSequence;
@@ -625,6 +627,9 @@ export function initDocsViewerDocumentController(context) {
     retainDocuments: retainDocuments,
     projectActiveCollectionSequence: function (sequence) {
       if (activeRecord?.root && !activeRecord.error) projectCollectionNavigation(activeRecord, sequence);
+    },
+    refreshActiveCollectionNavigation: function () {
+      if (activeRecord?.invokingSequence) projectCollectionNavigation(activeRecord, activeRecord.invokingSequence);
     },
     scrollToHash: scrollToHash,
     handleMissingDoc: handleMissingDoc,

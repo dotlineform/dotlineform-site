@@ -542,6 +542,7 @@ export function startDocsViewerRuntime(options) {
     more: more,
     setIndexView: panelLayout.setActiveIndexView,
     revealIndex: revealIndex,
+    refreshActiveCollectionNavigation: documentController.refreshActiveCollectionNavigation,
     resultsView: indexPanelRefs.resultsView,
     resultsStatus: resultsStatus,
     results: results,

@@ -38,11 +38,12 @@ export function registerBookTocLinks(toc) {
   return sequence;
 }
 
+/** Project adjacent links from the invoking order. Search can supply its own accessible name. */
 export function createCollectionNavigation(document, sequence) {
   const { rows, position } = sequence;
   const nav = document.createElement("nav");
   nav.className = "docsViewer__collectionNavigation";
-  nav.setAttribute("aria-label", "Collection document navigation");
+  nav.setAttribute("aria-label", sequence.ariaLabel || "Collection document navigation");
 
   for (const [offset, label, direction] of [[-1, "Previous", "left"], [1, "Next", "right"]]) {
     const adjacent = position + offset;
@@ -65,5 +66,5 @@ export function createCollectionNavigation(document, sequence) {
     registerCollectionNavigationLink(link, () => ({ ...sequence, position: adjacent }));
     nav.append(link);
   }
-  return nav;
+  return nav.childElementCount ? nav : null;
 }
