@@ -14,6 +14,12 @@ the source docs also don't employ consistent use of bullets + bold
 - others displayed as panels, 
 - others should be rewritten as normal paragraphs.
 
+there is also an interesting use of bullet symbols *in* a paragraph [Tao, Western Lenses, and the Possibility of Reconciliation](/docs/?collection=library&doc=d-20261124-181449-26dfe9) - this might be another option to consider (and that could be tokenised)?
+
+I have used this in [Why a Truly Universal Language Is Unattainable](/docs/?collection=library&doc=d-20261124-204035-4291d1) to separate 'tag pills'
+
+we'd need to standardise on a single bullet symbol ・ and/or •
+
 source html:
 [Structured Instability — Why Life & Memory Are Alive](/docs/?collection=library&doc=d-20261124-134035-68e613)
 ![bullets source](images/bullets_source.png)
@@ -61,7 +67,10 @@ see [Symmetry & Geometry — Laws, Breaking, and Brains](/docs/?collection=libra
 ## References
 
 currently using different formats for this section  
+
 fundamentally need to decide whether to include in a doc/chapter or whether to push to separate index of recommended reading / references?
+
+do we create a searchable json of references?
 
 ## spelling and grammar
 
@@ -72,3 +81,23 @@ math vs maths
 
 how to check and correct it across 100s docs?
 
+## images
+
+mostly images (raster or svg) are drawn in different styles. most of them contain structural problems (lines or text overlapping when they shouldn't) or need to be completely redesigned.
+
+how do we define a consistent style and track the work needed to recreate all the images?
+
+might be easier of we standardise on svg and convert raster diagrams to svg
+does epub support svg?
+
+[qubit calculations](/docs/?collection=library&doc=d-20261124-212917-2cf593) is a reference for clean svg diagrams
+
+## tables
+
+decided that all tables should be small font. can we bulk-check and change existing docs?
+
+## index and glossary
+
+need to create these
+- Library: pinned to the top of list? includes links to the docs?
+- Book: at end of book, links to pages/chapters?
