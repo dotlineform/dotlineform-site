@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>R2 image pilot | dotlineform</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, sans-serif;
+      line-height: 1.5;
+    }
+
+    main {
+      max-inline-size: 50rem;
+      margin: 3rem auto;
+      padding-inline: 1rem;
+    }
+
+    img {
+      max-inline-size: 100%;
+      block-size: auto;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>R2 image pilot</h1>
+    <p id="status" role="status"></p>
+    <img id="pilot-image" alt="Catalogue image for Work 04813" hidden>
+    <noscript>JavaScript is required to run this pilot.</noscript>
+  </main>
+  <script type="module">
+    const imageUrl = "https://media.dotlineform.com/works/video/pilot/r2-image/test.webp";
+    const status = document.getElementById("status");
+    const image = document.getElementById("pilot-image");
+
+    status.textContent = "Fetching image from R2…";
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error(`R2 returned HTTP ${response.status}.`);
+      }
+
+      image.src = URL.createObjectURL(await response.blob());
+      await image.decode();
+      image.hidden = false;
+      status.textContent = "Image fetched from R2 and displayed.";
+    } catch (error) {
+      status.textContent = `Could not load the R2 image. ${error.message}`;
+    }
+  </script>
+</body>
+</html>

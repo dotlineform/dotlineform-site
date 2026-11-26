@@ -3,9 +3,9 @@ draft: false
 doc_id: d-20261122-160647-241260
 title: Standalone Site Pilots
 added_date: "2026-11-22 16:06:47"
-last_updated: "2026-11-22"
+last_updated: "2026-11-26"
 summary: Test an unlinked static pilot in site-preview and on GitHub Pages, starting with a cross-origin read from R2.
-ui_status: proposed
+ui_status: active
 parent_id: d-20261118-235100-64ad2e
 ---
 # Standalone Site Pilots
@@ -14,7 +14,7 @@ Use one tracked static page to test a feature locally and on the deployed site. 
 
 ## First Pilot With An R2 Image
 
-| Item | Proposed path or address |
+| Item | Path or address |
 | --- | --- |
 | Static page in the repository | `site/pilot/r2-image/index.html` |
 | Default local preview | `http://127.0.0.1:4000/pilot/r2-image/` |
@@ -22,7 +22,7 @@ Use one tracked static page to test a feature locally and on the deployed site. 
 | Test object on the existing R2 bucket | `works/video/pilot/r2-image/test.webp` |
 | Public object URL | `https://media.dotlineform.com/works/video/pilot/r2-image/test.webp` |
 
-Manually upload a small WebP copy of an already public Catalogue image to the test object key. Have the page fetch it with JavaScript using a plain `GET`, then display the fetched image or show a clear failure.
+The test object is a copy of the already public Catalogue image `works/img/04813-primary-800.webp`. The page fetches the pilot URL once with JavaScript using a plain `GET`, then displays the decoded image or shows a failure message. The page and its script are served as one static file.
 
 ## Why The Browser Requires CORS
 
@@ -39,7 +39,7 @@ The page and the media are served from different origins. An **origin** is the s
 On 22 November 2026, read-only requests for the existing `works/img/04813-primary-800.webp` object returned HTTP 200 for both the default local and live page origins. Neither response included `Access-Control-Allow-Origin`. Check the current bucket policy and the new test object before deciding what to change.
 
 1. Open the Cloudflare dashboard and go to **Storage & databases → R2 → Overview**. Select the existing bucket whose **Settings → Custom Domains** lists `media.dotlineform.com`. [R2 custom domains](https://developers.cloudflare.com/r2/buckets/public-buckets/#custom-domains)
-2. In that bucket's **Settings**, open **CORS Policy** and review the current rules. If the rules already allow `GET` from the exact pilot origins, use them. Otherwise, choose **Add CORS policy** or edit the existing policy, then open the **JSON** tab. Add the missing origin to a suitable read rule or add a new rule. Preserve the existing rules when saving. The example is a complete policy for a bucket with no existing rules, or a rule to merge into the current policy array. [Dashboard CORS procedure](https://developers.cloudflare.com/r2/buckets/cors/#add-cors-policies-from-the-dashboard)
+2. In that bucket's **Settings**, find **CORS Policy** and review the current rules. If the rules already allow `GET` from the exact pilot origins, use them. Otherwise, choose **Add** or edit the existing policy and enter the JSON. Add the missing origin to a suitable read rule or add a new rule. Preserve the existing rules when saving. The example is a complete policy for a bucket with no existing rules, or a rule to merge into the current policy array. [Dashboard CORS procedure](https://developers.cloudflare.com/r2/buckets/cors/#add-cors-policies-from-the-dashboard)
 
 ```json
 [
@@ -58,10 +58,11 @@ curl -fsS -D - -o /dev/null \
   'https://media.dotlineform.com/works/video/pilot/r2-image/test.webp'
 ```
 
-Repeat with `Origin: https://www.dotlineform.com`. Expect HTTP 200 and an `Access-Control-Allow-Origin` response header matching the supplied origin. Use the fresh pilot object for this check. If a cached response still carries old headers after a policy change, refresh the affected pilot cache entries before retesting. Confirm the read in the browser. The HLS pilot will separately check requests for its actual playlists and segments. [R2 CORS on custom domains](https://developers.cloudflare.com/r2/buckets/cors/#use-cors-with-a-custom-domain) · [Cloudflare cache purge options](https://developers.cloudflare.com/cache/how-to/cache-rules/#cache-rules-and-cache-keys)
+Repeat with `Origin: https://www.dotlineform.com`. Expect HTTP 200 and an `Access-Control-Allow-Origin` response header matching the supplied origin. Use the fresh pilot object for this check. If the response still carries old headers after a policy change, use **Caching → Configuration → Custom Purge → Prefix** with the pilot image's hostname and full path to clear its cached variants, then retest the original URL. Confirm the read in the browser. The HLS pilot will separately check requests for its actual playlists and segments. [R2 CORS on custom domains](https://developers.cloudflare.com/r2/buckets/cors/#use-cors-with-a-custom-domain) · [Cloudflare purge by prefix](https://developers.cloudflare.com/cache/how-to/purge-cache/purge_by_prefix/)
 
 ## Verify, Deploy And Retire
 
-- [ ] Create the page and test object. Run `bin/site-validate`, then use `bin/site-preview` to open the exact route and confirm it fetches and displays the image. Review the route and its assets explicitly. The existing validator checks required site files, configured Docs Viewer routes and the code projection. A page authored under `site/pilot/` sits outside the `bin/site-code-update` inventory. Check the first pilot for any gap that warrants a targeted verifier change. [Verification](../development/Verification.md) · [Validator implementation](../../site-tools/site_tools/validation.py)
-- [ ] Review the tracked `site/` changes and release the page using the manual **Public site** workflow. Open the deployed URL directly and confirm that the same page fetches and displays the same R2 object. Record the tested origins, browser results and any R2 rule change. The pilot uses the Pages deploy path for the page and a manual R2 upload for the image. [Public site workflow](../../.github/workflows/public-site.yml) · [Deploy procedure](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site)
+- [x] Created the page and copied the public Work 04813 WebP to the pilot key. `bin/site-validate` passed on 26 November 2026. The exact preview route showed the fetch failure while the R2 response lacked the CORS header. The page makes one request, checks the HTTP status and decodes the image before displaying it. [Verification](../development/Verification.md)
+- [x] Added one `GET` rule for the two pilot origins to `dotlineform-media`. The bucket had no prior CORS policy. The original URL initially served cached responses without the new headers, so the exact pilot image prefix was purged. The original URL then returned HTTP 200 with the matching `Access-Control-Allow-Origin` for each origin, and the browser displayed the image from `site-preview`.
+- [ ] Review the tracked `site/` changes and release the page using the manual **Public site** workflow. Open the deployed URL directly and confirm that the same page fetches and displays the same R2 object. Record the tested origins, browser results and any R2 rule change. [Public site workflow](../../.github/workflows/public-site.yml) · [Deploy procedure](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site)
 - [ ] Agree which pilot assets to retain for follow-on work. Retire a finished pilot by removing its `site/pilot/<name>/` folder in a later Pages release and removing its temporary R2 objects once they are no longer used. Keep CORS origins used by the HLS pilot or other consumers.
