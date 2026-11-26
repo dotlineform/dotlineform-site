@@ -1,7 +1,9 @@
 """Names for the completed Search artifacts shared by Working and Public."""
 
 COLLECTION_SEARCH_SCOPES = ("works", "concepts", "moments", "library", "book")
-PORTFOLIO_COLLECTIONS = frozenset(("catalogue", "works", "concepts", "moments"))
+PORTFOLIO_DOCUMENT_COLLECTIONS = frozenset(("works", "concepts", "moments", "texts"))
+PORTFOLIO_HOST_COLLECTIONS = PORTFOLIO_DOCUMENT_COLLECTIONS | {"catalogue"}
+SEARCH_DOCUMENT_COLLECTIONS = PORTFOLIO_DOCUMENT_COLLECTIONS.union(COLLECTION_SEARCH_SCOPES)
 
 
 def search_artifact(scope: str) -> tuple[str, str]:

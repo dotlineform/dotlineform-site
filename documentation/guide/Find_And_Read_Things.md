@@ -20,6 +20,8 @@ Open its landing page from the Index. The collection list reads its saved manife
 
 ## Browse the Catalogue
 
+Use the brush, video or book icon at the end of the Catalogue search toolbar to open **Painting**, **Video** or **Writing** in Media View. **Back to document** returns you to the Catalogue.
+
 Open **Catalogue** from the Index. The **work or gallery** field matches titles and Work IDs. It searches the full Catalogue and has its own query in the Catalogue page URL. Results group matching Gallery titles, Galleries with matching Works, then individual Works. **A–Z** puts exact titles first among Works, then titles starting with the query, then other matches. Each set is alphabetical. Choose **Last added** to order each Gallery group and the Work group by date. [Catalogue collection browsing](../reference/Reader_Discovery_And_Return.md#catalogue-collection-browsing)
 
 With the field empty, List starts with up to 64 of the most recently added Works. Use **Shuffle** to browse another selection. **Switch to Gallery view** opens a rolling grid where each shuffle adds a column. Returning to List restores its selection and scroll. [Catalogue collection browsing](../reference/Reader_Discovery_And_Return.md#catalogue-collection-browsing)

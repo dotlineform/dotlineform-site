@@ -54,7 +54,7 @@ from docs_discovery_selection import (  # noqa: E402
 )
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_publication_paths import confined  # noqa: E402
-from docs_search_scopes import COLLECTION_SEARCH_SCOPES, PORTFOLIO_COLLECTIONS, search_artifact  # noqa: E402
+from docs_search_scopes import COLLECTION_SEARCH_SCOPES, PORTFOLIO_DOCUMENT_COLLECTIONS, PORTFOLIO_HOST_COLLECTIONS, search_artifact  # noqa: E402
 from docs_publication_ignore import read_publication_ignore_ids  # noqa: E402
 from docs_report_source import (  # noqa: E402
     ReportDescriptor,
@@ -282,13 +282,13 @@ class DocsViewerSearchDataBuilder:
 
     def portfolio_rows(self, selection: DiscoverySelection, galleries: dict[str, Any] | None) -> list[dict[str, Any]]:
         reference_hosts = {owner.report_host_doc_id for owner in self.config.collections
-                           if owner.collection not in PORTFOLIO_COLLECTIONS}
+                           if owner.collection not in PORTFOLIO_HOST_COLLECTIONS}
         rows = [
             {"id": doc_id, "title": row["title"], "parent_id": row["parent_id"]}
             for doc_id, row in selection.ordinary.items() if doc_id not in reference_hosts
         ]
         for owner, selected in selection.collections:
-            if owner.collection in PORTFOLIO_COLLECTIONS:
+            if owner.collection in PORTFOLIO_DOCUMENT_COLLECTIONS:
                 rows.extend(self.collection_entry(owner, doc_id, row) for doc_id, row in selected.items())
         if galleries is not None:
             rows.extend({"id": gallery_id, "title": title, "kind": "catalogue-gallery"}

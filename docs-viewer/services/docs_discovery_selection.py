@@ -13,7 +13,7 @@ import json
 
 from docs_book_toc import edition_rows
 from docs_catalogue_media import read_catalogue_gallery_report_search
-from docs_search_scopes import COLLECTION_SEARCH_SCOPES
+from docs_search_scopes import SEARCH_DOCUMENT_COLLECTIONS
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, DocsWorkspaceConfig, generated_documents_path, is_curated_book, resolve_workspace_path
 
 
@@ -84,7 +84,7 @@ def select_built_discovery_documents(
     collections = [
         (collection, _select_collection_rows(manifests[collection.collection], collection))
         for collection in config.collections
-        if collection.collection in COLLECTION_SEARCH_SCOPES and collection.report_host_doc_id in ordinary
+        if collection.collection in SEARCH_DOCUMENT_COLLECTIONS and collection.report_host_doc_id in ordinary
     ]
     return DiscoverySelection(ordinary, collections)
 
@@ -108,4 +108,4 @@ def read_discovery_selection(repo_root: Path, config: DocsStageConfig, ignored_i
     """Read completed metadata once for an explicit discovery refresh."""
     tree = read_discovery_metadata(resolve_workspace_path(repo_root, generated_documents_path(config)) / "index-tree.json")
     ordinary = select_ordinary_documents(tree["docs"], ignored_ids)
-    return DiscoverySelection(ordinary, select_collection_documents(repo_root, config, ordinary, COLLECTION_SEARCH_SCOPES))
+    return DiscoverySelection(ordinary, select_collection_documents(repo_root, config, ordinary, SEARCH_DOCUMENT_COLLECTIONS))

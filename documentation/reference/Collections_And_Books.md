@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-11-25"
+last_updated: "2026-11-26"
 summary: Collection host ownership, exact actions, Book placement, editions and publication.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -26,6 +26,10 @@ Moving the host in the ordinary Index changes its placement. The collection stil
 The shared `docs_collection` report owns the list, while the configured provider opens the exact document by ID. Manage supplies one explicit contribution for selection, applicable collection actions and updates from completed writes. **Select** changes the checked set. **Collection Actions** offers workflows appropriate to that owner, including New, Import, Prepare package and Export where enabled. Export and Prepare package use exact checked IDs. Import chooses the displayed collection for an ordinary incoming file, while a trusted returned package retains its manifest-owned destination. Confirmed document Delete uses the displayed exact document. Book additionally supports a confirmed batch in its pane. [Manage contribution](../../docs-viewer/runtime/js/management/docs-viewer-management-collection-default-contribution.js) · [Docs Import](Docs_Import.md) · [Prepare package](Document_Packages.md) · [Media cleanup](Media_And_Asset_Handling.md#document-delete-media-cleanup)
 
 In selection mode, **Save results** saves the checked documents in report order to a named JSON file in `working/source/saved-searches/`. The report retains the checked rows. The file gives analysis a list of exact Working documents and can also be loaded from the Index's **Saved results** picker. With pagination off, the checkboxes cover the current full report list. [Saved results format and reader workflow](Reader_Discovery_And_Return.md#saved-results-in-manage)
+
+## Texts
+
+**Texts** (`texts`) owns standalone web editions of written works. Its ordinary Index host sits next to Catalogue. Manage uses the standard collection actions and offers both **A–Z** and **Last added**. The public collection report lists editions by title in **A–Z** order. Each edition has its own document ID and can link to the corresponding Catalogue Work. [Text edition workflow](../_working/Publish_A_Text_Edition.md)
 
 ## Flat Book Collections
 

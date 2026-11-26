@@ -147,6 +147,13 @@
           "icon": "dlf-catalogue",
           "title": "catalogue",
           "report_host_doc_id": "d-20260916-161504-f8c947"
+        },
+        {
+          "collection": "texts",
+          "document_media": true,
+          "icon": "square-library",
+          "title": "Texts",
+          "report_host_doc_id": "d-20261126-214901-86fa12"
         }
       ]
     }

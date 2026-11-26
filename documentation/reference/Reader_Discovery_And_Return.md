@@ -34,7 +34,7 @@ The field names the active scope, and the adjacent icon names the destination of
 
 | Scope | File | Fields and coverage |
 | --- | --- | --- |
-| Portfolio | `index.json` | Titles of eligible ordinary pages and portfolio hosts, Context, Concepts, Moments and Catalogue Galleries. Reference collection hosts stay with their own scope. |
+| Portfolio | `index.json` | Titles of eligible ordinary pages and portfolio hosts, documents in Context, Concepts, Moments and Texts, and Catalogue Galleries. Reference collection hosts stay with their own scope. |
 | Context, Concepts, Moments | `works.json`, `concepts.json`, `moments.json` | Title, heading, summary, body and code in the selected collection. |
 | Library, Living Memory | `library.json`, `book.json` | Titles and summaries. Living Memory uses its web edition. |
 
@@ -87,6 +87,8 @@ A collection report loads the exact configured manifest and sorts and filters th
 Public Library defaults to A–Z. **Shuffle** orders the loaded documents randomly in the browser and returns the list to its first page. The tab snapshot stores the shuffle seed with the current page so returning from a document restores the same order for the same manifest, even when the report is rebuilt. Switch back to A–Z, then use **Shuffle** again for a new order. Manage Library offers A–Z and Last added. [Browsing projector](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js)
 
 ### Catalogue Collection Browsing
+
+The **Painting**, **Video** and **Writing** icons at the end of the Catalogue search toolbar open their curated Galleries directly in Media View. The report binds them to Gallery IDs `362`, `363` and `365` and loads the selected Gallery when opened. **Back to document** restores the report and returns focus to the shortcut. [Collection report](../../docs-viewer/runtime/js/shared/docs-collection-report.js)
 
 The Catalogue host uses the Catalogue document manifest for Work IDs, titles and dates. Its **work or gallery** field searches all Works by title or Work ID and loads `galleries/report-search.json` when it needs Gallery titles and membership matches. It groups Gallery-title matches, Galleries containing matching Works, then Work results. Search pages have 20 entries. A new search defaults to **A–Z**. Within the Work results, exact title matches come first, titles starting with the query come next, and other matches follow. Each of those sets is alphabetical. **Last added** orders results by date within the two Gallery groups and the Work group. Refining a query preserves the chosen sort. [Catalogue read models](Catalogue_Indexes_And_Payloads.md#generated-read-models) · [Browsing projector](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js)
 

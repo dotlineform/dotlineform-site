@@ -27,6 +27,11 @@ import { catalogueDiscoveryMediaPresentation } from "./docs-viewer-catalogue-med
 const CATALOGUE_LIST_SIZE = 64;
 const CATALOGUE_DISCOVERY_COLUMNS = 8;
 const CATALOGUE_GALLERY_WIDTH = CATALOGUE_DISCOVERY_COLUMNS * 64 + (CATALOGUE_DISCOVERY_COLUMNS - 1) * 8;
+const CATALOGUE_GALLERY_SHORTCUTS = [
+  { galleryId: "362", label: "Painting", marker: "brush" },
+  { galleryId: "363", label: "Video", marker: "video" },
+  { galleryId: "365", label: "Writing", marker: "square-library" }
+];
 
 /**
  * Optional caller-owned composition for one shared collection report.
@@ -74,10 +79,10 @@ function collectionTitle(record) {
 }
 
 /** Select shared capabilities independently of the current page-display choice. */
-function collectionBrowsingFeatures(collection) {
+function collectionBrowsingFeatures(collection, managementContext) {
   var boundedBrowsing = ["catalogue", "works"].includes(collection.collection)
     || collection.collectionType === "book-collection";
-  return { pagination: boundedBrowsing };
+  return { pagination: boundedBrowsing, sortControl: managementContext || collection.collection !== "texts" };
 }
 
 function collectionItemsLabel(collection) {
@@ -196,6 +201,32 @@ function contributeDocRow(state, item, doc) {
   if (trailingHost.childNodes.length) row.appendChild(trailingHost);
 }
 
+function bindGalleryOpen(state, button, galleryId) {
+  button.addEventListener("click", async function () {
+    var isCurrent = function () { return state.mounted && state.root.contains(button); };
+    state.statusNode.textContent = "";
+    state.statusNode.hidden = true;
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    try {
+      await state.openMediaTarget({
+        mediaTarget: { kind: "catalogue-gallery", id: galleryId },
+        invocationControl: button,
+        documentTarget: { docId: state.parentDocId },
+        isCurrentDocument: isCurrent
+      });
+    } catch (error) {
+      if (isCurrent()) {
+        state.statusNode.textContent = error.message || "Gallery could not open.";
+        state.statusNode.hidden = false;
+      }
+    } finally {
+      button.disabled = false;
+      button.removeAttribute("aria-busy");
+    }
+  });
+}
+
 function appendGalleryRow(state, gallery) {
   var row = document.createElement("li");
   row.className = "docsViewerReport__row docsViewerReport__galleryRow";
@@ -226,31 +257,33 @@ function appendGalleryRow(state, gallery) {
     label += ", " + count.textContent;
   }
   button.setAttribute("aria-label", label);
-  button.addEventListener("click", async function () {
-    var isCurrent = function () { return state.mounted && state.rowsNode.contains(button); };
-    state.statusNode.textContent = "";
-    state.statusNode.hidden = true;
-    button.disabled = true;
-    button.setAttribute("aria-busy", "true");
-    try {
-      await state.openMediaTarget({
-        mediaTarget: { kind: "catalogue-gallery", id: gallery.galleryId },
-        invocationControl: button,
-        documentTarget: { docId: state.parentDocId },
-        isCurrentDocument: isCurrent
-      });
-    } catch (error) {
-      if (isCurrent()) {
-        state.statusNode.textContent = error.message || "Gallery could not open.";
-        state.statusNode.hidden = false;
-      }
-    } finally {
-      button.disabled = false;
-      button.removeAttribute("aria-busy");
-    }
-  });
+  bindGalleryOpen(state, button, gallery.galleryId);
   row.appendChild(button);
   state.rowsNode.appendChild(row);
+}
+
+function mountCatalogueGalleryShortcuts(state) {
+  var shortcuts = document.createElement("fieldset");
+  shortcuts.className = "docsViewerReport__galleryShortcuts";
+  shortcuts.disabled = true;
+  var legend = document.createElement("legend");
+  legend.className = "visually-hidden";
+  legend.textContent = "Catalogue Galleries";
+  shortcuts.appendChild(legend);
+  for (const { galleryId, label, marker } of CATALOGUE_GALLERY_SHORTCUTS) {
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "docsViewer__toolbarIconButton";
+    button.title = "Open " + label + " Gallery";
+    button.setAttribute("aria-label", button.title);
+    var icon = createDocsViewerToolbarIcon(document, "docsViewerReport__galleryMarker");
+    icon.dataset.marker = marker;
+    button.appendChild(icon);
+    bindGalleryOpen(state, button, galleryId);
+    shortcuts.appendChild(button);
+  }
+  state.filterToolbarNode.appendChild(shortcuts);
+  return shortcuts;
 }
 
 function renderFilterShell(collection) {
@@ -645,6 +678,7 @@ function updateCollectionControls(state, pageIndex = state.pageIndex) {
     state.filterInputNode.disabled = !state.manifestLoaded || locked;
     state.filterClearNode.disabled = state.filterInputNode.disabled;
   }
+  if (state.galleryShortcuts) state.galleryShortcuts.disabled = !state.manifestLoaded || locked;
   state.selectionControls?.setReady(selectionReady(state));
   state.paginationControl?.update(state.pagedBrowsing);
   if (state.paginationControl) state.paginationControl.button.disabled = locked;
@@ -674,7 +708,7 @@ function updateCollectionControls(state, pageIndex = state.pageIndex) {
     state.discoveryMediaNode.disabled = gallery || pending || state.shufflePending || !state.documentMatches.length;
   }
   var button = state.collectionSortNode;
-  button.hidden = discoveryActive || Boolean(state.sectionNavigation?.usesTreeRows());
+  button.hidden = !state.features.sortControl || discoveryActive || Boolean(state.sectionNavigation?.usesTreeRows());
   button.disabled = button.hidden || locked || pending || Boolean(state.shufflePending);
   if (button.dataset.docsCollectionSort !== state.sortMode) {
     var alternateMode = state.sortMode === state.alternateSort;
@@ -741,7 +775,7 @@ function renderListToolbar(state, docIds, retainedRows) {
     }
   });
   if (!host.childNodes.length) return;
-  state.filterToolbarNode.appendChild(host);
+  state.filterToolbarNode.insertBefore(host, state.galleryShortcuts ?? null);
   state.listToolbarNode = host;
 }
 
@@ -972,7 +1006,9 @@ function restoreListControls(state, saved) {
   if (JSON.stringify(current) === JSON.stringify(saved)) return;
   cancelCollectionSearch(state);
   if (state.filterInputNode && typeof saved.query === "string") state.query = saved.query;
-  if (state.alternateSort === COLLECTION_RANDOM_SORT) {
+  if (!state.features.sortControl) {
+    state.sortMode = COLLECTION_TITLE_SORT;
+  } else if (state.alternateSort === COLLECTION_RANDOM_SORT) {
     var seed = saved.sort === COLLECTION_RANDOM_SORT ? saved.shuffleSeed : null;
     if (!Number.isInteger(seed) || seed < 0 || seed >= 2 ** 32) seed = null;
     state.browsingData.setShuffleSeed(seed);
@@ -1072,7 +1108,8 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     return Promise.resolve(true);
   }
 
-  var features = collectionBrowsingFeatures(collection);
+  var managementContext = Boolean(context.managementContext);
+  var features = collectionBrowsingFeatures(collection, managementContext);
   var refs = renderShell(context, collection);
   var readGallerySearch = collectionIdValue === "catalogue" && typeof context.openMediaTarget === "function"
     && context.collectionProvider.readCatalogueGalleryReportSearch;
@@ -1128,7 +1165,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     selectionControls: null,
     pager: null,
     contribution: contribution,
-    managementContext: Boolean(context && context.managementContext),
+    managementContext: managementContext,
     filterClearNode: refs.filterClearNode,
     filterInputNode: refs.filterInputNode,
     filterToolbarNode: refs.filterToolbarNode,
@@ -1203,6 +1240,9 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
         remembered.save();
       }
     });
+  }
+  if (collectionIdValue === "catalogue" && typeof state.openMediaTarget === "function") {
+    state.galleryShortcuts = mountCatalogueGalleryShortcuts(state);
   }
   updateCollectionControls(state);
   bindFilterControls(state);
