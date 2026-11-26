@@ -1510,19 +1510,25 @@ body.docs-viewer-service{
   }
 }
 
-.docsViewer__mediaDetailImagePane{
+.docsViewer__mediaDetailWorkPane{
   min-width: 0;
 }
 
-.docsViewer__mediaDetailImage{
+.docsViewer__mediaDetailImage,
+.docsViewer__mediaDetailVideo{
   display: block;
-  width: min(100%, var(--docs-media-image-width), calc((100vh - 12rem) * var(--docs-media-image-ratio)));
+  width: min(100%, var(--docs-media-natural-width), calc((100vh - 12rem) * var(--docs-media-aspect-ratio)));
   max-width: 100%;
   height: auto;
   max-height: calc(100vh - 12rem);
   margin: 0 auto;
   object-fit: contain;
   object-position: center top;
+}
+
+.docsViewer__mediaDetailVideo{
+  aspect-ratio: var(--docs-media-aspect-ratio);
+  background: #000;
 }
 
 .docsViewer__mediaDetailCaption{

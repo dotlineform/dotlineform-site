@@ -22,7 +22,7 @@ function loadHlsLibrary(document) {
   return hlsLibrary;
 }
 
-/** Attach playback for one rendered Catalogue Entry and return its release action. */
+/** Attach playback for one Catalogue player and return its release action. */
 export function mountCatalogueVideo(video, status, url) {
   var active = true;
   var player = null;
@@ -59,6 +59,7 @@ export function mountCatalogueVideo(video, status, url) {
   return function release() {
     active = false;
     video.removeEventListener("error", onMediaError);
+    video.pause();
     if (player) player.destroy();
     if (video.hasAttribute("src")) {
       video.removeAttribute("src");

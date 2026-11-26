@@ -46,12 +46,13 @@ export function catalogueDocumentImage(image, base) {
   };
 }
 
-export function catalogueDocumentWorkPresentation(payload, workId, primaryBase) {
+export function catalogueDocumentWorkPresentation(payload, workId, primaryBase, videoUrl) {
   var work = payload && payload.doc_id === workId && payload.catalogue && payload.catalogue.work;
   if (!work) throw new Error("Catalogue Work " + workId + " is unavailable.");
   return {
     schema_version: "docs_media_view_v2", target: catalogueMediaTarget(workId),
     label: work.image.alt, image: catalogueDocumentImage(work.image, primaryBase),
+    ...(work.video ? { video_url: videoUrl(work.video) } : {}),
     new_tab_target: versionedImageUrl(primaryBase, work.full_image, work.image.version),
     galleries: work.galleries.map(function (gallery) {
       return { target: catalogueGalleryTarget(gallery.id), label: gallery.label, relation: gallery.relation };

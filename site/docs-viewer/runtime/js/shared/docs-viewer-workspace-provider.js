@@ -159,7 +159,7 @@ export function createDocsViewerWorkspaceProvider(options) {
   };
   provider.readCatalogueWorkPresentation = async function (workId, loadedPayload) {
     var payload = loadedPayload || await readDocument({ collection: "catalogue", doc_id: workId });
-    return catalogueDocumentWorkPresentation(payload, workId, routeContext().routeConfig.catalogueWorkPrimaryBaseUrl);
+    return catalogueDocumentWorkPresentation(payload, workId, routeContext().routeConfig.catalogueWorkPrimaryBaseUrl, provider.catalogueVideoUrl);
   };
   if (source && typeof source.readCatalogueGallery === "function") {
     provider.readCatalogueGallery = function (galleryId) { return source.readCatalogueGallery(galleryId); };

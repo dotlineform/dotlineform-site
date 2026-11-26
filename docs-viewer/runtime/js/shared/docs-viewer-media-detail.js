@@ -5,6 +5,7 @@ import {
 } from "./docs-viewer-media-presentation.js";
 import { catalogueMediaTargetWorkId } from "./docs-viewer-catalogue-media.js";
 import { mountCatalogueDocument } from "./docs-viewer-catalogue-rendering.js";
+import { mountCatalogueVideo } from "./docs-viewer-catalogue-video.js";
 import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import { buildViewerUrl, SEARCH_SCOPE_PARAM } from "./docs-viewer-router.js";
@@ -522,7 +523,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var selectionRequest = 0;
     var galleryPage = 0;
     var failedImage = null;
-    var imageCleanups = [];
+    var mediaCleanups = [];
     var contextManifestRead;
     var contextMatches = new WeakMap();
     var feedback = documentRef.createElement("p");
@@ -550,14 +551,18 @@ export function createDocsViewerMediaDetailAdapter() {
         : Boolean(resolveRecord(root, context.targetContext)));
     }
 
+    function setMediaSize(element, data) {
+      element.style.setProperty("--docs-media-natural-width", data.widthPx + "px");
+      element.style.setProperty("--docs-media-aspect-ratio", String(data.widthPx / data.heightPx));
+    }
+
     function imageElement(data, className, loading) {
       var image = documentRef.createElement("img");
       image.className = className;
       image.alt = data.alt;
       if (loading) image.loading = loading;
-      image.style.setProperty("--docs-media-image-width", data.widthPx + "px");
-      image.style.setProperty("--docs-media-image-ratio", String(data.widthPx / data.heightPx));
-      imageCleanups.push(mountDocsViewerResponsiveImage(image, data));
+      setMediaSize(image, data);
+      mediaCleanups.push(mountDocsViewerResponsiveImage(image, data));
       image.addEventListener("error", function () {
         if (!isCurrent() || !viewport.contains(image)) return;
         message("Image unavailable. ", function () {
@@ -569,6 +574,24 @@ export function createDocsViewerMediaDetailAdapter() {
         if (isCurrent() && failedImage === image && viewport.contains(image)) message("");
       });
       return image;
+    }
+
+    function appendWorkVideo(pane, work) {
+      var video = documentRef.createElement("video");
+      video.className = "docsViewer__mediaDetailVideo";
+      video.controls = true;
+      video.playsInline = true;
+      video.crossOrigin = "anonymous";
+      video.preload = "metadata";
+      video.poster = work.image.src;
+      video.setAttribute("aria-label", work.label);
+      setMediaSize(video, work.image);
+
+      var status = documentRef.createElement("p");
+      status.setAttribute("role", "status");
+      status.hidden = true;
+      pane.append(video, status);
+      mediaCleanups.push(mountCatalogueVideo(video, status, work.videoUrl));
     }
 
     function titleElement(label) {
@@ -645,9 +668,8 @@ export function createDocsViewerMediaDetailAdapter() {
     function renderWork(work) {
       var figure = documentRef.createElement("figure");
       figure.className = "docsViewer__mediaDetailFigure";
-      var imagePane = documentRef.createElement("div");
-      imagePane.className = "docsViewer__mediaDetailImagePane";
-      imagePane.appendChild(imageElement(work.image, "docsViewer__mediaDetailImage"));
+      var mediaPane = documentRef.createElement("div");
+      mediaPane.className = "docsViewer__mediaDetailWorkPane";
       var caption = documentRef.createElement("figcaption");
       caption.className = "docsViewer__mediaDetailCaption docsViewer__mediaDetailCaption--simple";
       caption.appendChild(titleElement(work.label));
@@ -679,13 +701,15 @@ export function createDocsViewerMediaDetailAdapter() {
       appendGalleryLinks(caption, groups.filter(function (entry) { return entry.relation !== "series"; })
         .concat(groups.filter(function (entry) { return entry.relation === "series"; })));
       appendContextLinks(caption, work);
+      if (work.videoUrl) appendWorkVideo(mediaPane, work);
+      else mediaPane.appendChild(imageElement(work.image, "docsViewer__mediaDetailImage"));
       if (supplied.gallery) {
         var position = docsViewerMediaGalleryPosition(supplied.gallery, work.target);
-        imagePane.appendChild(navigationControls("Work", position.index + 1, position.total,
+        mediaPane.appendChild(navigationControls("Work", position.index + 1, position.total,
           position.previous ? function () { selectTarget(position.previous); } : null,
           position.next ? function () { selectTarget(position.next); } : null));
       }
-      figure.append(imagePane, caption);
+      figure.append(mediaPane, caption);
       return figure;
     }
 
@@ -783,8 +807,8 @@ export function createDocsViewerMediaDetailAdapter() {
         galleryPage = docsViewerMediaGalleryPosition(supplied.gallery, next.target).pageIndex;
       }
       current = next;
-      imageCleanups.forEach(function (cleanup) { cleanup(); });
-      imageCleanups = [];
+      mediaCleanups.forEach(function (cleanup) { cleanup(); });
+      mediaCleanups = [];
       var grid = current === supplied.gallery;
       viewport.replaceChildren(grid
         ? renderGallery(current)
@@ -854,6 +878,8 @@ export function createDocsViewerMediaDetailAdapter() {
       root: section,
       activate: function (activationContext) {
         if (released) return;
+        var inlineVideo = root.querySelector("video[data-docs-catalogue-entry-video]");
+        if (inlineVideo && !inlineVideo.paused) inlineVideo.pause();
         controls = activationContext;
         projectControls();
       },
@@ -861,8 +887,8 @@ export function createDocsViewerMediaDetailAdapter() {
         if (released) return;
         released = true;
         selectionRequest += 1;
-        imageCleanups.forEach(function (cleanup) { cleanup(); });
-        imageCleanups = [];
+        mediaCleanups.forEach(function (cleanup) { cleanup(); });
+        mediaCleanups = [];
         discoveryWorkReads?.clear();
         controls = null;
         viewport.replaceChildren();

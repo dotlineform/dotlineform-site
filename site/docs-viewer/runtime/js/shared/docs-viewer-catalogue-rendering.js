@@ -31,7 +31,7 @@ function imageControl(presentation, entry, destinationLabel) {
 
 function videoControl(presentation) {
   var image = presentation.image;
-  return '<video class="docsViewerCatalogueEntry__frame" controls playsinline crossorigin="anonymous" preload="metadata"'
+  return '<video class="docsViewerCatalogueEntry__frame" data-docs-catalogue-entry-video controls playsinline crossorigin="anonymous" preload="metadata"'
     + ' aria-label="' + escape(presentation.label) + '" poster="' + escape(image.src) + '"'
     + ' width="' + image.width_px + '" height="' + image.height_px + '"></video>'
     + '<p role="status" data-catalogue-video-status hidden></p>';

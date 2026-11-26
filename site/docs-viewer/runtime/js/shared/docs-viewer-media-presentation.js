@@ -97,6 +97,8 @@ function normalizeWorkPresentation(value) {
 
   var newTabTarget = docsViewerSafeMediaTarget(value.new_tab_target);
   if (!newTabTarget) throw new Error("Media View new-tab target is unsupported.");
+  var videoUrl = docsViewerSafeMediaTarget(value.video_url);
+  if (value.video_url !== undefined && !videoUrl) throw new Error("Media View video target is unsupported.");
 
   return Object.freeze({
     schemaVersion: "docs_media_view_v2",
@@ -109,6 +111,7 @@ function normalizeWorkPresentation(value) {
       widthPx: imageWidth,
       heightPx: imageHeight
     }),
+    videoUrl: videoUrl,
     galleries: Object.freeze(galleries),
     newTabTarget: newTabTarget
   });

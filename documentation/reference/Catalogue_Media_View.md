@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-11-20"
-summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
+last_updated: "2026-11-26"
+summary: Exact Work and Gallery links, responsive images and film playback, Gallery navigation and static-consumer boundaries.
 ui_status: done
 parent_id: d-20260519-000000-a0da45
 ---
@@ -16,9 +16,9 @@ Media View opens an exact Catalogue Work or Gallery in the Docs Viewer main pane
 
 | Surface | Links and their source |
 | --- | --- |
-| **Work in Media View** | The image caption shows the Work title and a `cat.` link to the exact Catalogue document in the current viewer, retaining the Index search. Gallery links list direct memberships first, then distinct Galleries explicitly related to the Work's Series. The invoking Gallery or Discovery grid also has a return link. Context rows list documents whose built references name that exact Work. |
+| **Work in Media View** | The caption shows the Work title and a `cat.` link to the exact Catalogue document in the current viewer, retaining the Index search. Gallery links list direct memberships first, then distinct Galleries explicitly related to the Work's Series. The invoking Gallery or Discovery grid also has a return link. Context rows list documents whose built references name that exact Work. |
 | **Gallery in Media View** | The Gallery title and member grid use the exact Gallery record. Each Context document appears once if it names the Gallery through a visible or hidden Gallery token, or names a Work anywhere in its member list. |
-| **Work's Catalogue document** | Entry shows the image, Work metadata and resources. A separate Gallery section uses the adopted direct and Series-related links. The generated `[[links|context]]` section lists the Work document's incoming and outgoing relationships, which can include documents in collections other than Context. A reader can pin that list in Info. [Related Links](Related_Links.md) |
+| **Work's Catalogue document** | Entry shows the image or film player, Work metadata and resources. A separate Gallery section uses the adopted direct and Series-related links. The generated `[[links|context]]` section lists the Work document's incoming and outgoing relationships, which can include documents in collections other than Context. A reader can pin that list in Info. [Related Links](Related_Links.md) |
 
 **If expected Context links are missing**, check the referring document's collection and its exact Work ID. A Work image or Work Media View token in Context supplies that ID. An ordinary Markdown link to the Catalogue document contributes to its document relationships only. Referring to a Gallery can give that Gallery a Context link without giving every member Work the same link. The `context` heading on the Catalogue document names its Related Links section and places no collection filter on that list. [Document and Catalogue references](Document_And_Catalogue_References.md) · [Related Links](Related_Links.md#generated-data-and-freshness)
 
@@ -37,6 +37,10 @@ A Gallery reads one exact `gallery_record_v3` via `/docs/catalogue-gallery?galle
 In Public, Work images and Gallery grids share a layout based on the width inside the Media View panel. At 36rem or wider, the metadata sits alongside the image or grid. In a narrower panel it follows below. Gallery thumbnails wrap to the available column width at their normal size, keeping the active page in its existing order. [Reader stylesheet](../../docs-viewer/static/css/docs-viewer.css)
 
 The Content Detail host owns the outer **Back** and **Open in new tab** controls. Back restores the invoking document or result context, scroll and focus. A link from a pinned Related Links list opens against the document displayed when selected. [Info Panel](Info_Panel.md) · [Reader return rules](../guide/Find_And_Read_Things.md)
+
+## Film Playback
+
+A film opens in Media View on its poster with the browser’s controls. The player preserves the poster’s aspect ratio and scales down as needed for the pane width and viewport height. One player is mounted for the selected Work. Returning to the grid, changing Works or closing Media View stops playback. If a film is playing in the underlying Catalogue document when Media View opens, it pauses. **Open in new tab** opens the film’s full-size poster. [Shared player](../../docs-viewer/runtime/js/shared/docs-viewer-catalogue-video.js) · [Media View lifecycle](../../docs-viewer/runtime/js/shared/docs-viewer-media-detail.js)
 
 ## Discovery Grid
 

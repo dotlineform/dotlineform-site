@@ -5,7 +5,7 @@ title: Catalogue Video In Media View
 added_date: "2026-11-26 16:00:14"
 last_updated: "2026-11-26"
 summary: Play the selected Catalogue film in Media View using the Work's existing poster and HLS package.
-ui_status: planned
+ui_status: active
 parent_id: d-20261118-235100-64ad2e
 ---
 # Catalogue Video In Media View
@@ -32,7 +32,14 @@ Use the saved poster dimensions to set the player’s maximum size and aspect ra
 
 - [ ] The poster in *videos* opens film `05248` in Media View. The film plays and seeks using the browser's controls. Check that the player fits at wide and narrow widths and keeps its aspect ratio when playback starts.
 - [ ] Move between a film and an image Work in a Gallery or Discovery selection. Check that playback stops on a change of Work, return to the grid and Back. Check the normal image presentation, the **cat.** link, full-size image in a new tab and return to the opener.
-- [ ] Check Manage and site-preview. Verify native playback on desktop Safari and iPhone and the `hls.js` path on an available Chromium browser. Project and validate the shared reader code for the public release. [Verification](../development/Verification.md#docs-viewer-site-code-projection)
+- [ ] Check Manage and site-preview. Verify native playback on desktop Safari and iPhone and the `hls.js` path on an available Chromium browser.
+- [x] Project and validate the shared reader code for the public release. [Verification](../development/Verification.md#docs-viewer-site-code-projection)
+
+## Implementation Evidence
+
+The existing selected Work read supplies the film reference and poster. Gallery and Discovery retain their thumbnail reads. The Work provider resolves the playlist using the configured video base, and presentation normalisation checks the browser URL at the same boundary that handles embedded Media View payloads. Media View reuses the shared player and releases it through the existing media cleanup on selection change and close.
+
+The reader projection and site validation passed, as did lint for all six changed canonical JavaScript modules. A runtime data check used the existing payloads for `05248` and `04813` to confirm the film’s Working and R2 URLs, 1280 × 720 poster dimensions, full-size poster target and the print’s image presentation. Browser acceptance is tracked above.
 
 ## Follow-on If Ordinary Documents Need Inline Players
 
