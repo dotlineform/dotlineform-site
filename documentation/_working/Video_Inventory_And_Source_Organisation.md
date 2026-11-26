@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261122-131045-1f936c
 title: Video Inventory And Source Organisation
 added_date: "2026-11-22 13:10:45"
-last_updated: "2026-11-22"
+last_updated: "2026-11-26"
 summary: Reconcile Catalogue film Works, local video sources and published cuts, and agree a consistent Projects layout.
 ui_status: proposed
 parent_id: d-20261118-235100-64ad2e
@@ -60,6 +60,12 @@ Start with these examples to settle how we identify distinct cuts and choose a s
 ## Proposed Projects Layout
 
 Start with the convention already used in *by the river*. Use `<project>/video/` for finished copies and `<project>/source video/` for source footage where it exists. Keep filenames that distinguish meaningful cuts. Confirm the file-to-Work matches before agreeing moves or renames, then update the affected Catalogue paths to point to the selected files. [Configured Work media roots](../reference/Catalogue_Media_Pipeline_Config.md#work-media-sources)
+
+## 1080p Playback Assessment
+
+The current HLS encoder tops out at 1280 × 720. Use the recorded source dimensions and runtimes to identify confirmed 1080p or larger originals and shortlist cuts where fine detail is visible at the intended viewing size. [Current cap and player sizing](Catalogue_Video_In_Media_View.md#player-sizing)
+
+If a higher rendition looks worthwhile, compare 720p and 1080p encodes of a representative cut. Assess the visible benefit at desktop or fullscreen size, preparation time, added package bytes per minute, and the bitrate required for playback. Use the candidate runtimes to estimate the additional R2 storage. Check seeking and quality switching on desktop and phone before deciding which cuts warrant an extra rendition. [Measured 360p and 720p baseline](../deliveries/Catalogue_HLS_Video_Pilot.md#local-preparation)
 
 ## Completion Gates
 
