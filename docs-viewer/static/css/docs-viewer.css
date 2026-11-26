@@ -702,6 +702,14 @@ body.docs-viewer-service{
   mask-image: url("../icons/dlf-doc.svg");
 }
 
+.docsViewer__icon--dlf-paginate-on{
+  mask-image: url("../icons/dlf-paginate-on.svg");
+}
+
+.docsViewer__icon--dlf-paginate-off{
+  mask-image: url("../icons/dlf-paginate-off.svg");
+}
+
 .docsViewer__icon--chevron-left{
   mask-image: url("../icons/chevron-left.svg");
 }

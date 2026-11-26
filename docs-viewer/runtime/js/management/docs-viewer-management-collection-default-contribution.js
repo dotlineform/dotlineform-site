@@ -1,7 +1,6 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { CATALOGUE_SEARCH_PARAM } from "../shared/docs-viewer-router.js";
 import { createDocsViewerEditMenuItem } from "./docs-viewer-management-edit-menu.js";
-import { mountDocsViewerPaginationControl } from "./docs-viewer-pagination-control.js";
 import { openSaveResults } from "./docs-viewer-saved-searches.js";
 import { isBookMatter } from "./docs-viewer-book-manifest.js";
 import {
@@ -731,12 +730,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   }
 
   return {
-    ...(options.paginationToggle ? {
-      paginationDefault: false,
-      mountPaginationControl: function ({ host, change }) {
-        return mountDocsViewerPaginationControl({ host, enabled: false, itemsLabel: "documents", change });
-      }
-    } : {}),
+    ...(options.paginationToggle ? { paginationDefault: false } : {}),
     captureListState: function () {
       var snapshot = selectionOwner.snapshot();
       return bookRowSelection ? { ...snapshot, bookDocId: bookRowSelection.capture() } : snapshot;

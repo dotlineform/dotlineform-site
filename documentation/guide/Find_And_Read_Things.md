@@ -18,6 +18,8 @@ In Manage, use **Saved results** after the Recent clock to **Save as new** from 
 
 Open its landing page from the Index. The collection list reads its saved manifest and sorts or filters those rows. For example, Context puts matching starred documents first on page one. Opening a document there captures that list's order for **Previous** and **Next**. Browser Back can restore the immediate calling list. The document's **index** shortcut reopens the collection with its last visible browsing controls in this tab. [Collection data](../reference/Reader_Discovery_And_Return.md#collection-list-preparation) · [Return paths](../reference/Reader_Discovery_And_Return.md#exact-document-navigation-and-return)
 
+On the public site, Library, Concepts, Moments and Context show 20 documents per page. When the list spans more than one page, use the pagination icon to switch between **Show all documents** and **Show pages**.
+
 ## Browse the Catalogue
 
 Use the brush, video or book icon at the end of the Catalogue search toolbar to open **Painting**, **Video** or **Writing** in Media View. **Back to document** returns you to the Catalogue.

@@ -1,6 +1,6 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { mountDocsViewerPaginationControl } from "../management/docs-viewer-pagination-control.js";
+import { mountDocsViewerPaginationControl } from "../shared/docs-viewer-pagination-control.js";
 import {
   COLUMN_MODEL, COPY_COLUMN_IDS, PRESENTATION_COLUMNS,
   prepareCatalogueWorksRows, projectCatalogueWorks, serializeCatalogueWorksTsv

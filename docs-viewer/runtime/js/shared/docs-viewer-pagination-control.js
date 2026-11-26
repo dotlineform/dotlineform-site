@@ -1,7 +1,7 @@
-import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 
 /**
- * Mount a local pagination button; the report owns mode changes and rendering.
+ * Mount a pagination button. The report owns mode changes and rendering.
  * @param {Object} options
  * @param {HTMLElement} options.host Toolbar that receives the button.
  * @param {boolean} options.enabled Initial pagination mode.
@@ -21,10 +21,9 @@ export function mountDocsViewerPaginationControl({ host, enabled, itemsLabel, ch
     button,
     update(value) {
       pagination = value;
-      icon.classList.toggle("docsViewer__icon--dlf-paginate-on", value);
-      icon.classList.toggle("docsViewer__icon--dlf-paginate-off", !value);
-      button.setAttribute("aria-pressed", String(value));
-      button.title = value ? "Pagination on. Show all " + itemsLabel + "." : "Pagination off. Show pages.";
+      icon.classList.toggle("docsViewer__icon--dlf-paginate-off", value);
+      icon.classList.toggle("docsViewer__icon--dlf-paginate-on", !value);
+      button.title = value ? "Show all " + itemsLabel : "Show pages";
       button.setAttribute("aria-label", button.title);
     }
   };

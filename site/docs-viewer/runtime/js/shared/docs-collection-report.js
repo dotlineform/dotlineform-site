@@ -1,5 +1,6 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+import { mountDocsViewerPaginationControl } from "./docs-viewer-pagination-control.js";
 import { registerCollectionNavigationLink } from "./docs-viewer-collection-navigation.js";
 import { createDocsCollectionReportState } from "./docs-collection-report-state.js";
 import { fetchDocsCollectionManifest, fetchSelectedDocumentRows } from "./docs-viewer-data.js";
@@ -49,8 +50,7 @@ const CATALOGUE_GALLERY_SHORTCUTS = [
  * @property {function(): *} [captureListState] Optional JSON-safe list restoration state.
  * @property {function(*): void} [restoreListState] Restore a previously captured caller state.
  * @property {function(Object): Object} createListManagement Manage-owned data, updates and refresh.
- * @property {boolean} [paginationDefault] Caller-owned initial pagination choice.
- * @property {function(Object): Object} [mountPaginationControl] Local control over shared pagination state.
+ * @property {boolean} [paginationDefault] Opt into the pagination toggle with this initial mode.
  * @property {function(Object): Object} [mountCatalogueSearchCopy] Manage-only copy control for the Catalogue query.
  */
 
@@ -79,10 +79,11 @@ function collectionTitle(record) {
 }
 
 /** Select shared capabilities independently of the current page-display choice. */
-function collectionBrowsingFeatures(collection, managementContext) {
-  var boundedBrowsing = ["catalogue", "works"].includes(collection.collection)
+function collectionBrowsingFeatures(collection, managementContext, publicReader) {
+  var publicPaginationToggle = publicReader && ["library", "concepts", "moments", "works"].includes(collection.collection);
+  var boundedBrowsing = publicPaginationToggle || ["catalogue", "works"].includes(collection.collection)
     || collection.collectionType === "book-collection";
-  return { pagination: boundedBrowsing, sortControl: managementContext || collection.collection !== "texts" };
+  return { pagination: boundedBrowsing, publicPaginationToggle, sortControl: managementContext || collection.collection !== "texts" };
 }
 
 function collectionItemsLabel(collection) {
@@ -680,8 +681,12 @@ function updateCollectionControls(state, pageIndex = state.pageIndex) {
   }
   if (state.galleryShortcuts) state.galleryShortcuts.disabled = !state.manifestLoaded || locked;
   state.selectionControls?.setReady(selectionReady(state));
-  state.paginationControl?.update(state.pagedBrowsing);
-  if (state.paginationControl) state.paginationControl.button.disabled = locked;
+  if (state.paginationControl) {
+    state.paginationControl.update(state.pagedBrowsing);
+    var paginationButton = state.paginationControl.button;
+    paginationButton.hidden = state.features.publicPaginationToggle && state.matches.length <= COLLECTION_PAGE_SIZE;
+    paginationButton.disabled = locked || paginationButton.hidden;
+  }
   state.sectionNavigation?.setBrowsingLocked(locked);
   if (state.shuffleNode) {
     state.shuffleNode.disabled = locked || pending || state.shufflePending || state.browsingData.rows.length < CATALOGUE_DISCOVERY_SIZE
@@ -972,7 +977,7 @@ function captureListControls(state) {
         pass: state.galleryDiscovery.pass?.controls
       }
     } } : {}),
-    ...(typeof state.contribution?.paginationDefault === "boolean" ? { pagination: state.pagedBrowsing } : {}),
+    ...(state.paginationControl ? { pagination: state.pagedBrowsing } : {}),
     ...(state.sectionNavigation ? { section: state.sectionNavigation.selected() } : {}),
     contribution: captureContribution ? captureContribution.call(state.contribution) : null };
 }
@@ -1016,7 +1021,7 @@ function restoreListControls(state, saved) {
   } else {
     state.sortMode = saved.sort === state.alternateSort ? state.alternateSort : COLLECTION_TITLE_SORT;
   }
-  if (typeof state.contribution?.paginationDefault === "boolean" && typeof saved.pagination === "boolean") {
+  if (state.paginationControl && typeof saved.pagination === "boolean") {
     state.pagedBrowsing = saved.pagination;
   }
   state.pageIndex = Number.isInteger(saved.page) && saved.page >= 0 ? saved.page : 0;
@@ -1109,7 +1114,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   }
 
   var managementContext = Boolean(context.managementContext);
-  var features = collectionBrowsingFeatures(collection, managementContext);
+  var features = collectionBrowsingFeatures(collection, managementContext, context.appContext?.kind === "public");
   var refs = renderShell(context, collection);
   var readGallerySearch = collectionIdValue === "catalogue" && typeof context.openMediaTarget === "function"
     && context.collectionProvider.readCatalogueGalleryReportSearch;
@@ -1227,17 +1232,21 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     state.pageIndex = 0;
     if (renderListProjectionContained(state, "sort-change", { reusePinnedRows: true }) && shuffleAvailable) remembered.save();
   });
-  var mountPaginationControl = contributionCallback(contribution, "mountPaginationControl");
-  if (mountPaginationControl) {
-    state.paginationControl = mountPaginationControl({
+  if (features.publicPaginationToggle || typeof contribution?.paginationDefault === "boolean") {
+    state.paginationControl = mountDocsViewerPaginationControl({
       host: state.filterToolbarNode,
+      enabled: state.pagedBrowsing,
+      itemsLabel: "documents",
       change: function (enabled) {
         if (state.selectionActive) return;
-        cancelCollectionSearch(state);
         state.pagedBrowsing = enabled;
         state.pageIndex = 0;
-        renderListProjectionContained(state, "pagination-change");
-        remembered.save();
+        try {
+          renderListPage(state);
+          remembered.save();
+        } catch (error) {
+          reportFailure(state, error, "pagination-change");
+        }
       }
     });
   }
