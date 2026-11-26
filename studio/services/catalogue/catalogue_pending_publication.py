@@ -51,5 +51,7 @@ def merge_completed_work_selections(
                 image=record["image"] or prior.get("image", False),
                 file_names=sorted((set(record["file_names"]) | set(prior.get("file_names", []))) & download_names),
             )
+            if "video_files" in prior and "video_files" not in record:
+                record["video_files"] = prior["video_files"]
         pending[other].pop(work_id, None)
         pending[family][work_id] = record

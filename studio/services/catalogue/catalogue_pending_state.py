@@ -10,6 +10,7 @@ import re
 import tempfile
 from typing import Any
 from docs_workspace_config import DocsWorkspaceConfig
+from docs_artifact_locations import normalize_artifact_identity
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config
 from studio.services.catalogue.catalogue_work_attachments import safe_download_filename
@@ -55,7 +56,7 @@ def validate_pending_state(repo_root: Path, value: Any, *, schema: str, progress
         for work_id, entry in entries.items():
             if not isinstance(work_id, str) or not WORK_ID.fullmatch(work_id):
                 raise ValueError("Catalogue queue requires exact five-digit Work IDs")
-            if not isinstance(entry, dict) or set(entry) != fields:
+            if not isinstance(entry, dict) or set(entry) - {"video_files"} != fields:
                 raise ValueError(f"Work {work_id}: invalid Catalogue queue fields")
             if any(type(entry[field]) is not bool for field in fields - {"file_names"}):
                 raise ValueError(f"Work {work_id}: Catalogue queue flags must be booleans")
@@ -66,6 +67,12 @@ def validate_pending_state(repo_root: Path, value: Any, *, schema: str, progress
                 safe_download_filename(name)
             if names != sorted(set(names)):
                 raise ValueError(f"Work {work_id}: file_names must be sorted and distinct")
+            if "video_files" in entry:
+                video_files = entry["video_files"]
+                if (not isinstance(video_files, list) or "master.m3u8" not in video_files
+                        or any(not isinstance(name, str) or normalize_artifact_identity(name) != name for name in video_files)
+                        or video_files != sorted(set(video_files))):
+                    raise ValueError(f"Work {work_id}: invalid video package selection")
     if value["current_works"].keys() & value["deleted_works"].keys():
         raise ValueError("A queued Work cannot be both current and deleted")
     validate_shared_changes(repo_root, shared_changes(value, publishing=publishing), publishing=publishing)

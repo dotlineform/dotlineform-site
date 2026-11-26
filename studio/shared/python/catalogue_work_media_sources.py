@@ -99,7 +99,8 @@ def resolve_work_media_source_root(
     )
 
 
-def _safe_relative_path(parts: tuple[Any, ...]) -> Path:
+def work_media_relative_path(*parts: Any) -> Path:
+    """Parse an exact relative Work source identity without inspecting files."""
     text_parts: list[str] = []
     for value in parts:
         if value is None or value == "":
@@ -129,7 +130,7 @@ def resolve_work_media_path(
     """Resolve a source-relative path and reject symlinks at every access."""
 
     _reject_symlink_segments(source_root.projects_base, source_root.root_subdir, require_exists=True)
-    relative = _safe_relative_path(relative_parts)
+    relative = work_media_relative_path(*relative_parts)
     current = source_root.root
     missing = False
     for index, segment in enumerate(relative.parts):

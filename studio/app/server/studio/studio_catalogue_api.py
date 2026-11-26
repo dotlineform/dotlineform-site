@@ -52,6 +52,7 @@ from catalogue.catalogue_refresh_service import catalogue_refresh_status, refres
 from local_env import runtime_env  # noqa: E402
 from catalogue.catalogue_work_attachments import MAX_WORK_ATTACHMENT_BYTES, MAX_WORK_METADATA_BYTES, WorkAttachment  # noqa: E402
 from catalogue.catalogue_work_source_actions import open_work_source_target  # noqa: E402
+from catalogue.catalogue_work_video import VIDEO_SOURCE_EXTENSIONS, prepare_work_video  # noqa: E402
 
 
 CATALOGUE_READ_KEYS = {
@@ -77,6 +78,7 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "work/create",
                 "work/create-batch",
                 "work/save",
+                "work/prepare-video",
                 "series/create",
                 "series/save",
                 "gallery/create",
@@ -112,6 +114,10 @@ def catalogue_post_response(
         return HTTPStatus.OK, selected_work_records_payload(repo_root, body)
     if api_path == "/project-media/open":
         return HTTPStatus.OK, open_work_source_target(repo_root, body, dry_run=dry_run)
+    if api_path == "/work/prepare-video":
+        if dry_run:
+            raise ValueError("Prepare video cannot run as a dry run")
+        return HTTPStatus.OK, prepare_work_video(repo_root, body)
     if api_path == "/refresh":
         if body:
             raise ValueError("Refresh Catalogue takes an empty request")
@@ -205,6 +211,10 @@ def project_media_payload(repo_root: Path, query: Mapping[str, list[str]]) -> di
             "project_folders": project_media_folder_records(source_root.root, query_text(query)),
         }
     if mode == "files":
+        kind = (query.get("kind") or ["image"])[0]
+        extensions = {"image": IMAGE_EXTENSIONS, "video": VIDEO_SOURCE_EXTENSIONS}.get(kind)
+        if extensions is None:
+            raise ValueError("Project media kind must be image or video")
         project_folder = normalize_project_media_segment(
             str((query.get("project_folder") or [""])[0] or ""),
             field="project_folder",
@@ -225,7 +235,7 @@ def project_media_payload(repo_root: Path, query: Mapping[str, list[str]]) -> di
             "subfolders": project_media_subfolder_records(
                 resolve_project_media_folder(source_root, project_folder)
             ),
-            "files": project_media_file_records(folder_path, query_text(query)),
+            "files": project_media_file_records(folder_path, query_text(query), extensions=extensions),
         }
     raise ValueError("project-media mode must be sources, folders or files")
 
@@ -272,12 +282,12 @@ def visible_dir(path: Path) -> bool:
         return False
 
 
-def visible_image_file(path: Path) -> bool:
+def visible_media_file(path: Path, extensions: set[str] | frozenset[str]) -> bool:
     try:
         is_file = stat.S_ISREG(path.lstat().st_mode)
     except OSError:
         return False
-    return is_file and not path.name.startswith(".") and path.suffix.lower() in IMAGE_EXTENSIONS
+    return is_file and not path.name.startswith(".") and path.suffix.lower() in extensions
 
 
 def project_media_folder_records(source_root: Path, query: str) -> list[dict[str, Any]]:
@@ -301,10 +311,10 @@ def project_media_subfolder_records(project_folder_path: Path) -> list[dict[str,
     ]
 
 
-def project_media_file_records(folder_path: Path, query: str) -> list[dict[str, Any]]:
+def project_media_file_records(folder_path: Path, query: str, *, extensions: set[str] | frozenset[str]) -> list[dict[str, Any]]:
     records = []
     for child in sorted(folder_path.iterdir(), key=lambda item: item.name.lower()):
-        if not visible_image_file(child):
+        if not visible_media_file(child, extensions):
             continue
         if query and query not in child.name.lower():
             continue

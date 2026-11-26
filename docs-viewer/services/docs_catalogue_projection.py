@@ -82,6 +82,7 @@ def adopt_catalogue_work(
     return {
         **({"series_id": work["series_id"]} if "series_id" in work else {}),
         "entry": entry,
+        **({"video": work["video"]} if "video" in work else {}),
         "image": image,
         "full_image": full_image,
         "galleries": galleries,

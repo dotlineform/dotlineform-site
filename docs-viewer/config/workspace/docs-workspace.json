@@ -15,6 +15,7 @@
     "work_primary": "works/primary",
     "work_thumbnails": "works/thumbs",
     "work_files": "works/media/files",
+    "work_video": "works/video",
     "served_path_prefix": "/docs/assets"
   },
   "catalogue": {

@@ -349,6 +349,7 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
                 "work_thumbnails_base_url": assets.url(assets.work_thumbnails) + "/",
                 "work_primary_base_url": assets.url(assets.work_primary) + "/",
                 "work_files_base_url": assets.url(assets.work_files) + "/",
+                "work_video_base_url": assets.url(assets.work_video) + "/",
             }
             route["sites"] = {
                 "public_preview": {

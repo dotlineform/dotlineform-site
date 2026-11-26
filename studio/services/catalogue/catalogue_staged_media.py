@@ -20,6 +20,7 @@ class CatalogueStagingAssets:
     work_primary: ArtifactLocation
     work_thumbnails: ArtifactLocation
     work_files: ArtifactLocation
+    work_video: ArtifactLocation
 
     def url(self, location: ArtifactLocation) -> str:
         return CATALOGUE_MEDIA_ROUTE_PREFIX + location.path.relative_to(self.root.path).as_posix()
@@ -37,6 +38,7 @@ def catalogue_staging_assets(
         location_child(root, output / str(config["variants"]["primary"]["output_subdir"])),
         location_child(root, output / str(config["variants"]["thumb"]["output_subdir"])),
         location_child(root, media_work_files_subdir(config)),
+        location_child(root, Path("works/video")),
     )
 
 
@@ -68,7 +70,7 @@ def clear_staged_works(repo_root: Path, selections: Mapping[str, Mapping[str, An
     Empty descriptors require no staging setup. Queue persistence precedes this
     cleanup; absent bytes succeed and completed removals remain on failure.
     """
-    media_selections = {wid: entry for wid, entry in selections.items() if entry["image"] or entry["file_names"]}
+    media_selections = {wid: entry for wid, entry in selections.items() if entry["image"] or entry["file_names"] or entry.get("video_files")}
     if not media_selections:
         return
     config = load_pipeline_config(repo_root=repo_root)
@@ -79,3 +81,5 @@ def clear_staged_works(repo_root: Path, selections: Mapping[str, Mapping[str, An
                 path.unlink(missing_ok=True)
         for name in selection["file_names"]:
             location_child(staging.work_files, Path(name)).path.unlink(missing_ok=True)
+        for name in selection.get("video_files", []):
+            location_child(staging.work_video, Path(work_id) / name).path.unlink(missing_ok=True)

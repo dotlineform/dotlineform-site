@@ -152,6 +152,11 @@ export function createDocsViewerWorkspaceProvider(options) {
   provider.catalogueDownloadUrl = function (identity) {
     return catalogueAssetUrl(routeContext().routeConfig.catalogueWorkFilesBaseUrl, identity);
   };
+  provider.catalogueVideoUrl = function (identity) {
+    var match = /^(\d{5})\/master\.m3u8$/.exec(identity);
+    if (!match) throw new Error("Catalogue video target is unavailable or unsafe.");
+    return catalogueAssetUrl(routeContext().routeConfig.catalogueWorkVideoBaseUrl, match[1]) + "/master.m3u8";
+  };
   provider.readCatalogueWorkPresentation = async function (workId, loadedPayload) {
     var payload = loadedPayload || await readDocument({ collection: "catalogue", doc_id: workId });
     return catalogueDocumentWorkPresentation(payload, workId, routeContext().routeConfig.catalogueWorkPrimaryBaseUrl);

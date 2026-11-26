@@ -43,6 +43,7 @@ import {
   readWorkMediaSources,
   openWorkProjectMedia,
   previewWorkProjectMedia,
+  prepareWorkVideo,
   refreshCatalogue as requestCatalogueRefresh
 } from "./catalogue-editor-service-client.js";
 import { openNativeWorkAttachment, syncPendingAttachmentNames } from "./catalogue-work-attachments.js";
@@ -183,6 +184,9 @@ function validateDraft(state) {
   if (state.mode !== "bulk") {
     const sources = state.workMediaSourceConfig?.mediaSourceIds || [];
     if (!sources.includes(resolvedWorkMediaSourceId(state))) errors.set("media_source_id", "Select a configured media source.");
+    if (!state.pendingWorkBatch && state.draft.video_source && !state.draft.project_filename) {
+      errors.set("video_source", "Choose a poster image for the film.");
+    }
     validateWorkEmbeddedItems(state.draft).forEach((message, key) => errors.set(key, message));
   }
   return errors;
@@ -209,7 +213,7 @@ function renderCatalogueRefreshStatus(state) {
   let text;
   let tone = "";
   if (!state.serverAvailable) text = "Catalogue Refresh is unavailable.";
-  else if (state.isBuilding) text = "Refreshing Catalogue readers…";
+  else if (state.isBuilding && !state.isPreparingVideo) text = "Refreshing Catalogue readers…";
   else if (!state.refreshStatus) text = "Checking Catalogue reader freshness…";
   else if (state.refreshStatus.status_error) {
     text = state.refreshStatus.status_error;
@@ -262,6 +266,37 @@ async function runCatalogueRefresh(state) {
   }
 }
 
+function formatVideoTime(seconds) {
+  const whole = Math.round(seconds);
+  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
+}
+
+async function runPrepareVideo(state) {
+  if (state.prepareVideoButton.disabled) return;
+  clearActionMessages(state);
+  state.isBuilding = true;
+  state.isPreparingVideo = true;
+  updateEditorState(state);
+  const started = performance.now();
+  const showElapsed = () => state.messageController.setActionTextWithState(
+    state.statusNode, `Preparing video · ${formatVideoTime(Math.floor((performance.now() - started) / 1000))} elapsed`
+  );
+  showElapsed();
+  const timer = setInterval(showElapsed, 1000);
+  try {
+    const result = await prepareWorkVideo(state.currentWorkId);
+    state.refreshStatus = { ok: true, needed: true, refreshed_at_utc: state.refreshStatus?.refreshed_at_utc };
+    state.messageController.setActionTextWithState(state.statusNode, `Video ready · ${formatVideoTime(result.duration_seconds)}. Refresh Catalogue to continue.`);
+  } catch (error) {
+    state.messageController.setActionTextWithState(state.statusNode, error.message, "error");
+  } finally {
+    clearInterval(timer);
+    state.isPreparingVideo = false;
+    state.isBuilding = false;
+    updateEditorState(state);
+  }
+}
+
 function renderEditorMessage(state, snapshot = {}) {
   const hasRecord = Object.prototype.hasOwnProperty.call(snapshot, "hasRecord")
     ? snapshot.hasRecord
@@ -307,6 +342,8 @@ function updateEditorState(state, { recordsChanged = false } = {}) {
   updateSummary(state);
 
   const dirty = hasRecord && draftHasChanges(state);
+  state.prepareVideoButton.hidden = !state.draft.video_source || state.mode === "bulk";
+  state.prepareVideoButton.disabled = busy || dirty || state.mode !== "single" || !state.currentRecord?.video_source || !state.serverAvailable;
   state.refreshButton.disabled = busy || state.isEditingDefinition || dirty || !state.serverAvailable;
   renderCatalogueRefreshStatus(state);
   if ((state.mode === "bulk" || state.mode === "single") && hasRecord) {
@@ -592,6 +629,7 @@ async function init() {
       })),
       saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
       refreshCatalogue: () => runCatalogueRefresh(state),
+      prepareVideo: () => runPrepareVideo(state),
       deleteCurrentWork: () => deleteCurrentWork(state, workActionOptions(state))
     });
     await applyInitialWorkRouteSelection(state, workSelectionOptions(state));

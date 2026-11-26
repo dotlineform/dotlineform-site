@@ -55,6 +55,7 @@ def publication_media_bindings(
     for key, source, prefix_key in (
         ("catalogue/works/primary", assets.work_primary, "image_works"),
         ("catalogue/works/files", assets.work_files, "files_works"),
+        ("catalogue/works/video", assets.work_video, "video_works"),
     ):
         prefix = safe_relative_path(settings[prefix_key].strip("/"), field=f"media.{prefix_key}")
         if prefix.parts[0] == "archive":

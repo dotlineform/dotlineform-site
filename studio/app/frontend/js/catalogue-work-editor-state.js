@@ -119,6 +119,7 @@ export function createWorkEditorState(elements, options = {}) {
     workMediaSourceConfig: null,
     isSaving: false,
     isBuilding: false,
+    isPreparingVideo: false,
     isDeleting: false,
     isEditingDefinition: false,
     isOpeningSource: false,

@@ -61,4 +61,6 @@ Work Delete confirms the exact saved Work or selected batch. It removes canonica
 
 ### Persistent Media
 
+For a film Work, use **Choose image** for its poster and **Choose video** for the original in Projects. Save the Work, then select **Prepare video**. Studio shows elapsed time during the encode and reports the film duration and package readiness on completion. **Refresh Catalogue** hands the prepared package to Docs Viewer. Continue with **Regenerate** and **Publish** there. [Work media handoff](Catalogue_Save_And_Refresh.md#prepare-video)
+
 The picker resolves the configured Projects original. Save prepares renditions and native downloads under Projects `dotlineform-site/catalogue/media-staging/`. The editor follows the supplied staging flags and media version for display. Refresh completes the handoff to `working/assets/works/`. Open resource labels in a new tab. **Edit** changes a managed download's label and **Add file** with the same normalized identity replaces its bytes. [Work media authoring and queue](Catalogue_Save_And_Refresh.md#work-media-authoring)

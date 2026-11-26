@@ -337,12 +337,13 @@ export function createDocsViewerMediaDetailAdapter() {
     }
     bindReferences(root, null);
     if (context.payload && context.payload.catalogue && context.collectionProvider.catalogueImage) {
-      mountCatalogueDocument({
+      state.referenceCleanups.push(...mountCatalogueDocument({
         content: root, payload: context.payload,
         image: context.collectionProvider.catalogueImage,
         downloadUrl: context.collectionProvider.catalogueDownloadUrl,
+        videoUrl: context.collectionProvider.catalogueVideoUrl,
         bind: bindReferences
-      });
+      }));
     }
     return {
       ready: Promise.resolve(true),

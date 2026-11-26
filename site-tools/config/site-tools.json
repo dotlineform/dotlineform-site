@@ -10,7 +10,8 @@
   "media": {
     "base": "https://media.dotlineform.com",
     "image_works": "/works/img",
-    "files_works": "/works/files"
+    "files_works": "/works/files",
+    "video_works": "/works/video"
   },
   "thumbs": {
     "base": "",

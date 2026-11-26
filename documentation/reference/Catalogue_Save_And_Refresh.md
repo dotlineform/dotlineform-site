@@ -35,6 +35,12 @@ The editor owns the draft, field completion, membership choices and selected ima
 
 **Add file** holds a native upload in the draft. Save normalizes its name under the exact Work ID and retains its label. Selecting the same derived filename replaces its bytes and keeps the edited label. Use a distinct basename for a second attachment. A label edit or removal does not recheck unchanged attachments. **Choose source folder** relinks original locations without requesting image processing. [Work Editor media](Catalogue_Work_Editor.md#persistent-media) · [Attachment owner](../../studio/services/catalogue/catalogue_work_attachments.py)
 
+### Prepare Video
+
+Save persists the Projects-relative `video_source` independently of the poster. **Prepare video** encodes the selected saved Work into a complete HLS package and selects its exact files for Refresh. Studio shows elapsed preparation time and reports the film duration on success or the phase that failed. The saved `video_package` records the prepared files and whether they are in staging. [Preparation owner](../../studio/services/catalogue/catalogue_work_video.py)
+
+Refresh copies the selected files into Working and clears their staging state. Regenerate adopts the prepared playlist reference into the Work's Catalogue Entry and queues the files. Publish applies them to Preview and R2 through the normal Work transfer, with the master playlist after the rendition files. A replacement uses the same Work paths. The approved image serves as the inline player's poster and supplies the normal thumbnail. Unused files from a shorter encode can be reviewed separately. [Video package decision and cleanup](../_working/Catalogue_R2_Video_Delivery.md#video-segment-cleanup-follow-on)
+
 ## Updates Queue
 
 `working/catalogue-updates-pending.json` uses `catalogue_updates_pending_v5`. Current Work records carry `metadata`, `image`, `file_names` and `refreshed`; deletions carry exact owned media descriptors. Save merges known effects by ID. New work starts at `refreshed: false` and a later edit can return a ready entry to false. Work Delete captures its media descriptors before removing canonical data and memberships. Its staged-file cleanup uses those same selections.
@@ -76,6 +82,7 @@ Use `python3 docs-viewer/build/reconcile_catalogue_design.py --write` for delibe
 | Primary images | `assets/works/primary/` | Configured R2 `works/img/` |
 | Thumbnails | `assets/works/thumbs/` | `site/assets/data/catalogue/works/thumbs/` |
 | Downloads | `assets/works/media/files/` | Configured R2 `works/files/` |
+| HLS video | `assets/works/video/<work-id>/` | Configured R2 `works/video/<work-id>/` |
 
 The Work handoff record `works/index/<id>.json` is a Working Regenerate input. The public Work document carries its adopted fields. Catalogue has no ordinary document-media namespace. [Workspace locations](../../docs-viewer/config/workspace/docs-workspace.json)
 

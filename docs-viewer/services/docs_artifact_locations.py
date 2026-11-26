@@ -10,12 +10,13 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
-import mimetypes
 import os
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Iterator, Mapping, Protocol
+
+from media_files import content_type_for
 
 REPOSITORY_PROVIDER = "repository"
 EXTERNAL_LOCAL_PROVIDER = "external_local"
@@ -353,7 +354,7 @@ class R2ArtifactLocationAdapter(ArtifactLocationAdapter):
         with tempfile.TemporaryDirectory(prefix="docs-artifact-upload-") as temp_dir:
             path = Path(temp_dir) / f"artifact{suffix}"
             path.write_bytes(data)
-            resolved_content_type = content_type or mimetypes.guess_type(normalized)[0] or "application/octet-stream"
+            resolved_content_type = content_type or content_type_for(Path(normalized))
             self.client.put_object(self.key(normalized), path, resolved_content_type)
         remote = self.stat(normalized)
         if remote is None:

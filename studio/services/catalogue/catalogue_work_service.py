@@ -161,6 +161,8 @@ def extract_work_update(body: Mapping[str, Any]) -> dict[str, Any]:
     unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in WORK_FIELDS)
     if unknown:
         raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
+    if "video_package" in raw_record:
+        raise ValueError("Prepare video owns the prepared package")
     if not raw_record:
         raise ValueError("record must include at least one work field")
     return dict(raw_record)

@@ -40,6 +40,7 @@ def accumulate_work_changes(
         names = (set(old.get("file_names", [])) | set(changes["file_names"])) & downloads_by_work[work_id]
         pending["deleted_works"].pop(work_id, None)
         pending["current_works"][work_id] = {
+            **old,
             "metadata": old.get("metadata", False) or changes["metadata"],
             "image": old.get("image", False) or changes["image"],
             "file_names": sorted(names), "refreshed": False,

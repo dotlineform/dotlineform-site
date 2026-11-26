@@ -6,6 +6,7 @@ const WORK_FIELD_DEFINITIONS = Object.freeze({
   project_folder: Object.freeze({ key: "project_folder", label: "project folder", type: "text" }),
   project_subfolder: Object.freeze({ key: "project_subfolder", label: "project subfolder", type: "text" }),
   project_filename: Object.freeze({ key: "project_filename", label: "project filename", type: "text" }),
+  video_source: Object.freeze({ key: "video_source", label: "video source", type: "video-source" }),
   title: Object.freeze({ key: "title", label: "title", type: "text", required: true }),
   year: Object.freeze({ key: "year", label: "year", type: "number", step: "1", required: true }),
   year_display: Object.freeze({ key: "year_display", label: "year display", type: "text", required: true }),
@@ -24,6 +25,7 @@ const WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.project_folder,
   WORK_FIELD_DEFINITIONS.project_subfolder,
   WORK_FIELD_DEFINITIONS.project_filename,
+  WORK_FIELD_DEFINITIONS.video_source,
   WORK_FIELD_DEFINITIONS.title,
   WORK_FIELD_DEFINITIONS.year,
   WORK_FIELD_DEFINITIONS.year_display,
@@ -44,6 +46,7 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.project_folder,
   WORK_FIELD_DEFINITIONS.project_subfolder,
   WORK_FIELD_DEFINITIONS.project_filename,
+  WORK_FIELD_DEFINITIONS.video_source,
   WORK_FIELD_DEFINITIONS.year,
   WORK_FIELD_DEFINITIONS.year_display,
   WORK_FIELD_DEFINITIONS.medium,
@@ -168,6 +171,7 @@ function buildWorkRecordFromDraft(draft, options = {}) {
   record.project_folder = draft.project_folder || null;
   record.project_subfolder = draft.project_subfolder || null;
   record.project_filename = draft.project_filename || null;
+  record.video_source = draft.video_source || null;
   record.title = normalizeText(draft.title) || null;
   record.year = normalizeText(draft.year) ? Number(draft.year) : null;
   record.year_display = normalizeText(draft.year_display) || null;

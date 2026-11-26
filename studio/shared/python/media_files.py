@@ -16,5 +16,8 @@ def file_md5(path: Path) -> str:
 
 
 def content_type_for(path: Path) -> str:
+    hls_type = {".m3u8": "application/vnd.apple.mpegurl", ".m4s": "video/iso.segment"}.get(path.suffix.lower())
+    if hls_type:
+        return hls_type
     content_type, _encoding = mimetypes.guess_type(path.name)
     return content_type or "application/octet-stream"

@@ -9,6 +9,7 @@ from typing import Any, Dict, Iterable, Mapping
 
 from catalogue_work_media_sources import (
     resolve_work_media_source_id,
+    work_media_relative_path,
     work_media_source_id_for_storage,
 )
 from pipeline_config import load_pipeline_config
@@ -39,6 +40,8 @@ WORK_FIELDS = [
     "project_folder",
     "project_subfolder",
     "project_filename",
+    "video_source",
+    "video_package",
     MEDIA_VERSION_FIELD,
     "image_staged",
     "title",
@@ -63,6 +66,7 @@ SERIES_FIELDS = [
 
 WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
     "image_staged",
+    "video_package",
     "downloads",
     "links",
     "width_cm",
@@ -83,6 +87,8 @@ OMIT_EMPTY_SOURCE_FIELDS = {
     "project_folder",
     "project_subfolder",
     "project_filename",
+    "video_source",
+    "video_package",
     MEDIA_VERSION_FIELD,
     "medium",
     "storage_location",
@@ -105,7 +111,7 @@ SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY = {
 }
 
 SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY = {
-    "work": ("width_px", "height_px", MEDIA_VERSION_FIELD, "image_staged"),
+    "work": ("width_px", "height_px", MEDIA_VERSION_FIELD, "image_staged", "video_package"),
     "series": (),
 }
 
@@ -237,6 +243,9 @@ def normalize_source_record(
             entries = work_resource_entries(record, field)
             if entries:
                 out[field] = [dict(entry) for entry in entries]
+        elif field == "video_source":
+            if value is not None and value != "":
+                out[field] = work_media_relative_path(value).as_posix()
         elif field in {"project_folder", "project_subfolder", "project_filename"}:
             # Source path components are identities, not prose to trim or unquote.
             if value is not None and value != "":

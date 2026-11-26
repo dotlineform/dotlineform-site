@@ -155,6 +155,7 @@ class DocsAssetsConfig:
     work_primary: ArtifactLocation
     work_thumbnails: ArtifactLocation
     work_files: ArtifactLocation
+    work_video: ArtifactLocation
     served_path_prefix: str
     document_media_collections: tuple[str, ...]
     media_types: tuple[str, ...]
@@ -172,7 +173,7 @@ class DocsAssetsConfig:
         return replace(self, root=root, work_root=work_root,
                        document_media=location_child(root, self.document_media.path.relative_to(self.root.path)), **{
             name: location_child(work_root, getattr(self, name).path.relative_to(self.work_root.path))
-            for name in ("work_primary", "work_thumbnails", "work_files")
+            for name in ("work_primary", "work_thumbnails", "work_files", "work_video")
         })
 
     def reference_identity(self, path: Path) -> Path:
@@ -197,10 +198,10 @@ class DocsAssetsConfig:
         relative = safe_relative_path(identity, field="asset reference")
         if relative.as_posix() != identity:
             raise ValueError("asset reference must use its exact workspace-relative identity")
-        work_families = [self.work_primary.path, self.work_thumbnails.path, self.work_files.path]
+        work_families = [self.work_primary.path, self.work_thumbnails.path, self.work_files.path, self.work_video.path]
         is_work = any(relative.is_relative_to(family.relative_to(self.work_root.path)) for family in work_families)
         path = (self.work_root.path if is_work else self.root.path) / relative
-        families = [self.work_primary.path, self.work_thumbnails.path, self.work_files.path]
+        families = work_families.copy()
         families.extend(
             self.document_media.path / owner / media_type
             for owner in (Path("workspace"), *(Path("collections") / child for child in self.document_media_collections))
@@ -507,7 +508,7 @@ def _assets(raw: Any, *, workspace_root: ArtifactLocation,
             document_media_collections: tuple[str, ...], media_types: tuple[str, ...], assets_base_dir: Path | None,
             work_assets_base_dir: Path | None) -> DocsAssetsConfig:
     item = _object(raw, field="assets", required={
-        "roots", "document_media", "work_primary", "work_thumbnails", "work_files", "served_path_prefix",
+        "roots", "document_media", "work_primary", "work_thumbnails", "work_files", "work_video", "served_path_prefix",
     })
     raw_roots = _object(item["roots"], field="assets.roots", required=set(STAGES))
     roots = {}
@@ -523,7 +524,7 @@ def _assets(raw: Any, *, workspace_root: ArtifactLocation,
         roots = {stage: ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, assets_base_dir) for stage in STAGES}
     paths = {
         key: safe_relative_path(item[key], field=f"assets.{key}")
-        for key in ("document_media", "work_primary", "work_thumbnails", "work_files")
+        for key in ("document_media", "work_primary", "work_thumbnails", "work_files", "work_video")
     }
     if work_assets_base_dir is not None:
         if (not work_assets_base_dir.is_absolute() or ".." in work_assets_base_dir.parts

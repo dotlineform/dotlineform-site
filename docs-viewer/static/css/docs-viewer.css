@@ -2112,6 +2112,11 @@ body.docs-viewer-service{
   overflow: hidden;
 }
 
+.docsViewer__content video.docsViewerCatalogueEntry__frame{
+  height: auto;
+  background: #000;
+}
+
 .docsViewer__content .docsViewerCatalogueEntry__frame > img,
 .docsViewer__content .docsViewerCatalogueEntry__frame > [data-docs-media-placeholder]{
   position: absolute;

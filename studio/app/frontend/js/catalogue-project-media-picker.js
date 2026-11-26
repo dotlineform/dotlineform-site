@@ -167,6 +167,7 @@ export async function openProjectMediaModal(state, options = {}) {
     loadFolders: () => loadProjectFolders(state, mediaSourceId, options),
     loadFiles: async request => {
       const payload = await options.loadProjectFiles({
+        kind: options.mediaKind,
         mediaSourceId,
         projectFolder: request.folder,
         projectSubfolder: request.subfolder,
@@ -224,6 +225,26 @@ export async function openProjectMediaPickerForCurrentDraft(state, options = {})
     await options.onImageSelected(result.selection);
   }
   return result;
+}
+
+/** Video uses the Projects root and has its own source selection, separate from the poster. */
+export async function chooseWorkVideoSource(state, options) {
+  const scope = state.workMediaSourceConfig.defaultMediaSourceId;
+  const parts = state.draft.video_source ? state.draft.video_source.split("/") : [];
+  const filename = parts.pop() || "";
+  const usePosterFolder = !filename && options.getMediaSourceId() === scope;
+  const folder = usePosterFolder ? state.draft.project_folder : parts.shift() || "";
+  const subfolder = usePosterFolder ? state.draft.project_subfolder : parts.join("/");
+  const result = await openProjectMediaModal(state, {
+    ...options,
+    mediaKind: "video",
+    filePickerConfig: { text: { modalTitle: "Choose video" } },
+    initialSelection: { scope, folder, subfolder, filename }
+  });
+  if (result?.confirmed) {
+    const selected = result.selection;
+    setDraftField(state, "video_source", [selected.project_folder, selected.project_subfolder, selected.project_filename].filter(Boolean).join("/"), options);
+  }
 }
 
 /** Confirm an unsaved batch; Save alone persists it and completes local media. */

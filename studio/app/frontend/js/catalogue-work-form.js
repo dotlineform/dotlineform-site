@@ -8,6 +8,7 @@ import { clearAutomaticWorkDimensions, clearWorkImagePreview } from "./catalogue
 import { workBulkEditingPaused } from "./catalogue-work-route-state.js";
 import { BULK_WORK_METADATA_FIELDS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
+  chooseWorkVideoSource,
   openProjectMediaPickerForCurrentDraft,
   openProjectMediaFolderForCurrentDraft,
   resetProjectMediaFolders
@@ -164,7 +165,7 @@ function renderField(field, fieldsNode, state, options) {
     renderProjectMediaDisplayField(field, fieldsNode, state, options);
     return;
   }
-  if (field.key === "project_filename") {
+  if (field.key === "project_filename" || field.key === "video_source") {
     renderProjectMediaDisplayField(field, fieldsNode, state, options);
     return;
   }
@@ -301,6 +302,7 @@ function renderMediaSourceField(field, fieldsNode, state, options) {
 }
 
 function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
+  const isVideo = field.key === "video_source";
   const wrapper = document.createElement("div");
   wrapper.className = "studioForm__field catalogueWorkForm__field catalogueProjectMediaPicker__displayField";
 
@@ -312,16 +314,18 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
   const control = document.createElement("div");
   control.className = "catalogueProjectMediaPicker__displayControl";
 
-  const display = document.createElement("a");
+  const display = document.createElement(isVideo ? "span" : "a");
   display.className = "studioUi__input studioUi__input--readonlyDisplay catalogueProjectMediaPicker__displayValue";
   display.id = `catalogueWorkFieldDisplay-${field.key}`;
-  display.dataset.projectMediaDisplay = field.key;
   display.textContent = "—";
-  display.addEventListener("click", event => {
-    event.preventDefault();
-    if (display.getAttribute("aria-disabled") === "true") return;
-    options.onOpenSourceTarget(field.key);
-  });
+  if (!isVideo) {
+    display.dataset.projectMediaDisplay = field.key;
+    display.addEventListener("click", event => {
+      event.preventDefault();
+      if (display.getAttribute("aria-disabled") === "true") return;
+      options.onOpenSourceTarget(field.key);
+    });
+  }
   control.appendChild(display);
 
   const input = document.createElement("input");
@@ -368,6 +372,30 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
     });
     control.appendChild(button);
     state.projectMediaChooseButton = button;
+  }
+
+  if (isVideo) {
+    const choose = document.createElement("button");
+    choose.type = "button";
+    choose.className = "studioUi__iconButton";
+    choose.append(createStudioIcon(document, "folder-open"));
+    choose.title = "Choose video…";
+    choose.setAttribute("aria-label", choose.title);
+    choose.addEventListener("click", event => {
+      event.stopPropagation();
+      chooseWorkVideoSource(state, options).catch(error => {
+        state.messageController.setActionTextWithState(state.statusNode, error.message, "error");
+      });
+    });
+    const prepare = document.createElement("button");
+    prepare.type = "button";
+    prepare.className = "studioUi__button catalogueWorkVideo__prepare";
+    prepare.textContent = "Prepare video";
+    prepare.hidden = true;
+    control.append(choose, prepare);
+    state.videoSourceField = wrapper;
+    state.chooseVideoButton = choose;
+    state.prepareVideoButton = prepare;
   }
 
   wrapper.appendChild(control);
@@ -594,6 +622,8 @@ export function setModeFieldAvailability(state) {
   if (state.projectMediaChooseButton) {
     state.projectMediaChooseButton.disabled = state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting;
   }
+  state.videoSourceField.hidden = isBulk || Boolean(state.pendingWorkBatch);
+  state.chooseVideoButton.disabled = busy || !state.serverAvailable;
   state.projectMediaFolderButtons.forEach((button, fieldKey) => {
     button.hidden = !isBulk && !state.currentRecord && !(state.mode === "new" && fieldKey === "project_subfolder");
     button.disabled = busy || !state.serverAvailable;

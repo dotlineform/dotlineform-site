@@ -1,3 +1,5 @@
+import { mountCatalogueVideo } from "./docs-viewer-catalogue-video.js";
+
 /** Render portable Catalogue references from the loaded document. */
 function escape(value) {
   return String(value).replace(/[&<>"']/g, function (character) {
@@ -25,6 +27,14 @@ function imageControl(presentation, entry, destinationLabel) {
     + ' data-docs-media-open aria-label="Open ' + escape(destinationLabel) + '">'
     + '<img data-docs-media-image alt="' + title + '" width="' + image.width_px + '" height="' + image.height_px + '" decoding="async">'
     + '<span data-docs-media-placeholder hidden>' + title + "</span></button>";
+}
+
+function videoControl(presentation) {
+  var image = presentation.image;
+  return '<video class="docsViewerCatalogueEntry__frame" controls playsinline crossorigin="anonymous" preload="metadata"'
+    + ' aria-label="' + escape(presentation.label) + '" poster="' + escape(image.src) + '"'
+    + ' width="' + image.width_px + '" height="' + image.height_px + '"></video>'
+    + '<p role="status" data-catalogue-video-status hidden></p>';
 }
 
 function iconMarkup(name) {
@@ -64,7 +74,9 @@ function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
   var options = reference.options;
   if (reference.presentation === "media") return mediaTextLink(reference.target, options.label);
   var attrs = mediaTargetAttributes(reference.target);
-  var image = imageControl(presentation, reference.presentation === "entry", options.gallery_label ?? presentation.label);
+  var image = presentation.videoUrl
+    ? videoControl(presentation)
+    : imageControl(presentation, reference.presentation === "entry", options.gallery_label ?? presentation.label);
   if (reference.presentation === "image") {
     var placement = {
       full: "docsViewerFigure--full-column",
@@ -96,6 +108,7 @@ function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
 /** Mount the prepared display data before any Media View target is selected. */
 export function mountCatalogueDocument(context) {
   var catalogue = context.payload.catalogue;
+  var cleanups = [];
   catalogue.references.forEach(function (reference) {
     var slot = context.content.querySelector('[data-docs-catalogue-ref="' + reference.reference_id + '"]');
     if (!slot) return;
@@ -105,12 +118,16 @@ export function mountCatalogueDocument(context) {
         var work = reference.presentation === "entry" ? catalogue.work : null;
         var image = context.image(work ? work.image : reference.render);
         presentation = { label: image.alt, image: image, entry: work && work.entry, galleries: work && work.galleries };
+        if (work?.video) presentation.videoUrl = context.videoUrl(work.video);
         if (reference.options.left_size === "thumbnail") {
           slot.style.setProperty("--docs-viewer-thumbnail-width", image.width_px + "px");
         }
       }
       slot.innerHTML = catalogueReferenceMarkup(reference, presentation, context.downloadUrl);
-      context.bind(slot, presentation && {
+      if (presentation?.videoUrl) {
+        cleanups.push(mountCatalogueVideo(slot.querySelector("video"), slot.querySelector("[data-catalogue-video-status]"), presentation.videoUrl));
+      }
+      context.bind(slot, presentation && !presentation.videoUrl && {
         src: image.src, srcset: image.srcset, alt: image.alt,
         widthPx: image.width_px, heightPx: image.height_px
       });
@@ -119,4 +136,5 @@ export function mountCatalogueDocument(context) {
       slot.textContent = error.message;
     }
   });
+  return cleanups;
 }

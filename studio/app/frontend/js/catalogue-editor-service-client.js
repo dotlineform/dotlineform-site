@@ -108,6 +108,10 @@ export function refreshCatalogue() {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.refresh, {});
 }
 
+export function prepareWorkVideo(workId) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.prepareWorkVideo, { work_id: workId });
+}
+
 export function readCatalogueRefreshStatus() {
   return getJson(CATALOGUE_WRITE_ENDPOINTS.refreshStatus);
 }
@@ -135,6 +139,7 @@ export function readProjectMediaFolders(mediaSourceId = "", query = "") {
 export function readProjectMediaFiles(options = {}) {
   const qs = queryString({
     mode: "files",
+    kind: options.kind,
     media_source_id: options.mediaSourceId,
     project_folder: options.projectFolder,
     project_subfolder: options.projectSubfolder,

@@ -31,6 +31,10 @@ def delete_apply_response(
               "file_names": sorted(item["filename"] for item in work_resource_entries(plan.previous.works[wid], "downloads"))}
         for wid in record_ids if kind == "works"
     }
+    for wid, selection in deleted_media.items():
+        video = plan.previous.works[wid].get("video_package")
+        if video:
+            selection["video_files"] = video["files"]
     transactions.execute_source_json_write(plan.payloads, dry_run=context.dry_run, repo_root=context.repo_root)
     identity = {"ids": record_ids} if kind == "works" else {"id": record_ids[0]}
     payload: dict[str, Any] = {

@@ -57,6 +57,8 @@ def catalogue_payloads(
         work = compact_json_object({"work_id": wid, **projection.build_work_record_projection(source)})
         if source.get("series_id"):
             work["series_id"] = source["series_id"]
+        if "video_package" in source:
+            work["video"] = f"{wid}/master.m3u8"
         links = [dict(link) for link in source.get("links", [])]
         downloads = list(source.get("downloads", []))
         if links:

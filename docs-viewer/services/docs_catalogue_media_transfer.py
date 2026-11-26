@@ -33,7 +33,8 @@ class CatalogueMediaTransfers:
             else:
                 source_owner = {"primary": self.workspace.assets.work_primary,
                                 "thumbs": self.workspace.assets.work_thumbnails,
-                                "files": self.workspace.assets.work_files}[key.rsplit("/", 1)[1]]
+                                "files": self.workspace.assets.work_files,
+                                "video": self.workspace.assets.work_video}[key.rsplit("/", 1)[1]]
                 data = write_bytes(preview, read_bytes(confined(source_owner.path, identity)))
             completed_effect(self.result, "Preview files removed" if deleting else "Preview files applied", preview)
             self.result["phase"] = "Catalogue media distribution"

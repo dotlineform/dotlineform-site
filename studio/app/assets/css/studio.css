@@ -1624,6 +1624,10 @@ label.catalogueGalleryWorks__row:focus-within {
   align-items: center;
 }
 
+.catalogueWorkVideo__prepare {
+  justify-self: start;
+}
+
 .catalogueProjectMediaPicker__displayValue {
   min-width: 0;
   min-height: var(--studio-control-height);

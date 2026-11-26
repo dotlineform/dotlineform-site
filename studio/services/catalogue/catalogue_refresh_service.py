@@ -301,6 +301,8 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                             image.unlink(missing_ok=True)
                     for name in entry["file_names"]:
                         output_path(working.work_files, name).unlink(missing_ok=True)
+                    for name in entry.get("video_files", []):
+                        output_path(working.work_video, f"{work_id}/{name}").unlink(missing_ok=True)
                     output["deleted"].append(f"works/index/{work_id}.json")
                 else:
                     record = records.works[work_id]
@@ -324,6 +326,17 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                         destination = output_path(working.work_files, name)
                         if _handoff_file(source, destination):
                             staged_sources.append(source)
+                    video_files = entry.get("video_files", [])
+                    video_staged = bool(video_files) and record["video_package"]["staged"]
+                    if video_staged:
+                        if staging is None:
+                            staging = catalogue_staging_assets(repo_root, config=media_config)
+                        for name in video_files:
+                            identity = f"{work_id}/{name}"
+                            source = output_path(staging.work_video, identity)
+                            destination = output_path(working.work_video, identity)
+                            if _handoff_file(source, destination):
+                                staged_sources.append(source)
                     phase = "metadata handoff"
                     work_payload = payloads[f"works/index/{work_id}.json"]
                     try:
@@ -335,6 +348,9 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                         output["written"].append(f"works/index/{work_id}.json")
                     phase = "staging flags"
                     flags_changed = entry["image"] and record["image_staged"]
+                    if video_staged:
+                        record["video_package"]["staged"] = False
+                        flags_changed = True
                     if entry["image"]:
                         record["image_staged"] = False
                     for name in entry["file_names"]:

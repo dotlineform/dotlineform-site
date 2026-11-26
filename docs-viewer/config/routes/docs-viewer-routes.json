@@ -136,7 +136,8 @@
         "media_config_url": "/assets/data/catalogue/media-config.json",
         "work_thumbnails_base_url": "/assets/data/catalogue/works/thumbs/",
         "work_primary_base_url": "https://media.dotlineform.com/works/img/",
-        "work_files_base_url": "https://media.dotlineform.com/works/files/"
+        "work_files_base_url": "https://media.dotlineform.com/works/files/",
+        "work_video_base_url": "https://media.dotlineform.com/works/video/"
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",

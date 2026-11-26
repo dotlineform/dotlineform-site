@@ -57,7 +57,9 @@ def publish_catalogue_works(repo_root: Path, workspace: Any, pending: dict[str, 
             else:
                 write_bytes(document, document_bytes)
             completed_effect(result, "Preview files removed" if deleting else "Preview files applied", document)
-            work_media.apply(((key, target.name) for key, target in media), deleting=deleting)
+            identities = [(key, target.name) for key, target in media]
+            identities.extend(("catalogue/works/video", f"{work_id}/{name}") for name in selection.get("video_files", []))
+            work_media.apply(identities, deleting=deleting)
             if not deleting:
                 work_media.apply(rendered_catalogue_assets(payload))
             result["phase"] = "Catalogue Work distribution"
