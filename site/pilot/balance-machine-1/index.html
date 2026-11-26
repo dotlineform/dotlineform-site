@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>balance machine 1 | dotlineform</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, sans-serif;
+      line-height: 1.5;
+    }
+
+    main {
+      max-inline-size: 60rem;
+      margin: 2rem auto;
+      padding-inline: 1rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    video {
+      display: block;
+      inline-size: 100%;
+      block-size: auto;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .playback-info {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem 1rem;
+      margin-block: 0.75rem;
+    }
+
+    #playback-status {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>balance machine 1</h1>
+    <video id="player" aria-label="balance machine 1 film" controls playsinline crossorigin="anonymous"
+           preload="metadata" poster="poster.jpg" width="1280" height="720"></video>
+    <div class="playback-info">
+      <p id="playback-status" role="status"></p>
+      <a id="change-playback" href="?playback=native" hidden>Use native HLS</a>
+    </div>
+    <noscript>JavaScript is required to select a playback mode.</noscript>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.7.4/dist/hls.min.js"
+          integrity="sha384-p9vgU/7IYJWd3I4STrtqxqR/2cAQlhIX7D/HrTnIMEjjcUox165b7se7sxmm3zDg"
+          crossorigin="anonymous"></script>
+  <script type="module">
+    const playlistUrl = "https://media.dotlineform.com/works/video/pilot/balance-machine-1/master.m3u8";
+    const video = document.getElementById("player");
+    const status = document.getElementById("playback-status");
+    const changePlayback = document.getElementById("change-playback");
+    const nativeRequested = new URLSearchParams(location.search).get("playback") === "native";
+    const nativeSupported = video.canPlayType("application/vnd.apple.mpegurl");
+    const Hls = window.Hls;
+
+    video.addEventListener("error", () => {
+      status.textContent = "The HLS stream could not be played.";
+    });
+
+    if (nativeRequested) {
+      changePlayback.href = "./";
+      changePlayback.textContent = "Use automatic playback";
+      changePlayback.hidden = false;
+    }
+
+    if (!nativeRequested && Hls?.isSupported()) {
+      const hls = new Hls();
+      status.textContent = "Playback via hls.js";
+      changePlayback.hidden = !nativeSupported;
+      hls.on(Hls.Events.LEVEL_SWITCHED, (_event, { level }) => {
+        status.textContent = `Playback via hls.js · ${hls.levels[level].height}p`;
+      });
+      hls.on(Hls.Events.ERROR, (_event, { fatal, details }) => {
+        if (fatal) {
+          hls.destroy();
+          status.textContent = `The HLS stream could not be played (${details}).`;
+        }
+      });
+      hls.loadSource(playlistUrl);
+      hls.attachMedia(video);
+    } else if (nativeSupported) {
+      status.textContent = "Playback via native HLS";
+      video.src = playlistUrl;
+    } else {
+      status.textContent = nativeRequested
+        ? "This browser does not support native HLS."
+        : "HLS playback is unavailable in this browser.";
+    }
+  </script>
+</body>
+</html>

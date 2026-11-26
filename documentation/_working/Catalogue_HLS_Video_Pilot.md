@@ -3,9 +3,9 @@ draft: false
 doc_id: d-20261122-003943-ac9eb5
 title: Catalogue HLS Video Pilot
 added_date: "2026-11-22 00:39:43"
-last_updated: "2026-11-22"
+last_updated: "2026-11-26"
 summary: Pilot adaptive video playback for one Catalogue Work using FFmpeg, Cloudflare R2 and the browser's video controls.
-ui_status: proposed
+ui_status: active
 parent_id: d-20261118-235100-64ad2e
 ---
 # Catalogue HLS Video Pilot
@@ -48,11 +48,32 @@ With native HLS support, the browser reads the playlist directly. The `controls`
 ## Manual Pilot And Acceptance
 
 - [x] Select **balance machine 1** as the pilot film. The source is `projects/balance machine/balance machine 1.m4v` beneath `$DOTLINEFORM_PROJECTS_BASE_DIR`. The 2011 HandBrake export runs 4:09 at 1280 × 720 with H.264 video and an embedded stereo AAC soundtrack. FFmpeg decoded both tracks through to the end without errors.
-- [ ] Select a frame from the film and save it at the video's native dimensions as a high-quality JPG or PNG in the source project. Use that still as the preview page's poster and reserve the 16:9 player area before playback.
-- [ ] Write a small local CLI that takes a source video and an output directory and runs FFmpeg to create an HLS package. Run it for the pilot film with two or three quality levels, using H.264 video up to 720p and AAC audio from the embedded soundtrack. Record the chosen resolutions and bitrates, encoding time and total size of the playlists and segments.
-- [ ] Confirm the pilot R2 destination and the preview page's origin. Upload the package to R2 manually, record the upload time and point the preview page at the master playlist. Catalogue Work `04813` describes the same-title print.
-- [ ] Open the same preview in Mac Safari, iPhone Safari, desktop Chrome and Firefox. Record which playback path each uses and explicitly exercise native HLS on the iPhone if the default selects `hls.js`. Check startup, seeking, audio sync after seeks, inline playback on the iPhone, fullscreen and how well the film retains its detail during motion.
+- [x] Approved the 1280 × 720 JPEG from 1:20.08. Saved it in the source project and used an identical copy as the preview poster. The player reserves a 16:9 area before playback.
+- [x] Built the local FFmpeg CLI and prepared the two-rendition pilot package from the selected film and embedded soundtrack. Both renditions decoded to the end, and their segment boundaries matched.
+- [x] Uploaded all 89 objects to the pilot prefix on 26 November 2026, finishing around 12:13 GMT. The connection stopped after 64 objects and the remaining 25 completed in 13.4 seconds on resume. Uploaded the master last and pointed the preview page at it. For each pilot origin, checked the three gzip playlists, two initialization files and one segment per rendition. The responses had matching CORS origins and content types, and the media byte-range requests returned HTTP 206. Catalogue Work `04813` describes the same-title print. [Existing pilot CORS policy](Standalone_Site_Pilots.md#verify-deploy-and-retire) · [Apple HLS delivery requirements](https://developer.apple.com/streaming/hls-authoring-specification-for-apple-devices.html)
+- [ ] Open the same preview in Mac Safari, iPhone Safari, desktop Chrome and Firefox. Use the deployed HTTPS address for the iPhone and explicitly exercise native HLS there if the default selects `hls.js`. Record which playback path each browser uses. Check startup, seeking, audio sync after seeks, inline playback on the iPhone, fullscreen and how well the film retains its detail during motion.
 - [ ] Throttle a desktop connection during playback. Inspect segment requests to confirm a quality change and assess whether playback recovers as bandwidth falls and rises. Check that the soundtrack stays in sync through quality changes, and record any stalls or visible quality issues alongside the network conditions.
+
+### Local Preparation
+
+Run [the pilot CLI](../../bin/prepare-hls-pilot) with the Projects root set in the shell. It reads one local video file with an embedded soundtrack and creates a new output directory. Use a new directory for another encode.
+
+```bash
+bin/prepare-hls-pilot \
+  "$DOTLINEFORM_PROJECTS_BASE_DIR/projects/balance machine/balance machine 1.m4v" \
+  var/catalogue-hls-pilot/balance-machine-1/hls
+```
+
+The encode took 1 minute 2 seconds and produced 92,386,736 bytes across 89 files. Both renditions use a 25 fps timeline, matching six-second keyframe intervals and stereo AAC at a 128 kbit/s target. Each rendition carries the soundtrack so FFmpeg's measured master-playlist bitrates include the full playback stream. The master also declares the output frame rate. Each media playlist has 42 segments covering 248.92 seconds, including a 2.92-second tail.
+
+| Rendition | H.264 video target | Measured average with audio | Peak segment with audio |
+| --- | --- | --- | --- |
+| 640 × 360 | 650 kbit/s | 717 kbit/s | 1,027 kbit/s |
+| 1280 × 720 | 2,400 kbit/s | 2,253 kbit/s | 3,111 kbit/s |
+
+### Local Playback
+
+`bin/site-validate` passed. At `http://127.0.0.1:4000/pilot/balance-machine-1/`, the in-app browser played and resumed after a midpoint seek in both modes. Automatic playback through [hls.js 1.7.4](https://github.com/video-dev/hls.js/releases/tag/v1.7.4) also moved from 360p to 720p on the unthrottled connection. The **Use native HLS** link selects the native path where supported. Mac Safari started native playback and advanced to 15 seconds. Device and browser acceptance, audio and picture review, and the controlled bandwidth test remain open.
 
 ## Video Inventory And Hosting Estimates
 
@@ -112,11 +133,12 @@ Paths starting with `projects/` or `dotlineform-site/catalogue/media-staging/` a
 | Project note | `projects/balance machine/_balance machine.md` | Existing inventory and reconciliation notes. |
 | Selected video | `projects/balance machine/balance machine 1.m4v` | Verified source. FFmpeg will use its embedded soundtrack. |
 | Separate soundtrack | `projects/balance machine/balance machine 1.aif` | Existing candidate. Its match to the embedded soundtrack is unconfirmed. |
-| Poster source, JPEG example | `projects/balance machine/balance machine 1 poster.jpg` | Proposed file for the chosen frame at 1280 × 720. |
+| Poster candidate | `var/catalogue-hls-pilot/balance-machine-1/poster.jpg` | Local 1280 × 720 JPEG from 1:20.08. |
+| Poster source | `projects/balance machine/balance machine 1 poster.jpg` | Approved 1280 × 720 JPEG. |
 | Pilot poster | `site/pilot/balance-machine-1/poster.jpg` | Preview copy of the chosen frame for local and deployed checks. |
-| Pilot preview page | `site/pilot/balance-machine-1/index.html` | Proposed temporary page served by `bin/site-preview` and GitHub Pages at the direct `/pilot/balance-machine-1/` route. |
-| Local HLS master playlist | `var/catalogue-hls-pilot/balance-machine-1/hls/master.m3u8` | Proposed CLI output. The playlists and segments go together in `hls/` for manual upload. |
-| Pilot master playlist on R2 | `https://media.dotlineform.com/works/video/pilot/balance-machine-1/master.m3u8` | Proposed public address for the preview player. The named folder gives the package an address before the film has a Work ID. |
+| Pilot preview page | `site/pilot/balance-machine-1/index.html` | Checked at `/pilot/balance-machine-1/` in `bin/site-preview`. GitHub Pages release pending. |
+| Local HLS master playlist | `var/catalogue-hls-pilot/balance-machine-1/hls/master.m3u8` | Encoded and decoded locally. The playlists and segments go together in `hls/` for manual upload. |
+| Pilot master playlist on R2 | `https://media.dotlineform.com/works/video/pilot/balance-machine-1/master.m3u8` | Uploaded and checked from both pilot origins. The named folder gives the package an address before the film has a Work ID. |
 
 ### Production With Studio And R2
 

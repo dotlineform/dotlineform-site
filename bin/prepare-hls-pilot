@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  printf 'Usage: %s SOURCE_VIDEO NEW_OUTPUT_DIRECTORY\n' "$0" >&2
+  exit 2
+fi
+
+source_video="$1"
+output_directory="$2"
+[[ "$source_video" = /* ]] || source_video="$PWD/$source_video"
+[[ "$output_directory" = /* ]] || output_directory="$PWD/$output_directory"
+
+if [[ ! -f "$source_video" ]]; then
+  printf 'Source video file does not exist: %s\n' "$source_video" >&2
+  exit 1
+fi
+if ! command -v ffmpeg >/dev/null; then
+  printf 'FFmpeg is required to prepare the HLS pilot.\n' >&2
+  exit 1
+fi
+
+mkdir -p -- "$(dirname "$output_directory")"
+mkdir -- "$output_directory"
+
+# Use one timeline and a closed GOP with a keyframe at each segment boundary.
+frame_rate=25
+segment_seconds=6
+ffmpeg -hide_banner -nostdin -nostats -loglevel warning -xerror -i "$source_video" \
+  -filter_complex "[0:v:0]fps=$frame_rate,split=2[low][high];
+    [low]scale='min(iw,640)':'min(ih,360)':force_original_aspect_ratio=decrease:force_divisible_by=2[vlow];
+    [high]scale='min(iw,1280)':'min(ih,720)':force_original_aspect_ratio=decrease:force_divisible_by=2[vhigh]" \
+  -map '[vlow]' -map 0:a:0 -map '[vhigh]' -map 0:a:0 \
+  -c:v libx264 -preset medium -pix_fmt yuv420p -g "$((frame_rate * segment_seconds))" -sc_threshold 0 -flags +cgop \
+  -b:v:0 650k -maxrate:v:0 850k -bufsize:v:0 1300k \
+  -b:v:1 2400k -maxrate:v:1 2800k -bufsize:v:1 4800k \
+  -c:a aac -b:a 128k -ac 2 \
+  -f hls -hls_playlist_type vod -hls_segment_type fmp4 \
+  -hls_time "$segment_seconds" -hls_flags independent_segments -hls_fmp4_init_filename init.mp4 \
+  -var_stream_map 'v:0,a:0,name:360p v:1,a:1,name:720p' \
+  -hls_segment_filename "$output_directory/%v/segment-%04d.m4s" \
+  -master_pl_name master.m3u8 "$output_directory/%v/index.m3u8"
+
+# FFmpeg computes the multiplexed bitrates. Supply the known output frame rate when its master omits it.
+master_playlist="$output_directory/master.m3u8"
+awk -v frame_rate="$frame_rate" '
+  /^#EXT-X-STREAM-INF:/ && !/[:,]FRAME-RATE=/ { $0 = $0 ",FRAME-RATE=" frame_rate ".000" }
+  { print }
+' "$master_playlist" > "$master_playlist.tmp"
+mv -- "$master_playlist.tmp" "$master_playlist"
+
+printf 'HLS master playlist: %s\n' "$master_playlist"
