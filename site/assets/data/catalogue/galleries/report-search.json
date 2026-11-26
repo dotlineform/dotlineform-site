@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_gallery_report_search_v1",
-    "generated_at_utc": "2026-11-17T18:46:58Z"
+    "generated_at_utc": "2026-11-26T16:30:49Z"
   },
   "galleries": {
     "001": "10,000",
@@ -15782,6 +15782,9 @@
     "05247": [
       "103",
       "362"
+    ],
+    "05248": [
+      "317"
     ]
   },
   "presentation_by_gallery": {

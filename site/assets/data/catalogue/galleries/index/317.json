@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-23T07:58:31Z",
+    "generated_at_utc": "2026-11-26T16:30:49Z",
     "gallery_id": "317"
   },
   "gallery": {
@@ -48,6 +48,10 @@
     {
       "work_id": "04822",
       "title": "balance machine 3.1"
+    },
+    {
+      "work_id": "05248",
+      "title": "balance machine 1"
     }
   ]
 }
