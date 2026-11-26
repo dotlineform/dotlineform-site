@@ -48,7 +48,7 @@ Prepare resolves only the chosen Projects source and records the files from its 
 
 Record broader browser coverage, audio and motion observations, and bandwidth drop and recovery during live use as devices and conditions are available. Use the retained pilot stream for comparison when diagnosing playback.
 
-Use the [video inventory](../_working/Video_Inventory_And_Source_Organisation.md) to select the next cuts and estimate package storage before expanding live use. The measured pilot used about 22 MB per minute across both renditions. [Catalogue Video In Media View](../_working/Catalogue_Video_In_Media_View.md) plans playback in the selected Work pane and records the decisions for a later inline player in ordinary documents. Revisit controls beyond the browser's standard controls as live use informs them.
+Use the [video inventory](../_working/Video_Inventory_And_Source_Organisation.md) to select the next cuts and estimate package storage before expanding live use. The measured pilot used about 22 MB per minute across both renditions. [Catalogue Video In Media View](Catalogue_Video_In_Media_View.md) records the accepted playback in the selected Work pane and the decisions for a later inline player in ordinary documents. Revisit controls beyond the browser's standard controls as live use informs them.
 
 ## Video Segment Cleanup Follow-on
 

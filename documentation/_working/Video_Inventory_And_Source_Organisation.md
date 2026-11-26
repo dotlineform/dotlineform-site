@@ -63,7 +63,7 @@ Start with the convention already used in *by the river*. Use `<project>/video/`
 
 ## 1080p Playback Assessment
 
-The current HLS encoder tops out at 1280 × 720. Use the recorded source dimensions and runtimes to identify confirmed 1080p or larger originals and shortlist cuts where fine detail is visible at the intended viewing size. [Current cap and player sizing](Catalogue_Video_In_Media_View.md#player-sizing)
+The current HLS encoder tops out at 1280 × 720. Use the recorded source dimensions and runtimes to identify confirmed 1080p or larger originals and shortlist cuts where fine detail is visible at the intended viewing size. [Current cap and player sizing](../deliveries/Catalogue_Video_In_Media_View.md#player-sizing)
 
 If a higher rendition looks worthwhile, compare 720p and 1080p encodes of a representative cut. Assess the visible benefit at desktop or fullscreen size, preparation time, added package bytes per minute, and the bitrate required for playback. Use the candidate runtimes to estimate the additional R2 storage. Check seeking and quality switching on desktop and phone before deciding which cuts warrant an extra rendition. [Measured 360p and 720p baseline](../deliveries/Catalogue_HLS_Video_Pilot.md#local-preparation)
 
