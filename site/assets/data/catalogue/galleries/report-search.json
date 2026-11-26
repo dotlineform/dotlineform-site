@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_gallery_report_search_v1",
-    "generated_at_utc": "2026-11-26T16:30:49Z"
+    "generated_at_utc": "2026-11-26T20:17:27Z"
   },
   "galleries": {
     "001": "10,000",
@@ -196,7 +196,8 @@
     "359": "untitled drawings",
     "360": "mandala form",
     "361": "ink",
-    "362": "painting"
+    "362": "painting",
+    "363": "video"
   },
   "gallery_ids_by_work": {
     "00001": [
@@ -15784,13 +15785,18 @@
       "362"
     ],
     "05248": [
-      "317"
+      "317",
+      "363"
     ]
   },
   "presentation_by_gallery": {
     "362": {
       "description": "paintings from across the catalogue",
       "marker": "brush"
+    },
+    "363": {
+      "description": "video from across the catalogue",
+      "marker": "video"
     }
   },
   "added_dates_by_gallery": {
@@ -15984,6 +15990,7 @@
     "359": "2026-09-17",
     "360": "2026-10-25",
     "361": "2026-09-17",
-    "362": "2026-10-25"
+    "362": "2026-10-25",
+    "363": "2026-11-26"
   }
 }

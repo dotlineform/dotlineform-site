@@ -59,6 +59,11 @@
           "relation": "direct"
         },
         {
+          "id": "363",
+          "label": "video",
+          "relation": "direct"
+        },
+        {
           "id": "318",
           "label": "balance machine - video stills",
           "relation": "series"

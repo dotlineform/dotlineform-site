@@ -967,6 +967,13 @@
       "description": "paintings from across the catalogue",
       "marker": "brush",
       "added_date": "2026-10-25"
+    },
+    "363": {
+      "gallery_id": "363",
+      "title": "video",
+      "description": "video from across the catalogue",
+      "marker": "video",
+      "added_date": "2026-11-26"
     }
   }
 }
