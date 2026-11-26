@@ -10,11 +10,11 @@ parent_id: d-20261118-235100-64ad2e
 ---
 # Standalone Site Pilots
 
-Use one tracked static page to test a feature locally and on the deployed site. Give each pilot a named folder under `site/pilot/` and share its direct URL. Keep the page outside the site's navigation and Docs Viewer routes. The first pilot proves that a browser can read an object from the existing R2 media host before the HLS pilot adds playlists, segments and a player. [Site preview and deploy](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site) · [Catalogue HLS Video Pilot](Catalogue_HLS_Video_Pilot.md)
+Use one tracked static page to test a feature locally and on the deployed site. Give each pilot a named folder under `site/pilot/` and share its direct URL. Keep the page outside the site's navigation and Docs Viewer routes. The first pilot confirmed that a browser could read an object from the existing R2 media host. The page and its test image were retired after the live check. [Site preview and deploy](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site) · [Catalogue HLS Video Pilot](Catalogue_HLS_Video_Pilot.md)
 
 ## First Pilot With An R2 Image
 
-| Item | Path or address |
+| Item | Former path or address |
 | --- | --- |
 | Static page in the repository | `site/pilot/r2-image/index.html` |
 | Default local preview | `http://127.0.0.1:4000/pilot/r2-image/` |
@@ -22,7 +22,7 @@ Use one tracked static page to test a feature locally and on the deployed site. 
 | Test object on the existing R2 bucket | `works/video/pilot/r2-image/test.webp` |
 | Public object URL | `https://media.dotlineform.com/works/video/pilot/r2-image/test.webp` |
 
-The test object is a copy of the already public Catalogue image `works/img/04813-primary-800.webp`. The page fetches the pilot URL once with JavaScript using a plain `GET`, then displays the decoded image or shows a failure message. The page and its script are served as one static file.
+The test object was a copy of the public Catalogue image `works/img/04813-primary-800.webp`. The page fetched the pilot URL once with JavaScript using a plain `GET`, then displayed the decoded image or showed a failure message. The page and its script were served as one static file.
 
 ## Why The Browser Requires CORS
 
@@ -50,7 +50,7 @@ On 22 November 2026, read-only requests for the existing `works/img/04813-primar
 ]
 ```
 
-3. Save the policy, then check the test object's response for each origin. If you use a different preview address, use that exact origin in the rule and the check. For example, `http://localhost:4000` or a Mac's LAN address used by an iPhone would be its own origin. The policy applies to the bucket and controls whether JavaScript on those page origins may read its public responses. [Origin matching](https://developers.cloudflare.com/r2/buckets/cors/#common-issues)
+3. Save the policy, then check an active test object's response for each origin. The command below records the image pilot check. If you use a different preview address, use that exact origin in the rule and the check. For example, `http://localhost:4000` or a Mac's LAN address used by an iPhone would be its own origin. The policy applies to the bucket and controls whether JavaScript on those page origins may read its public responses. [Origin matching](https://developers.cloudflare.com/r2/buckets/cors/#common-issues)
 
 ```bash
 curl -fsS -D - -o /dev/null \
@@ -65,4 +65,4 @@ Repeat with `Origin: https://www.dotlineform.com`. Expect HTTP 200 and an `Acces
 - [x] Created the page and copied the public Work 04813 WebP to the pilot key. `bin/site-validate` passed on 26 November 2026. The exact preview route showed the fetch failure while the R2 response lacked the CORS header. The page makes one request, checks the HTTP status and decodes the image before displaying it. [Verification](../development/Verification.md)
 - [x] Added one `GET` rule for the two pilot origins to `dotlineform-media`. The bucket had no prior CORS policy. The original URL initially served cached responses without the new headers, so the exact pilot image prefix was purged. The original URL then returned HTTP 200 with the matching `Access-Control-Allow-Origin` for each origin, and the browser displayed the image from `site-preview`.
 - [x] Released the pilot on 26 November 2026 through the manual **Public site** workflow. The deployed `site/` delta contained only the pilot page. At `https://www.dotlineform.com/pilot/r2-image/`, the browser fetched and displayed the same R2 WebP and reported success. [GitHub Pages deployment](https://github.com/dotlineform/dotlineform-site/actions/runs/45812962314) · [Deploy procedure](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site)
-- [ ] Agree which pilot assets to retain for follow-on work. Retire a finished pilot by removing its `site/pilot/<name>/` folder in a later Pages release and removing its temporary R2 objects once they are no longer used. Keep CORS origins used by the HLS pilot or other consumers.
+- [x] Retired the image pilot on 26 November 2026. The removal deployment succeeded and the former live route returned HTTP 404. Then removed the duplicate WebP from R2, confirmed the object was absent and purged its cached variants. The former public image URL returned HTTP 404 with each pilot origin and with the Origin header omitted. Retained the bucket's `GET` rule for HLS and confirmed both CORS origins on the original Catalogue image. [Retirement deployment](https://github.com/dotlineform/dotlineform-site/actions/runs/45813678089)
