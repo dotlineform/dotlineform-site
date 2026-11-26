@@ -9,7 +9,7 @@ ui_status: done
 ---
 # Catalogue HLS Video Pilot
 
-The standalone *balance machine 1* pilot was accepted on 26 November 2026. R2 is the selected host for Catalogue video, and this cut is the first film Work for the [Catalogue R2 Video Delivery](../_working/Catalogue_R2_Video_Delivery.md). Broader browser and bandwidth checks now follow live use. The standalone page, poster and R2 package remain available for comparison. [Live pilot](https://www.dotlineform.com/pilot/balance-machine-1/) · [Standalone pilot workflow](../_working/Standalone_Site_Pilots.md)
+The standalone *balance machine 1* pilot was accepted on 26 November 2026. R2 is the selected host for Catalogue video, and this cut is the first film Work for the [Catalogue R2 Video Delivery](Catalogue_R2_Video_Delivery.md). Broader browser and bandwidth checks now follow live use. The standalone page, poster and R2 package remain available for comparison. [Live pilot](https://www.dotlineform.com/pilot/balance-machine-1/) · [Standalone pilot workflow](../_working/Standalone_Site_Pilots.md)
 
 ## Source And Player
 

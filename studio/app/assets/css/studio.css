@@ -687,6 +687,7 @@ span.studioUi__input--readonlyDisplay {
 .studioUi__icon--circle-check { mask-image: url("/docs-viewer/static/icons/circle-check.svg"); }
 .studioUi__icon--brush { mask-image: url("/docs-viewer/static/icons/brush.svg"); }
 .studioUi__icon--video { mask-image: url("/docs-viewer/static/icons/video.svg"); }
+.studioUi__icon--clapperboard { mask-image: url("/docs-viewer/static/icons/clapperboard.svg"); }
 .studioUi__icon--square-library { mask-image: url("/docs-viewer/static/icons/square-library.svg"); }
 
 .studioUi__popup {
@@ -1624,8 +1625,11 @@ label.catalogueGalleryWorks__row:focus-within {
   align-items: center;
 }
 
-.catalogueWorkVideo__prepare {
-  justify-self: start;
+.catalogueWorkVideo__actions {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .catalogueProjectMediaPicker__displayValue {

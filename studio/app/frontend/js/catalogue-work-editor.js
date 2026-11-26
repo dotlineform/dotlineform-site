@@ -278,9 +278,9 @@ async function runPrepareVideo(state) {
   state.isPreparingVideo = true;
   updateEditorState(state);
   const started = performance.now();
-  const showElapsed = () => state.messageController.setActionTextWithState(
-    state.statusNode, `Preparing video · ${formatVideoTime(Math.floor((performance.now() - started) / 1000))} elapsed`
-  );
+  const showElapsed = () => {
+    state.prepareVideoTimer.textContent = `Preparing video · ${formatVideoTime(Math.floor((performance.now() - started) / 1000))} elapsed`;
+  };
   showElapsed();
   const timer = setInterval(showElapsed, 1000);
   try {
@@ -291,6 +291,7 @@ async function runPrepareVideo(state) {
     state.messageController.setActionTextWithState(state.statusNode, error.message, "error");
   } finally {
     clearInterval(timer);
+    state.prepareVideoTimer.textContent = "";
     state.isPreparingVideo = false;
     state.isBuilding = false;
     updateEditorState(state);
@@ -342,7 +343,7 @@ function updateEditorState(state, { recordsChanged = false } = {}) {
   updateSummary(state);
 
   const dirty = hasRecord && draftHasChanges(state);
-  state.prepareVideoButton.hidden = !state.draft.video_source || state.mode === "bulk";
+  state.prepareVideoControls.hidden = !state.draft.video_source || state.mode === "bulk";
   state.prepareVideoButton.disabled = busy || dirty || state.mode !== "single" || !state.currentRecord?.video_source || !state.serverAvailable;
   state.refreshButton.disabled = busy || state.isEditingDefinition || dirty || !state.serverAvailable;
   renderCatalogueRefreshStatus(state);

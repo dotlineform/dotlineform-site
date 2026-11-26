@@ -313,6 +313,7 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
 
   const control = document.createElement("div");
   control.className = "catalogueProjectMediaPicker__displayControl";
+  wrapper.appendChild(control);
 
   const display = document.createElement(isVideo ? "span" : "a");
   display.className = "studioUi__input studioUi__input--readonlyDisplay catalogueProjectMediaPicker__displayValue";
@@ -387,18 +388,30 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
         state.messageController.setActionTextWithState(state.statusNode, error.message, "error");
       });
     });
+    control.appendChild(choose);
+
     const prepare = document.createElement("button");
     prepare.type = "button";
-    prepare.className = "studioUi__button catalogueWorkVideo__prepare";
-    prepare.textContent = "Prepare video";
-    prepare.hidden = true;
-    control.append(choose, prepare);
+    prepare.className = "studioUi__iconButton";
+    prepare.title = "Prepare video";
+    prepare.setAttribute("aria-label", prepare.title);
+    prepare.append(createStudioIcon(document, "clapperboard"));
+
+    const timer = document.createElement("span");
+    timer.className = "studioUi__status";
+    timer.setAttribute("role", "timer");
+
+    const actions = document.createElement("div");
+    actions.className = "catalogueWorkVideo__actions";
+    actions.hidden = true;
+    actions.append(prepare, timer);
+    wrapper.appendChild(actions);
     state.videoSourceField = wrapper;
     state.chooseVideoButton = choose;
     state.prepareVideoButton = prepare;
+    state.prepareVideoControls = actions;
+    state.prepareVideoTimer = timer;
   }
-
-  wrapper.appendChild(control);
 
   const message = document.createElement("span");
   message.className = "catalogueWorkForm__fieldStatus";
