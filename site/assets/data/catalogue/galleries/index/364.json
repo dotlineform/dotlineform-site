@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-11-26T21:05:38Z",
+    "gallery_id": "364"
+  },
+  "gallery": {
+    "gallery_id": "364",
+    "title": "nerve"
+  },
+  "member_works": [
+    {
+      "work_id": "00008",
+      "title": "nerve"
+    },
+    {
+      "work_id": "05235",
+      "title": "nerve - back cover"
+    }
+  ]
+}

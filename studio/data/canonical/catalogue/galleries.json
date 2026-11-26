@@ -974,6 +974,18 @@
       "description": "video from across the catalogue",
       "marker": "video",
       "added_date": "2026-11-26"
+    },
+    "364": {
+      "gallery_id": "364",
+      "title": "nerve",
+      "added_date": "2026-11-26"
+    },
+    "365": {
+      "gallery_id": "365",
+      "title": "writing",
+      "description": "stories, poems and longer texts from across the catalogue",
+      "marker": "square-library",
+      "added_date": "2026-11-26"
     }
   }
 }

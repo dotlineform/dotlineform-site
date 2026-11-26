@@ -53,6 +53,11 @@
       "full_image": "05235-primary-1600.webp",
       "galleries": [
         {
+          "id": "364",
+          "label": "nerve",
+          "relation": "direct"
+        },
+        {
           "id": "150",
           "label": "nerve (formaldehyde form)",
           "relation": "series"

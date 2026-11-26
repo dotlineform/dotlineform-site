@@ -1,0 +1,17 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-11-26T21:05:38Z",
+    "gallery_id": "365"
+  },
+  "gallery": {
+    "gallery_id": "365",
+    "title": "writing"
+  },
+  "member_works": [
+    {
+      "work_id": "00008",
+      "title": "nerve"
+    }
+  ]
+}

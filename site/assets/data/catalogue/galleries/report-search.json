@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_gallery_report_search_v1",
-    "generated_at_utc": "2026-11-26T20:17:27Z"
+    "generated_at_utc": "2026-11-26T21:05:38Z"
   },
   "galleries": {
     "001": "10,000",
@@ -197,7 +197,9 @@
     "360": "mandala form",
     "361": "ink",
     "362": "painting",
-    "363": "video"
+    "363": "video",
+    "364": "nerve",
+    "365": "writing"
   },
   "gallery_ids_by_work": {
     "00001": [
@@ -15787,6 +15789,13 @@
     "05248": [
       "317",
       "363"
+    ],
+    "00008": [
+      "364",
+      "365"
+    ],
+    "05235": [
+      "364"
     ]
   },
   "presentation_by_gallery": {
@@ -15797,6 +15806,10 @@
     "363": {
       "description": "video from across the catalogue",
       "marker": "video"
+    },
+    "365": {
+      "description": "stories, poems and longer texts from across the catalogue",
+      "marker": "square-library"
     }
   },
   "added_dates_by_gallery": {
@@ -15991,6 +16004,8 @@
     "360": "2026-10-25",
     "361": "2026-09-17",
     "362": "2026-10-25",
-    "363": "2026-11-26"
+    "363": "2026-11-26",
+    "364": "2026-11-26",
+    "365": "2026-11-26"
   }
 }
