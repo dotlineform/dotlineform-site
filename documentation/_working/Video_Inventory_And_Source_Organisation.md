@@ -10,7 +10,7 @@ parent_id: d-20261118-235100-64ad2e
 ---
 # Video Inventory And Source Organisation
 
-Review the videos project by project before choosing cuts for the Catalogue. Establish which local files match the Vimeo and YouTube uploads, which local sources are still missing or unconfirmed, and where to keep confirmed files in Projects. The inventory supplies source sizes and runtimes for hosting estimates. The manual HLS pilot can proceed with its verified source. [Catalogue HLS Video Pilot](Catalogue_HLS_Video_Pilot.md)
+Review the videos project by project before choosing cuts for the Catalogue. Establish which local files match the Vimeo and YouTube uploads, which local sources are still missing or unconfirmed, and where to keep confirmed files in Projects. The inventory supplies source sizes and runtimes for a wider R2 rollout. The completed HLS pilot established the first source for Catalogue video. [Catalogue HLS Video Pilot](../deliveries/Catalogue_HLS_Video_Pilot.md)
 
 ## Where The Inventory Lives
 
@@ -18,7 +18,7 @@ Review the videos project by project before choosing cuts for the Catalogue. Est
 | --- | --- |
 | **Source footage, exports and extracts** | Keep the files in their project folders. Start the project note with a short description of the source footage, soundtracks, finished exports and extracts that are available. |
 | **Which file matches which cut or upload** | Use the existing project Markdown note, such as `_by the river.md`, as the working record. Keep the candidate paths, Vimeo and YouTube URLs, confirmed matches, missing sources, cut selection decisions and next actions here. Record a Work ID once the cut is registered. |
-| **What you have registered for readers** | Use `works.json` for each registered cut's Work ID, Series, Medium, Duration and visitor-facing Links. The Work's selected Catalogue image supplies its poster. Use the proposed optional project-relative video source to register the selected local file once confirmed. [Catalogue source model](../reference/Catalogue_Source_Model.md#metadata-and-ordering) · [Film and still records](Catalogue_HLS_Video_Pilot.md#film-and-still-work-records) |
+| **What you have registered for readers** | Use `works.json` for each registered cut's Work ID, Series, Medium, Duration and visitor-facing Links. The Work's selected Catalogue image supplies its poster. Use the proposed optional project-relative video source to register the selected local file once confirmed. [Catalogue source model](../reference/Catalogue_Source_Model.md#metadata-and-ordering) · [First film and poster](Catalogue_R2_Video_Delivery.md#film-and-poster) |
 
 When you register a distinct cut, give it its own Work ID. A short cut and a long cut get separate Works, with their own durations, selected sources and matching platform links. Different exports of the same edit are candidates for the same Work. Use ordinary Gallery membership to group the cuts for readers, and keep them in the same Series where appropriate. [Catalogue identities and relationships](../reference/Catalogue_Source_Model.md#relationships-and-identity) · [Gallery editing](../reference/Catalogue_Work_Editor.md)
 
@@ -65,4 +65,4 @@ Start with the convention already used in *by the river*. Use `<project>/video/`
 
 - [ ] Reconcile the first three projects using the current Projects report and the project-note table. Agree the folder and naming convention and decide whether a video-specific report would help before broadening the review.
 - [ ] Review the remaining local projects and both platform libraries. Keep cut decisions and unresolved sources in the project notes, save confirmed sources and reader-facing links for registered cuts on their own Works, and group related cuts with a Gallery.
-- [ ] Measure the confirmed local source file sizes directly when totalling the inventory. Carry the total bytes, combined runtime of the distinct cuts being considered for hosting and unresolved source count into the hosting decision. [Pilot hosting estimates](Catalogue_HLS_Video_Pilot.md#video-inventory-and-hosting-estimates)
+- [ ] Measure the confirmed local source file sizes directly when totalling the inventory. Use the total bytes, combined runtime of the selected cuts and unresolved source count to plan the wider R2 rollout. [Measured pilot estimate](../deliveries/Catalogue_HLS_Video_Pilot.md#video-inventory-and-hosting-estimates)
