@@ -5,7 +5,7 @@ title: Standalone Site Pilots
 added_date: "2026-11-22 16:06:47"
 last_updated: "2026-11-26"
 summary: Test an unlinked static pilot in site-preview and on GitHub Pages, starting with a cross-origin read from R2.
-ui_status: active
+ui_status: done
 parent_id: d-20261118-235100-64ad2e
 ---
 # Standalone Site Pilots
@@ -64,5 +64,5 @@ Repeat with `Origin: https://www.dotlineform.com`. Expect HTTP 200 and an `Acces
 
 - [x] Created the page and copied the public Work 04813 WebP to the pilot key. `bin/site-validate` passed on 26 November 2026. The exact preview route showed the fetch failure while the R2 response lacked the CORS header. The page makes one request, checks the HTTP status and decodes the image before displaying it. [Verification](../development/Verification.md)
 - [x] Added one `GET` rule for the two pilot origins to `dotlineform-media`. The bucket had no prior CORS policy. The original URL initially served cached responses without the new headers, so the exact pilot image prefix was purged. The original URL then returned HTTP 200 with the matching `Access-Control-Allow-Origin` for each origin, and the browser displayed the image from `site-preview`.
-- [ ] Review the tracked `site/` changes and release the page using the manual **Public site** workflow. Open the deployed URL directly and confirm that the same page fetches and displays the same R2 object. Record the tested origins, browser results and any R2 rule change. [Public site workflow](../../.github/workflows/public-site.yml) · [Deploy procedure](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site)
+- [x] Released the pilot on 26 November 2026 through the manual **Public site** workflow. The deployed `site/` delta contained only the pilot page. At `https://www.dotlineform.com/pilot/r2-image/`, the browser fetched and displayed the same R2 WebP and reported success. [GitHub Pages deployment](https://github.com/dotlineform/dotlineform-site/actions/runs/45812962314) · [Deploy procedure](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site)
 - [ ] Agree which pilot assets to retain for follow-on work. Retire a finished pilot by removing its `site/pilot/<name>/` folder in a later Pages release and removing its temporary R2 objects once they are no longer used. Keep CORS origins used by the HLS pilot or other consumers.
