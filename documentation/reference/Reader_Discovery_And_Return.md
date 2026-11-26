@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-11-25"
+last_updated: "2026-11-26"
 summary: Index, Search, Recent and collection data, browsing state and return behaviour.
 parent_id: d-20260424-000000-50b63f
 
@@ -88,7 +88,7 @@ Public Library defaults to A–Z. **Shuffle** orders the loaded documents random
 
 ### Catalogue Collection Browsing
 
-The Catalogue host uses the Catalogue document manifest for Work IDs, titles and dates. Its **work or gallery** field searches all Works by title or Work ID and loads `galleries/report-search.json` when it needs Gallery titles and membership matches. It groups Gallery-title matches, Galleries containing matching Works, then Work results. Search pages have 20 entries. A new search defaults to A–Z. A–Z and Last added sort within groups, and refining a query preserves the chosen sort. [Catalogue read models](Catalogue_Indexes_And_Payloads.md#generated-read-models) · [Browsing projector](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js)
+The Catalogue host uses the Catalogue document manifest for Work IDs, titles and dates. Its **work or gallery** field searches all Works by title or Work ID and loads `galleries/report-search.json` when it needs Gallery titles and membership matches. It groups Gallery-title matches, Galleries containing matching Works, then Work results. Search pages have 20 entries. A new search defaults to **A–Z**. Within the Work results, exact title matches come first, titles starting with the query come next, and other matches follow. Each of those sets is alphabetical. **Last added** orders results by date within the two Gallery groups and the Work group. Refining a query preserves the chosen sort. [Catalogue read models](Catalogue_Indexes_And_Payloads.md#generated-read-models) · [Browsing projector](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js)
 
 Unfiltered List starts with up to 64 of the latest Works. **Shuffle** advances that mode's selection. The rolling Gallery has its own cycle, adding a column of eight and keeping up to eight columns. Switching back to List restores its displayed Works and scroll. The tab remembers the view and displayed Work IDs. A successful Manage Regenerate resets to the default List. The **Open selection in Media View** action uses the unfiltered List sequence. [Shuffle data and cycles](Catalogue_Shuffle_Randomness.md) · [Discovery grid](Catalogue_Media_View.md#discovery-grid)
 

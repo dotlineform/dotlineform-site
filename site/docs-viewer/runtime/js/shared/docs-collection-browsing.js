@@ -82,6 +82,18 @@ function catalogueTitlePattern(query) {
   return new RegExp(`(?:^|[^\\p{L}\\p{M}\\p{N}])${literalQuery}`, "u");
 }
 
+function prioritizeCatalogueWorkMatches(matches, query) {
+  const exactTitles = [];
+  const titlePrefixes = [];
+  const otherMatches = [];
+  for (const row of matches) {
+    if (row.searchTitle === query) exactTitles.push(row);
+    else if (row.searchTitle.startsWith(query)) titlePrefixes.push(row);
+    else otherMatches.push(row);
+  }
+  return exactTitles.concat(titlePrefixes, otherMatches);
+}
+
 /** Prepare Gallery title keys once and count direct memberships from the matched Work rows. */
 export function createCatalogueGallerySearch(payload) {
   if (payload?.header?.schema !== "catalogue_gallery_report_search_v1") {
@@ -137,7 +149,8 @@ function shuffleCollectionRows(rows, seed) {
 /**
  * Shared presentation over completed records: exact URLs, thumbnail choices,
  * search keys and cached ordering. Inventory and edit ownership stay with callers.
- * Catalogue adds Work-ID matching; Context retains numeric-aware title collation.
+ * Catalogue matches Work IDs and prioritizes exact titles and title prefixes in A–Z search.
+ * Context retains numeric-aware title collation.
  * @param {Object} options
  * @param {string} options.collectionId Exact configured collection.
  * @param {string} [options.mediaRoot] Configured authored-thumbnail media root.
@@ -205,6 +218,7 @@ export function createCollectionPresentation(options) {
         if (catalogue) {
           const titlePattern = catalogueTitlePattern(normalized);
           matches = ordered.filter(row => titlePattern.test(row.searchTitle) || row.workId.includes(normalized));
+          if (sortMode === COLLECTION_TITLE_SORT) matches = prioritizeCatalogueWorkMatches(matches, normalized);
         } else {
           matches = ordered.filter(row => row.searchTitle.includes(normalized));
         }
