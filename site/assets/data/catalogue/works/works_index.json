@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-11-09T15:33:47Z"
+    "generated_at_utc": "2026-11-26T14:57:23Z"
   },
   "works": {
     "00001": {
@@ -20787,6 +20787,10 @@
     "05247": {
       "work_id": "05247",
       "title": "mother and child (detail)"
+    },
+    "05248": {
+      "work_id": "05248",
+      "title": "balance machine 1"
     }
   }
 }

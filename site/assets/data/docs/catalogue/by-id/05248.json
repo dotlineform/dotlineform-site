@@ -1,0 +1,69 @@
+{
+  "doc_id": "05248",
+  "title": "balance machine 1",
+  "added_date": "2026-11-26 14:57:36",
+  "last_updated": "2026-11-26 14:57:36",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v2",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05248"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "work": {
+      "series_id": "150",
+      "entry": {
+        "metadata_lines": [
+          "2003, 2011",
+          "video",
+          "4:09",
+          "",
+          "cat. 05248"
+        ],
+        "resources": []
+      },
+      "video": "05248/master.m3u8",
+      "image": {
+        "alt": "balance machine 1",
+        "width_px": 1280,
+        "height_px": 720,
+        "version": 1,
+        "default": "05248-primary-800.webp",
+        "candidates": [
+          {
+            "identity": "05248-primary-800.webp",
+            "width_px": 800
+          },
+          {
+            "identity": "05248-primary-1200.webp",
+            "width_px": 1200
+          },
+          {
+            "identity": "05248-primary-1600.webp",
+            "width_px": 1280
+          }
+        ]
+      },
+      "full_image": "05248-primary-1600.webp",
+      "galleries": [
+        {
+          "id": "317",
+          "label": "balance machine",
+          "relation": "series"
+        },
+        {
+          "id": "318",
+          "label": "balance machine - video stills",
+          "relation": "series"
+        }
+      ]
+    }
+  }
+}
