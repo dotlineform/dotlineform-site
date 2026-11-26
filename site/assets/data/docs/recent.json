@@ -1,8 +1,26 @@
 {
   "schema": "docs_recent_v3",
   "limit": 20,
-  "generated_at": "2026-11-17T18:46:59Z",
+  "generated_at": "2026-11-26T23:14:55Z",
   "docs": [
+    {
+      "kind": "catalogue-gallery",
+      "id": "364",
+      "title": "nerve",
+      "timestamp": "2026-11-26"
+    },
+    {
+      "kind": "catalogue-gallery",
+      "id": "363",
+      "title": "video",
+      "timestamp": "2026-11-26"
+    },
+    {
+      "kind": "catalogue-gallery",
+      "id": "365",
+      "title": "writing",
+      "timestamp": "2026-11-26"
+    },
     {
       "doc_id": "d-20261113-101744-c4dd8f",
       "title": "catalogue randomness",
@@ -108,26 +126,6 @@
       "id": "308",
       "title": "moments",
       "timestamp": "2026-10-24"
-    },
-    {
-      "doc_id": "d-20261024-095656-151301",
-      "title": "moments in an unfinished painting",
-      "timestamp": "2026-10-24",
-      "collection": "moments",
-      "report_doc_id": "d-20260907-180859-c425b2",
-      "collection_title": "Moments"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "138",
-      "title": "untitled composites",
-      "timestamp": "2026-10-24"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "319",
-      "title": "3 symbols - cards",
-      "timestamp": "2026-10-23"
     }
   ]
 }
