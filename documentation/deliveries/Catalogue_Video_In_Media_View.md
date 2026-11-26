@@ -20,7 +20,7 @@ Use the player’s fullscreen control for larger playback on the film’s own Ca
 
 The saved poster dimensions set the player’s maximum size and aspect ratio. A smaller player displays at that size when there is room. Larger players scale down proportionally to fit the media pane and available viewport height. The frame stays stable when HLS switches quality. Work `05248` has a 1280 × 720 poster matching its largest rendition. If future posters differ from their films and exact video sizing matters, carry the prepared video dimensions with the Work. [Current Media View image sizing](../../docs-viewer/static/css/docs-viewer.css)
 
-**Current encoding cap.** Prepare video produces HLS renditions up to 640 × 360 and 1280 × 720. A 1080p source currently plays at up to 720p. The same responsive sizing rule applies if a 1080p rendition is added later. [Encoder settings](../../bin/prepare-hls-pilot) · [1080p inventory assessment](../_working/Video_Inventory_And_Source_Organisation.md#1080p-playback-assessment)
+**Current encoding cap.** Prepare video produces HLS renditions up to 640 × 360 and 1280 × 720. A 1080p source currently plays at up to 720p. The same responsive sizing rule applies if a 1080p rendition is added later. [Encoder settings](../../bin/prepare-catalogue-video) · [1080p inventory assessment](../_working/Video_Inventory_And_Source_Organisation.md#1080p-playback-assessment)
 
 ## Delivered Workflow
 

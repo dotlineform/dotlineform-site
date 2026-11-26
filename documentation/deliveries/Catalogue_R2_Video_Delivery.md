@@ -10,7 +10,7 @@ parent_id: d-20260419-000000-d2e47b
 ---
 # Catalogue R2 Video Delivery
 
-*Balance machine 1* went live on 26 November 2026 as the first Catalogue film with inline playback from R2. The [completed HLS pilot](Catalogue_HLS_Video_Pilot.md) supplies the encoding and playback evidence. Its live page, poster and R2 package are available for comparison.
+*Balance machine 1* went live on 26 November 2026 as the first Catalogue film with inline playback from R2. The [completed HLS pilot](Catalogue_HLS_Video_Pilot.md) records the encoding and playback evidence and the retirement of the standalone assets.
 
 ## Film And Poster
 
@@ -46,7 +46,7 @@ Prepare resolves only the chosen Projects source and records the files from its 
 
 ## Live Review
 
-Record broader browser coverage, audio and motion observations, and bandwidth drop and recovery during live use as devices and conditions are available. Use the retained pilot stream for comparison when diagnosing playback.
+Record broader browser coverage, audio and motion observations, and bandwidth drop and recovery during live use as devices and conditions are available. Use Work `05248` for Catalogue playback checks.
 
 Use the [video inventory](../_working/Video_Inventory_And_Source_Organisation.md) to select the next cuts and estimate package storage before expanding live use. The measured pilot used about 22 MB per minute across both renditions. [Catalogue Video In Media View](Catalogue_Video_In_Media_View.md) records the accepted playback in the selected Work pane and the decisions for a later inline player in ordinary documents. Revisit controls beyond the browser's standard controls as live use informs them.
 

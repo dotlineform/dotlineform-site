@@ -17,7 +17,7 @@ if [[ ! -f "$source_video" ]]; then
   exit 1
 fi
 if ! command -v ffmpeg >/dev/null; then
-  printf 'FFmpeg is required to prepare the HLS pilot.\n' >&2
+  printf 'FFmpeg is required to prepare Catalogue video.\n' >&2
   exit 1
 fi
 

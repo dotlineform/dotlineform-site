@@ -43,7 +43,7 @@ def prepare_work_video(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         with TemporaryDirectory(prefix="prepare-", dir=staging.path) as directory:
             package = Path(directory) / "hls"
             encode = subprocess.run(
-                [str(repo_root / "bin/prepare-hls-pilot"), str(source), str(package)],
+                [str(repo_root / "bin/prepare-catalogue-video"), str(source), str(package)],
                 capture_output=True, text=True, check=False,
             )
             if encode.returncode:
