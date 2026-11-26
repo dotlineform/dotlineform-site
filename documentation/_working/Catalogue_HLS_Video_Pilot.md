@@ -75,6 +75,10 @@ The encode took 1 minute 2 seconds and produced 92,386,736 bytes across 89 files
 
 `bin/site-validate` passed. At `http://127.0.0.1:4000/pilot/balance-machine-1/`, the in-app browser played and resumed after a midpoint seek in both modes. Automatic playback through [hls.js 1.7.4](https://github.com/video-dev/hls.js/releases/tag/v1.7.4) also moved from 360p to 720p on the unthrottled connection. The **Use native HLS** link selects the native path where supported. Mac Safari started native playback and advanced to 15 seconds. Device and browser acceptance, audio and picture review, and the controlled bandwidth test remain open.
 
+### Public Playback
+
+Released the pilot on 26 November 2026. The live page and poster matched the deployed files. At the public URL, the in-app browser started `hls.js` playback at 360p, moved to 720p and resumed after a midpoint seek. Mac Safari 27.2 played the native stream, sought to 2:04, entered fullscreen and returned to inline at the same position. Physical iPhone Safari, desktop Chrome and Firefox, audio and motion review, and the controlled bandwidth drop and recovery remain open. [Public pilot](https://www.dotlineform.com/pilot/balance-machine-1/) · [Native HLS path](https://www.dotlineform.com/pilot/balance-machine-1/?playback=native) · [Deployment](https://github.com/dotlineform/dotlineform-site/actions/runs/45818377729)
+
 ## Video Inventory And Hosting Estimates
 
 The separate [Video Inventory And Source Organisation](Video_Inventory_And_Source_Organisation.md) delivery owns the local source review and Vimeo and YouTube reconciliation. Use its confirmed source sizes, distinct cut runtimes and unresolved source count for the hosting estimates. The manual pilot can proceed with the verified *balance machine 1* file.
@@ -136,7 +140,7 @@ Paths starting with `projects/` or `dotlineform-site/catalogue/media-staging/` a
 | Poster candidate | `var/catalogue-hls-pilot/balance-machine-1/poster.jpg` | Local 1280 × 720 JPEG from 1:20.08. |
 | Poster source | `projects/balance machine/balance machine 1 poster.jpg` | Approved 1280 × 720 JPEG. |
 | Pilot poster | `site/pilot/balance-machine-1/poster.jpg` | Preview copy of the chosen frame for local and deployed checks. |
-| Pilot preview page | `site/pilot/balance-machine-1/index.html` | Checked at `/pilot/balance-machine-1/` in `bin/site-preview`. GitHub Pages release pending. |
+| Pilot preview page | `site/pilot/balance-machine-1/index.html` | Checked locally and released at `/pilot/balance-machine-1/` on GitHub Pages. |
 | Local HLS master playlist | `var/catalogue-hls-pilot/balance-machine-1/hls/master.m3u8` | Encoded and decoded locally. The playlists and segments go together in `hls/` for manual upload. |
 | Pilot master playlist on R2 | `https://media.dotlineform.com/works/video/pilot/balance-machine-1/master.m3u8` | Uploaded and checked from both pilot origins. The named folder gives the package an address before the film has a Work ID. |
 
