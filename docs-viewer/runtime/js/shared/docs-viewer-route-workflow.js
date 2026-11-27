@@ -30,9 +30,9 @@ export function initDocsViewerRouteWorkflow(context) {
     });
     return result;
   }
-  function viewerUrl(docId, hash, query, targetOptions = {}, catalogueSearch = "") {
+  function viewerUrl(docId, hash, query, targetOptions = {}, catalogueSearch = "", page) {
     return buildViewerUrl({ docId: docId, collection: targetOptions.collection || "", hash: hash,
-      query: query, searchScope: search.searchScope, catalogueSearch: catalogueSearch,
+      query: query, searchScope: search.searchScope, catalogueSearch: catalogueSearch, page: page,
       origin: window.location.origin, preservedQueryParams: preservedQueryParams(),
       viewerBaseUrl: currentValue(context.viewerBaseUrl) });
   }
@@ -41,10 +41,10 @@ export function initDocsViewerRouteWorkflow(context) {
     return routeFromAnchorHref(anchor.href, { currentHref: window.location.href,
       origin: window.location.origin, viewerPathname: currentValue(context.viewerPathname) });
   }
-  function requestedTarget() {
+  function requestedRoute() {
     var route = routeFromAnchor({ href: window.location.href });
     if (route && route.error) throw new Error(route.error);
-    return route ? route.target : documentTarget({ doc_id: currentValue(context.defaultRouteDocId) || context.defaultDocId() }, { review: currentValue(context.viewerPathname) === "/docs-review/" });
+    return route || { target: documentTarget({ doc_id: currentValue(context.defaultRouteDocId) || context.defaultDocId() }, { review: currentValue(context.viewerPathname) === "/docs-review/" }) };
   }
   function isCatalogueHost(target) {
     return Boolean(target && !target.collection && currentValue(context.viewerPathname) !== "/docs-review/"
@@ -59,6 +59,17 @@ export function initDocsViewerRouteWorkflow(context) {
     if (next === undefined || next === displayedCatalogueSearch) return;
     displayedCatalogueSearch = next;
     navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, search.searchQuery, target, next));
+  }
+  function replaceDisplayedUrl(query) {
+    var target = selected.documentTarget;
+    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, query, target, displayedCatalogueSearch, context.readingPageForUrl()));
+  }
+  function replaceReadingPage() {
+    displayedHash = "";
+    replaceDisplayedUrl(search.searchQuery);
+  }
+  function normalizeReadingPage(requested) {
+    if (requested !== context.readingPageForUrl()) replaceDisplayedUrl(search.searchQuery);
   }
   function capturePositions() {
     var positions = [];
@@ -82,8 +93,7 @@ export function initDocsViewerRouteWorkflow(context) {
     context.clearManagementMessageForDocChange(record.document?.record?.target);
     await context.restoreDocument(record.document);
     // Keep the panel's current search query when restoring a document.
-    var target = selected.documentTarget;
-    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, search.searchQuery, target, displayedCatalogueSearch));
+    replaceDisplayedUrl(search.searchQuery);
     record.positions.forEach(function (position) {
       if (position.node.isConnected) { position.node.scrollTop = position.top; position.node.scrollLeft = position.left; }
     });
@@ -97,10 +107,13 @@ export function initDocsViewerRouteWorkflow(context) {
     var target = destination.target;
     var sameTarget = selected.documentTarget && documentTargetKey(selected.documentTarget) === documentTargetKey(target);
     displayedCatalogueSearch = destination.catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : "");
-    var viewOptions = { catalogueSearch: destination.catalogueSearch, collectionSequence: destination.collectionSequence,
+    var viewOptions = { catalogueSearch: destination.catalogueSearch, collectionSequence: destination.collectionSequence, page: destination.page,
       focusCatalogueSearch: !destination.force && !displayedHash && isCatalogueHost(target) };
     context.clearManagementMessageForDocChange(target);
-    if (!destination.force && await context.restoreRetainedDocument(target, displayedHash, viewOptions)) return target;
+    if (!destination.force && await context.restoreRetainedDocument(target, displayedHash, viewOptions)) {
+      normalizeReadingPage(destination.page);
+      return target;
+    }
     selected.documentTarget = target;
     var request = ++selected.requestId;
     context.renderDocLoadingState({ doc_id: target.doc_id, collection: target.collection || "" });
@@ -113,6 +126,7 @@ export function initDocsViewerRouteWorkflow(context) {
       var doc = Object.assign({}, policy, payload, target);
       selected.payloadCache.set(documentTargetKey(target), payload);
       await context.renderPayload(doc, payload, displayedHash, viewOptions);
+      normalizeReadingPage(destination.page);
       return target;
     } catch (error) {
       context.handlePayloadError(error);
@@ -136,6 +150,7 @@ export function initDocsViewerRouteWorkflow(context) {
     var key = documentTargetKey(target);
     if (pendingDocumentOpen) return pendingDocumentOpen.key === key ? pendingDocumentOpen.promise : Promise.resolve(null);
     var hash = options.hash || "";
+    var page = options.page;
     var catalogueSearch = catalogueSearchFor(target, options.catalogueSearch);
     var sameTarget = selected.documentTarget && documentTargetKey(target) === documentTargetKey(selected.documentTarget);
     if (sameTarget && !options.force) {
@@ -144,7 +159,6 @@ export function initDocsViewerRouteWorkflow(context) {
         await context.prepareDocumentNavigation();
         displayedHash = hash;
         displayedCatalogueSearch = catalogueSearch ?? displayedCatalogueSearch;
-        navigation.replaceUrl(viewerUrl(target.doc_id, hash, search.searchQuery, target, displayedCatalogueSearch));
         if ((!hash || catalogueSearch !== undefined) && selected.displayedPayload && selected.displayedPayload.report
           && selected.displayedPayload.report.id === "docs_collection") {
           await context.restoreRetainedDocument(target, hash, { catalogueSearch: catalogueSearch,
@@ -152,16 +166,18 @@ export function initDocsViewerRouteWorkflow(context) {
             focusCatalogueSearch: !hash && isCatalogueHost(target) });
         } else {
           if (options.collectionSequence) context.projectActiveCollectionSequence(options.collectionSequence);
+          if (page !== undefined || !hash) context.setReadingPage(page);
           context.scrollToHash(hash);
         }
+        replaceDisplayedUrl(search.searchQuery);
         await navigation.update();
         return target;
       })();
     }
-    var promise = navigation.open({ target: target, hash: hash, catalogueSearch: catalogueSearch,
+    var promise = navigation.open({ target: target, hash: hash, catalogueSearch: catalogueSearch, page: page,
       collectionSequence: options.collectionSequence,
       force: options.force === true,
-      url: viewerUrl(target.doc_id, hash, search.searchQuery, target, catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : ""))
+      url: viewerUrl(target.doc_id, hash, search.searchQuery, target, catalogueSearch ?? (sameTarget ? displayedCatalogueSearch : ""), page)
     }, {
       replace: options.historyMode === "replace",
       returnToMatchingCaller: options.returnToMatchingCaller ? function (caller) {
@@ -197,21 +213,21 @@ export function initDocsViewerRouteWorkflow(context) {
     return Promise.resolve();
   }
   function updateIndexHistory(query) {
-    var target = selected.documentTarget;
-    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, query, target, displayedCatalogueSearch));
+    replaceDisplayedUrl(query);
     updateNavigation();
   }
   async function applyCurrentRoute() {
     try {
-      var target = requestedTarget();
+      var route = requestedRoute();
+      var target = route.target;
       if (!initialized) {
         initialized = true;
         var catalogueSearch = catalogueSearchFor(target, new URLSearchParams(window.location.search).get(CATALOGUE_SEARCH_PARAM));
         context.syncIndexRoute(currentQuery(), new URLSearchParams(window.location.search).get(SEARCH_SCOPE_PARAM), target);
-        return await navigation.initialize({ target: target, hash: currentHash(), catalogueSearch: catalogueSearch,
-          url: viewerUrl(target.doc_id, currentHash(), currentQuery(), target, catalogueSearch) });
+        return await navigation.initialize({ target: target, hash: currentHash(), catalogueSearch: catalogueSearch, page: route.page,
+          url: viewerUrl(target.doc_id, currentHash(), currentQuery(), target, catalogueSearch, route.page) });
       }
-      return await loadDoc(target, { hash: currentHash(), historyMode: "replace", force: true });
+      return await loadDoc(target, { hash: currentHash(), page: route.page, historyMode: "replace", force: true });
     } catch (error) { context.handlePayloadError(error); return null; }
   }
   function replaceIndex(payload) {
@@ -225,6 +241,7 @@ export function initDocsViewerRouteWorkflow(context) {
     var request = selected.requestId;
     var key = documentTargetKey(target);
     var mode = context.activeViewState().activeModeId;
+    var page = context.readingPageForUrl();
     if (!selected.documentTarget || key !== documentTargetKey(selected.documentTarget)) {
       throw new Error("The document to refresh is no longer displayed.");
     }
@@ -235,11 +252,12 @@ export function initDocsViewerRouteWorkflow(context) {
     var payload = await context.collectionProvider.readDocument(target);
     if (request !== selected.requestId || !selected.documentTarget
       || key !== documentTargetKey(selected.documentTarget)
-      || key !== documentTargetKey(requestedTarget())
+      || key !== documentTargetKey(requestedRoute().target)
       || mode !== context.activeViewState().activeModeId) throw new Error("The document refresh target changed.");
     if (!payload || payload.doc_id !== target.doc_id) throw new Error("Document payload did not match the refresh target.");
     await context.prepareDocumentNavigation();
     await context.refreshRenderedPayload(Object.assign({}, selected.displayedRecord, payload, target), payload);
+    normalizeReadingPage(page);
     await navigation.update();
   }
   async function loadIndex(options = {}) {
@@ -280,7 +298,7 @@ export function initDocsViewerRouteWorkflow(context) {
       event.preventDefault();
       if (route.error) { setStatus(route.error, true); return; }
       var selectedFromIndex = anchor.classList.contains("docsViewer__navLink");
-      loadDoc(route.target, { hash: route.hash, catalogueSearch: route.catalogueSearch,
+      loadDoc(route.target, { hash: route.hash, catalogueSearch: route.catalogueSearch, page: route.page,
         collectionSequence: collectionSequenceForLink(anchor) })
         .then(function (target) {
           if (!target) return;
@@ -310,6 +328,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   var commands = { applyCurrentRoute: applyCurrentRoute, loadDoc: loadDoc, loadIndex: loadIndex,
     resolveDocId: currentDocId, updateIndexHistory: updateIndexHistory, replaceCatalogueSearch: replaceCatalogueSearch,
+    replaceReadingPage: replaceReadingPage,
     viewerUrl: viewerUrl, viewerUrlForDocument: viewerUrlForDocument,
     openPresentation: openPresentation, returnToDocument: returnToDocument,
     collectionIndexTarget: collectionIndexTarget, openCollectionIndex: openCollectionIndex,

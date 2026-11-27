@@ -10,13 +10,14 @@ export function buildViewerUrl(options) {
   var url = new URL(settings.viewerBaseUrl || "/docs/", settings.origin || window.location.origin);
   url.search = "";
   Object.entries(settings.preservedQueryParams || {}).forEach(function (entry) {
-    if (["scope", "stage", "subdoc", "collection", "doc"].includes(entry[0])) {
+    if (["scope", "stage", "subdoc", "collection", "doc", "page"].includes(entry[0])) {
       throw new Error("Reader route contains retired or conflicting document context.");
     }
     if (entry[1]) url.searchParams.set(entry[0], entry[1]);
   });
   if (target.collection) url.searchParams.set("collection", target.collection);
   url.searchParams.set("doc", target.doc_id);
+  if (settings.page !== undefined) url.searchParams.set("page", settings.page);
   if (settings.query) {
     url.searchParams.set("q", settings.query.trim());
     if (settings.searchScope) url.searchParams.set(SEARCH_SCOPE_PARAM, settings.searchScope);
@@ -41,7 +42,10 @@ export function routeFromAnchorHref(href, options) {
       throw new Error("Document route contains repeated identity fields.");
     }
     var target = documentTarget({ doc_id: url.searchParams.get("doc"), collection: url.searchParams.get("collection") || "" }, { review: settings.viewerPathname === "/docs-review/" });
-    return { target: target, hash: url.hash.slice(1), catalogueSearch: url.searchParams.get(CATALOGUE_SEARCH_PARAM) };
+    var rawPage = url.searchParams.get("page");
+    var page = /^[1-9]\d*$/.test(rawPage || "") ? Number(rawPage) : undefined;
+    return { target: target, hash: url.hash.slice(1), catalogueSearch: url.searchParams.get(CATALOGUE_SEARCH_PARAM),
+      page: Number.isSafeInteger(page) ? page : undefined };
   } catch (error) {
     return { error: error.message };
   }

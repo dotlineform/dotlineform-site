@@ -408,6 +408,7 @@ export function startDocsViewerRuntime(options) {
     appContext: appContext,
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     content: content,
+    readingNavigation: mainViewRefs.readingNavigation,
     collectionProvider: collectionProvider,
     imageDetailAdapter: settings.imageDetailAdapter,
     mediaDetailAdapter: settings.mediaDetailAdapter,
@@ -453,6 +454,7 @@ export function startDocsViewerRuntime(options) {
     },
     tableDetailAdapter: settings.tableDetailAdapter,
     toolbar: mainViewToolbar,
+    replaceReadingPage: function () { routeWorkflowCommands.replaceReadingPage(); },
     viewerUrlForDocument: viewerUrlForDocument
   });
   routeWorkflow = initDocsViewerRouteWorkflow({
@@ -464,6 +466,8 @@ export function startDocsViewerRuntime(options) {
     retainDocuments: documentController.retainDocuments,
     projectActiveCollectionSequence: documentController.projectActiveCollectionSequence,
     scrollToHash: documentController.scrollToHash,
+    setReadingPage: documentController.setReadingPage,
+    readingPageForUrl: documentController.readingPageForUrl,
     prepareDocumentNavigation: documentViewCoordinator.prepareDocumentNavigation,
     returnToDocument: documentViewCoordinator.returnToDocument,
     openPresentation: documentViewCoordinator.openPresentation,
@@ -845,6 +849,7 @@ export function startDocsViewerRuntime(options) {
       mainViewRefs.collectionIndex.setAttribute("aria-label", indexLabel);
       placeCollectionToolbar();
     }
+    documentController?.projectReadingNavigation(rendered);
     var mount = mainViewRefs.collectionActions;
     if (mount) {
       var host = appContext.kind === "manage" && report.state === "detail" && rendered

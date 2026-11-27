@@ -23,6 +23,7 @@ from docs_inline_icon_artwork import InlineIconArtwork
 ICON_TOKEN_PREFIX = "[[icon:"
 DATE_TOKEN = "[[date]]"
 TOC_DIRECTIVE = "[[toc]]"
+PAGE_BREAK_DIRECTIVE = "[[pagebreak]]"
 LITERAL_HTML_TAG_PATTERN = re.compile(r"</?(?:code|pre|script|style|textarea)\b", re.IGNORECASE)
 
 
@@ -76,6 +77,7 @@ class InlineIconRenderer(InlineIconArtwork):
     def render_markdown(
         self, markdown: str, *, related_links: Callable[[str], str] | None = None,
         summary_html: str = "", date_text: str = "", toc_html: Callable[[], str] | None = None,
+        page_breaks: bool = False,
     ) -> str:
         """Render Docs Markdown with math, inline icons and document fields.
 
@@ -84,8 +86,9 @@ class InlineIconRenderer(InlineIconArtwork):
         """
         has_date = DATE_TOKEN in markdown
         has_toc = toc_html is not None and TOC_DIRECTIVE in markdown
+        has_page_break = page_breaks and PAGE_BREAK_DIRECTIVE in markdown
         renderer = build_docs_markdown_renderer()
-        if not has_date and not has_toc and all(
+        if not has_date and not has_toc and not has_page_break and all(
             marker not in markdown for marker in (ICON_TOKEN_PREFIX, RELATED_LINKS_PREFIX, SUMMARY_DIRECTIVE)
         ):
             return renderer.render(normalize_markdown_blank_lines(markdown))
@@ -95,6 +98,11 @@ class InlineIconRenderer(InlineIconArtwork):
             install_summary_rule(renderer, summary_html=summary_html)
         if has_toc:
             install_standalone_directive(renderer, TOC_DIRECTIVE, "docs_toc", toc_html)
+        if has_page_break:
+            install_standalone_directive(
+                renderer, PAGE_BREAK_DIRECTIVE, "docs_page_break",
+                lambda: '<div data-docs-page-break hidden></div>\n', top_level=True,
+            )
         if RELATED_LINKS_PREFIX in markdown:
             if related_links is None:
                 raise ValueError("Related links require a prepared document relationship context")

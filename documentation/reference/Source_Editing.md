@@ -58,6 +58,8 @@ The menu captures the current adapter, selection and revision before moving focu
 
 [Directives owner](../../docs-viewer/runtime/js/management/source-editor/directive-actions.js)
 
+In a Texts edition, type `[[pagebreak]]` on its own line between top-level Markdown blocks, with a blank line on either side. The authored breaks define the reading pages. Keep code examples in a code block to display the directive literally. [Authored pages in Texts](Reader_Discovery_And_Return.md#authored-pages-in-texts)
+
 ### Table options
 
 In Source, place the caret anywhere in a standalone Markdown table or select the table, then choose **Directives → Table options**. The dialog opens with the table’s existing settings. For **Relative widths**, enter one positive whole number per column, separated by spaces. Both `20 40 40` and `1 2 2` give the last two columns equal space. A blank field uses automatic widths.

@@ -44,12 +44,18 @@ export function renderDocsViewerMainView(options = {}) {
     index.title = "index";
     index.setAttribute("aria-label", "index");
     index.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--list"));
+    const navigation = documentRef.createElement("div");
+    navigation.className = "docsViewer__documentNavigation";
+    const readingNavigation = documentRef.createElement("div");
+    readingNavigation.className = "docsViewer__readingNavigationMount";
+    readingNavigation.hidden = true;
+    navigation.append(index, readingNavigation);
     const controlGroup = documentRef.createElement("div");
     controlGroup.className = "docsViewer__mainViewToolbarControlGroup";
     const collectionActions = documentRef.createElement("div");
     collectionActions.className = "docsViewer__collectionActionMount";
     controlGroup.append(actions, collectionActions);
-    toolbar.append(index, controlGroup);
+    toolbar.append(navigation, controlGroup);
   }
   if (toolbarMount && toolbar) {
     toolbarMount.replaceChildren(toolbar);
@@ -77,6 +83,7 @@ export function findDocsViewerMainViewRefs(options = {}) {
     main: root.querySelector(".docsViewer__main"),
     toolbar: root.querySelector("#docsViewerMainViewToolbar"),
     collectionIndex: root.querySelector(".docsViewer__collectionIndex"),
+    readingNavigation: root.querySelector(".docsViewer__readingNavigationMount"),
     collectionActions: root.querySelector(".docsViewer__collectionActionMount"),
     content: root.querySelector("#docsViewerContent")
   };

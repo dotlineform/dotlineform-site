@@ -61,6 +61,7 @@
         "docs-viewer-navigation.js",
         "docs-viewer-pagination-control.js",
         "docs-viewer-panel-layout.js",
+        "docs-viewer-reading-pages.js",
         "docs-viewer-related-links.js",
         "docs-viewer-render.js",
         "docs-viewer-responsive-image.js",
@@ -118,6 +119,7 @@
       "destination_root": "site/docs-viewer/static/icons",
       "files": [
         "arrow-down-a-z.svg",
+        "arrow-left-to-line.svg",
         "arrow-left.svg",
         "brush.svg",
         "chart-column-colour.svg",

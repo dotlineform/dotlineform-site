@@ -48,6 +48,7 @@ class PayloadBuilderMixin:
         Normal document generation projects that metadata through item_entry.
         Both callers supply their prepared Summary, preserving package flattening.
         """
+        collection = getattr(self, "collection_id", "")
         try:
             projected_markdown = project_report_markdown(
                 doc.body_markdown,
@@ -64,9 +65,9 @@ class PayloadBuilderMixin:
                 summary_html=summary_html,
                 date_text=doc.date_display or doc.date,
                 toc_html=toc_html,
+                page_breaks=collection == "texts",
             )
         except ValueError as exc:
-            collection = getattr(self, "collection_id", "")
             owner = f"collection {collection}" if collection else "ordinary documents"
             raise ValueError(
                 f"Document {doc.doc_id} ({doc.title!r}; {owner}; source {doc.source_path}): {exc}"

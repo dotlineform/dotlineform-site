@@ -1,6 +1,7 @@
 import { documentTarget, documentTargetKey } from "./docs-viewer-document-target.js";
 import { mountDocsContentHtml } from "./docs-viewer-asset-url.js";
 import { createCollectionNavigation, registerBookTocLinks } from "./docs-viewer-collection-navigation.js";
+import { mountDocsViewerReadingPages } from "./docs-viewer-reading-pages.js";
 
 export function initDocsViewerDocumentController(context) {
   var routeSession = context.routeSession;
@@ -16,9 +17,18 @@ export function initDocsViewerDocumentController(context) {
   var window = document.defaultView;
 
   function actionContext() { return activeRecord && activeRecord.actionContext || {}; }
+  function projectReadingNavigation(rendered) {
+    var host = context.readingNavigation;
+    if (!host) return;
+    var toolbar = rendered ? activeRecord?.readingPages?.toolbar : null;
+    if (host.firstChild !== (toolbar || null)) host.replaceChildren(...(toolbar ? [toolbar] : []));
+    host.hidden = !toolbar;
+  }
+
   function capture() {
     return {
       record: activeRecord,
+      readingPage: activeRecord?.readingPages?.position(),
       collectionSequence: activeRecord?.invokingSequence,
       owners: (activeRecord && activeRecord.viewOwners || []).map(function (owner) { return { id: owner.id, state: owner.capture() }; })
     };
@@ -78,6 +88,7 @@ export function initDocsViewerDocumentController(context) {
     if (record) selectedDocument.documentTarget = record.target;
     if (record && record.error) renderDocumentStatus(record.error, true);
     else if (record && retained.get(documentTargetKey(record.target)) === record) {
+      record.readingPages?.setPage(snapshot.readingPage);
       projectCollectionNavigation(record, snapshot.collectionSequence);
       if (!await activate(record)) return;
       record.restorationStates = new Map((snapshot.owners || []).map(function (saved) { return [saved.id, saved.state]; }));
@@ -86,15 +97,16 @@ export function initDocsViewerDocumentController(context) {
       });
     } else handleMissingDoc();
   }
-  async function restoreRetained(target, hash, { catalogueSearch, collectionSequence, focusCatalogueSearch } = {}) {
+  async function restoreRetained(target, hash, { catalogueSearch, collectionSequence, focusCatalogueSearch, page } = {}) {
     var record = retained.get(documentTargetKey(target));
     if (!record) return false;
+    record.readingPages?.setPage(page);
     projectCollectionNavigation(record, collectionSequence);
     if (!await activate(record)) return false;
     // A list owner may resume its last visible state independently of this entry.
     var resumed = false;
     record.viewOwners.forEach(function (owner) { if (owner.resume) { owner.resume(catalogueSearch, focusCatalogueSearch); resumed = true; } });
-    if (hash) scrollToHash(hash);
+    if (hash || record.readingPages) scrollToHash(hash);
     else if (!resumed || catalogueSearch !== undefined) window.scrollTo(0, 0);
     return true;
   }
@@ -381,13 +393,15 @@ export function initDocsViewerDocumentController(context) {
 
   function scrollToHash(hash) {
     if (!hash) {
-      window.scrollTo({ top: 0, behavior: "auto" });
+      if (activeRecord?.readingPages) activeRecord.readingPages.scrollToStart();
+      else window.scrollTo({ top: 0, behavior: "auto" });
       return;
     }
 
     var target = Array.from(content.querySelectorAll("[id]")).find(function (node) { return node.id === hash; });
     if (!target) return;
 
+    activeRecord?.readingPages?.reveal(target);
     target.scrollIntoView({ block: "start", behavior: "auto" });
   }
 
@@ -462,6 +476,7 @@ export function initDocsViewerDocumentController(context) {
     var target = documentTarget(doc, { review: context.appContext.kind === "review" });
     var key = documentTargetKey(target);
     var previous = retained.get(key);
+    var readingPage = options.preservePosition ? previous?.readingPages?.position() : options.page;
     var collectionSequence = options.preservePosition ? previous?.invokingSequence : options.collectionSequence;
     var committedRecord = previous && previous.committedRecord && JSON.stringify(payload) === JSON.stringify(previous.payload) ? previous.committedRecord : null;
     if (committedRecord) doc = Object.assign({}, doc, committedRecord, target);
@@ -478,7 +493,7 @@ export function initDocsViewerDocumentController(context) {
       outerContent.appendChild(content);
     }
     content.hidden = waitForLayout;
-    var record = Object.assign(previous || {}, { target: target, doc: doc, payload: payload, root: content, generation: mountGeneration, viewOwners: [], restorationStates: null,
+    var record = Object.assign(previous || {}, { target: target, doc: doc, payload: payload, root: content, generation: mountGeneration, viewOwners: [], restorationStates: null, readingPages: null,
       collectionSequence: undefined, collectionNavigation: null,
       lifetime: { active: true, unsubscribers: [] },
       committedRecord: committedRecord,
@@ -505,6 +520,9 @@ export function initDocsViewerDocumentController(context) {
     releaseTableDetails();
     releaseImageDetails();
     mountDocumentContent(content, payload);
+    record.readingPages = mountDocsViewerReadingPages(content, context.replaceReadingPage);
+    record.readingPages?.setPage(readingPage);
+    projectReadingNavigation(true);
     if (!target.collection) {
       content.querySelectorAll("[data-docs-book-toc]").forEach(function (toc) {
         record.bookSequence = registerBookTocLinks(toc);
@@ -535,6 +553,8 @@ export function initDocsViewerDocumentController(context) {
         position.node.scrollLeft = position.left;
       });
       window.scrollTo(scrollX, scrollY);
+    } else if (record.readingPages) {
+      scrollToHash(hash);
     } else {
       window.requestAnimationFrame(function () { scrollToHash(hash); });
     }
@@ -632,6 +652,9 @@ export function initDocsViewerDocumentController(context) {
       if (activeRecord?.invokingSequence) projectCollectionNavigation(activeRecord, activeRecord.invokingSequence);
     },
     scrollToHash: scrollToHash,
+    projectReadingNavigation: projectReadingNavigation,
+    setReadingPage: function (page) { activeRecord?.readingPages?.setPage(page); },
+    readingPageForUrl: function () { return activeRecord?.readingPages?.position() ?? undefined; },
     handleMissingDoc: handleMissingDoc,
     handlePayloadError: handlePayloadError,
     hideDocPane: hideDocPane,

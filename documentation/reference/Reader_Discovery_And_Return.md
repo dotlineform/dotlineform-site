@@ -112,6 +112,12 @@ The Catalogue query uses `catalogue-search` on its host URL, independently of In
 
 Same-tab collection links capture their invoking order. Previous and Next use that order across report pages, including starred Context documents followed by other matches. Catalogue uses its displayed List, captured rolling grid order or matching Work sequence from its own search. Gallery results activate Media View independently. Book uses the saved Manage Tree or the generated web TOC sequence. The TOC host can supply that sequence on direct entry to the TOC. [Collection navigation](../../docs-viewer/runtime/js/shared/docs-viewer-collection-navigation.js) · [Book source and placement](Source_Organisation.md#book-source-and-provenance)
 
+### Authored Pages In Texts
+
+Texts editions with authored page breaks open in paged mode. The document toolbar has **Go to page 1** and a pagination toggle beside **Index**. The page footer has **Go to page 1**, **Previous page**, the current position in **1 / 12** format, and **Next page**. Page navigation starts at the top of the selected page and updates `page` in the current URL without adding browser history entries. An edition link without `page` opens page 1. A saved page URL remains bookmarkable, and a heading link reveals the page containing its target.
+
+The pagination toggle's **Show all text** action shows the full edition and scrolls to the start of the current authored page. **Show pages** checks the page visible at the top of the reading pane when selected and opens that page at its start. In continuous reading, **Go to page 1** scrolls to the start of the edition and the URL omits `page`. Static HTML exports contain the full text in reading order. [Source page breaks](Source_Editing.md#directives) · [Reading page controller](../../docs-viewer/runtime/js/shared/docs-viewer-reading-pages.js)
+
 ### Browser History
 
 The reader retains its active mount and one immediate caller. A new document opening pushes a browser entry and releases any older caller. Returning consumes the active return context. Same-document anchors and browse/filter changes update the existing entry. An older browser destination reloads its exact URL. The Index's loaded view is independent of that pair. [Navigation owner](../../docs-viewer/runtime/js/shared/docs-viewer-navigation.js) · [Route workflow](../../docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js)
