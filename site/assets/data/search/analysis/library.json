@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-8fd86a12ee7999f26339da4ab21a9ecb",
-    "generated_at_utc": "2026-11-25T00:08:54Z",
+    "version": "blake2b-4bc06be33bd48eda37232a50099744d1",
+    "generated_at_utc": "2026-11-27T21:01:06Z",
     "count": 433
   },
   "fields": [
@@ -139,8 +139,8 @@
     {
       "id": "d-20261017-112353-93c738",
       "title": "100 Words Related to Reflection & Memory",
-      "last_updated": "2026-10-17",
-      "display_meta": "2026-10-17 • Library",
+      "last_updated": "2026-11-27",
+      "display_meta": "2026-11-27 • Library",
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
