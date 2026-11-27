@@ -97,6 +97,10 @@
   mask-image: url("../icons/unfold-horizontal.svg");
 }
 
+.docsViewer__icon--between-horizontal-start{
+  mask-image: url("../icons/between-horizontal-start.svg");
+}
+
 .docsViewer__icon--book-image{
   mask-image: url("../icons/book-image.svg");
 }

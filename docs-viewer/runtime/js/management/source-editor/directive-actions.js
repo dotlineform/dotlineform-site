@@ -48,6 +48,13 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     label: "Summary",
     source: "[[summary]]",
     blankLines: true
+  }),
+  Object.freeze({
+    artwork: "docsViewer__icon--between-horizontal-start",
+    id: "insert-page-break",
+    label: "Page break",
+    source: "[[pagebreak]]",
+    blankLines: true
   })
 ]);
 
@@ -148,6 +155,7 @@ function createController(root, button, menu) {
     mediaActions: null,
     menu: menu,
     observer: null,
+    pageBreakItem: menu.querySelector('[data-docs-viewer-directive-action="insert-page-break"]'),
     root: root
   };
   controller.onDocumentClick = function (event) {
@@ -274,9 +282,7 @@ function focusEditor(adapter) {
 }
 
 function enabledMenuItems(controller) {
-  return Array.from(controller.menu.querySelectorAll('[role="menuitem"]')).filter(function (item) {
-    return !item.disabled;
-  });
+  return Array.from(controller.menu.querySelectorAll('[role="menuitem"]:not(:disabled):not([hidden])'));
 }
 
 function runSourceAction(context, controller, actionId) {
@@ -386,6 +392,7 @@ export function createDirectiveActionsMainViewControlHandlers() {
       controller.mediaActions = captureMediaTokenActions(adapter.getBufferSnapshot(), controller.capture);
       setMenuItemLabel(controller.imageItem, controller.mediaActions.image.label);
       setMenuItemLabel(controller.catalogueItem, controller.mediaActions.catalogue.label);
+      controller.pageBreakItem.hidden = !adapter.supportsPageBreaks;
       controller.menu.hidden = false;
       controller.button.setAttribute("aria-expanded", "true");
       enabledMenuItems(controller)[0]?.focus({ preventScroll: true });

@@ -26,7 +26,7 @@ Open **Source editor** from the displayed document's controls. In Manage, Option
 
 ## `GET /docs/source`
 
-Use `doc_id` and add `collection` only for a named document. The response carries `ok`, the target, complete `source_text`, a display-safe `path` and `media_options` for image/file suffixes and upload limits. The mounted editor reuses the options.
+Use `doc_id` and add `collection` only for a named document. The response carries `ok`, the target, complete `source_text`, a display-safe `path`, `media_options` for image/file suffixes and upload limits, and `supports_page_breaks` for the Directives menu.
 
 Working resolves the exact owner, confines the direct-child Markdown path and checks the immutable front-matter ID against the request. For ordinary documents it also checks membership and parentage in `index-order.json`. Saved Draft and report rules are validated on Save, so an exactly identified source with a readiness or report problem can still be opened for correction. From the exact source the editor loads its own metadata and body together. [Target resolver](../../docs-viewer/services/docs_management_document_target.py)
 
@@ -55,10 +55,11 @@ The menu captures the current adapter, selection and revision before moving focu
 | **Table options** | Edit the selected table’s column widths, rules, header row, shading, text size and detail view. [Table options](#table-options) |
 | **Image detail** | Insert the comment before the selected standalone image. [Image detail](Document_Image_Detail.md) |
 | **Insert related links**, **Insert icon**, **Summary** | Insert `[[links|]]`, an editable icon stem, or a standalone `[[summary]]`. [Related Links](Related_Links.md#authoring-decision) · [Icons](Icon_Tokens.md) · [Summary](Builder.md#summary-block) |
+| **Page break** | Insert a standalone `[[pagebreak]]` at the caret in Context, Concepts, Moments, Library or Texts. [Authored page breaks](Reader_Discovery_And_Return.md#authored-page-breaks) |
 
 [Directives owner](../../docs-viewer/runtime/js/management/source-editor/directive-actions.js)
 
-In Context, Concepts, Moments, Library or Texts, type `[[pagebreak]]` on its own line between top-level Markdown blocks, with a blank line on either side. The authored breaks define the reading pages. Keep code examples in a code block to display the directive literally. [Authored page breaks](Reader_Discovery_And_Return.md#authored-page-breaks)
+Place the caret between top-level Markdown blocks before choosing **Page break**. When typing `[[pagebreak]]` by hand, put it on its own line with a blank line on either side. Keep code examples in a code block to display the directive literally.
 
 ### Table options
 

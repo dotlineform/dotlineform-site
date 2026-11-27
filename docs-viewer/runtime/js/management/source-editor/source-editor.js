@@ -181,6 +181,7 @@ function createSourceEditorContextAdapter(context, state) {
   function isCurrent() { return state.sourceEditorAdapter === adapter && state.loaded && Boolean(state.textarea); }
   var adapter = {
     isCurrent: isCurrent,
+    supportsPageBreaks: false,
     captureSelection: function () {
       return Object.assign(sourceSelection(state), { revision: state.bufferRevision });
     },
@@ -267,6 +268,7 @@ function loadSource(context, state) {
       }
       state.lastCleanSource = normalizeSource(payload.source_text);
       state.mediaOptions = payload.media_options;
+      adapter.supportsPageBreaks = payload.supports_page_breaks;
       state.loaded = true;
       if (state.textarea) {
         state.textarea.value = state.lastCleanSource;

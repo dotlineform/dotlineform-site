@@ -37,6 +37,7 @@ from docs_source_media_upload import SourceMediaUpload  # noqa: E402
 from docs_document_media_ownership import compare_document_media  # noqa: E402
 from docs_source_media_adoption import prepare_source_media_adoption  # noqa: E402
 from docs_report_source import ReportDescriptor  # noqa: E402
+from docs_builder.page_break_directive import PAGE_BREAK_COLLECTIONS  # noqa: E402
 
 
 def normalize_source_body(value: Any) -> str:
@@ -67,6 +68,7 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
         **resolved.request_target(),
         "source_text": source_text,
         "media_options": source_media_options(),
+        "supports_page_breaks": resolved.collection in PAGE_BREAK_COLLECTIONS,
         "path": path_label(repo_root, target.path),
     }
     if resolved.collection:
