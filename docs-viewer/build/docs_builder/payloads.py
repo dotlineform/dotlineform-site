@@ -9,6 +9,7 @@ from .common import (
     utc_timestamp,
 )
 from .rendering import add_missing_image_titles
+from .page_break_directive import PAGE_BREAK_COLLECTIONS
 from .source import DocRecord, DocumentIdentity
 from .ordinary_metadata import OrdinaryDocumentSummary
 from .related_links import render_related_links
@@ -65,7 +66,7 @@ class PayloadBuilderMixin:
                 summary_html=summary_html,
                 date_text=doc.date_display or doc.date,
                 toc_html=toc_html,
-                page_breaks=collection == "texts",
+                page_breaks=collection in PAGE_BREAK_COLLECTIONS,
             )
         except ValueError as exc:
             owner = f"collection {collection}" if collection else "ordinary documents"

@@ -37,9 +37,12 @@ from docs_builder.common import (  # noqa: E402
     HTML_MEDIA_TOKEN_PATTERN,
     MEDIA_TOKEN_PATTERN,
 )
+from docs_builder.page_break_directive import (  # noqa: E402
+    PAGE_BREAK_COLLECTIONS, PAGE_BREAK_DIRECTIVE, PAGE_BREAK_TOKEN, install_page_break_rule,
+)
 from docs_builder.source_tokens import replace_source_tokens  # noqa: E402
 from docs_builder.source import DocRecord  # noqa: E402
-from docs_builder.summary_directive import omit_summary_directives  # noqa: E402
+from docs_builder.summary_directive import SUMMARY_DIRECTIVE, SUMMARY_TOKEN, install_summary_rule  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
     DocsCollectionConfig,
     DocsStageConfig,
@@ -68,7 +71,7 @@ from docs_source_model import (  # noqa: E402
 )
 from docs_front_matter import FRONT_MATTER_PATTERN, read_front_matter_fields  # noqa: E402
 from docs_management_document_target import confined_document_path  # noqa: E402
-from markdown_renderer import extract_markdown_search_fields  # noqa: E402
+from markdown_renderer import build_markdown_renderer, extract_markdown_search_fields, normalize_markdown_blank_lines  # noqa: E402
 
 
 SEARCH_INDEX_SCHEMA = "docs_viewer_search_index_v4"
@@ -88,6 +91,29 @@ SEARCH_V2_GROUPED_INTEGER = re.compile(r"(?<![\w.-])(?<![0-9],)[0-9]{1,3}(?:,[0-
 SEARCH_V2_INTEGER = re.compile(r"[0-9]+")
 SEARCH_V2_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
 SEARCH_V2_CONTENT_HASH = re.compile(r"^[0-9a-f]{64}$")
+
+
+def omit_search_directives(markdown: str, *, page_breaks: bool) -> str:
+    """Omit authored boundaries and duplicate Summary text while keeping literal examples."""
+    has_summary = SUMMARY_DIRECTIVE in markdown
+    has_page_break = page_breaks and PAGE_BREAK_DIRECTIVE in markdown
+    if not has_summary and not has_page_break:
+        return markdown
+    normalized = normalize_markdown_blank_lines(markdown)
+    renderer = build_markdown_renderer()
+    directives = {}
+    if has_summary:
+        install_summary_rule(renderer, summary_html="")
+        directives[SUMMARY_TOKEN] = SUMMARY_DIRECTIVE
+    if has_page_break:
+        install_page_break_rule(renderer)
+        directives[PAGE_BREAK_TOKEN] = PAGE_BREAK_DIRECTIVE
+    lines = normalized.splitlines(keepends=True)
+    for token in renderer.parse(normalized):
+        if directive := directives.get(token.type):
+            line = token.map[0]
+            lines[line] = lines[line].replace(directive, "", 1)
+    return "".join(lines)
 
 
 def utc_timestamp() -> str:
@@ -322,6 +348,7 @@ class DocsViewerSearchDataBuilder:
         documents: Mapping[str, list[DocRecord]] | None,
     ) -> list[dict[str, Any]]:
         needs_body = not SEARCH_V2_CONTENT_FIELDS.isdisjoint(fields)
+        page_breaks = owner.collection in PAGE_BREAK_COLLECTIONS
         by_id = None if documents is None else {doc.doc_id: doc for doc in documents[owner.collection]}
         root = document_source_path(owner).resolve() if by_id is None else None
         report_contract = None
@@ -342,18 +369,19 @@ class DocsViewerSearchDataBuilder:
                         report = parse_document_report(source, metadata, body, source_name=f"{doc_id}.md", contract=report_contract)
             record["summary"] = metadata.get("summary", "")
             if needs_body:
-                content = extract_markdown_search_fields(self.searchable_markdown(body, report), title=row["title"])
+                markdown = self.searchable_markdown(body, report, page_breaks=page_breaks)
+                content = extract_markdown_search_fields(markdown, title=row["title"])
                 record.update(heading=content.headings, body=content.body, code=content.code)
             rows.append(record)
         return rows
 
-    def searchable_markdown(self, body: str, report: ReportDescriptor | None) -> str:
+    def searchable_markdown(self, body: str, report: ReportDescriptor | None, *, page_breaks: bool) -> str:
         markdown = project_report_markdown(
             body,
             report,
             include_host=False,
         )
-        markdown = omit_summary_directives(markdown)
+        markdown = omit_search_directives(markdown, page_breaks=page_breaks)
         markdown = replace_source_tokens(
             markdown,
             replacer=lambda token: " " if token.family == "image" or not token.visible else html.escape(token.title),

@@ -64,7 +64,7 @@ A multi-term query intersects the normalized matches. Text prefixes start at two
 
 ### Source Boundary
 
-Text scopes extract their configured fields from selected Markdown. Supported visible references contribute display text. The producer removes registered media tokens, active Docs image tokens and hidden Catalogue references before ordinary text extraction. Code examples keep their code-field treatment. The renderer separates readable prose, headings and code. Link destinations, media paths and markup attributes do not become prose terms. Ordinary image alt text and visible HTML text can contribute. [Tokenizer](Docs_Search_Tokenizer.md) · [Reference grammar](Document_And_Catalogue_References.md#supported-source-forms)
+Text scopes extract their configured fields from selected Markdown. Supported visible references contribute display text. The producer removes registered media tokens, active Docs image tokens, hidden Catalogue references and authored page-break directives before ordinary text extraction. Code examples keep their code-field treatment. The renderer separates readable prose, headings and code. Link destinations, media paths and markup attributes do not become prose terms. Ordinary image alt text and visible HTML text can contribute. [Tokenizer](Docs_Search_Tokenizer.md) · [Reference grammar](Document_And_Catalogue_References.md#supported-source-forms)
 
 ## Saved Results In Manage
 
@@ -112,11 +112,11 @@ The Catalogue query uses `catalogue-search` on its host URL, independently of In
 
 Same-tab collection links capture their invoking order. Previous and Next use that order across report pages, including starred Context documents followed by other matches. Catalogue uses its displayed List, captured rolling grid order or matching Work sequence from its own search. Gallery results activate Media View independently. Book uses the saved Manage Tree or the generated web TOC sequence. The TOC host can supply that sequence on direct entry to the TOC. [Collection navigation](../../docs-viewer/runtime/js/shared/docs-viewer-collection-navigation.js) · [Book source and placement](Source_Organisation.md#book-source-and-provenance)
 
-### Authored Pages In Texts
+### Authored Page Breaks
 
-Texts editions with authored page breaks open in paged mode. The document toolbar has **Go to page 1** and a pagination toggle beside **Index**. The page footer has **Go to page 1**, **Previous page**, the current position in **1 / 12** format, and **Next page**. Page navigation starts at the top of the selected page and updates `page` in the current URL without adding browser history entries. An edition link without `page` opens page 1. A saved page URL remains bookmarkable, and a heading link reveals the page containing its target.
+Documents in Context, Concepts, Moments, Library and Texts open in paged mode when they contain authored page breaks. The document toolbar has **Go to page 1** and a pagination toggle beside **Index**. The page footer has **Go to page 1**, **Previous page**, the current position in **1 / 12** format, and **Next page**. Page navigation starts at the top of the selected page and updates `page` in the current URL without adding browser history entries. A document link without `page` opens page 1. A saved page URL remains bookmarkable, and a heading link reveals the page containing its target.
 
-The pagination toggle's **Show all text** action shows the full edition and scrolls to the start of the current authored page. **Show pages** checks the page visible at the top of the reading pane when selected and opens that page at its start. In continuous reading, **Go to page 1** scrolls to the start of the edition and the URL omits `page`. Static HTML exports contain the full text in reading order. [Source page breaks](Source_Editing.md#directives) · [Reading page controller](../../docs-viewer/runtime/js/shared/docs-viewer-reading-pages.js)
+The pagination toggle's **Show all text** action shows the full document and scrolls to the start of the current authored page. **Show pages** checks the page visible at the top of the reading pane when selected and opens that page at its start. In continuous reading, **Go to page 1** scrolls to the start of the document and the URL omits `page`. Static HTML exports contain the full text in reading order. [Source page breaks](Source_Editing.md#directives) · [Reading page controller](../../docs-viewer/runtime/js/shared/docs-viewer-reading-pages.js)
 
 ### Browser History
 

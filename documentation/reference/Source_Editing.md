@@ -58,7 +58,7 @@ The menu captures the current adapter, selection and revision before moving focu
 
 [Directives owner](../../docs-viewer/runtime/js/management/source-editor/directive-actions.js)
 
-In a Texts edition, type `[[pagebreak]]` on its own line between top-level Markdown blocks, with a blank line on either side. The authored breaks define the reading pages. Keep code examples in a code block to display the directive literally. [Authored pages in Texts](Reader_Discovery_And_Return.md#authored-pages-in-texts)
+In Context, Concepts, Moments, Library or Texts, type `[[pagebreak]]` on its own line between top-level Markdown blocks, with a blank line on either side. The authored breaks define the reading pages. Keep code examples in a code block to display the directive literally. [Authored page breaks](Reader_Discovery_And_Return.md#authored-page-breaks)
 
 ### Table options
 

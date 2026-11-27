@@ -13,6 +13,7 @@ from typing import Any
 from markdown_it.rules_inline import StateInline
 
 from .math_rendering import build_docs_markdown_renderer
+from .page_break_directive import PAGE_BREAK_DIRECTIVE, install_page_break_rule
 from .related_links_directive import RELATED_LINKS_PREFIX, install_related_links_rule
 from .standalone_directive import install_standalone_directive
 from .summary_directive import SUMMARY_DIRECTIVE, install_summary_rule
@@ -23,7 +24,6 @@ from docs_inline_icon_artwork import InlineIconArtwork
 ICON_TOKEN_PREFIX = "[[icon:"
 DATE_TOKEN = "[[date]]"
 TOC_DIRECTIVE = "[[toc]]"
-PAGE_BREAK_DIRECTIVE = "[[pagebreak]]"
 LITERAL_HTML_TAG_PATTERN = re.compile(r"</?(?:code|pre|script|style|textarea)\b", re.IGNORECASE)
 
 
@@ -99,10 +99,7 @@ class InlineIconRenderer(InlineIconArtwork):
         if has_toc:
             install_standalone_directive(renderer, TOC_DIRECTIVE, "docs_toc", toc_html)
         if has_page_break:
-            install_standalone_directive(
-                renderer, PAGE_BREAK_DIRECTIVE, "docs_page_break",
-                lambda: '<div data-docs-page-break hidden></div>\n', top_level=True,
-            )
+            install_page_break_rule(renderer)
         if RELATED_LINKS_PREFIX in markdown:
             if related_links is None:
                 raise ValueError("Related links require a prepared document relationship context")
