@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T19:05:27Z",
+  "generated_at": "2026-11-27T11:00:50Z",
   "schema": "docs_index_tree_v1",
   "docs": [
     {
@@ -19,6 +19,11 @@
     {
       "doc_id": "d-20260916-161504-f8c947",
       "title": "Catalogue",
+      "report_id": "docs_collection"
+    },
+    {
+      "doc_id": "d-20261126-214901-86fa12",
+      "title": "Texts",
       "report_id": "docs_collection"
     },
     {

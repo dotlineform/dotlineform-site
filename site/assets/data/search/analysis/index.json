@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-81d2591f5e8c10afd86820b93292473c",
-    "generated_at_utc": "2026-11-26T22:19:55Z",
-    "count": 514
+    "version": "blake2b-692ab14e6e6d498fe8f74e858ee17a8f",
+    "generated_at_utc": "2026-11-27T11:01:01Z",
+    "count": 516
   },
   "fields": [
     "title"
@@ -3804,6 +3804,19 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
+    },
+    {
+      "id": "d-20261126-214901-86fa12",
+      "title": "Texts"
+    },
+    {
+      "id": "d-20261127-100053-b77c4f",
+      "title": "Nerve",
+      "last_updated": "2026-11-27",
+      "display_meta": "2026-11-27 • Texts",
+      "collection": "texts",
+      "report_doc_id": "d-20261126-214901-86fa12",
+      "collection_title": "Texts"
     }
   ],
   "terms": {
@@ -5595,7 +5608,8 @@
         127,
         143,
         194,
-        255
+        255,
+        515
       ]
     },
     "net": {
@@ -6424,6 +6438,11 @@
     "text": {
       "title": [
         369
+      ]
+    },
+    "texts": {
+      "title": [
+        514
       ]
     },
     "textured": {
