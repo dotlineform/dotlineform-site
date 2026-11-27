@@ -66,11 +66,12 @@ export function createDocsViewerManagementActionContext(options = {}) {
       for (var i = children.length - 1; i >= 0; i -= 1) pending.push(children[i].doc_id);
     }
   }
+  var collection = options.collectionFor?.(documentTarget);
   var contextOptions = {
     documentTarget: documentTarget,
     subtreeDocIds: subtreeDocIds,
-    collectionHostDocIds: options.collectionHostDocIds,
-    collectionType: options.collectionTypeFor?.(documentTarget)
+    collectionId: collection?.collection,
+    collectionType: collection?.collectionType
   };
   return createDocsViewerActionContext(contextOptions);
 }
@@ -84,8 +85,7 @@ export function createDocsViewerManagementActionResolver(options = {}) {
       documentIndex: options.documentIndex,
       includeSubtree: definition && definition.target === DOCS_VIEWER_ACTION_TARGETS.DOCUMENT_SUBTREE,
       selectedDocument: selectedDocument,
-      collectionHostDocIds: options.collectionHostDocIds(),
-      collectionTypeFor: options.collectionTypeFor
+      collectionFor: options.collectionFor
     };
     if (arguments.length > 1) {
       contextOptions.documentTarget = typeof target === "string" ? { doc_id: target } : target;
@@ -176,14 +176,10 @@ export function initDocsViewerManagement(context) {
   resolveAction = createDocsViewerManagementActionResolver({
     documentIndex: documentIndex,
     selectedDocument: selectedDocument,
-    collectionTypeFor: target => {
+    collectionFor: target => {
       const config = domains.workspaceConfig.activeConfig;
-      return (target?.collection ? config?.collectionsById.get(target.collection)
-        : config?.collections.find(collection => collection.reportHostDocId === target?.doc_id))?.collectionType;
-    },
-    collectionHostDocIds: function () {
-      var config = domains.workspaceConfig.activeConfig;
-      return config ? config.collections.map(function (collection) { return collection.reportHostDocId; }) : [];
+      return target?.collection ? config?.collectionsById.get(target.collection)
+        : config?.collectionsByReportHostId.get(target?.doc_id);
     }
   });
 

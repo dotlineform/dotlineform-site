@@ -64,15 +64,15 @@ function documentActionRestriction(actionId, target, context) {
   }
   if (actionId === IDS.NEW && target.collection) return "Use Collection Actions to create a collection document.";
   if (actionId === IDS.THUMB && context.collectionType !== "curated-book"
-    && !["library", "works", "concepts", "moments"].includes(target.collection)) {
+    && !["library", "works", "concepts", "moments", "texts"].includes(target.collection)) {
     return "Thumb is available for authored collection documents.";
   }
   if (target.collection === "catalogue" && !CATALOGUE_ACTION_IDS.has(actionId)) {
     return "Catalogue Work documents are managed through Work edits and Regenerate.";
   }
   if (!target.collection && STRUCTURAL_DOCUMENT_ACTION_IDS.has(actionId)) {
-    if (normalizeIds(context.collectionHostDocIds).includes(target.doc_id)
-      && !(actionId === IDS.SET_DRAFT && context.collectionType === "curated-book")) {
+    if (context.collectionId && !(actionId === IDS.SET_DRAFT
+      && (context.collectionType === "curated-book" || context.collectionId === "texts"))) {
       return "Collection hosts are maintained parts of the site structure.";
     }
     if (PRIVATE_REPORT_DOC_IDS.has(target.doc_id)) {
@@ -139,7 +139,7 @@ export function createDocsViewerActionContext(options = {}) {
   return {
     documentTarget: options.documentTarget || null,
     subtreeDocIds: normalizeIds(options.subtreeDocIds),
-    collectionHostDocIds: normalizeIds(options.collectionHostDocIds),
+    collectionId: options.collectionId,
     collectionType: options.collectionType
   };
 }

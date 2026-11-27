@@ -1,6 +1,6 @@
 import { IMAGE_PLACEMENTS } from "./image-placement.js";
 
-var IMAGE_FIELDS = new Set(["use_work_title_caption", "summary", "placement", "fill_width", "left_size", "gallery_label"]);
+var IMAGE_FIELDS = new Set(["use_work_title_caption", "summary", "placement", "fill_width", "left_size", "gallery_label", "open_entry"]);
 var CATALOGUE_TARGET_ID_PATTERNS = { work: /^[0-9]{5}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
 
 function cleanString(value) {
@@ -83,7 +83,7 @@ export function serializeCatalogueMediaToken(options = {}) {
     + (hidden ? ":visible=false" : "") + "|" + escapedTitle(title) + "]]";
 }
 
-/** Serialize a Work image's caption choice, authored summary and layout. */
+/** Serialize a Work image's presentation and optional Catalogue entry destination. */
 export function serializeCatalogueImageToken(options = {}) {
   var targetType = cleanString(options.targetType);
   var targetId = cleanString(options.targetId);
@@ -109,6 +109,10 @@ export function serializeCatalogueImageToken(options = {}) {
   fields.push(["placement", placement], ["fill_width", options.fillWidth ? "true" : "false"]);
   if (leftSize) fields.push(["left_size", leftSize]);
   var gallery = options.galleryId;
+  if (options.openEntry === true) {
+    if (gallery) return "";
+    fields.push(["open_entry", "true"]);
+  }
   if (gallery) {
     if (!isCatalogueTargetId("gallery", gallery) || !options.galleryLabel?.trim() || /[\r\n]/.test(options.galleryLabel)) return "";
     fields.push(["gallery_label", options.galleryLabel]);
@@ -141,11 +145,13 @@ function parseCatalogueImageFields(rawQuery, options) {
   if (["use_work_title_caption", "fill_width"].some(function (key) {
     return fields[key] !== "true" && fields[key] !== "false";
   })) return null;
+  var openEntry = fields.open_entry === "true";
   var serialized = serializeCatalogueImageToken({
     targetType: options.targetType,
     targetId: options.targetId,
     galleryId: options.galleryId,
     galleryLabel: fields.gallery_label,
+    openEntry: openEntry,
     useWorkTitleCaption: fields.use_work_title_caption === "true",
     summary: fields.summary || "",
     placement: fields.placement,
@@ -155,6 +161,7 @@ function parseCatalogueImageFields(rawQuery, options) {
   if (!serialized || serialized.slice(serialized.indexOf("|") + 1, -2) !== rawQuery) return null;
   return {
     galleryLabel: fields.gallery_label || "",
+    openEntry: openEntry,
     useWorkTitleCaption: fields.use_work_title_caption === "true",
     summary: summaryText(fields.summary),
     placement: cleanString(fields.placement),
@@ -205,6 +212,7 @@ export function parseCatalogueToken(raw, options = {}) {
     visible: visible,
     galleryId: galleryId,
     galleryLabel: imageFields ? imageFields.galleryLabel : "",
+    openEntry: imageFields?.openEntry === true,
     useWorkTitleCaption: imageFields ? imageFields.useWorkTitleCaption : null,
     summary: imageFields ? imageFields.summary : "",
     placement: imageFields ? imageFields.placement : "",

@@ -9,7 +9,7 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Document and Catalogue References
 
-Source stores exact targets and the author's presentation choices. Use **Insert doc link** for an ordinary Markdown document link, **Add Media View link** for a Work image, text opener or hidden Work/Gallery association and **Add image** for a Docs-owned image. [Source editor](Source_Editing.md#directives) · [Related Links](Related_Links.md)
+Source stores exact targets and the author's presentation choices. Use **Insert doc link** for an ordinary Markdown document link, **Add Catalogue reference** for a Work image, text opener or hidden Work/Gallery association and **Add image** for a Docs-owned image. [Source editor](Source_Editing.md#directives) · [Related Links](Related_Links.md)
 
 ## Supported Source Forms
 
@@ -19,6 +19,7 @@ Source stores exact targets and the author's presentation choices. Use **Insert 
 [[catalogue:media:gallery:179|details]]
 [[catalogue:media:gallery:179:visible=false|details]]
 [[catalogue:image:work:00638|use_work_title_caption=true&placement=left&fill_width=true]]
+[[catalogue:image:work:00638|use_work_title_caption=true&placement=left&fill_width=true&open_entry=true]]
 [[catalogue:image:work:03188:gallery:005|use_work_title_caption=true&placement=full&fill_width=true&gallery_label=3%20symbols]]
 [[catalogue:media:work:03188:gallery:005|Explore the Gallery]]
 [[catalogue:media:work:03188:gallery:005:visible=false|3 symbols]]
@@ -30,6 +31,8 @@ Use a five-digit Work ID. A Gallery ID has three digits or at least four digits 
 ## Catalogue Image
 
 Work image fields use canonical percent encoding and field order. The required fields are `use_work_title_caption`, `placement` and `fill_width`. Optional `summary` follows the caption choice. Left placements may append `left_size=third` or `left_size=thumbnail` after `fill_width`. A thumbnail requires `fill_width=false`. Omitted size uses half width on the left. The caption and alt come from the pictured Work. A paired image ends with `gallery_label`, the Gallery title captured on selection. The Gallery row and opener use this saved label until the author reselects the destination. **Include Work metadata** was retired and migrated out of Working source. Full metadata belongs to Entry.
+
+**Opens → Catalogue entry** appends `open_entry=true` to a Work image. The image links to the pictured Work's exact Catalogue document. A Work image without that field opens in Media View. A Gallery-paired image uses its Gallery as the Media View destination.
 
 ### Wrap Body Text
 

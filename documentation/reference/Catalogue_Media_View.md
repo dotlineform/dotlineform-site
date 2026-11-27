@@ -28,7 +28,7 @@ For missing **Gallery links**, check direct Work membership and the separately a
 
 ## Authoring
 
-Choose **Directives → Add Media View link** in Source. Selecting a Work defaults to its image and **This Work**. Choose a direct Gallery under **Open in Media View** to open its grid while showing the Work image. A directly selected Gallery defaults to **Inline link**. **Hidden** records the selected associations and omits the body control. Save or rebuild the document to update the reader. [Source forms and editing](Document_And_Catalogue_References.md#supported-source-forms)
+Choose **Directives → Add Catalogue reference** in Source. Selecting a Work defaults to **Image** and **This Work in Media View**. Under **Opens**, choose **Catalogue entry** to link the image to the selected Work document, or choose one of the Work's Galleries to open its grid in Media View. A directly selected Gallery defaults to **Inline link**. **Hidden** records the selected associations and omits the body control. Save the source to update the reader. [Source forms and editing](Document_And_Catalogue_References.md#supported-source-forms)
 
 ## Gallery Presentations
 

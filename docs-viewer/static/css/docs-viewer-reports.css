@@ -208,6 +208,12 @@
   border-radius: 6px;
 }
 
+.docsViewerReport[data-report-collection] .docsViewerReport__documentThumbnail{
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: center;
+}
+
 .docsViewerReport__collectionButton--thumbnail .docsViewerReport__title{
   min-width: 0;
 }

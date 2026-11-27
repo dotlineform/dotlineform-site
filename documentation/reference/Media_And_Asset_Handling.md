@@ -48,7 +48,7 @@ Confirmed document **Delete** selects all files, including unused files, in each
 
 ## Assigned Document Thumbnails
 
-Open **Edit → Thumb** in Library, Book, Context, Concepts or Moments. **From this document** uses an image in the saved rendered document, including SVG and Catalogue images, fitted proportionally within 96 × 96 pixels. **Catalogue Works** copies the selected Work's existing thumbnail. **Apply** replaces the document's independent copy. **Delete thumbnail** removes it, saving the public removal first. Removing or replacing the originating body image leaves the thumbnail in place.
+Open **Document actions → Thumb** in a Library, Book, Context, Concepts, Moments or Texts document. **From this document** uses an image in the saved rendered document, including SVG and Catalogue images, fitted proportionally within 96 × 96 pixels. **Catalogue Works** copies the selected Work's existing thumbnail. **Apply** replaces the document's independent copy. **Delete thumbnail** removes it, saving the public removal first. Removing or replacing the originating body image leaves the thumbnail in place.
 
 The file's presence supplies `has_thumbnail` for by-ID, collection and Selected rows. Thumb updates those exact records and their publication selections while preserving queued body-media writes. There is no `thumbnail:` source field to maintain. The browser supplies the chosen document image as canvas PNG pixels, and the service writes WebP or copies existing Catalogue thumbnail bytes. Docs Media excludes these independent list thumbnails from its Working file/reference inventory. [Thumbnail service](../../docs-viewer/services/docs_document_thumbnails.py) · [Working and R2 reports](#docs-media-inventory-report)
 

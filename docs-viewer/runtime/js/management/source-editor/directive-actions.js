@@ -13,7 +13,7 @@ const TABLE_OPTIONS = { id: "table-options", label: "Table options", artwork: "d
 
 const SOURCE_ACTIONS = [
   { actionId: ACTION_IDS.SOURCE_ADD_IMAGE, artwork: "docsViewer__icon--image", label: "Add image" },
-  { actionId: ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE, artwork: "docsViewer__icon--book-image", label: "Add Media View link" },
+  { actionId: ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE, artwork: "docsViewer__icon--book-image", label: "Add Catalogue reference" },
   { actionId: ACTION_IDS.SOURCE_ADD_FILE, artwork: "docsViewer__icon--paperclip", label: "Add file" },
   { actionId: ACTION_IDS.SOURCE_INSERT_DOC_LINK, artwork: "docsViewer__icon--file-plus-corner", label: "Insert doc link" },
   { actionId: ACTION_IDS.OPEN_VSCODE, artwork: "docsViewer__icon--file-code-corner", label: "Open in VS Code" }

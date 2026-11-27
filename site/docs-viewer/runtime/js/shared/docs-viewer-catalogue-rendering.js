@@ -1,4 +1,5 @@
 import { mountCatalogueVideo } from "./docs-viewer-catalogue-video.js";
+import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
 
 /** Render portable Catalogue references from the loaded document. */
 function escape(value) {
@@ -18,14 +19,19 @@ function resourceUrl(value) {
   return value;
 }
 
-function imageControl(presentation, entry, destinationLabel) {
+function imageControl(presentation, entry, destinationLabel, entryHref) {
   var image = presentation.image;
   var title = escape(presentation.label);
+  var imageMarkup = '<img data-docs-media-image alt="' + title + '" width="' + image.width_px + '" height="' + image.height_px + '" decoding="async">';
+  if (entryHref) {
+    return '<a class="docsViewer__mediaImageLink docsViewerFigure__imageLink" href="' + escape(entryHref)
+      + '" aria-label="Open Catalogue entry for ' + title + '">' + imageMarkup + '</a>';
+  }
   var frame = entry ? " docsViewerCatalogueEntry__frame" : "";
   var ratio = entry ? ' style="aspect-ratio: ' + image.width_px + " / " + image.height_px + ';"' : "";
   return '<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink' + frame + '"' + ratio
     + ' data-docs-media-open aria-label="Open ' + escape(destinationLabel) + '">'
-    + '<img data-docs-media-image alt="' + title + '" width="' + image.width_px + '" height="' + image.height_px + '" decoding="async">'
+    + imageMarkup
     + '<span data-docs-media-placeholder hidden>' + title + "</span></button>";
 }
 
@@ -70,13 +76,13 @@ function galleryLinksMarkup(galleries) {
   return '<section class="docsViewerCatalogueEntry__galleries"><h2>' + heading + "</h2>" + lists + "</section>";
 }
 
-function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
+function catalogueReferenceMarkup(reference, presentation, downloadUrl, entryHref) {
   var options = reference.options;
   if (reference.presentation === "media") return mediaTextLink(reference.target, options.label);
-  var attrs = mediaTargetAttributes(reference.target);
+  var attrs = entryHref ? "" : " " + mediaTargetAttributes(reference.target);
   var image = presentation.videoUrl
     ? videoControl(presentation)
-    : imageControl(presentation, reference.presentation === "entry", options.gallery_label ?? presentation.label);
+    : imageControl(presentation, reference.presentation === "entry", options.gallery_label ?? presentation.label, entryHref);
   if (reference.presentation === "image") {
     var placement = {
       full: "docsViewerFigure--full-column",
@@ -90,7 +96,7 @@ function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
     if (options.left_size === "thumbnail") classes += " docsViewerFigure--left-thumbnail";
     var blocks = options.use_work_title_caption ? '<span class="docsViewerFigure__caption">' + escape(presentation.label) + "</span>" : "";
     if (options.summary_html) blocks += '<span class="docsViewerFigure__summary">' + options.summary_html + "</span>";
-    return '<figure class="docsViewerFigure ' + classes + '" ' + attrs + ">" + image + (blocks ? "<figcaption>" + blocks + "</figcaption>" : "") + "</figure>";
+    return '<figure class="docsViewerFigure ' + classes + '"' + attrs + ">" + image + (blocks ? "<figcaption>" + blocks + "</figcaption>" : "") + "</figure>";
   }
   var entry = presentation.entry;
   var rows = entry.resources.map(function (resource) {
@@ -99,13 +105,13 @@ function catalogueReferenceMarkup(reference, presentation, downloadUrl) {
     return "<li>" + iconMarkup(icon) + ' <a href="' + escape(url) + '" target="_blank" rel="noopener noreferrer">' + escape(resource.label) + "</a></li>";
   }).join("");
   return '<article class="docsViewerCatalogueEntry"><div class="docsViewerCatalogueEntry__record"><h1>' + escape(presentation.label)
-    + '</h1><figure class="docsViewerCatalogueEntry__image" ' + attrs + ">" + image + '</figure><p class="docsViewerCatalogueEntry__metadata">'
+    + '</h1><figure class="docsViewerCatalogueEntry__image"' + attrs + ">" + image + '</figure><p class="docsViewerCatalogueEntry__metadata">'
     + entry.metadata_lines.map(escape).join("<br>") + "</p></div>"
     + (rows ? '<div class="docsViewerCatalogueEntry__resources"><section data-catalogue-resource="links"><ul>' + rows + "</ul></section></div>" : "")
     + galleryLinksMarkup(presentation.galleries) + "</article>";
 }
 
-/** Mount the prepared display data before any Media View target is selected. */
+/** Mount prepared images and bind Media View openers or link to the exact Work document. */
 export function mountCatalogueDocument(context) {
   var catalogue = context.payload.catalogue;
   var cleanups = [];
@@ -123,14 +129,20 @@ export function mountCatalogueDocument(context) {
           slot.style.setProperty("--docs-viewer-thumbnail-width", image.width_px + "px");
         }
       }
-      slot.innerHTML = catalogueReferenceMarkup(reference, presentation, context.downloadUrl);
+      var entryHref = reference.options.open_entry ? context.catalogueEntryHref(reference.target.id) : "";
+      slot.innerHTML = catalogueReferenceMarkup(reference, presentation, context.downloadUrl, entryHref);
       if (presentation?.videoUrl) {
         cleanups.push(mountCatalogueVideo(slot.querySelector("video"), slot.querySelector("[data-catalogue-video-status]"), presentation.videoUrl));
       }
-      context.bind(slot, presentation && !presentation.videoUrl && {
+      var imageData = presentation && !presentation.videoUrl && {
         src: image.src, srcset: image.srcset, alt: image.alt,
         widthPx: image.width_px, heightPx: image.height_px
-      });
+      };
+      if (entryHref) {
+        cleanups.push(mountDocsViewerResponsiveImage(slot.querySelector("[data-docs-media-image]"), imageData));
+      } else {
+        context.bind(slot, imageData);
+      }
     } catch (error) {
       slot.setAttribute("role", "status");
       slot.textContent = error.message;

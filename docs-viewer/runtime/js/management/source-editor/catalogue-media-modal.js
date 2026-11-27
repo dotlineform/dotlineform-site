@@ -12,6 +12,7 @@ import {
 
 const SEARCH_INPUT_ID = "docsViewerCatalogueImageSearch";
 const RESULTS_ID = "docsViewerCatalogueImageResults";
+const CATALOGUE_ENTRY = "catalogue-entry";
 
 function modalBody(searchQuery) {
   return `<div class="docsViewerCatalogueTokenModal docsViewerCatalogueImageModal">
@@ -21,7 +22,7 @@ function modalBody(searchQuery) {
     </div>
     <p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status" hidden></p>
     <div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="${RESULTS_ID}" role="listbox" aria-label="Catalogue Works and Galleries" data-role="catalogue-results" tabindex="0" hidden></div>
-    <label class="docsViewer__field docsViewer__field--listbox" hidden><span class="docsViewer__fieldLabel">Open in Media View</span>
+    <label class="docsViewer__field docsViewer__field--listbox" hidden><span class="docsViewer__fieldLabel" data-role="destination-label">Opens</span>
       <select class="docsViewer__fieldInput" data-role="destination" size="4"></select>
     </label>
     <div class="docsViewer__field" data-role="display" role="radiogroup" aria-labelledby="docsViewerCatalogueDisplayLabel" hidden>
@@ -72,6 +73,9 @@ export function openCatalogueMediaModal({ root, action, adapter }) {
       const status = role("catalogue-search-status");
       const primary = role("modal-primary");
       const destination = role("destination");
+      const destinationLabel = role("destination-label");
+      const workOption = new Option("This Work in Media View", "");
+      const entryOption = new Option("Catalogue entry", CATALOGUE_ENTRY);
       const display = role("display");
       const displayOptions = destination.form.elements.namedItem("catalogueDisplay");
       const imageOption = display.querySelector('input[value="image"]');
@@ -98,12 +102,18 @@ export function openCatalogueMediaModal({ root, action, adapter }) {
         destination.closest("label").hidden = target?.targetType !== "work";
         display.hidden = !target;
         const imageSelected = imageOption.checked;
+        entryOption.hidden = !imageSelected;
+        entryOption.disabled = !imageSelected;
+        if (!imageSelected && destination.value === CATALOGUE_ENTRY) destination.value = "";
+        const hidden = displayOptions.value === "hidden";
+        destinationLabel.textContent = hidden ? "Associate with" : "Opens";
+        workOption.text = hidden ? "This Work" : "This Work in Media View";
         imageOptions.hidden = !target || !imageSelected;
         linkText.closest("label").hidden = !target || imageSelected;
         primary.disabled = !target || (!imageSelected && !linkText.value.trim());
       }
       function applyDestination(saved) {
-        const id = destination.value;
+        const id = destination.value === CATALOGUE_ENTRY ? "" : destination.value;
         const currentGalleryTitle = galleries.get(id)?.title;
         galleryLabel = saved?.galleryLabel || currentGalleryTitle || "";
         imageOption.disabled = target.targetType !== "work" || Boolean(id && !galleryLabel);
@@ -118,7 +128,8 @@ export function openCatalogueMediaModal({ root, action, adapter }) {
         destination.replaceChildren();
         message("");
         if (next.targetType === "work") {
-          destination.add(new Option("This Work", ""));
+          destination.add(workOption);
+          destination.add(entryOption);
           const members = choices.galleryIdsByWork[next.targetId] || [];
           for (const id of members) destination.add(new Option(id + " · " + galleries.get(id).title, id));
           if (saved?.galleryId && !members.includes(saved.galleryId)) {
@@ -129,7 +140,7 @@ export function openCatalogueMediaModal({ root, action, adapter }) {
             destination.add(option);
             message("The saved Gallery is no longer a direct membership. Keep it or choose another destination.");
           }
-          destination.value = saved?.galleryId || "";
+          destination.value = saved?.openEntry ? CATALOGUE_ENTRY : saved?.galleryId || "";
         }
         displayOptions.value = saved ? (saved.visible ? saved.presentation : "hidden") : next.targetType === "work" ? "image" : "media";
         applyDestination(saved);
@@ -194,13 +205,15 @@ export function openCatalogueMediaModal({ root, action, adapter }) {
     onSubmit(api) {
       if (!adapter.isCurrent()) { api.setStatus("The Source editor was replaced. Cancel and try again."); return false; }
       if (!target) { api.setStatus("Choose a Catalogue target."); return false; }
+      const destination = api.host.querySelector('[data-role="destination"]').value;
+      const openEntry = destination === CATALOGUE_ENTRY;
       const fields = { targetType: target.targetType, targetId: target.targetId,
-        galleryId: api.host.querySelector('[data-role="destination"]').value };
+        galleryId: openEntry ? "" : destination };
       const display = api.host.querySelector('input[name="catalogueDisplay"]:checked').value;
       const source = display === "image"
-        ? serializeCatalogueImageToken({ ...fields, galleryLabel, ...readCatalogueImagePresentation(api.host) })
+        ? serializeCatalogueImageToken({ ...fields, openEntry, galleryLabel, ...readCatalogueImagePresentation(api.host) })
         : serializeCatalogueMediaToken({ ...fields, title: api.host.querySelector('[data-role="link-text"]').value, visible: display !== "hidden" });
-      if (!source) { api.setStatus("Enter the required fields for this Media View link."); return false; }
+      if (!source) { api.setStatus("Enter the required fields for this Catalogue reference."); return false; }
       if (!adapter.replaceCapturedSelection(capture, source)) {
         api.setStatus("Markdown source changed while this modal was open. Cancel and try again.");
         return false;

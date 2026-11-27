@@ -33,7 +33,7 @@ export function captureMediaTokenActions(snapshot, selection) {
       capture: imageToken ? tokenCapture : selection
     },
     catalogue: {
-      label: catalogueToken ? "Edit Media View link" : "Add Media View link",
+      label: catalogueToken ? "Edit Catalogue reference" : "Add Catalogue reference",
       token: catalogueToken,
       capture: catalogueToken ? tokenCapture : selection
     }

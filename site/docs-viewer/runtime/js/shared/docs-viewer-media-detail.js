@@ -343,6 +343,9 @@ export function createDocsViewerMediaDetailAdapter() {
         image: context.collectionProvider.catalogueImage,
         downloadUrl: context.collectionProvider.catalogueDownloadUrl,
         videoUrl: context.collectionProvider.catalogueVideoUrl,
+        catalogueEntryHref: function (workId) {
+          return buildViewerUrl({ viewerBaseUrl: state.viewerConfig.viewerBaseUrl, docId: workId, collection: "catalogue" });
+        },
         bind: bindReferences
       }));
     }

@@ -7,7 +7,7 @@ import html
 from pathlib import Path
 import re
 from typing import Any
-from urllib.parse import quote, urlsplit
+from urllib.parse import quote, urlencode, urlsplit
 
 from docs_image_tokens import FIGURE_NATURAL_WIDTH_CLASS, FIGURE_PLACEMENT_CLASSES
 from docs_catalogue_projection import catalogue_preparation_inputs
@@ -62,6 +62,7 @@ class CatalogueStaticInputs:
         self, repo_root: Path, workspace: DocsWorkspaceConfig, *, public_media: dict[str, Any] | None = None,
     ) -> None:
         self.repo_root = repo_root
+        self.viewer_base_url = workspace.public_viewer_base_url
         self.projection = catalogue_preparation_inputs(repo_root, workspace)
         if public_media is None:
             self.primary_base = workspace.assets.url(workspace.assets.work_primary) + "/"
@@ -89,7 +90,7 @@ class CatalogueStaticInputs:
         return self.icons.render(name, decorative=True)
 
 
-def image_control(presentation: dict[str, Any], *, entry: bool, destination_label: str) -> str:
+def image_control(presentation: dict[str, Any], *, entry: bool, destination_label: str, entry_href: str) -> str:
     image = presentation["image"]
     title = html.escape(presentation["label"], quote=True)
     width, height = image["width_px"], image["height_px"]
@@ -97,25 +98,42 @@ def image_control(presentation: dict[str, Any], *, entry: bool, destination_labe
     ratio = f' style="aspect-ratio: {width} / {height};"' if entry else ""
     srcset = ", ".join(f"{resource_url(item['src'])} {item['width_px']}w" for item in image["candidates"])
     responsive = f'srcset="{html.escape(srcset, quote=True)}" sizes="100vw" ' if srcset else ""
+    image_markup = (
+        f'<img data-docs-media-image src="{html.escape(resource_url(image["src"]), quote=True)}" '
+        f'{responsive}alt="{title}" width="{width}" height="{height}" decoding="async">'
+    )
+    if entry_href:
+        return (
+            '<a class="docsViewer__mediaImageLink docsViewerFigure__imageLink" '
+            f'href="{html.escape(entry_href, quote=True)}" aria-label="Open Catalogue entry for {title}">'
+            f'{image_markup}</a>'
+        )
     return (
         f'<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink{frame}"{ratio} '
         f'data-docs-media-open aria-label="Open {html.escape(destination_label, quote=True)}">'
-        f'<img data-docs-media-image src="{html.escape(resource_url(image["src"]), quote=True)}" '
-        f'{responsive}alt="{title}" '
-        f'width="{width}" height="{height}" decoding="async">'
+        f'{image_markup}'
         f'<span data-docs-media-placeholder hidden>{title}</span></button>'
     )
 
 
 def reference_markup(reference: dict[str, Any], presentation: dict[str, Any] | None, inputs: CatalogueStaticInputs) -> str:
     target, options = reference["target"], reference["options"]
-    attrs = (f'data-docs-content-detail="media" data-docs-media-kind="{target["kind"]}" '
-             f'data-docs-media-id="{html.escape(target["id"], quote=True)}"')
+    entry_href = ""
+    if options.get("open_entry"):
+        query = urlencode({"collection": "catalogue", "doc": target["id"]})
+        entry_href = f"{inputs.viewer_base_url}?{query}"
+    attrs = "" if entry_href else (
+        f' data-docs-content-detail="media" data-docs-media-kind="{target["kind"]}" '
+        f'data-docs-media-id="{html.escape(target["id"], quote=True)}"'
+    )
     mode = reference["presentation"]
     if mode == "media":
-        return (f'<span {attrs}><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>'
+        return (f'<span{attrs}><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>'
                 f'{html.escape(options["label"])}</button></span>')
-    image = image_control(presentation, entry=mode == "entry", destination_label=options.get("gallery_label", presentation["label"]))
+    image = image_control(
+        presentation, entry=mode == "entry", destination_label=options.get("gallery_label", presentation["label"]),
+        entry_href=entry_href,
+    )
     if mode == "image":
         modifiers = [FIGURE_PLACEMENT_CLASSES[options["placement"]]]
         if not options["fill_width"]:
@@ -129,7 +147,7 @@ def reference_markup(reference: dict[str, Any], presentation: dict[str, Any] | N
         if options["summary_html"]:
             blocks.append(f'<span class="docsViewerFigure__summary">{options["summary_html"]}</span>')
         caption = f'<figcaption>{"".join(blocks)}</figcaption>' if blocks else ""
-        return f'<figure class="docsViewerFigure {" ".join(modifiers)}" {attrs}>{image}{caption}</figure>'
+        return f'<figure class="docsViewerFigure {" ".join(modifiers)}"{attrs}>{image}{caption}</figure>'
     entry = presentation["entry"]
     metadata = "<br>".join(html.escape(line) for line in entry["metadata_lines"])
     resources = []
@@ -141,7 +159,7 @@ def reference_markup(reference: dict[str, Any], presentation: dict[str, Any] | N
                       f'<ul>{"".join(resources)}</ul></section></div>') if resources else ""
     return ('<article class="docsViewerCatalogueEntry"><div class="docsViewerCatalogueEntry__record">'
             f'<h1>{html.escape(presentation["label"])}</h1>'
-            f'<figure class="docsViewerCatalogueEntry__image" {attrs}>{image}</figure>'
+            f'<figure class="docsViewerCatalogueEntry__image"{attrs}>{image}</figure>'
             f'<p class="docsViewerCatalogueEntry__metadata">{metadata}</p></div>{resources_html}</article>')
 
 
@@ -163,7 +181,7 @@ def prepare_catalogue_document(
 
     for reference in envelope["references"]:
         mode = reference["presentation"]
-        opens_work = reference["target"]["kind"] == "catalogue-work"
+        opens_work_media = reference["target"]["kind"] == "catalogue-work" and not reference["options"].get("open_entry")
         presentation = None
         left_size = reference["options"].get("left_size", "")
         work_id = reference.get("work_id", reference["target"]["id"])
@@ -185,7 +203,7 @@ def prepare_catalogue_document(
                  "width_px": candidate["width_px"]} for candidate in image["candidates"]
             ]
             presentation = {"label": image["alt"], "image": {**image, "src": src, "candidates": candidates}}
-        if export and opens_work:
+        if export and opens_work_media:
             if not primary_url:
                 primary = inputs.projection.work(work_id)["image"]
                 primary_url = select(inputs.image_asset(primary["default"], primary["version"]))

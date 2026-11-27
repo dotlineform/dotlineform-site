@@ -37,6 +37,7 @@ class SourceTokenOccurrence:
     visible: bool = True
     gallery_id: str = ""
     gallery_label: str = ""
+    open_entry: bool = False
     use_work_title_caption: bool | None = None
     summary: str = ""
     placement: str = ""
@@ -93,8 +94,9 @@ def serialize_catalogue_image_token(
     left_size: str = "",
     gallery_id: str = "",
     gallery_label: str = "",
+    open_entry: bool = False,
 ) -> str:
-    """Serialize a Work image's caption choice, authored summary and layout."""
+    """Serialize a Work image's presentation and optional Catalogue entry destination."""
     if (
         target_type != "work"
         or not WORK_ID_PATTERN.fullmatch(str(target_id or ""))
@@ -125,6 +127,10 @@ def serialize_catalogue_image_token(
     if left_size:
         fields.append(("left_size", left_size))
     identity = f"work:{target_id}"
+    if open_entry:
+        if gallery_id:
+            return ""
+        fields.append(("open_entry", "true"))
     if gallery_id:
         if not CATALOGUE_TARGET_ID_PATTERNS["gallery"].fullmatch(gallery_id) or not gallery_label.strip() or re.search(r"[\r\n]", gallery_label):
             return ""
@@ -144,7 +150,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_id: str, gallery_id: 
         key, separator, encoded_value = pair.partition("=")
         if (
             not separator
-            or key not in {"use_work_title_caption", "summary", "placement", "fill_width", "left_size", "gallery_label"}
+            or key not in {"use_work_title_caption", "summary", "placement", "fill_width", "left_size", "gallery_label", "open_entry"}
             or key in fields
             or not encoded_value
         ):
@@ -158,8 +164,10 @@ def parse_catalogue_image_fields(raw_query: str, *, target_id: str, gallery_id: 
         return None
     if any(fields[key] not in {"true", "false"} for key in ("use_work_title_caption", "fill_width")):
         return None
+    open_entry = fields.get("open_entry") == "true"
     token = serialize_catalogue_image_token(
         target_type="work", target_id=target_id, gallery_id=gallery_id, gallery_label=fields.get("gallery_label", ""),
+        open_entry=open_entry,
         use_work_title_caption=fields["use_work_title_caption"] == "true",
         summary=fields.get("summary", ""),
         placement=fields["placement"],
@@ -173,6 +181,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_id: str, gallery_id: 
         return None
     return {
         "gallery_label": fields.get("gallery_label", ""),
+        "open_entry": open_entry,
         "use_work_title_caption": fields["use_work_title_caption"] == "true",
         "summary": normalize_summary_text(fields.get("summary", "")),
         "placement": normalize_plain_text(fields["placement"], required=True),
@@ -238,6 +247,7 @@ def parse_source_token(raw: str) -> SourceTokenOccurrence | None:
         end=len(raw),
         presentation=presentation,
         visible=visible, gallery_id=gallery_id, gallery_label=image_fields["gallery_label"] if image_fields else "",
+        open_entry=image_fields["open_entry"] if image_fields else False,
         use_work_title_caption=image_fields["use_work_title_caption"] if image_fields else None,
         summary=image_fields["summary"] if image_fields else "",
         placement=image_fields["placement"] if image_fields else "",
@@ -289,6 +299,8 @@ def catalogue_reference(token: SourceTokenOccurrence, reference_id: str) -> dict
             options["left_size"] = token.left_size
         if token.gallery_id:
             options["gallery_label"] = token.gallery_label
+        if token.open_entry:
+            options["open_entry"] = True
     elif token.presentation == "media":
         options["label"] = token.title
     return {

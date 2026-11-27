@@ -8,7 +8,7 @@ from typing import Any
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, is_curated_book, location_child
 
 
-THUMBNAIL_COLLECTIONS = frozenset({"library", "works", "concepts", "moments"})
+THUMBNAIL_COLLECTIONS = frozenset({"library", "works", "concepts", "moments", "texts"})
 
 
 def supports_document_thumbnail(owner: DocsStageConfig | DocsCollectionConfig | None) -> bool:
