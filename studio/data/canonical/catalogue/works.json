@@ -31948,7 +31948,14 @@
       "year_display": "1990-95",
       "medium": "bound photocopied printed pages, canvas cover",
       "width_px": 2242,
-      "height_px": 2242
+      "height_px": 2242,
+      "downloads": [
+        {
+          "filename": "01981-nerve-formaldehyde-form-download-1600px.pdf",
+          "label": "nerve (formaldehyde form).pdf",
+          "staged": false
+        }
+      ]
     },
     "01982": {
       "work_id": "01982",

@@ -27,7 +27,13 @@
           "",
           "cat. 01981"
         ],
-        "resources": []
+        "resources": [
+          {
+            "kind": "download",
+            "label": "nerve (formaldehyde form).pdf",
+            "identity": "01981-nerve-formaldehyde-form-download-1600px.pdf"
+          }
+        ]
       },
       "image": {
         "alt": "nerve (abattoir)",
