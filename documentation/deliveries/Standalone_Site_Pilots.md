@@ -6,11 +6,11 @@ added_date: "2026-11-22 16:06:47"
 last_updated: "2026-11-26"
 summary: Test an unlinked static pilot in site-preview and on GitHub Pages, starting with a cross-origin read from R2.
 ui_status: done
-parent_id: d-20261118-235100-64ad2e
+parent_id: d-20260419-000000-d2e47b
 ---
 # Standalone Site Pilots
 
-Use one tracked static page to test a feature locally and on the deployed site. Give each pilot a named folder under `site/pilot/` and share its direct URL. Keep the page outside the site's navigation and Docs Viewer routes. The first pilot confirmed that a browser could read an object from the existing R2 media host. The page and its test image were retired after the live check. [Site preview and deploy](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site) · [Catalogue HLS Video Pilot](../deliveries/Catalogue_HLS_Video_Pilot.md)
+Use one tracked static page to test a feature locally and on the deployed site. Give each pilot a named folder under `site/pilot/` and share its direct URL. Keep the page outside the site's navigation and Docs Viewer routes. The first pilot confirmed that a browser could read an object from the existing R2 media host. The page and its test image were retired after the live check. [Site preview and deploy](../guide/Publish_And_Deploy.md#3-review-and-deploy-the-site) · [Catalogue HLS Video Pilot](Catalogue_HLS_Video_Pilot.md)
 
 ## First Pilot With An R2 Image
 

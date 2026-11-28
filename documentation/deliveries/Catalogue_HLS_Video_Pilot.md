@@ -9,7 +9,7 @@ ui_status: done
 ---
 # Catalogue HLS Video Pilot
 
-The standalone *balance machine 1* pilot was accepted on 26 November 2026. It established R2 as the host for the first film Work. The standalone assets were retired after the Catalogue and Media View accepted playback. Broader browser and bandwidth checks use the published film Work. [Catalogue R2 Video Delivery](Catalogue_R2_Video_Delivery.md) · [Standalone pilot workflow](../_working/Standalone_Site_Pilots.md)
+The standalone *balance machine 1* pilot was accepted on 26 November 2026. It established R2 as the host for the first film Work. The standalone assets were retired after the Catalogue and Media View accepted playback. Broader browser and bandwidth checks use the published film Work. [Catalogue R2 Video Delivery](Catalogue_R2_Video_Delivery.md) · [Standalone pilot workflow](Standalone_Site_Pilots.md)
 
 ## Source And Player
 
@@ -38,7 +38,7 @@ The encode took 1 minute 2 seconds and produced 92,386,736 bytes across 89 files
 
 ## Upload And Playback Evidence
 
-All 89 objects were uploaded to the pilot prefix on 26 November 2026, finishing around 12:13 GMT. The connection stopped after 64 objects and the remaining 25 completed in 13.4 seconds on resume. The master was uploaded last. For each pilot origin, the three gzip playlists, two initialization files and one segment per rendition had matching CORS origins and content types. The media byte-range requests returned HTTP 206. [Existing pilot CORS policy](../_working/Standalone_Site_Pilots.md#verify-deploy-and-retire) · [Apple HLS delivery requirements](https://developer.apple.com/streaming/hls-authoring-specification-for-apple-devices.html)
+All 89 objects were uploaded to the pilot prefix on 26 November 2026, finishing around 12:13 GMT. The connection stopped after 64 objects and the remaining 25 completed in 13.4 seconds on resume. The master was uploaded last. For each pilot origin, the three gzip playlists, two initialization files and one segment per rendition had matching CORS origins and content types. The media byte-range requests returned HTTP 206. [Existing pilot CORS policy](Standalone_Site_Pilots.md#verify-deploy-and-retire) · [Apple HLS delivery requirements](https://developer.apple.com/streaming/hls-authoring-specification-for-apple-devices.html)
 
 `bin/site-validate` passed. In local preview, the in-app browser played and resumed after a midpoint seek in both modes. Automatic playback moved from 360p to 720p on the unthrottled connection. Mac Safari started native playback and advanced to 15 seconds.
 

@@ -29,7 +29,7 @@ In selection mode, **Save results** saves the checked documents in report order 
 
 ## Texts
 
-**Texts** (`texts`) owns standalone web editions of written works. Its ordinary Index host sits next to Catalogue. Manage uses the standard collection actions and offers both **A–Z** and **Last added**. The public collection report lists editions by title in **A–Z** order. Each edition has its own document ID and can link to the corresponding Catalogue Work. [Text edition workflow](../_working/Publish_A_Text_Edition.md)
+**Texts** (`texts`) owns standalone web editions of written works. Its ordinary Index host sits next to Catalogue. Manage uses the standard collection actions and offers both **A–Z** and **Last added**. The public collection report lists editions by title in **A–Z** order. Each edition has its own document ID and can link to the corresponding Catalogue Work. [Text edition workflow](../deliveries/Publish_A_Text_Edition.md)
 
 ## Flat Book Collections
 

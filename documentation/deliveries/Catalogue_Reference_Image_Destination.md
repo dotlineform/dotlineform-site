@@ -4,7 +4,8 @@ doc_id: d-20261127-105035-8fb2a6
 title: Catalogue Reference Image Destination
 added_date: "2026-11-27 10:50:35"
 last_updated: "2026-11-27"
-parent_id: d-20261118-235100-64ad2e
+ui_status: done
+parent_id: d-20260725-153656-516b61
 ---
 # Catalogue Reference Image Destination
 
@@ -15,8 +16,8 @@ The browser owns the destination choice and writes it into the Source buffer. So
 - [x] Add the Source command, destination choice and exact round trip through the JavaScript and Python token parsers.
 - [x] Render the selected destination in the reader and static HTML. Update the maintained reference pages.
 - [x] Complete focused diagnostics, public projection and redundancy review.
-- [ ] Open a Work image from a saved document and verify the exact Catalogue entry and Back behaviour in Manage. Check an existing Media View image alongside it.
+- [x] Confirm the saved Work image opens its Catalogue entry in Manage and site-preview.
 
-Read-only diagnostics recovered the saved choice for Work `00008`, resolved the local and public document routes, and rendered exact Work and Gallery Media View controls and a Catalogue entry link in static HTML. Focused JavaScript and Python lint, public projection and site validation passed.
+The user confirmed the new destination in Manage and site-preview on 27 November 2026. Back navigation was outside the recorded browser checks. Read-only diagnostics recovered the saved choice for Work `00008`, resolved the local and public document routes, and rendered exact Work and Gallery Media View controls and a Catalogue entry link in static HTML. Focused JavaScript and Python lint, public projection and site validation passed. [Current source forms](../reference/Document_And_Catalogue_References.md#supported-source-forms)
 
 The destination uses the Work identity already selected in the picker. Source parsing rejects simultaneous Gallery and Catalogue entry destinations through its existing canonical serialization check. The reader reuses the prepared rendition and normal document routing. Static export selects the rendered image and skips the extra full-size Media View asset for entry links. The change adds no lookup, rebuild or write beyond the existing Source Save workflow.
