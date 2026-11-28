@@ -3,7 +3,7 @@
   "title": "body space 1",
   "added_date": "2026-09-17 21:55:35",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n<section data-docs-related-links=\"true\"><h2>context</h2>\n<ul>\n<li><span class=\"docsViewer__inlineIcon\" data-docs-icon=\"dlf-concept\" aria-hidden=\"true\" style=\"display:inline-block;width:1em;height:1em;vertical-align:-0.125em;background-color:currentColor;mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhhc2ggcHJldmlldy1pY29uIj48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iOSIgeTI9IjkiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iMTUiIHkyPSIxNSIvPjxsaW5lIHgxPSIxMCIgeDI9IjgiIHkxPSIzIiB5Mj0iMjEiLz48bGluZSB4MT0iMTYiIHgyPSIxNCIgeTE9IjMiIHkyPSIyMSIvPjwvc3ZnPg==);\"><span aria-hidden=\"true\" style=\"position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;\">[[icon:dlf-concept]]</span></span> <a data-docs-related-link=\"true\" href=\"?collection=concepts&amp;doc=d-20260727-225608-0d87ce\">embodiment</a></li>\n</ul></section>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v2",
     "references": [

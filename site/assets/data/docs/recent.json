@@ -1,8 +1,96 @@
 {
   "schema": "docs_recent_v3",
   "limit": 20,
-  "generated_at": "2026-11-26T23:14:55Z",
+  "generated_at": "2026-11-28T00:08:46Z",
   "docs": [
+    {
+      "doc_id": "d-20261128-000355-3e656f",
+      "title": "balance",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-70e623",
+      "title": "constraint",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-c1544e",
+      "title": "doll",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-0197c3",
+      "title": "dream",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-19fbf0",
+      "title": "fold",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-4e215f",
+      "title": "ghost",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-3926cd",
+      "title": "home",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-4ed4ae",
+      "title": "interval",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-cfb1e3",
+      "title": "model",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-d571fe",
+      "title": "vessel",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "doc_id": "d-20261128-000355-232e45",
+      "title": "voice",
+      "timestamp": "2026-11-28",
+      "collection": "concepts",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
     {
       "kind": "catalogue-gallery",
       "id": "364",
@@ -58,74 +146,6 @@
       "id": "067",
       "title": "found forms",
       "timestamp": "2026-10-25"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "355",
-      "title": "gesture in grey",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "352",
-      "title": "hand life",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "360",
-      "title": "mandala form",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "332",
-      "title": "Michelle Pfeiffer",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "099",
-      "title": "models",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "103",
-      "title": "mother and child",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "362",
-      "title": "painting",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "140",
-      "title": "wa",
-      "timestamp": "2026-10-25"
-    },
-    {
-      "doc_id": "d-20261024-074029-d10856",
-      "title": "bird wing",
-      "timestamp": "2026-10-24",
-      "collection": "moments",
-      "report_doc_id": "d-20260907-180859-c425b2",
-      "collection_title": "Moments"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "331",
-      "title": "composites (book, 2023)",
-      "timestamp": "2026-10-24"
-    },
-    {
-      "kind": "catalogue-gallery",
-      "id": "308",
-      "title": "moments",
-      "timestamp": "2026-10-24"
     }
   ]
 }
