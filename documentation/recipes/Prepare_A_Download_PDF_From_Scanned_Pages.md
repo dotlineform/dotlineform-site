@@ -2,9 +2,17 @@
 
 Use the source JPGs for image quality and a Finder-created PDF for the approved page order and layout. Keep a separate download copy so you can make another size from the original scans whenever needed.
 
+## Name the scans in reading order
+
+Start every filename with the book title, followed by a unique sequence number padded to the same width throughout the set. Start at `00` for the front cover and number every scan, including the inside and back covers. Add a description after the number where it helps identify the scan.
+
+For *nerve (abattoir)*, the pattern was `nerve (abattoir) - 00 - front cover.jpg`, `nerve (abattoir) - 01 - inside cover.jpg`, numbered spreads `02` through `08`, and `nerve (abattoir) - 09 - back cover.jpg`.
+
+In Studio, use the matching numbers in the Work titles so the gallery sorts in reading order. The front cover can keep the plain book title. When renaming JPGs already linked to Works, update the source filenames in Studio too.
+
 ## Steps
 
-1. Use Finder’s **Create PDF** action on the source JPGs to assemble the book. Check the page order in Preview, including the front cover, interior pages or spreads, and back cover.
+1. Select the source JPGs in reading order, then use Finder’s **Create PDF** action. The PDF follows the order in which you select the files. Check the page order in Preview, including the front cover, interior pages or spreads, and back cover. [Apple’s Finder instructions](https://support.apple.com/en-mn/guide/mac-help/mchl21ac2368/mac)
 2. Open the Finder PDF with `pypdf`. For the image-per-page PDF used here, each page embedded its original JPEG byte for byte. Match each embedded JPEG to its source file so the replacement goes on the correct page.
 3. Use Pillow to resize each source JPG proportionally with Lanczos resampling. Set the chosen pixel limit on the **long edge**, whether that edge is horizontal or vertical. Encode at the chosen JPEG quality with optimisation and retain the source colour profile.
 4. In a copy of the Finder PDF, replace each embedded JPEG and update its pixel dimensions. Retain the PDF page dimensions, image placement, and colour profiles. The spreads then occupy the same space at **Actual Size** in Preview, with image resolution affecting how sharp they look when enlarged.
