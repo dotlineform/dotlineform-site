@@ -1,8 +1,8 @@
 {
   "doc_id": "01982",
-  "title": "nerve (abattoir) - inside cover",
+  "title": "nerve (abattoir) - 0 - inside cover",
   "added_date": "2026-09-23 10:11:30",
-  "last_updated": "2026-10-01 13:15:09",
+  "last_updated": "2026-11-28 10:29:05",
   "content_html": "<div data-docs-catalogue-ref=\"c1\"></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v2",
@@ -30,7 +30,7 @@
         "resources": []
       },
       "image": {
-        "alt": "nerve (abattoir) - inside cover",
+        "alt": "nerve (abattoir) - 0 - inside cover",
         "width_px": 3240,
         "height_px": 2268,
         "version": 1,
@@ -56,11 +56,6 @@
           "id": "309",
           "label": "nerve abattoir",
           "relation": "direct"
-        },
-        {
-          "id": "150",
-          "label": "nerve (formaldehyde form)",
-          "relation": "series"
         }
       ]
     }

@@ -2806,7 +2806,14 @@
       "medium": "bound printed pages, edition 9 [extant]",
       "storage_location": "1",
       "width_px": 1859,
-      "height_px": 2676
+      "height_px": 2676,
+      "downloads": [
+        {
+          "filename": "00166-nerve-formaldehyde-form-download-1600px.pdf",
+          "label": "nerve (formaldehyde form).pdf",
+          "staged": false
+        }
+      ]
     },
     "00167": {
       "work_id": "00167",

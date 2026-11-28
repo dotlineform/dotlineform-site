@@ -27,7 +27,13 @@
           "",
           "cat. 00166"
         ],
-        "resources": []
+        "resources": [
+          {
+            "kind": "download",
+            "label": "nerve (formaldehyde form).pdf",
+            "identity": "00166-nerve-formaldehyde-form-download-1600px.pdf"
+          }
+        ]
       },
       "image": {
         "alt": "nerve (formaldehyde form)",
@@ -53,8 +59,8 @@
       "full_image": "00166-primary-1600.webp",
       "galleries": [
         {
-          "id": "150",
-          "label": "nerve (formaldehyde form)",
+          "id": "364",
+          "label": "nerve",
           "relation": "direct"
         },
         {

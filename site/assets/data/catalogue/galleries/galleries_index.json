@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-11-26T21:05:38Z"
+    "generated_at_utc": "2026-11-28T10:23:50Z"
   },
   "galleries": {
     "001": {
@@ -511,10 +511,6 @@
     "143": {
       "gallery_id": "143",
       "title": "simultaneous equations"
-    },
-    "150": {
-      "gallery_id": "150",
-      "title": "nerve (formaldehyde form)"
     },
     "154": {
       "gallery_id": "154",
