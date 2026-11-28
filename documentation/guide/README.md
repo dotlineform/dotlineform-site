@@ -17,4 +17,6 @@ To use the public reader, start with [Find and read things](Find_And_Read_Things
 
 Use `documentation/reference/` for how the system works today and its code/configuration owners; `design/` for rationale and alternatives; `deliveries/` for useful completed evidence and deferred outcomes. [Development](../development/README.md) owns current development practice. Review [Working](../_working/README.md) for active/proposed work and writing in progress; there is no separate feature register. Processing has its own [project documentation](https://github.com/dotlineform/dotlineform-processing/blob/main/documentation/README.md).
 
+Use [Recipes](../recipes/README.md) for occasional tasks you want to repeat or automate later.
+
 A missing related link can be a behaviour problem, an intentional design choice or unfinished work. Follow the relevant Reference, Design and delivery record to distinguish them. Keep evidence links purposeful and preserve current explanations without copying historical logs. Repository Markdown is maintained directly; these edits need no Docs or Search rebuild.
