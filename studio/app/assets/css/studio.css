@@ -686,7 +686,7 @@ span.studioUi__input--readonlyDisplay {
 .studioUi__icon--image-plus { mask-image: url("/docs-viewer/static/icons/image-plus.svg"); }
 .studioUi__icon--circle-check { mask-image: url("/docs-viewer/static/icons/circle-check.svg"); }
 .studioUi__icon--brush { mask-image: url("/docs-viewer/static/icons/brush.svg"); }
-.studioUi__icon--video { mask-image: url("/docs-viewer/static/icons/video.svg"); }
+.studioUi__icon--video { mask-image: url("/docs-viewer/static/icons/film.svg"); }
 .studioUi__icon--clapperboard { mask-image: url("/docs-viewer/static/icons/clapperboard.svg"); }
 .studioUi__icon--square-library { mask-image: url("/docs-viewer/static/icons/square-library.svg"); }
 

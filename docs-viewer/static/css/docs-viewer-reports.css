@@ -296,7 +296,7 @@
 }
 
 .docsViewerReport__galleryMarker[data-marker="video"]{
-  mask-image: url("../icons/video.svg");
+  mask-image: url("../icons/film.svg");
 }
 
 .docsViewerReport__galleryMarker[data-marker="square-library"]{
