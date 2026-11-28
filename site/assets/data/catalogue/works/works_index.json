@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-11-28T10:29:01Z"
+    "generated_at_utc": "2026-11-28T11:39:56Z"
   },
   "works": {
     "00001": {
@@ -7870,39 +7870,39 @@
     },
     "01982": {
       "work_id": "01982",
-      "title": "nerve (abattoir) - 0 - inside cover"
+      "title": "nerve (abattoir) - 01 - inside cover"
     },
     "01983": {
       "work_id": "01983",
-      "title": "nerve (abattoir) - 1"
+      "title": "nerve (abattoir) - 02"
     },
     "01984": {
       "work_id": "01984",
-      "title": "nerve (abattoir) - 2"
+      "title": "nerve (abattoir) - 03"
     },
     "01985": {
       "work_id": "01985",
-      "title": "nerve (abattoir) - 3"
+      "title": "nerve (abattoir) - 04"
     },
     "01986": {
       "work_id": "01986",
-      "title": "nerve (abattoir) - 4"
+      "title": "nerve (abattoir) - 05"
     },
     "01987": {
       "work_id": "01987",
-      "title": "nerve (abattoir) - 5"
+      "title": "nerve (abattoir) - 06"
     },
     "01988": {
       "work_id": "01988",
-      "title": "nerve (abattoir) - 6"
+      "title": "nerve (abattoir) - 07"
     },
     "01989": {
       "work_id": "01989",
-      "title": "nerve (abattoir) - 7"
+      "title": "nerve (abattoir) - 08"
     },
     "01990": {
       "work_id": "01990",
-      "title": "nerve (abattoir) - 8 - back cover"
+      "title": "nerve (abattoir) - 09 - back cover"
     },
     "02010": {
       "work_id": "02010",
